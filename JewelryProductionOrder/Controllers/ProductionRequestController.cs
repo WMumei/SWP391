@@ -2,7 +2,7 @@
 
 namespace SWP391.Controllers
 {
-    public class OrderController : Controller
+    public class ProductionRequestController : Controller
     {
         public IActionResult Create()
         {
