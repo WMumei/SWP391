@@ -1,8 +1,62 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .button-container .button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #D9D9D9;
+            color: black;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+    }
+
+    .button-container .button:hover {
+                background-color: grey;
+    }
+</style>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-2">Jewelry Something</h1>
+</div>
+<div class="text-start">
+    <img class="banner" width="1400px" src="https://i.imgur.com/WnE3acs.jpeg" />
+</div>
+<br />
+<h4>
+    What type of Jewelry you want to order?
+</h4>   
+<br />
+<div class="button-container">
+    <button class="button">Ring</button>
+    <button class="button">Bracelet</button>
+    <button class="button">Earring</button>
+    <button class="button">Necklace</button>
+    <button class="button">Gemstone</button>
+    
+</div>
+<br />
+<div class="button-container">
+    <button class="button">Massage Stone</button>
+    <button class="button">Feng Shui</button>
+    <button class="button">Statue</button>
+    <button class="button">Handmade</button>
+    <button class="button">Charm</button>
+</div>
+<br/>
+
+<div class="text-lg-end">
+    <a href="/Order/Create" class="button">Create New Order</a>
+    <a asp-controller="Order" asp-action="Index" class="button">View Orders</a>
 </div>
