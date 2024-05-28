@@ -1,0 +1,29 @@
+﻿<form method="post">
+    
+        <div>
+            <h2>Create Quotation Request</h2>
+            <hr />
+        </div>
+        <!-- <div asp-validation-summary="All"></div> -->
+        <div>
+            <label Name>Type in your Order's name:</label>
+            <input Name type="text" class="form-control" />
+        </div>
+        <br />
+        <div>
+            <label Description>Type in your Order's description:</label>
+            <input Description type="text" class="form-control" />
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary form-control">Create</button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Order" asp-action="Index" class="btn btn-outline-primary form-control">
+                    Back
+                </a>
+            </div>
+        </div>
+</form>

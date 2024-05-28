@@ -1,0 +1,41 @@
+﻿<form method="post">
+    <div>
+        <div>
+            <h2>View Quotation Application</h2>
+            <hr />
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Test</td>
+                    <td>Description Example</td>
+                    <td>Approved</td>
+                    <td><a asp-controller="" asp-action="" class="button">Send to Costumer</a></td>
+                </tr>
+                <tr>
+                    <td>Test</td>
+                    <td>Description Example</td>
+                    <td>Disapproved</td>
+                    <td><a asp-controller="Quotation" asp-action="Create" class="button">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <a asp-controller="Order" asp-action="Index" class="btn btn-outline-primary form-control">
+            Back 
+        </a>
+    </div>
+
+    <!-- <div asp-validation-summary="All"></div> -->
+
+</form>
