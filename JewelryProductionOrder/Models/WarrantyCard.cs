@@ -12,9 +12,10 @@ namespace JewelryProductionOrder.Models
         //[ForeignKey("CustomerId")]
         //public User User { get; set; }
 
-        public int JewelryId { get; set; }
-        [ForeignKey("JewelryId")]
-        public Jewelry Jewelry { get; set; }
+        // Changed FK to the Jewelry side for this 1-1 relationship
+        //public int JewelryId { get; set; }
+        //[ForeignKey("JewelryId")]
+        //public Jewelry Jewelry { get; set; }
 
         //public int SalesStaffId { get; set; }
         //[ForeignKey("SalesStaffId")]
