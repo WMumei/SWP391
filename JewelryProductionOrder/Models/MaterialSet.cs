@@ -2,5 +2,6 @@
 {
     public class MaterialSet
     {
+        public int Id { get; set; }
     }
 }

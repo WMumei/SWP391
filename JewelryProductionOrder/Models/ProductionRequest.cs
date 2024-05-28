@@ -4,8 +4,20 @@ namespace JewelryProductionOrder.Models
 {
 	public class ProductionRequest
 	{
-		[Key]
         public int Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        //public int CustomerId { get; set; }
+        //[ForeignKey("CustomerId")]
+        //public User User { get; set; }
+
+        //public int DesignStaffId { get; set; }
+        //[ForeignKey("DesignStaffId")]
+        //public User user { get; set; }
+
+        //public int ProductionStaffId { get; set; }
+        //[ForeignKey("ProductionStaffId")]
+        //public User user { get; set; }
 
     }
 }
