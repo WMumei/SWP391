@@ -11,5 +11,14 @@ namespace JewelryProductionOrder.Data
         }
 
         public DbSet<ProductionRequest> ProductionRequests { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductionRequest>().HasData(
+                new ProductionRequest { Id = 1 },
+                new ProductionRequest { Id = 2 },
+                new ProductionRequest { Id = 3 }
+                );
+        }
     }
 }
