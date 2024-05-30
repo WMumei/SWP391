@@ -1,4 +1,43 @@
 ﻿<style>
+    button {
+        background-color: #0095ff;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.15385;
+        margin: 0;
+        outline: none;
+        padding: 8px .8em;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: baseline;
+        white-space: nowrap;
+    }
+
+    button:hover,
+    button:focus {
+        background-color: #07c;
+    }
+
+    button:focus {
+        box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+    }
+
+    button:active {
+        background-color: #0064bd;
+        box-shadow: none;
+    }
     .form-group {
         display: flex;
         justify-content: space-between;
@@ -18,7 +57,7 @@
 
     .labels {
         margin-bottom: 8px;
-        font-weight: bold; /* Optional: make the label bold */
+        font-weight: bold;
     }
 
     .input-field {
@@ -35,14 +74,12 @@
         <h1>Customer Information</h1>
         <div class="form-group">
             <div class="first-col">
-                <label Name class="labels">Type in the customer's name</label>
-                <select id="customer-name" class="input-field" onchange="updateCustomerID()">
-                    <option value="customer1">Customer 1</option>
-                    <option value="customer2">Customer 2</option>
-                    <option value="customer3">Customer 3</option>
+                <label for="customer-name">Customer</label>
+                <select id="customer-name" onchange="autofill()">
+                    <option value="" disabled selected>Select a customer</option>
                 </select>
             </div>
-            <div class="mid">
+            <div class="first-col">
                 <label Description class="labels">Type in the customer's ID</label>
                 <input Descripsion type="text" id="customer-id" class="input-field" placeholder="Ex : 1A2b3C4d" readonly/>
             </div>
@@ -50,8 +87,10 @@
 
         <div class="form-group">
             <div class="first-col">
-                <label Name class="labels">Jewelry ID</label>
-                <input Name type="text" class="input-field" />
+                <label for="jewelryID">Jewelry ID</label>
+                <select id="jewelryID">
+                    <option value="" disabled selected>Select jewelry ID</option>
+                </select>
             </div>
         </div>
         
@@ -67,17 +106,76 @@
         </div>
     </div>
 
+    <button>Submit</button> <button>Cancel</button>
+
     <script>
         const customerData = {
-            'customer1': 'ID001',
-            'customer2': 'ID002',
-            'customer3': 'ID003'
+            "1": 
+            { 
+                name: "Customer 1", 
+                id: "C001", 
+                jewelry: ["J001", "J002"] 
+            },
+            "2": 
+            { 
+                name: "Customer 2", 
+                id: "C002", 
+                jewelry: ["J003"] 
+            },
+            "3": 
+            { 
+                name: "Customer 3", 
+                id: "C003", 
+                jewelry: ["J004", "J005", "J006"] 
+            },
+            "4":
+            {
+                name: "Customer 4",
+                id: "C004",
+                jewelry: []
+            }
+
         };
 
-        function updateCustomerID() {
-            const customerName = document.getElementById('customer-name').value;
-            const customerID = customerData[customerName] || '';
-            document.getElementById('customer-id').value = customerID;
+        window.onload = function () {
+            const customerSelect = document.getElementById('customer-name');
+
+            for (const key in customerData) {
+                if (customerData.hasOwnProperty(key)) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.text = customerData[key].name;
+                    customerSelect.add(option);
+                }
+            }
+        };
+
+        function autofill() {
+            const customerSelect = document.getElementById('customer-name');
+            const customerIDInput = document.getElementById('customer-id');
+            const jewelrySelect = document.getElementById('jewelryID');
+
+            const selectedCustomerValue = customerSelect.value;
+
+            const customer = customerData[selectedCustomerValue];
+
+            customerIDInput.value = customer.id;
+
+            jewelrySelect.innerHTML = '<option value="" disabled selected>Select jewelry ID</option>';
+            if (customer.jewelry.length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.text = "This customer doesn't have any jewelry";
+                option.disabled = true;
+                jewelrySelect.add(option);
+            } else {
+                customer.jewelry.forEach(id => {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.text = id;
+                    jewelrySelect.add(option);
+                });
+            }
         }
     </script>
 </form>
