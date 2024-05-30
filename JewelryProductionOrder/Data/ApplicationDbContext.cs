@@ -11,6 +11,7 @@ namespace JewelryProductionOrder.Data
         }
 
         public DbSet<ProductionRequest> ProductionRequests { get; set; }
+        public DbSet<QuotationRequest> QuotationRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,5 +21,6 @@ namespace JewelryProductionOrder.Data
                 new ProductionRequest { Id = 3, CreatedDate = DateTime.Now }
                 );
         }
+        
     }
 }
