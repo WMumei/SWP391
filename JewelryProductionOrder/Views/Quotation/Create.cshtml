@@ -11,15 +11,20 @@
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
     <div>
-        <label Name>Request Name:</label>
-        <input asp-for="Name" type="text" class="form-control" />
+        <label Name>Choose one production request:</label>
+        
+        <select>
+            <option>RequestID</option>
+            <option>RequestID</option>
+            <option>RequestID</option>
+        </select>
     </div>
     <br/>
     <table class="table table-bordered" style="background-color: lightblue">
         <thead style="background-color: cadetblue">
             <tr>
                 <th class="text-center">Item Description</th>
-                <th class="text-center">Weight(unit:gram)</th>
+                <th class="text-center">Weight</th>
                 <th class="text-center">Unit price</th>
                 <th class="text-center">Total</th>
             </tr>
@@ -27,10 +32,16 @@
         <tbody>
         <tr>
             <th>
-            <label Name>Material 1</label>
+                <label>Material:</label>
+            <select Name="Material">
+                <option>Gold</option>
+                <option>Silver</option>
+                </select>
+
             </th>
             <th>
                     <input Name="MaterialPrice" type="number" class="form-control" />
+                    <div class="text-end">unit:gram</div>
             </th>
                 <th>
                     <input Name="MaterialPrice" type="number" class="form-control" />
@@ -41,10 +52,15 @@
             </tr>
             <tr>
                 <th>
-                    <label Name>Gemstone</label>
+                    <label Name>Gemstone:</label>
+                    <select>
+                        <option>Diamond</option>
+                        <option>Ruby</option>
+                    </select>
                 </th>
                 <th>
                     <input Name="MaterialPrice" type="number" class="form-control" />
+                    <div class="text-end">unit: carat</div>
                 </th>
                 <th>
                     <input Name="MaterialPrice" type="number" class="form-control" />
@@ -72,10 +88,10 @@
                     <label Name>Others</label>
                 </th>
                 <th>
-                    <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
+                    <input Name="MaterialPrice" type="number" class="form-control" />
                 </th>
                 <th>
-                    <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
+                    <input Name="MaterialPrice" type="number" class="form-control" />
                 </th>
                 <th>
                     <input Name="MaterialPrice" type="number" class="form-control" />
