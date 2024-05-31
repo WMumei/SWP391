@@ -12,12 +12,6 @@ namespace JewelryProductionOrder.Models
         public DateTime CreateDate { get; set; }
         public string Status {  get; set; }
        
-        //[DisplayName("Labor")]
-        // public int LaborPrice { get; set; }
-        [Required]
-        public string Name { get; set; }
-       public int Price { get; set; }
-
         public string Name { get; set; }
         public decimal LaborPrice { get; set; }
         public decimal TotalPrice { get; set; }
