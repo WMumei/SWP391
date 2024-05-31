@@ -16,6 +16,10 @@ namespace SWP391.Controllers
             return View();
         }
 
+        public IActionResult CustomerInfo()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             List<ProductionRequest> obj = _db.ProductionRequests.ToList();
