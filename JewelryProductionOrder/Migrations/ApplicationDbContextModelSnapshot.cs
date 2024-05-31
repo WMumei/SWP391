@@ -232,6 +232,9 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int>("ProductionStaffId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -239,6 +242,8 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("DesignStaffId");
 
                     b.HasIndex("ProductionStaffId");
+
+                    b.HasIndex("SalesStaffId");
 
                     b.ToTable("ProductionRequests");
                 });
@@ -368,9 +373,14 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<DateTime>("ExpiredDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("SalesStaffId");
 
                     b.ToTable("WarrantyCards");
                 });
@@ -380,7 +390,7 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
@@ -398,13 +408,13 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
                         .HasForeignKey("ProductionStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.WarrantyCard", "WarrantyCard")
@@ -431,13 +441,13 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "DesignStaff")
                         .WithMany()
                         .HasForeignKey("DesignStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
@@ -449,13 +459,13 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany()
                         .HasForeignKey("ProductionRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
                         .HasForeignKey("ProductionStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -504,19 +514,25 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "DesignStaff")
                         .WithMany()
                         .HasForeignKey("DesignStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
                         .HasForeignKey("ProductionStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -524,6 +540,8 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("DesignStaff");
 
                     b.Navigation("ProductionStaff");
+
+                    b.Navigation("SalesStaff");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
@@ -531,25 +549,25 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
                         .WithMany()
                         .HasForeignKey("JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
                         .WithMany()
                         .HasForeignKey("MaterialSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Jewelry");
@@ -566,13 +584,13 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -596,10 +614,18 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
+
+                    b.Navigation("SalesStaff");
                 });
 #pragma warning restore 612, 618
         }

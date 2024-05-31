@@ -10,15 +10,19 @@ namespace JewelryProductionOrder.Models
 
         public int CustomerId { get; set; }
         [ForeignKey("CustomerId")]
-        public User Customer { get; set; }
+        public User? Customer { get; set; }
 
         public int DesignStaffId { get; set; }
         [ForeignKey("DesignStaffId")]
-        public User DesignStaff { get; set; }
+        public User? DesignStaff { get; set; }
 
         public int ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
-        public User ProductionStaff { get; set; }
+        public User? ProductionStaff { get; set; }
+
+        public int SalesStaffId { get; set; }
+        [ForeignKey("SalesStaffId")]
+        public User? SalesStaff { get; set; }
 
 
 

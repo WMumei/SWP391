@@ -18,9 +18,9 @@ namespace JewelryProductionOrder.Models
         //[ForeignKey("JewelryId")]
         //public Jewelry Jewelry { get; set; }
 
-        //[Required]
-        //public int SalesStaffId { get; set; }
-        //[ForeignKey("SalesStaffId")]
-        //public User? SalesStaff { get; set; }
+        [Required]
+        public int SalesStaffId { get; set; }
+        [ForeignKey("SalesStaffId")]
+        public User? SalesStaff { get; set; }
     }
 }

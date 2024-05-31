@@ -16,17 +16,17 @@ namespace JewelryProductionOrder.Models
 
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]
-        public Jewelry Jewelry { get; set; }
+        public Jewelry? Jewelry { get; set; }
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
-        public MaterialSet MaterialSet { get; set; }
+        public MaterialSet? MaterialSet { get; set; }
 
         public int SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
-        public User SalesStaff { get; set; }
+        public User? SalesStaff { get; set; }
 
         public int ManagerId { get; set; }
         [ForeignKey("ManagerId")]
-        public User Manager { get; set; }
+        public User? Manager { get; set; }
     }
 }
