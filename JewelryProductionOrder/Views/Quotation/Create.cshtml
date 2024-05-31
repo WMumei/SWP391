@@ -1,0 +1,144 @@
+﻿@model QuotationRequest
+
+
+
+<form method="post">
+    
+        <div>
+            <h2 class="text-center">Create Quotation Request</h2>
+            <hr>
+           
+        </div>
+        <!-- <div asp-validation-summary="All"></div> -->
+    <div>
+        <label Name>Choose one production request:</label>
+        
+        <select>
+            <option>RequestID</option>
+            <option>RequestID</option>
+            <option>RequestID</option>
+        </select>
+    </div>
+    <br/>
+    <table class="table table-bordered" style="background-color: lightblue">
+        <thead style="background-color: cadetblue">
+            <tr>
+                <th class="text-center">Item Description</th>
+                <th class="text-center">Weight</th>
+                <th class="text-center">Unit price</th>
+                <th class="text-center">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>
+                <label>Material:</label>
+            <select Name="Material">
+                <option>Gold</option>
+                <option>Silver</option>
+                </select>
+
+            </th>
+            <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <div class="text-end">unit:gram</div>
+            </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <label Name>Gemstone:</label>
+                    <select>
+                        <option>Diamond</option>
+                        <option>Ruby</option>
+                    </select>
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <div class="text-end">unit: carat</div>
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <label >Labor</label>
+                </th>
+                <th>
+                    <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
+                </th>
+                <th>
+                    <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
+                </th>
+                <th>
+                    <input  type="number" class="form-control" />
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <label Name>Others</label>
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+                <th>
+                    <input Name="MaterialPrice" type="number" class="form-control" />
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <div class="container text-end" >
+      <div class="row">
+            
+            <table class="table table-borderless " >
+        <tbody>
+            <tr>
+                <th>Subtotal: </th>
+                <th><input Name type="number" class="form-control" /></th>
+            </tr>
+            <tr>
+                <th>Discount: </th>
+                <th><input Name type="number" class="form-control" /></th>
+            </tr>
+            <tr>
+                <th>Subtotal less Discount: </th>
+                <th><input Name type="number" class="form-control" /></th>
+            </tr>
+            <tr>
+                <th>Tax:</th>
+                <th><input Name type="number" class="form-control" /></th>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <th><input asp-for="Price"  class="form-control" /></th>
+            </tr>
+        </tbody>
+    </table>
+
+        </div>
+    </div>
+
+
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary form-control">Create</button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-outline-primary form-control">
+                    Back
+                </a>
+            </div>
+        </div>
+</form>
