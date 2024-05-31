@@ -22,6 +22,196 @@ namespace JewelryProductionOrder.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaterialSetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductionRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductionStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WarrantyCardId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("MaterialSetId");
+
+                    b.HasIndex("ProductionRequestId");
+
+                    b.HasIndex("ProductionStaffId");
+
+                    b.HasIndex("SalesStaffId");
+
+                    b.HasIndex("WarrantyCardId");
+
+                    b.ToTable("Jewelries");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DesignFile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DesignStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductionRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductionStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DesignStaffId");
+
+                    b.HasIndex("JewelryId");
+
+                    b.HasIndex("ProductionRequestId");
+
+                    b.HasIndex("ProductionStaffId");
+
+                    b.ToTable("JewelryDesigns");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Material", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MaterialSets");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
+                {
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialSetId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaterialId", "MaterialSetId");
+
+                    b.HasIndex("MaterialSetId");
+
+                    b.ToTable("MaterialSetsMaterials");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalesStaffId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -33,26 +223,383 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DesignStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductionStaffId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ProductionRequests");
+                    b.HasIndex("CustomerId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(2024, 5, 28, 14, 47, 16, 325, DateTimeKind.Local).AddTicks(1035)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedDate = new DateTime(2024, 5, 28, 14, 47, 16, 325, DateTimeKind.Local).AddTicks(1054)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedDate = new DateTime(2024, 5, 28, 14, 47, 16, 325, DateTimeKind.Local).AddTicks(1057)
-                        });
+                    b.HasIndex("DesignStaffId");
+
+                    b.HasIndex("ProductionStaffId");
+
+                    b.ToTable("ProductionRequests");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("LaborPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ManagerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialSetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JewelryId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("MaterialSetId");
+
+                    b.HasIndex("SalesStaffId");
+
+                    b.ToTable("QuotationRequests");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.SalesStaffCustomer", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SalesStaffId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId", "SalesStaffId");
+
+                    b.HasIndex("SalesStaffId");
+
+                    b.ToTable("SalesStaffCustomers");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("WarrantyCards");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany()
+                        .HasForeignKey("MaterialSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
+                        .WithMany()
+                        .HasForeignKey("ProductionRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
+                        .WithMany()
+                        .HasForeignKey("ProductionStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.WarrantyCard", "WarrantyCard")
+                        .WithMany()
+                        .HasForeignKey("WarrantyCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("MaterialSet");
+
+                    b.Navigation("ProductionRequest");
+
+                    b.Navigation("ProductionStaff");
+
+                    b.Navigation("SalesStaff");
+
+                    b.Navigation("WarrantyCard");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "DesignStaff")
+                        .WithMany()
+                        .HasForeignKey("DesignStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithMany()
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
+                        .WithMany()
+                        .HasForeignKey("ProductionRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
+                        .WithMany()
+                        .HasForeignKey("ProductionStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("DesignStaff");
+
+                    b.Navigation("Jewelry");
+
+                    b.Navigation("ProductionRequest");
+
+                    b.Navigation("ProductionStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany()
+                        .HasForeignKey("MaterialSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("MaterialSet");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Post", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SalesStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "DesignStaff")
+                        .WithMany()
+                        .HasForeignKey("DesignStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
+                        .WithMany()
+                        .HasForeignKey("ProductionStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("DesignStaff");
+
+                    b.Navigation("ProductionStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithMany()
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany()
+                        .HasForeignKey("MaterialSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jewelry");
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("MaterialSet");
+
+                    b.Navigation("SalesStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.SalesStaffCustomer", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
+                        .WithMany()
+                        .HasForeignKey("SalesStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SalesStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.User", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 #pragma warning restore 612, 618
         }

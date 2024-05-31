@@ -1,4 +1,6 @@
-﻿namespace JewelryProductionOrder.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace JewelryProductionOrder.Models
 {
     public class Post
     {
@@ -6,8 +8,8 @@
         public string Title { get; set; }
         public string Image { get; set; }
         public DateTime CreatedDate { get; set; }
-        //public int SalesStaffId { get; set; }
-        //[ForeignKey("SalesStaffId")]
-        //public User user { get; set; }
+        public int SalesStaffId { get; set; }
+        [ForeignKey("SalesStaffId")]
+        public User SalesStaff { get; set; }
     }
 }

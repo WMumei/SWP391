@@ -12,19 +12,23 @@ namespace JewelryProductionOrder.Models
         public string DesignFile { get; set; }
         public string Status { get; set; }
 
-        //public int CustomerId { get; set; }
-        //[ForeignKey("CustomerId")]
-        //public User User { get; set; }
+        public int CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
+        public User Customer { get; set; }
 
-        //public int DesignStaffId { get; set; }
-        //[ForeignKey("DesignStaffId")]
-        //public User user { get; set; }
+        public int DesignStaffId { get; set; }
+        [ForeignKey("DesignStaffId")]
+        public User DesignStaff { get; set; }
 
-        //public int ProductionStaffId { get; set; }
-        //[ForeignKey("ProductionStaffId")]
-        //public User user { get; set; }
+        public int ProductionStaffId { get; set; }
+        [ForeignKey("ProductionStaffId")]
+        public User ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
         public ProductionRequest ProductionRequest { get; set; }
+
+        public int JewelryId { get; set; }
+        [ForeignKey("JewelryId")]
+        public Jewelry Jewelry { get; set; }
     }
 }

@@ -23,22 +23,20 @@ namespace JewelryProductionOrder.Models
         [ForeignKey("WarrantyCardId")]
         public WarrantyCard WarrantyCard { get; set; }
 
-        //public int CustomerId { get; set; }
-        //[ForeignKey("CustomerId")]
-        //public User User { get; set; }
+        public int CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
+        public User Customer { get; set; }
 
-        //public int SalesStaffId { get; set; }
-        //[ForeignKey("SalesStaffId")]
-        //public User user { get; set; }
+        public int SalesStaffId { get; set; }
+        [ForeignKey("SalesStaffId")]
+        public User SalesStaff { get; set; }
 
-        //public int ProductionStaffId { get; set; }
-        //[ForeignKey("ProductionStaffId")]
-        //public User user { get; set; }
+        public int ProductionStaffId { get; set; }
+        [ForeignKey("ProductionStaffId")]
+        public User ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
         public ProductionRequest ProductionRequest { get; set; }
-        public int QuotationRequestId { get; set; }
-        [ForeignKey("QuotationRequestId")]
-        public QuotationRequest QuotationRequest { get; set; }
+
     }
 }
