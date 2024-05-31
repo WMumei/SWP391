@@ -1,3 +1,4 @@
+
 ﻿
     <div class="container">
         <div>
@@ -19,18 +20,38 @@
         <h5>Price for Request: 10.000 VND</h5>
 
 
+
         <br />
         <div class="row">
             <div class="col-6 col-md-3">
-                <button type="submit" class="btn btn-primary form-control">Create</button>
+                <!-- <button type="submit" class="btn btn-primary form-control">Create</button> -->
+                <a asp-controller="ProductionRequest" asp-action="CustomerInfo" class="btn btn-outline-primary form-control">Create</a>
             </div>
-            <div class="col-6 col-md-3">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">
-                    Back to Menu
-                </a>
+            <!-- <div asp-validation-summary="All"></div> -->
+            <div>
+                <label>Type in your Jewelry's name:</label>
+                <input type="text" class="form-control" />
+            </div>
+            <br />
+            <div>
+                <label>Description: </label>
+                <input type="text" class="form-control" />
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">
+                        Back to Menu
+                    </a>
+                </div>
             </div>
         </div>
     </form>
+
     
         <br />
         <hr />
@@ -125,3 +146,4 @@
     </div>
         
     </div>
+
