@@ -9,7 +9,7 @@
         gap: 20px;
     }
 
-    .button-container .button {
+        .button-container .button {
             width: 150px;
             height: 150px;
             display: flex;
@@ -20,53 +20,28 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
-    }
+        }
 
-    .button-container .button:hover {
+            .button-container .button:hover {
                 background-color: grey;
-    }
+            }
 </style>
 
 <div class="text-center">
-    <h1 class="display-2">Jewelry Something</h1>
+    <h1 class="display-2">JPO</h1>
 </div>
 <div class="text-start">
     <img class="banner" width="100%" src="https://i.imgur.com/WnE3acs.jpeg" />
 </div>
 <br />
-<h4>
-    What type of Jewelry you want to order?
-</h4>   
-<br />
-<div class="button-container">
-    <button class="button">Ring</button>
-    <button class="button">Bracelet</button>
-    <button class="button">Earring</button>
-    <button class="button">Necklace</button>
-    <button class="button">Gemstone</button>
-    
-</div>
-<br />
-<div class="button-container">
-    <button class="button">Massage Stone</button>
-    <button class="button">Feng Shui</button>
-    <button class="button">Statue</button>
-    <button class="button">Handmade</button>
-    <button class="button">Charm</button>
-</div>
-<br/>
+
 
 <div class="text-lg-end">
     <a asp-controller="ProductionRequest" asp-action="Create" class="button">Create Request</a>
     <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
-<<<<<<< Updated upstream
-    <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Cards</a>
-=======
     <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
-
     <div>
         <a asp-controller="Quotation" asp-action="Index" class="button">View Quotation</a>
     </div>
 
->>>>>>> Stashed changes
 </div>
