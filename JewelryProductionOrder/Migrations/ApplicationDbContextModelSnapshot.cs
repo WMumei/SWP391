@@ -625,7 +625,9 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Navigation("Customer");
 
+
                     b.Navigation("SalesStaff");
+
                 });
 #pragma warning restore 612, 618
         }

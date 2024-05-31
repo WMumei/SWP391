@@ -24,6 +24,7 @@ namespace JewelryProductionOrder.Data
         public DbSet<WarrantyCard> WarrantyCards { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WarrantyCard>()
@@ -129,5 +130,6 @@ namespace JewelryProductionOrder.Data
 
 
         }
+        
     }
 }
