@@ -1,0 +1,31 @@
+﻿<div class="container">
+    <form method="post">
+        <div class="">
+            <div>
+                <h2>Create Jewelry</h2>
+                <hr />
+            </div>
+            <!-- <div asp-validation-summary="All"></div> -->
+            <div>
+                <label>Type in your Jewelry's name:</label>
+                <input type="text" class="form-control" />
+            </div>
+            <br />
+            <div>
+                <label>Description: </label>
+                <input type="text" class="form-control" />
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">
+                        Back to Menu
+                    </a>
+                </div>
+            </div>
+    </form>
+</div>
