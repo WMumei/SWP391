@@ -19,7 +19,7 @@ namespace JewelryProductionOrder.Data
         public DbSet<MaterialSetMaterial> MaterialSetsMaterials { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<SalesStaffCustomer> SalesStaffCustomers { get; set; }
+        public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<WarrantyCard> WarrantyCards { get; set; }
 
@@ -80,15 +80,25 @@ namespace JewelryProductionOrder.Data
                 .HasForeignKey(t => t.MaterialSetId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<SalesStaffCustomer>()
+            modelBuilder.Entity<Delivery>()
                 .HasOne(t => t.SalesStaff)
                 .WithMany()
                 .HasForeignKey(t => t.SalesStaffId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<SalesStaffCustomer>()
+            modelBuilder.Entity<Delivery>()
                 .HasOne(t => t.Customer)
                 .WithMany()
                 .HasForeignKey(t => t.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Delivery>()
+                .HasOne(t => t.Jewelry)
+                .WithMany()
+                .HasForeignKey(t => t.JewelryId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Delivery>()
+                .HasOne(t => t.WarrantyCard)
+                .WithMany()
+                .HasForeignKey(t => t.WarrantyCardId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<JewelryDesign>()
