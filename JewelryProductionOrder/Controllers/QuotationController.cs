@@ -21,7 +21,7 @@ namespace SWP391.Controllers
         {
             return View();
         }
-        //[HttpPost]
+        [HttpPost]
         //public IActionResult Create(QuotationRequest quotationobj)
         //{
         //if (quotationobj.Id > 0)
@@ -32,7 +32,7 @@ namespace SWP391.Controllers
         //{
 
         //}
-        // return View();
+        //return View();
         //}
         [HttpPost,ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
