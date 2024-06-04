@@ -6,7 +6,7 @@ namespace JewelryProductionOrder.Models
 	public class ProductionRequest
 	{
         public int Id { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
         public String? Address { get; set; }
 
         public int CustomerId { get; set; }

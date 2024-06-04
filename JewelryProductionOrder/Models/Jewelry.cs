@@ -11,16 +11,11 @@ namespace JewelryProductionOrder.Models
         public string Description { get; set; }
         public string Image {  get; set; }
         public string Status { get; set; }
-
+        public DateTime CreatedAt { get; set; }
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet? MaterialSet { get; set; }
 
-        // ------------------
-        // TODO: Setup unique constraint
-        // ------------------
-        public int WarrantyCardId { get; set; }
-        [ForeignKey("WarrantyCardId")]
         public WarrantyCard? WarrantyCard { get; set; }
 
         public int CustomerId { get; set; }

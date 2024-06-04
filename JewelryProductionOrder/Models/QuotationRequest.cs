@@ -11,10 +11,11 @@ namespace JewelryProductionOrder.Models
         public int Id { get; set; }
         public DateTime CreateDate { get; set; }
         public string Status {  get; set; }
-       
         public string Name { get; set; }
         public decimal LaborPrice { get; set; }
         public decimal TotalPrice { get; set; }
+        public DateTime CreatedAt { get; set; }
+
 
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]
