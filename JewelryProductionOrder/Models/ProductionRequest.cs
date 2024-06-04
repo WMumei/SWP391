@@ -7,6 +7,7 @@ namespace JewelryProductionOrder.Models
 	{
         public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
+        public String? Address { get; set; }
 
         public int CustomerId { get; set; }
         [ForeignKey("CustomerId")]

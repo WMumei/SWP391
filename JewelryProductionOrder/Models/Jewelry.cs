@@ -14,14 +14,14 @@ namespace JewelryProductionOrder.Models
 
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
-        public MaterialSet MaterialSet { get; set; }
+        public MaterialSet? MaterialSet { get; set; }
 
         // ------------------
         // TODO: Setup unique constraint
         // ------------------
         public int WarrantyCardId { get; set; }
         [ForeignKey("WarrantyCardId")]
-        public WarrantyCard WarrantyCard { get; set; }
+        public WarrantyCard? WarrantyCard { get; set; }
 
         public int CustomerId { get; set; }
         [ForeignKey("CustomerId")]
@@ -36,7 +36,7 @@ namespace JewelryProductionOrder.Models
         public User? ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
-        public ProductionRequest ProductionRequest { get; set; }
+        public ProductionRequest? ProductionRequest { get; set; }
 
     }
 }

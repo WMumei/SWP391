@@ -2,12 +2,8 @@
 
 namespace JewelryProductionOrder.Controllers
 {
-    public class JewelryController : Controller
+    public class WarrantyCardController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
         public IActionResult Create()
         {
             return View();
