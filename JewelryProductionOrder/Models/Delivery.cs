@@ -21,5 +21,7 @@ namespace JewelryProductionOrder.Models
         public int WarrantyCardId { get; set; }
         [ForeignKey("WarrantyCardId")]
         public WarrantyCard WarrantyCard { get; set; }
+
+        public DateTime? DeliveredAt { get; set; }
     }
 }
