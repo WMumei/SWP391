@@ -16,6 +16,15 @@ namespace SWP391.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Create(ProductionRequest obj)
+        {
+            obj.CreatedAt = DateTime.Now;
+            _db.ProductionRequests.Add(obj);
+            _db.SaveChanges();
+            return View();
+        }
+
         public IActionResult CustomerInfo()
         {
             return View();

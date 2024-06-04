@@ -31,7 +31,7 @@ namespace JewelryProductionOrder.Models
         public User? ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
-        public ProductionRequest? ProductionRequest { get; set; }
+        public ProductionRequest ProductionRequest { get; set; }
 
     }
 }

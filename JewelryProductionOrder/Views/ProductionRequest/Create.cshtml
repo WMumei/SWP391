@@ -1,4 +1,5 @@
-﻿
+﻿@model ProductionRequest
+
 <div class="container">
 	<div>
 		<h2>Create New Production Request</h2>
@@ -10,13 +11,13 @@
 	<br />
 	<form method="post" class="col-md-10">
 		<div>
-			<label class="col-form-label-lg" Name>Type in quantity:</label>
-			<input class="col-md-1" Name type="text" class="form-control" />
+			<label class="col-form-label-lg" asp-for="Quantity" >Type in quantity:</label>
+			<input class="col-md-1" asp-for="Quantity" class="form-control" />
 		</div>
 
 		<br />
 
-		<h5>Price for Request: 10.000 VND</h5>
+		@* <h5>Price for Request: 10.000 VND</h5> *@
 
 
 
@@ -26,10 +27,11 @@
 			<br />
 			<div class="row">
 				<div class="col-6 col-md-3">
-					<!-- <button type="submit" class="btn btn-primary form-control">Create</button> -->
-					<a asp-controller="ProductionRequest" asp-action="CustomerInfo" class="btn btn-outline-primary form-control">
+					<button type="submit" class="btn btn-primary form-control">Create</button>
+					@* <a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-outline-primary form-control">
 						Create
-					</a>
+					</a> *@
+
 				</div>
 				<div class="col-6 col-md-3">
 					<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">

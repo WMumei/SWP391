@@ -27,6 +27,7 @@ namespace JewelryProductionOrder.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region MultipleCascade
             modelBuilder.Entity<WarrantyCard>()
                 .HasOne(t => t.SalesStaff)
                 .WithMany()
@@ -137,9 +138,15 @@ namespace JewelryProductionOrder.Data
                 .WithMany()
                 .HasForeignKey(t => t.ProductionStaffId)
                 .OnDelete(DeleteBehavior.Restrict);
+            #endregion
 
-
+            #region SeedDatabase
+            modelBuilder.Entity<ProductionRequest>().HasData(
+                    new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity=1 },
+                    new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity=1 }
+                );
+            #endregion
         }
-        
+
     }
 }

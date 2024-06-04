@@ -9,7 +9,6 @@ namespace JewelryProductionOrder.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime CreateDate { get; set; }
         public string Status {  get; set; }
         public string Name { get; set; }
         public decimal LaborPrice { get; set; }

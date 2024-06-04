@@ -1,14 +1,22 @@
-﻿<form method="post">
-    <div>
-        <div>
-            <h2>View Production Request</h2>
-            <hr />
+﻿@model List<ProductionRequest>
+<div class="container"> 
+        <div class="row">
+            <div class="col-6">
+                <h2>View Production Request</h2>
+
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New
+                </a>
+            </div>
         </div>
         <table class ="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Created Date</th>
+                    <th>Created At</th>
+                    <th>Quantity</th>
                     <th>Customer</th>
                     <th>Staffs</th>
                     <th>Quotation</th>
@@ -17,10 +25,15 @@
                 </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1</td>
-                <td>2024</td>
-            </tr>
+                @foreach(var obj in Model.OrderBy(u => u.CreatedAt))
+                {
+                <tr>
+                    
+                    <td>@obj.Id</td>
+                    <td>@obj.CreatedAt</td>
+                    <td>@obj.Quantity</td>
+                </tr>
+                }
             </tbody>
         </table>
         <div>
@@ -29,4 +42,3 @@
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
         
-</form>
