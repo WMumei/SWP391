@@ -2,7 +2,7 @@
 
 
 
-<form method="post">
+<form method="post" >
     
         <div>
             <h2 class="text-center">Create Quotation Request</h2>
@@ -11,12 +11,10 @@
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
     <div>
-        <label Name>Choose one production request:</label>
         
-        <select>
-            <option>RequestID</option>
-            <option>RequestID</option>
-            <option>RequestID</option>
+        
+        <select onchange="autofill()">
+            <option value="" disabled selected>Select a production request</option>
         </select>
     </div>
     <br/>
@@ -25,48 +23,53 @@
             <tr>
                 <th class="text-center">Item Description</th>
                 <th class="text-center">Weight</th>
-                <th class="text-center">Unit price</th>
-                <th class="text-center">Total</th>
+                <th class="text-center">
+                    Unit price (nghin VND)
+                   
+                    </th>
+                <th class="text-center">Total(nghin VND)</th>
             </tr>
         </thead>
         <tbody>
         <tr>
             <th>
-                <label>Material:</label>
+                    <label Name>Material:</label>
             <select Name="Material">
+                        <option value="" disabled selected>Select material</option>
                 <option>Gold</option>
                 <option>Silver</option>
                 </select>
 
             </th>
             <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
                     <div class="text-end">unit:gram</div>
             </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
                 </th>
             </tr>
             <tr>
                 <th>
                     <label Name>Gemstone:</label>
                     <select>
+                        <option value="" disabled selected>Select Gemstone</option>
                         <option>Diamond</option>
                         <option>Ruby</option>
                     </select>
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00"/>
                     <div class="text-end">unit: carat</div>
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND"/>
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
                 </th>
             </tr>
             <tr>
@@ -80,7 +83,7 @@
                     <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
                 </th>
                 <th>
-                    <input  type="number" class="form-control" />
+                    <input type="number" class="form-control" placeholder="0 VND" />
                 </th>
             </tr>
             <tr>
@@ -88,13 +91,14 @@
                     <label Name>Others</label>
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
+                    <div class="text-end">unit:gram</div>
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
                 </th>
                 <th>
-                    <input Name="MaterialPrice" type="number" class="form-control" />
+                    <input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
                 </th>
             </tr>
         </tbody>
@@ -106,24 +110,24 @@
         <tbody>
             <tr>
                 <th>Subtotal: </th>
-                <th><input Name type="number" class="form-control" /></th>
+                        <th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
             </tr>
             <tr>
                 <th>Discount: </th>
-                <th><input Name type="number" class="form-control" /></th>
+                        <th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
             </tr>
             <tr>
                 <th>Subtotal less Discount: </th>
-                <th><input Name type="number" class="form-control" /></th>
+                        <th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
             </tr>
             <tr>
                 <th>Tax:</th>
-                <th><input Name type="number" class="form-control" /></th>
+                        <th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
             </tr>
             <tr>
                 <th>Total:</th>
 
-                <th><input asp-for="TotalPrice"  class="form-control" /></th>
+                        <th><input asp-for="TotalPrice" class="form-control" placeholder="0 VND" /></th>
 
             </tr>
         </tbody>
