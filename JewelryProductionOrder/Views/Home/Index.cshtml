@@ -9,7 +9,7 @@
         gap: 20px;
     }
 
-    .button-container .button {
+        .button-container .button {
             width: 150px;
             height: 150px;
             display: flex;
@@ -20,11 +20,11 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
-    }
+        }
 
-    .button-container .button:hover {
+            .button-container .button:hover {
                 background-color: grey;
-    }
+            }
 </style>
 
 <div class="text-center">
@@ -39,7 +39,7 @@
 <div class="text-lg-end">
     <a asp-controller="ProductionRequest" asp-action="Create" class="button">Create Request</a>
     <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
-
+    <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
     <div>
         <a asp-controller="Quotation" asp-action="Index" class="button">View Quotation</a>
     </div>
