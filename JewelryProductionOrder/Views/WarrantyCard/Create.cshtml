@@ -1,69 +1,6 @@
-﻿<style>
-    button {
-        background-color: #0095ff;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
-        box-sizing: border-box;
-        color: #fff;
-        cursor: pointer;
-        display: inline-block;
-        font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
-        font-size: 13px;
-        font-weight: 400;
-        line-height: 1.15385;
-        margin: 0;
-        outline: none;
-        padding: 8px .8em;
-        position: relative;
-        text-align: center;
-        text-decoration: none;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-        vertical-align: baseline;
-        white-space: nowrap;
-    }
-
-    button:hover,
-    button:focus {
-        background-color: #07c;
-    }
-
-    button:focus {
-        box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
-    }
-
-    button:active {
-        background-color: #0064bd;
-        box-shadow: none;
-    }
-    .form-group {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .first-col {
-        flex: 0 0 48%;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .mid{
-            margin-left: auto;
-            margin-right: 0;
-        }
-
-    .labels {
-        margin-bottom: 8px;
-        font-weight: bold;
-    }
-
-    .input-field {
-        width: 100%;
-    }
-</style>
+﻿<head>
+	<link rel="stylesheet" href="~/css/CreateWarrantyCard.css" />
+</head>
 <form method="post">
     <div>
         <div>
@@ -74,9 +11,9 @@
         <h1>Customer Information</h1>
         <div class="form-group form-control">
             <div class="first-col">
-                <label for="customer-name">Customer</label>
-                <select id="customer-name">
-                    <option value="" disabled selected>Select a customer</option>
+                <input type="text" id="searchText" placeholder="Enter customer's name..." />
+                <select id="searchResults">
+	                <option value="">-- Select --</option>
                 </select>
             </div>
 @*             <div class="first-col">
@@ -109,73 +46,25 @@
     <button>Submit</button> <button>Cancel</button>
 
     <script>
-        const customerData = {
-            "1": 
-            { 
-                name: "Customer 1", 
-                id: "C001", 
-                jewelry: ["J001", "J002"] 
-            },
-            "2": 
-            { 
-                name: "Customer 2", 
-                id: "C002", 
-                jewelry: ["J003"] 
-            },
-            "3": 
-            { 
-                name: "Customer 3", 
-                id: "C003", 
-                jewelry: ["J004", "J005", "J006"] 
-            },
-            "4":
-            {
-                name: "Customer 4",
-                id: "C004",
-                jewelry: []
-            }
+        const searchText = document.getElementById("searchText");
+        const searchResults = document.getElementById("searchResults");
+        const allOptions = ["Option 1", "Another Option", "Matching Text", "Yet Another Option", "More Matching Text"];
 
-        };
+        function filterResults() {
+            const userInput = searchText.value.toLowerCase();
+            searchResults.innerHTML = "";
 
-        window.onload = function () {
-            const customerSelect = document.getElementById('customer-name');
-
-            for (const key in customerData) {
-                if (customerData.hasOwnProperty(key)) {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.text = customerData[key].name;
-                    customerSelect.add(option);
+            allOptions.forEach(option => {
+                const lowerOption = option.toLowerCase();
+                if (lowerOption.includes(userInput)) {
+                    const optionElement = document.createElement("option");
+                    optionElement.text = option;
+                    optionElement.value = option;
+                    searchResults.appendChild(optionElement);
                 }
-            }
-        };
-
-        function autofill() {
-            const customerSelect = document.getElementById('customer-name');
-            const customerIDInput = document.getElementById('customer-id');
-            const jewelrySelect = document.getElementById('jewelryID');
-
-            const selectedCustomerValue = customerSelect.value;
-
-            const customer = customerData[selectedCustomerValue];
-
-            customerIDInput.value = customer.id;
-
-            jewelrySelect.innerHTML = '<option value="" disabled selected>Select jewelry ID</option>';
-            if (customer.jewelry.length === 0) {
-                const option = document.createElement('option');
-                option.value = "";
-                option.text = "This customer doesn't have any jewelry";
-                option.disabled = true;
-                jewelrySelect.add(option);
-            } else {
-                customer.jewelry.forEach(id => {
-                    const option = document.createElement('option');
-                    option.value = id;
-                    option.text = id;
-                    jewelrySelect.add(option);
-                });
-            }
+            });
         }
+
+        searchText.addEventListener("keyup", filterResults);
     </script>
 </form>

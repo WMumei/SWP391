@@ -5,6 +5,8 @@ namespace JewelryProductionOrder.Models
 {
     public class WarrantyCard
     {
+        
+
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiredAt { get; set; }
