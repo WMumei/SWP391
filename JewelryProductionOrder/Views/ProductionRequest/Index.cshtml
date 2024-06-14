@@ -25,10 +25,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var obj in Model.OrderBy(u => u.CreatedAt))
+                @foreach(var obj in Model.OrderByDescending(o => o.CreatedAt))
                 {
                 <tr>
-                    
                     <td>@obj.Id</td>
                     <td>@obj.CreatedAt</td>
                     <td>@obj.Quantity</td>

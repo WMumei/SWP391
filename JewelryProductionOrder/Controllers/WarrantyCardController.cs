@@ -4,6 +4,7 @@ namespace JewelryProductionOrder.Controllers
 {
     public class JewelryController : Controller
     {
+
         public IActionResult Index()
         {
             return View();
