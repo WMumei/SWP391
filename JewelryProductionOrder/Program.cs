@@ -1,5 +1,7 @@
 using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Models.Repositories.Repository;
+using Models.Repositories.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(
 	o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 	);
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
