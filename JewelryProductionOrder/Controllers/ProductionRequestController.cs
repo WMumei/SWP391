@@ -32,7 +32,7 @@ namespace SWP391.Controllers
         }
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.ToList();
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll().ToList();
             return View(obj);
         }
     }
