@@ -1,7 +1,6 @@
 ﻿@model QuotationRequest
 
 
-
 <form method="post" >
     
         <div>
@@ -15,6 +14,11 @@
         
         <select onchange="autofill()">
             <option value="" disabled selected>Select a production request</option>
+           @* @foreach (var obj in Model.OrderBy(u => u.CreatedAt))
+            {
+                <option>@obj.Id</option>
+            }
+            *@
         </select>
     </div>
     <br/>
@@ -24,10 +28,10 @@
                 <th class="text-center">Item Description</th>
                 <th class="text-center">Weight</th>
                 <th class="text-center">
-                    Unit price (nghin VND)
+                    Unit price 
                    
                     </th>
-                <th class="text-center">Total(nghin VND)</th>
+                <th class="text-center">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +45,8 @@
                 </select>
 
             </th>
-            <th>
+            @*Nhập weight *@
+                <th > 
                     <input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
                     <div class="text-end">unit:gram</div>
             </th>
@@ -74,7 +79,7 @@
             </tr>
             <tr>
                 <th>
-                    <label >Labor</label>
+                    <label asp-for="LaborPrice">Labor</label>
                 </th>
                 <th>
                     <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
@@ -83,7 +88,7 @@
                     <!--<input Name="MaterialPrice" type="number" class="form-control" />-->
                 </th>
                 <th>
-                    <input type="number" class="form-control" placeholder="0 VND" />
+                    <input type="number" class="form-control" placeholder="0 VND" asp-for="LaborPrice"/>
                 </th>
             </tr>
             <tr>
@@ -122,10 +127,10 @@
             </tr>
             <tr>
                 <th>Tax:</th>
-                        <th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
+                        <th><p>10%</p></th>
             </tr>
             <tr>
-                <th>Total:</th>
+                        <th asp-for="TotalPrice">Total:</th>
 
                         <th><input asp-for="TotalPrice" class="form-control" placeholder="0 VND" /></th>
 

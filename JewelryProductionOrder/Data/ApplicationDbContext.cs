@@ -145,6 +145,10 @@ namespace JewelryProductionOrder.Data
                     new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity=1 },
                     new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity=1 }
                 );
+            modelBuilder.Entity<QuotationRequest>().HasData(
+                    new QuotationRequest { Id = 1, Name = "abc" , Status="Approved", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
+                    new QuotationRequest { Id = 2, Name = "abc", Status = "Approved", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
+                ) ;
             #endregion
         }
 
