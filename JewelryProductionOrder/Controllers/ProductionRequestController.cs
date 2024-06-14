@@ -1,15 +1,16 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Mvc;
+using Models.Repositories.Repository.IRepository;
 
 namespace SWP391.Controllers
 {
     public class ProductionRequestController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public ProductionRequestController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public ProductionRequestController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Create()
         {
@@ -20,8 +21,8 @@ namespace SWP391.Controllers
         public IActionResult Create(ProductionRequest obj)
         {
             obj.CreatedAt = DateTime.Now;
-            _db.ProductionRequests.Add(obj);
-            _db.SaveChanges();
+            _unitOfWork.ProductionRequest.Add(obj);
+            _unitOfWork.Save();
             return View();
         }
 
@@ -31,7 +32,7 @@ namespace SWP391.Controllers
         }
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _db.ProductionRequests.ToList();
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.ToList();
             return View(obj);
         }
     }
