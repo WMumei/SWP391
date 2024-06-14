@@ -2,7 +2,7 @@
 
 namespace JewelryProductionOrder.Controllers
 {
-    public class WarrantyCardController : Controller
+    public class JewelryController : Controller
     {
         public IActionResult Create()
         {
