@@ -4,36 +4,34 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SWP391.Controllers
 {
-    public class QuotationController : Controller
+    public class QuotationRequestController : Controller
 
     {
         private readonly ApplicationDbContext _db;
-        public QuotationController(ApplicationDbContext db)
+        public QuotationRequestController(ApplicationDbContext db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            //List<QuotationRequest> requests = _db.QuotationRequests.ToList();
+            List<QuotationRequest> requests = _db.QuotationRequests.ToList();
             return View();
         }
-        public IActionResult Create()
+       public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        //public IActionResult Create(QuotationRequest quotationobj)
-        //{
-        //if (quotationobj.Id > 0)
-        //{
-        //ModelState.AddModelError("")
-        //}
-        //if(ModelState.IsValid)
-        //{
-
-        //}
-        //return View();
-        //}
+        public IActionResult Create(QuotationRequest obj)
+        {
+            obj.CreatedAt = DateTime.Now;
+            _db.QuotationRequests.Add(obj); //add object vào db
+            _db.SaveChanges(); //lưu thay đổi vào db
+            return View();
+        }
+        
+       
+        
         [HttpPost,ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {

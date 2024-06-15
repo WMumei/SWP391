@@ -4,48 +4,41 @@
 		<div class="col-6">
 			<h2>View Production Request</h2>
 
-		</div>
-		<div class="col-6 text-end">
-			<a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
-				<i class="bi bi-plus-circle"></i> Create New
-			</a>
-		</div>
-	</div>
-	<table class="table table-bordered table-striped">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Created At</th>
-				<th>Quantity</th>
-				<th>Customer</th>
-				<th>Staffs</th>
-				<th>Quotation</th>
-				<th>Jewelry</th>
-				<th>Design</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var obj in Model.OrderByDescending(o => o.CreatedAt))
-			{
-				<tr>
-					<td>@obj.Id</td>
-					<td>@obj.CreatedAt</td>
-					<td>@obj.Quantity</td>
-					<td>@obj?.Customer?.Name</td>
-					@if (obj.SalesStaff is not null)
-					{
-						<td>@(obj.SalesStaff.Name)</td>
-					}
-					else
-					{
-						<td><a asp-controller="ProductionRequest" asp-action="TakeRequest" asp-route-id="@obj.Id" class="button">Take</a></td>
-					}
-				</tr>
-			}
-		</tbody>
-	</table>
-	<div>
-		<a asp-controller="Quotation" asp-action="Create" class="button">Create Quotation</a>
-	</div>
-</div>
-<!-- <div asp-validation-summary="All"></div> -->
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New
+                </a>
+            </div>
+        </div>
+        <table class ="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Created At</th>
+                    <th>Quantity</th>
+                    <th>Customer</th>
+                    <th>Staffs</th>
+                    <th>Quotation</th>
+                    <th>Jewelry</th>
+                    <th>Design</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var obj in Model.OrderBy(u => u.CreatedAt))
+                {
+                <tr>
+                    
+                    <td>@obj.Id</td>
+                    <td>@obj.CreatedAt</td>
+                    <td>@obj.Quantity</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <a asp-controller="QuotationRequest" asp-action="Create" class="button">Create Quotation</a>
+        </div>
+        </div>
+        <!-- <div asp-validation-summary="All"></div> -->
+        

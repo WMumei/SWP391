@@ -47,7 +47,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("WarrantyCardId");
 
-                    b.ToTable("Deliveries");
+                    b.ToTable("Deliveries", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
@@ -104,7 +104,9 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("Jewelries");
+                    b.HasIndex("WarrantyCardId");
+
+                    b.ToTable("Jewelries", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
@@ -161,7 +163,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("ProductionStaffId");
 
-                    b.ToTable("JewelryDesigns");
+                    b.ToTable("JewelryDesigns", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Material", b =>
@@ -181,7 +183,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Materials", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
@@ -200,7 +202,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MaterialSets");
+                    b.ToTable("MaterialSets", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -218,7 +220,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("MaterialSetId");
 
-                    b.ToTable("MaterialSetsMaterials");
+                    b.ToTable("MaterialSetsMaterials", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Post", b =>
@@ -247,7 +249,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
@@ -356,7 +358,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("QuotationRequests");
+                    b.ToTable("QuotationRequests", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Role", b =>
@@ -464,7 +466,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("WarrantyCards");
+                    b.ToTable("WarrantyCards", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
