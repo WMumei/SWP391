@@ -15,7 +15,6 @@ namespace JewelryProductionOrder.Models
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet? MaterialSet { get; set; }
-
         public WarrantyCard? WarrantyCard { get; set; }
 
         public int CustomerId { get; set; }

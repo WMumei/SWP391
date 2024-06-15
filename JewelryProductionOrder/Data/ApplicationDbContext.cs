@@ -1,5 +1,6 @@
 ﻿using JewelryProductionOrder.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace JewelryProductionOrder.Data
 {
@@ -145,6 +146,14 @@ namespace JewelryProductionOrder.Data
                     new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity=1 },
                     new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity=1 }
                 );
+            #endregion
+
+            #region OneToOne
+            //modelBuilder.Entity<Jewelry>()
+            //        .HasOne(e => e.WarrantyCard)
+            //        .WithOne(e => e.Jewelry)
+            //        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
+            //        .IsRequired();
             #endregion
         }
 
