@@ -146,6 +146,15 @@ namespace JewelryProductionOrder.Data
                     new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity=1 },
                     new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity=1 }
                 );
+            modelBuilder.Entity<Role>().HasData(
+                    new Role { Id = 1, Name = "Staff" },
+                    new Role { Id = 2, Name = "Customer" }
+                );
+            modelBuilder.Entity<User>().HasData(
+                                   new User { Id = 1, Name = "Staff", RoleId = 1 },
+                                   new User { Id = 2, Name = "Customer", RoleId = 2 }
+                );
+
             #endregion
 
             #region OneToOne
