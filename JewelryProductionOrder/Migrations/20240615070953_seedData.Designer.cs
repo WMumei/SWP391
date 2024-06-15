@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240604081558_AddColumnCreatedAt")]
-    partial class AddColumnCreatedAt
+    [Migration("20240615070953_seedData")]
+    partial class seedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int>("WarrantyCardId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeliverDate")
+                    b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("CustomerId", "SalesStaffId", "JewelryId", "WarrantyCardId");
@@ -61,7 +61,7 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CustomerId")
@@ -95,9 +95,6 @@ namespace JewelryProductionOrder.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WarrantyCardId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -109,8 +106,6 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("ProductionStaffId");
 
                     b.HasIndex("SalesStaffId");
-
-                    b.HasIndex("WarrantyCardId");
 
                     b.ToTable("Jewelries");
                 });
@@ -203,6 +198,9 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.ToTable("MaterialSets");
@@ -215,6 +213,9 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<int>("MaterialSetId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("MaterialId", "MaterialSetId");
 
@@ -266,17 +267,23 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DesignStaffId")
+                    b.Property<int?>("DesignStaffId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductionStaffId")
+                    b.Property<int?>("ProductionStaffId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SalesStaffId")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<int?>("SalesStaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -289,6 +296,20 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("SalesStaffId");
 
                     b.ToTable("ProductionRequests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 9, 52, 720, DateTimeKind.Local).AddTicks(2014),
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 9, 52, 720, DateTimeKind.Local).AddTicks(2024),
+                            Quantity = 1
+                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
@@ -298,9 +319,6 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -359,6 +377,18 @@ namespace JewelryProductionOrder.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Staff"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.User", b =>
@@ -369,12 +399,16 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
@@ -395,14 +429,17 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpiredDate")
+                    b.Property<DateTime>("ExpiredAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SalesStaffId")
                         .HasColumnType("int");
@@ -410,6 +447,9 @@ namespace JewelryProductionOrder.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("JewelryId")
+                        .IsUnique();
 
                     b.HasIndex("SalesStaffId");
 
@@ -483,12 +523,6 @@ namespace JewelryProductionOrder.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("JewelryProductionOrder.Models.WarrantyCard", "WarrantyCard")
-                        .WithMany()
-                        .HasForeignKey("WarrantyCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("MaterialSet");
@@ -498,8 +532,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("ProductionStaff");
 
                     b.Navigation("SalesStaff");
-
-                    b.Navigation("WarrantyCard");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
@@ -580,26 +612,22 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.User", "DesignStaff")
                         .WithMany()
                         .HasForeignKey("DesignStaffId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
                         .HasForeignKey("ProductionStaffId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Customer");
 
@@ -664,6 +692,12 @@ namespace JewelryProductionOrder.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithOne("WarrantyCard")
+                        .HasForeignKey("JewelryProductionOrder.Models.WarrantyCard", "JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
@@ -672,7 +706,14 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Jewelry");
+
                     b.Navigation("SalesStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
+                {
+                    b.Navigation("WarrantyCard");
                 });
 #pragma warning restore 612, 618
         }

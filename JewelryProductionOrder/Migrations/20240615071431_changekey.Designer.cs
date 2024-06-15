@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240604091354_DeleteDupCol")]
-    partial class DeleteDupCol
+    [Migration("20240615071431_changekey")]
+    partial class changekey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,13 +301,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 4, 16, 13, 54, 76, DateTimeKind.Local).AddTicks(8241),
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 14, 31, 163, DateTimeKind.Local).AddTicks(4045),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 4, 16, 13, 54, 76, DateTimeKind.Local).AddTicks(8254),
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 14, 31, 163, DateTimeKind.Local).AddTicks(4056),
                             Quantity = 1
                         });
                 });
@@ -377,6 +377,18 @@ namespace JewelryProductionOrder.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Staff"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.User", b =>

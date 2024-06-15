@@ -1,5 +1,6 @@
 ﻿using JewelryProductionOrder.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace JewelryProductionOrder.Data
 {
@@ -145,12 +146,29 @@ namespace JewelryProductionOrder.Data
                     new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity=1 },
                     new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity=1 }
                 );
-            modelBuilder.Entity<QuotationRequest>().HasData(
-                    new QuotationRequest { Id = 1, Name = "abc" , Status="Approved", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
-                    new QuotationRequest { Id = 2, Name = "abc", Status = "Approved", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
-                ) ;
-            #endregion
-        }
+            modelBuilder.Entity<Role>().HasData(
+                    new Role { Id = 1, Name = "Staff" },
+                    new Role { Id = 2, Name = "Customer" }
+                );
+            modelBuilder.Entity<User>().HasData(
+                                   new User { Id = 1, Name = "Staff", RoleId = 1 },
+                                   new User { Id = 2, Name = "Customer", RoleId = 2 }
+                );
+			modelBuilder.Entity<QuotationRequest>().HasData(
+		            new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
+		            new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
+	            );
+			#endregion
+
+			#region OneToOne
+			//modelBuilder.Entity<Jewelry>()
+			//        .HasOne(e => e.WarrantyCard)
+			//        .WithOne(e => e.Jewelry)
+			//        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
+			//        .IsRequired();
+
+			#endregion
+		}
 
     }
 }

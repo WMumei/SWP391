@@ -300,13 +300,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 4, 16, 45, 47, 431, DateTimeKind.Local).AddTicks(3812),
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 16, 7, 576, DateTimeKind.Local).AddTicks(1952),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 4, 16, 45, 47, 431, DateTimeKind.Local).AddTicks(3823),
+                            CreatedAt = new DateTime(2024, 6, 15, 14, 16, 7, 576, DateTimeKind.Local).AddTicks(1966),
                             Quantity = 1
                         });
                 });
@@ -375,7 +375,19 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Staff"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.User", b =>
@@ -405,7 +417,21 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Staff",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Customer",
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>

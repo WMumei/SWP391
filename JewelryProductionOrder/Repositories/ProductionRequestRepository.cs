@@ -1,6 +1,7 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Models.Repository;
 using System.Linq.Expressions;
 
@@ -13,6 +14,11 @@ namespace JewelryProductionOrder.Repositories
         {
             _db = db;
         }
+        public IEnumerable<ProductionRequest> GetAllWithCustomers()
+        {
+            return dbSet.Include(x => x.Customer).ToList();
+        }
+
         public void Save()
         {
             _db.SaveChanges();

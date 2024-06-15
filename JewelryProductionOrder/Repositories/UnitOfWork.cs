@@ -16,10 +16,12 @@ namespace Models.Repositories.Repository
         private ApplicationDbContext _db;
 
         public IProductionRequestRepository ProductionRequest { get; private set; }
+        public IUserRepository User { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             ProductionRequest = new ProductionRequestRepository(_db);
+            User = new UserRepository(_db);
         }
 
         public void Save()

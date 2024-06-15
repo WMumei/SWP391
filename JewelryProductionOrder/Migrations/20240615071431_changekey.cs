@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateDatabase : Migration
+    public partial class changekey : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,14 +16,14 @@ namespace JewelryProductionOrder.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 4, 16, 45, 47, 431, DateTimeKind.Local).AddTicks(3812));
+                value: new DateTime(2024, 6, 15, 14, 14, 31, 163, DateTimeKind.Local).AddTicks(4045));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 4, 16, 45, 47, 431, DateTimeKind.Local).AddTicks(3823));
+                value: new DateTime(2024, 6, 15, 14, 14, 31, 163, DateTimeKind.Local).AddTicks(4056));
         }
 
         /// <inheritdoc />
@@ -34,14 +34,14 @@ namespace JewelryProductionOrder.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 4, 16, 13, 54, 76, DateTimeKind.Local).AddTicks(8241));
+                value: new DateTime(2024, 6, 15, 14, 9, 52, 720, DateTimeKind.Local).AddTicks(2014));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 4, 16, 13, 54, 76, DateTimeKind.Local).AddTicks(8254));
+                value: new DateTime(2024, 6, 15, 14, 9, 52, 720, DateTimeKind.Local).AddTicks(2024));
         }
     }
 }
