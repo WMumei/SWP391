@@ -1,5 +1,6 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 
@@ -11,12 +12,12 @@ namespace SWP391.Controllers
         private readonly IUnitOfWork _unitOfWork;
         public QuotationRequestController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork=unitOfWork;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().ToList();
-            return View();
+            List<QuotationRequest> requests =  _unitOfWork.QuotationRequest.GetAllWithSaleStaffs().ToList();
+            return View(requests);
         }
        public IActionResult Create()
         {
@@ -33,16 +34,16 @@ namespace SWP391.Controllers
         
        
         
-        [HttpPost,ActionName("Delete")]
-        public IActionResult DeletePOST(int id)
-        {
+        //[HttpPost,ActionName("Delete")]
+        //public IActionResult DeletePOST(int id)
+        //{
             //QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
-            if (quorequest == null) {
-                return NotFound();
-             }
+           // if (quorequest == null) {
+              //  return NotFound();
+            // }
             //_unitOfWork.QuotationRequests.Remove(quorequest);
             //_db.SaveChanges();
-            return RedirectToAction("Index");
+           // return RedirectToAction("Index");
 
         }
     }

@@ -3,6 +3,8 @@
     public class QuotationVM
     {
         public QuotationRequest QuotationRequest { get; set; }
+        public User SaleStaff { get; set; }
+        public Jewelry Jewelry { get; set; }
         public MaterialSet MaterialSet { get; set; }
     }
 }

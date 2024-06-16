@@ -2,6 +2,7 @@
 using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Models.Repository;
 using NuGet.Protocol.Core.Types;
 
@@ -13,6 +14,10 @@ namespace JewelryProductionOrder.Repositories
         public WarrantyCardRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+        public IEnumerable<WarrantyCard> GetAllWithSaleStaffs()
+        {
+            return dbSet.Include(x => x.SalesStaff).ToList();
         }
         //public void Add(WarrantyCard entity)
         //{

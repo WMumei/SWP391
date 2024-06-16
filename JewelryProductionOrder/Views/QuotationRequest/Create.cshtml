@@ -1,4 +1,4 @@
-﻿@model QuotationRequest
+﻿@model QuotationVM
 
 
 <form method="post">
@@ -12,14 +12,14 @@
 	<div>
 
 
-		@*         <select onchange="autofill()">
-		<option value="" disabled selected>Select a production request</option>
-		@foreach (var obj in Model.OrderBy(u => u.CreatedAt))
+		        <select onchange="autofill()" asp-for="Jewelry.Id">
+		<option value="" disabled selected >Select a jewelry</option>
+		@*@foreach (var obj in Jewelry)
 		{
-		<option>@obj.Id</option>
+				<option>@obj.Id</option>
 		}
-
-		</select> *@
+		*@
+		</select> 
 	</div>
 	<br />
 	<table class="table table-bordered table-info">
