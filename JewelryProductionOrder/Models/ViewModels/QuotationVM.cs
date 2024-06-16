@@ -3,11 +3,10 @@
     public class QuotationVM
     {
         public QuotationRequest QuotationRequest { get; set; }
-        public User SaleStaff { get; set; } //Checkoutform
+        //public User SaleStaff { get; set; } //Checkoutform
         public Jewelry Jewelry { get; set; }
-        public Gemstone Gemstone { get; set; }
-		public MaterialSetMaterial MaterialSetMaterial { get; set; }
-		public Material Material { get; set; }
-        public MaterialSet MaterialSet { get; set; }
+		
+		//public List<Jewelry> jewelries { get; } = [];
+		public MaterialSet MaterialSet { get; set; }
     }
 }

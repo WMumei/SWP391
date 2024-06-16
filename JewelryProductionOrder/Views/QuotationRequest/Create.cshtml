@@ -1,4 +1,4 @@
-﻿@model QuotationVM
+﻿@model QuotationVM 
 
 
 <form method="post">
@@ -14,7 +14,7 @@
 
 		        <select onchange="autofill()" asp-for="Jewelry.Id">
 		<option value="" disabled selected >Select a jewelry</option>
-		@*@foreach (var obj in Jewelry)
+		@*@foreach (var obj in Model.Jewelry)
 		{
 				<option>@obj.Id</option>
 		}
@@ -37,8 +37,8 @@
 		<tbody>
 			<tr>
 				<th>
-					<label Name asp-for="Material.Name">Material:</label>
-					<select Name="Material" asp-for="Material.Name">
+					<label Name asp-for="MaterialSet.Materials">Material:</label>
+					<select Name="Material" asp-for="MaterialSet.Materials">
 						<option value="" disabled selected>--Select material--</option>
 						<option>Gold</option>
 						<option>Silver</option>
@@ -47,11 +47,11 @@
 				</th>
 				@*Nhập weight *@
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" asp-for="MaterialSetMaterial.Weight" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" asp-for="MaterialSet.MaterialSetMaterials" />
 					<div class="text-end">unit:gram</div>
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="Material.Price" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Id" />
 				</th>
 				<th>
 					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.TotalPrice" />
@@ -59,22 +59,22 @@
 			</tr>
 			<tr>
 				<th>
-					<label Name asp-for="Gemstone.Name">Gemstone:</label>
-					<select asp-for="Gemstone.Name">
+					<label Name >Gemstone:</label>
+					<select >
 						<option value="" disabled selected>Select Gemstone</option>
 						<option>Diamond</option>
 						<option>Ruby</option>
 					</select>
 				</th>
 				<th>
-					<input type="number" class="form-control" placeholder="0.00" asp-for="Gemstone.Weight"/>
+					<input type="number" class="form-control" placeholder="0.00" asp-for="MaterialSet.Gemstones" />
 					<div class="text-end">unit: carat</div>
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="Gemstone.Price" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Gemstones" />
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.TotalPrice"/>
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Gemstones" />
 				</th>
 			</tr>
 			<tr>

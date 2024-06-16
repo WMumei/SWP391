@@ -57,7 +57,7 @@ namespace SWP391.Controllers
 			}
             return View();
 		}
-		public IActionResult DeletePOST(int id)
+		public IActionResult DeletePOST(int? id)
 		{
 			
 			if (id == null)
