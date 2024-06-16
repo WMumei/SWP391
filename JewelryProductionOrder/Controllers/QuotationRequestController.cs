@@ -1,20 +1,21 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Mvc;
+using Models.Repositories.Repository.IRepository;
 
 namespace SWP391.Controllers
 {
     public class QuotationRequestController : Controller
 
     {
-        private readonly ApplicationDbContext _db;
-        public QuotationRequestController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public QuotationRequestController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork=unitOfWork;
         }
         public IActionResult Index()
         {
-            List<QuotationRequest> requests = _db.QuotationRequests.ToList();
+            List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().ToList();
             return View();
         }
        public IActionResult Create()
@@ -25,22 +26,22 @@ namespace SWP391.Controllers
         public IActionResult Create(QuotationRequest obj)
         {
             obj.CreatedAt = DateTime.Now;
-            _db.QuotationRequests.Add(obj); //add object vào db
-            _db.SaveChanges(); //lưu thay đổi vào db
+            _unitOfWork.QuotationRequest.Add(obj); //add object vào db
+            _unitOfWork.Save(); //lưu thay đổi vào db
             return View();
         }
         
        
         
         [HttpPost,ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
+        public IActionResult DeletePOST(int id)
         {
-            QuotationRequest quorequest = _db.QuotationRequests.Find(id);
+            //QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
             if (quorequest == null) {
                 return NotFound();
              }
-            _db.QuotationRequests.Remove(quorequest);
-            _db.SaveChanges();
+            //_unitOfWork.QuotationRequests.Remove(quorequest);
+            //_db.SaveChanges();
             return RedirectToAction("Index");
 
         }

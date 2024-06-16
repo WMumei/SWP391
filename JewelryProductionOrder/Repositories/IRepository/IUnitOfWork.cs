@@ -10,6 +10,8 @@ namespace Models.Repositories.Repository.IRepository
     public interface IUnitOfWork
     {   
         IProductionRequestRepository ProductionRequest { get; }
+        IQuotationRequestRepository QuotationRequest { get; }
         void Save();
+        void Find(int id);
     }
 }
