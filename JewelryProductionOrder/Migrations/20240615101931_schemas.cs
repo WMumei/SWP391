@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class Schemas : Migration
+    public partial class schemas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -221,6 +221,51 @@ namespace JewelryProductionOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QuotationRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LaborPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductionRequestId = table.Column<int>(type: "int", nullable: false),
+                    MaterialSetId = table.Column<int>(type: "int", nullable: false),
+                    SalesStaffId = table.Column<int>(type: "int", nullable: false),
+                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuotationRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_MaterialSets_MaterialSetId",
+                        column: x => x.MaterialSetId,
+                        principalTable: "MaterialSets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_ProductionRequests_ProductionRequestId",
+                        column: x => x.ProductionRequestId,
+                        principalTable: "ProductionRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_Users_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_Users_SalesStaffId",
+                        column: x => x.SalesStaffId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JewelryDesigns",
                 columns: table => new
                 {
@@ -267,51 +312,6 @@ namespace JewelryProductionOrder.Migrations
                     table.ForeignKey(
                         name: "FK_JewelryDesigns_Users_ProductionStaffId",
                         column: x => x.ProductionStaffId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuotationRequests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LaborPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    JewelryId = table.Column<int>(type: "int", nullable: false),
-                    MaterialSetId = table.Column<int>(type: "int", nullable: false),
-                    SalesStaffId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuotationRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_QuotationRequests_Jewelries_JewelryId",
-                        column: x => x.JewelryId,
-                        principalTable: "Jewelries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuotationRequests_MaterialSets_MaterialSetId",
-                        column: x => x.MaterialSetId,
-                        principalTable: "MaterialSets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuotationRequests_Users_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuotationRequests_Users_SalesStaffId",
-                        column: x => x.SalesStaffId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -396,8 +396,26 @@ namespace JewelryProductionOrder.Migrations
                 columns: new[] { "Id", "Address", "CreatedAt", "CustomerId", "DesignStaffId", "ProductionStaffId", "Quantity", "SalesStaffId", "Status" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2024, 6, 14, 16, 44, 37, 761, DateTimeKind.Local).AddTicks(4972), null, null, null, 1, null, null },
-                    { 2, null, new DateTime(2024, 6, 14, 16, 44, 37, 761, DateTimeKind.Local).AddTicks(4982), null, null, null, 1, null, null }
+                    { 1, null, new DateTime(2024, 6, 15, 17, 19, 30, 120, DateTimeKind.Local).AddTicks(695), null, null, null, 1, null, null },
+                    { 2, null, new DateTime(2024, 6, 15, 17, 19, 30, 120, DateTimeKind.Local).AddTicks(707), null, null, null, 1, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Staff" },
+                    { 2, "Customer" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Address", "Email", "Name", "PhoneNumber", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, null, null, "Staff", null, 1 },
+                    { 2, null, null, "Customer", null, 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -496,11 +514,6 @@ namespace JewelryProductionOrder.Migrations
                 column: "SalesStaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests",
-                column: "JewelryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_QuotationRequests_ManagerId",
                 table: "QuotationRequests",
                 column: "ManagerId");
@@ -509,6 +522,12 @@ namespace JewelryProductionOrder.Migrations
                 name: "IX_QuotationRequests_MaterialSetId",
                 table: "QuotationRequests",
                 column: "MaterialSetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuotationRequests_ProductionRequestId",
+                table: "QuotationRequests",
+                column: "ProductionRequestId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuotationRequests_SalesStaffId",

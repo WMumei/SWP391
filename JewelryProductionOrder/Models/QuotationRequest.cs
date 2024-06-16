@@ -19,6 +19,11 @@ namespace JewelryProductionOrder.Models
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]
         public Jewelry? Jewelry { get; set; }
+
+        //public int ProductionRequestId { get; set; }
+        //[ForeignKey("ProductionRequestId")]
+        //public ProductionRequest ProductionRequest { get; set; }
+
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet? MaterialSet { get; set; }

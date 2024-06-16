@@ -14,23 +14,23 @@ namespace SWP391.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public IActionResult Create(ProductionRequest obj)
-        {
-            obj.CreatedAt = DateTime.Now;
+        //[HttpPost]
+        //public IActionResult Create(ProductionRequest obj)
+        //{
+        //    obj.CreatedAt = DateTime.Now;
 
-            OrderVM orderVM = new OrderVM
-            {
-                ProductionRequest = obj,
-                Customer = new User()
-            };
-            return View("Checkout", orderVM);
-        }
+        //    OrderVM orderVM = new OrderVM
+        //    {
+        //        ProductionRequest = obj,
+        //        Customer = new User()
+        //    };
+        //    return View("Checkout", orderVM);
+        //}
         public IActionResult Checkout()
         {
             OrderVM orderVM = new OrderVM

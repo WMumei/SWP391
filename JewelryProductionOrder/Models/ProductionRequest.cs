@@ -27,7 +27,7 @@ namespace JewelryProductionOrder.Models
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 
-
+        public QuotationRequest? QuotationRequest { get; set; }
 
 
     }

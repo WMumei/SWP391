@@ -12,7 +12,6 @@ namespace JewelryProductionOrder.Models
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet MaterialSet { get; set; }
-
         public decimal Weight { get; set; }
     }
 }

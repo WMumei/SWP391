@@ -71,11 +71,11 @@ namespace JewelryProductionOrder.Data
                 .WithMany()
                 .HasForeignKey(t => t.SalesStaffId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<QuotationRequest>()
-                .HasOne(t => t.Jewelry)
-                .WithMany()
-                .HasForeignKey(t => t.JewelryId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<QuotationRequest>()
+            //    .HasOne(t => t.Jewelry)
+            //    .WithMany()
+            //    .HasForeignKey(t => t.JewelryId)
+            //    .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<QuotationRequest>()
                 .HasOne(t => t.MaterialSet)
                 .WithMany()
@@ -154,21 +154,26 @@ namespace JewelryProductionOrder.Data
                                    new User { Id = 1, Name = "Staff", RoleId = 1 },
                                    new User { Id = 2, Name = "Customer", RoleId = 2 }
                 );
-			modelBuilder.Entity<QuotationRequest>().HasData(
-		            new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
-		            new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
-	            );
-			#endregion
+            modelBuilder.Entity<Material>().HasData(
+                                   new Material { Id = 1, Name = "Gold", Price = 1000, Type = "Metal" },
+                                   new Material { Id = 2, Name = "Silver", Price = 200, Type = "Metal" },
+                                   new Material { Id = 3, Name = "Diamond", Price = 200000, Type = "Gemstone" }
+                                                                     );
+            //modelBuilder.Entity<QuotationRequest>().HasData(
+            //        new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
+            //        new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
+            //    );
+            #endregion
 
-			#region OneToOne
-			//modelBuilder.Entity<Jewelry>()
-			//        .HasOne(e => e.WarrantyCard)
-			//        .WithOne(e => e.Jewelry)
-			//        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
-			//        .IsRequired();
+            #region OneToOne
+            //modelBuilder.Entity<Jewelry>()
+            //        .HasOne(e => e.WarrantyCard)
+            //        .WithOne(e => e.Jewelry)
+            //        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
+            //        .IsRequired();
 
-			#endregion
-		}
+            #endregion
+        }
 
     }
 }

@@ -17,6 +17,7 @@ namespace Models.Repositories.Repository
 
         public IProductionRequestRepository ProductionRequest { get; private set; }
         public IUserRepository User { get; private set; }
+        public IJewelryRepository Jewelry { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;

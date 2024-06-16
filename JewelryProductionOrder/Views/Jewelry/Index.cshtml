@@ -1,4 +1,5 @@
-﻿<form method="post">
+﻿@model List<Jewelry>
+<form method="post">
     <div>
         <div>
             <h2>View Jewelry</h2>
@@ -8,22 +9,42 @@
             <thead>
                 <tr class="fw-normal">
                     <th>Id</th>
+                    <th>Created At</th>
                     <th>Name</th>
+                    <th>Materials</th>
                     <th>Description</th>
-                    <th width="13%">Image</th>
-                    <th>Design</th>
                     <th>Status</th>
+@*                     <th width="13%">Image</th>
+                    <th>Design</th>
                     <th>Customer</th>
                     <th>Staffs</th>
                     <th>Production Request</th>
                     <th>Quotation Request</th>
-                    <th>Warranty Card</th>
+                    <th>Warranty Card</th> *@
                 </tr>
             </thead>
             <tbody>
             <tr>
-                <td>1</td>
-                <td>2024</td>
+                    @foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+                    {
+					<tr>
+
+						<td>@obj.Id</td>
+						<td>@obj.CreatedAt</td>
+						<td>@obj.Name</td>
+						<td>@obj?.Customer?.Name</td>
+
+							@if (obj.MaterialSet is not null)
+							{
+							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
+							}
+							else
+							{
+							<td><a asp-controller="MaterialSet" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+							}
+
+					</tr>
+                    }
             </tr>
             </tbody>
         </table>

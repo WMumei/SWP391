@@ -11,6 +11,7 @@ namespace Models.Repositories.Repository.IRepository
     {   
         IProductionRequestRepository ProductionRequest { get; }
         IUserRepository User { get; }
+        IJewelryRepository Jewelry { get; }
         void Save();
     }
 }
