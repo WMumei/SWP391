@@ -18,12 +18,21 @@ namespace Models.Repositories.Repository
         public IProductionRequestRepository ProductionRequest { get; private set; }
         public IUserRepository User { get; private set; }
         public IJewelryRepository Jewelry { get; private set; }
-        public UnitOfWork(ApplicationDbContext db)
+		public IMaterialRepository Material { get; private set; }
+		public IMaterialSetRepository MaterialSet { get; private set; }
+        public IGemstoneRepository Gemstone { get; private set; }
+        public IMaterialSetMaterialRepository MaterialSetMaterial { get; private set; }
+		public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             ProductionRequest = new ProductionRequestRepository(_db);
             User = new UserRepository(_db);
-        }
+			Jewelry = new JewelryRepository(_db);
+			Material = new MaterialRepository(_db);
+			MaterialSet = new MaterialSetRepository(_db);
+			Gemstone = new GemstoneRepository(_db);
+			MaterialSetMaterial = new MaterialSetMaterialRepository(_db);
+		}
 
         public void Save()
         {

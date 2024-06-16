@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240616082523_UpdateSeed")]
+    partial class UpdateSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,15 +89,6 @@ namespace JewelryProductionOrder.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Gemstones");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Diamond",
-                            Price = 200000m,
-                            Weight = 0m
-                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
@@ -155,7 +149,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 16, 16, 43, 8, 911, DateTimeKind.Local).AddTicks(3565),
+                            CreatedAt = new DateTime(2024, 6, 16, 15, 25, 22, 642, DateTimeKind.Local).AddTicks(573),
                             Description = "9999Gold for the material and 1 carat diamond for everyday where",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -228,6 +222,9 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("MaterialSetId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -236,6 +233,8 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialSetId");
 
                     b.ToTable("Materials");
 
@@ -251,6 +250,12 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Name = "Silver",
                             Price = 200m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Diamond",
+                            Price = 200000m
                         });
                 });
 
@@ -373,13 +378,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 16, 16, 43, 8, 911, DateTimeKind.Local).AddTicks(3296),
+                            CreatedAt = new DateTime(2024, 6, 16, 15, 25, 22, 642, DateTimeKind.Local).AddTicks(385),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 16, 16, 43, 8, 911, DateTimeKind.Local).AddTicks(3309),
+                            CreatedAt = new DateTime(2024, 6, 16, 15, 25, 22, 642, DateTimeKind.Local).AddTicks(396),
                             Quantity = 1
                         });
                 });
@@ -673,10 +678,17 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("ProductionStaff");
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Material", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", null)
+                        .WithMany("Materials")
+                        .HasForeignKey("MaterialSetId");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.Material", "Material")
-                        .WithMany("MaterialSetMaterials")
+                        .WithMany()
                         .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -818,14 +830,11 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("WarrantyCard");
                 });
 
-            modelBuilder.Entity("JewelryProductionOrder.Models.Material", b =>
-                {
-                    b.Navigation("MaterialSetMaterials");
-                });
-
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
                     b.Navigation("MaterialSetMaterials");
+
+                    b.Navigation("Materials");
                 });
 #pragma warning restore 612, 618
         }

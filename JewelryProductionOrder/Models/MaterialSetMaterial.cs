@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
 {
-    [PrimaryKey(nameof(MaterialId), nameof(MaterialSetId))]
+    //[PrimaryKey(nameof(MaterialId), nameof(MaterialSetId))]
     public class MaterialSetMaterial
     {
         public int MaterialId { get; set; }
