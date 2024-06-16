@@ -14,6 +14,7 @@ namespace Models.Repositories.Repository.IRepository
         IJewelryRepository Jewelry { get; }
         IQuotationRequestRepository QuotationRequest { get; }
         void Save();
-        void Find(int id);
+       // void Get();
+        //void Find(int id);
     }
 }

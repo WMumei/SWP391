@@ -32,19 +32,57 @@ namespace SWP391.Controllers
             return View();
         }
         
-       
-        
-        //[HttpPost,ActionName("Delete")]
-        //public IActionResult DeletePOST(int id)
-        //{
-            //QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
-           // if (quorequest == null) {
-              //  return NotFound();
-            // }
-            //_unitOfWork.QuotationRequests.Remove(quorequest);
-            //_db.SaveChanges();
-           // return RedirectToAction("Index");
-
+        public IActionResult Edit(int id)
+        {
+            if(id == 0)
+            {
+                return NotFound();
+            }
+            QuotationRequest? objFromDb = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (objFromDb == null)
+			{
+				return NotFound();
+			}
+        return View(objFromDb);
         }
-    }
+        [HttpPost]
+        public IActionResult Edit(QuotationRequest obj)
+        {
+            if (ModelState.IsValid)
+            {
+                obj.CreatedAt = DateTime.Now;
+                _unitOfWork.QuotationRequest.Update(obj);
+                _unitOfWork.Save();
+				return RedirectToAction("Index");
+			}
+            return View();
+		}
+		public IActionResult DeletePOST(int id)
+		{
+			
+			if (id == null)
+			{
+				return NotFound();
+			}
+			QuotationRequest objFromDb = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (objFromDb == null)
+			{
+				return NotFound();
+			}
+			return View(objFromDb);
+
+		}
+		[HttpPost,ActionName("Delete")]
+        public IActionResult Delete(int? id)
+        {
+            QuotationRequest quorequest = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (quorequest == null) {
+			 return NotFound();
+			 }
+			_unitOfWork.QuotationRequest.Remove(quorequest);
+			_unitOfWork.Save();
+			return RedirectToAction("Index");
+
+		}
+}
 }

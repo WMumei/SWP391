@@ -22,8 +22,8 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.SaveChanges();
         }
-
-        public void Update(QuotationRequest request)
+		
+		public void Update(QuotationRequest request)
         {
             _db.QuotationRequests.Update(request);
         }

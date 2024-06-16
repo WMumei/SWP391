@@ -37,7 +37,7 @@
 		<tbody>
 			<tr>
 				<th>
-					<label Name>Material:</label>
+					<label Name asp-for="Material.Name">Material:</label>
 					<select Name="Material" asp-for="Material.Name">
 						<option value="" disabled selected>--Select material--</option>
 						<option>Gold</option>
@@ -47,39 +47,39 @@
 				</th>
 				@*Nhập weight *@
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" asp-for="MaterialSetMaterial.Weight" />
 					<div class="text-end">unit:gram</div>
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="Material.Price" />
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.TotalPrice" />
 				</th>
 			</tr>
 			<tr>
 				<th>
-					<label Name>Gemstone:</label>
-					<select>
+					<label Name asp-for="Gemstone.Name">Gemstone:</label>
+					<select asp-for="Gemstone.Name">
 						<option value="" disabled selected>Select Gemstone</option>
 						<option>Diamond</option>
 						<option>Ruby</option>
 					</select>
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
+					<input type="number" class="form-control" placeholder="0.00" asp-for="Gemstone.Weight"/>
 					<div class="text-end">unit: carat</div>
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="Gemstone.Price" />
 				</th>
 				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
+					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.TotalPrice"/>
 				</th>
 			</tr>
 			<tr>
 				<th>
-					<label asp-for="LaborPrice">Labor</label>
+					<label asp-for="QuotationRequest.LaborPrice">Labor</label>
 				</th>
 				<th>
 					<!--<input Name="MaterialPrice" type="number" class="form-control" />-->
@@ -88,7 +88,7 @@
 					<!--<input Name="MaterialPrice" type="number" class="form-control" />-->
 				</th>
 				<th>
-					<input type="number" class="form-control" placeholder="0 VND" asp-for="LaborPrice" />
+					<input type="number" class="form-control" placeholder="0 VND" asp-for="QuotationRequest.LaborPrice" />
 				</th>
 			</tr>
 			<tr>
@@ -130,9 +130,9 @@
 					<th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
 					</tr>*@
 					<tr>
-						<th asp-for="TotalPrice">Total:</th>
+						<th asp-for="QuotationRequest.TotalPrice">Total:</th>
 
-						<th><input asp-for="TotalPrice" class="form-control" placeholder="0 VND" /></th>
+						<th><input asp-for="QuotationRequest.TotalPrice" class="form-control" placeholder="0 VND" /></th>
 
 					</tr>
 				</tbody>
