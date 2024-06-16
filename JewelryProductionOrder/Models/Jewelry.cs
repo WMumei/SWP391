@@ -9,24 +9,23 @@ namespace JewelryProductionOrder.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Image {  get; set; }
-        public string Status { get; set; }
+        public string? Image {  get; set; }
+        public string? Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int MaterialSetId { get; set; }
+        public int? MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet? MaterialSet { get; set; }
-
         public WarrantyCard? WarrantyCard { get; set; }
 
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
 
-        public int SalesStaffId { get; set; }
+        public int? SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 
-        public int ProductionStaffId { get; set; }
+        public int? ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
         public User? ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }

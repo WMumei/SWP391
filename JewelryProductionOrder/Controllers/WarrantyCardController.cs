@@ -1,17 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JewelryProductionOrder.Data;
+using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Repositories.IRepository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JewelryProductionOrder.Controllers
 {
-    public class JewelryController : Controller
+    public class WarrantyCardController : Controller
     {
-
-        public IActionResult Index()
+        private readonly ApplicationDbContext _db;
+        private readonly IWarrantyCardRepository _warrantyCardRepo;
+        public WarrantyCardController(ApplicationDbContext db)
         {
-            return View();
+            _db = db;
         }
         public IActionResult Create()
         {
             return View();
         }
+
+        public IActionResult Index()
+        {
+            List<WarrantyCard> objWarrantyCardList = _warrantyCardRepo.GetAll().ToList();
+            return View();
+        }
+
     }
 }

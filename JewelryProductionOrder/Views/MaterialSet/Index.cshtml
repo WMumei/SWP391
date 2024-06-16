@@ -1,22 +1,18 @@
-﻿@model List<ProductionRequest>
+﻿@* @model List<MaterialSet>
 
 <div class="container">
 	<div class="row">
 		<div class="col-6">
-			<h2>View Production Request</h2>
+			<h2>View Material</h2>
 
         </div>
-        <div class="col-6 text-end">
-            <a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create New
-            </a>
-        </div>
+
     </div>
     <table class ="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Created At</th>
+                <th></th>
+                <th></th>
                 <th>Quantity</th>
                 <th>Customer</th>
                 <th>Staffs</th>
@@ -34,6 +30,14 @@
                 <td>@obj.CreatedAt</td>
                 <td>@obj.Quantity</td>
                 <td>@obj?.Customer?.Name</td>
+				@if (obj.SalesStaff is not null)
+				{
+					<td>@obj.SalesStaff.Name</td>
+				}
+				else
+				{
+					<td><a asp-controller="MaterialSet" asp-action="TakeRequest" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Take</a></td>
+				}
                 @if (obj.QuotationRequest is not null)
                 {
                     <td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
@@ -54,3 +58,4 @@
 </div>
         <!-- <div asp-validation-summary="All"></div> -->
         
+ *@

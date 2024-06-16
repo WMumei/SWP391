@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
@@ -30,7 +32,9 @@ namespace JewelryProductionOrder.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,7 +59,8 @@ namespace JewelryProductionOrder.Migrations
                 columns: table => new
                 {
                     MaterialId = table.Column<int>(type: "int", nullable: false),
-                    MaterialSetId = table.Column<int>(type: "int", nullable: false)
+                    MaterialSetId = table.Column<int>(type: "int", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,8 +85,10 @@ namespace JewelryProductionOrder.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -103,7 +110,7 @@ namespace JewelryProductionOrder.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SalesStaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -123,11 +130,14 @@ namespace JewelryProductionOrder.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    DesignStaffId = table.Column<int>(type: "int", nullable: false),
-                    ProductionStaffId = table.Column<int>(type: "int", nullable: false),
-                    SalesStaffId = table.Column<int>(type: "int", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    DesignStaffId = table.Column<int>(type: "int", nullable: true),
+                    ProductionStaffId = table.Column<int>(type: "int", nullable: true),
+                    SalesStaffId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,58 +169,6 @@ namespace JewelryProductionOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SalesStaffCustomers",
-                columns: table => new
-                {
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    SalesStaffId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SalesStaffCustomers", x => new { x.CustomerId, x.SalesStaffId });
-                    table.ForeignKey(
-                        name: "FK_SalesStaffCustomers_Users_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SalesStaffCustomers_Users_SalesStaffId",
-                        column: x => x.SalesStaffId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WarrantyCards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    SalesStaffId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WarrantyCards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WarrantyCards_Users_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_WarrantyCards_Users_SalesStaffId",
-                        column: x => x.SalesStaffId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Jewelries",
                 columns: table => new
                 {
@@ -220,8 +178,8 @@ namespace JewelryProductionOrder.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MaterialSetId = table.Column<int>(type: "int", nullable: false),
-                    WarrantyCardId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     SalesStaffId = table.Column<int>(type: "int", nullable: false),
                     ProductionStaffId = table.Column<int>(type: "int", nullable: false),
@@ -260,12 +218,51 @@ namespace JewelryProductionOrder.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuotationRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LaborPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductionRequestId = table.Column<int>(type: "int", nullable: false),
+                    MaterialSetId = table.Column<int>(type: "int", nullable: false),
+                    SalesStaffId = table.Column<int>(type: "int", nullable: false),
+                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuotationRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Jewelries_WarrantyCards_WarrantyCardId",
-                        column: x => x.WarrantyCardId,
-                        principalTable: "WarrantyCards",
+                        name: "FK_QuotationRequests_MaterialSets_MaterialSetId",
+                        column: x => x.MaterialSetId,
+                        principalTable: "MaterialSets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_ProductionRequests_ProductionRequestId",
+                        column: x => x.ProductionRequestId,
+                        principalTable: "ProductionRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_Users_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_QuotationRequests_Users_SalesStaffId",
+                        column: x => x.SalesStaffId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -278,6 +275,7 @@ namespace JewelryProductionOrder.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DesignFile = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     DesignStaffId = table.Column<int>(type: "int", nullable: false),
                     ProductionStaffId = table.Column<int>(type: "int", nullable: false),
@@ -320,49 +318,120 @@ namespace JewelryProductionOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuotationRequests",
+                name: "WarrantyCards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LaborPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     JewelryId = table.Column<int>(type: "int", nullable: false),
-                    MaterialSetId = table.Column<int>(type: "int", nullable: false),
-                    SalesStaffId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    SalesStaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuotationRequests", x => x.Id);
+                    table.PrimaryKey("PK_WarrantyCards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QuotationRequests_Jewelries_JewelryId",
+                        name: "FK_WarrantyCards_Jewelries_JewelryId",
                         column: x => x.JewelryId,
                         principalTable: "Jewelries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_QuotationRequests_MaterialSets_MaterialSetId",
-                        column: x => x.MaterialSetId,
-                        principalTable: "MaterialSets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuotationRequests_Users_ManagerId",
-                        column: x => x.ManagerId,
+                        name: "FK_WarrantyCards_Users_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_QuotationRequests_Users_SalesStaffId",
+                        name: "FK_WarrantyCards_Users_SalesStaffId",
                         column: x => x.SalesStaffId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Deliveries",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    SalesStaffId = table.Column<int>(type: "int", nullable: false),
+                    JewelryId = table.Column<int>(type: "int", nullable: false),
+                    WarrantyCardId = table.Column<int>(type: "int", nullable: false),
+                    DeliveredAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deliveries", x => new { x.CustomerId, x.SalesStaffId, x.JewelryId, x.WarrantyCardId });
+                    table.ForeignKey(
+                        name: "FK_Deliveries_Jewelries_JewelryId",
+                        column: x => x.JewelryId,
+                        principalTable: "Jewelries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_Users_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_Users_SalesStaffId",
+                        column: x => x.SalesStaffId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_WarrantyCards_WarrantyCardId",
+                        column: x => x.WarrantyCardId,
+                        principalTable: "WarrantyCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductionRequests",
+                columns: new[] { "Id", "Address", "CreatedAt", "CustomerId", "DesignStaffId", "ProductionStaffId", "Quantity", "SalesStaffId", "Status" },
+                values: new object[,]
+                {
+                    { 1, null, new DateTime(2024, 6, 15, 17, 19, 30, 120, DateTimeKind.Local).AddTicks(695), null, null, null, 1, null, null },
+                    { 2, null, new DateTime(2024, 6, 15, 17, 19, 30, 120, DateTimeKind.Local).AddTicks(707), null, null, null, 1, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Staff" },
+                    { 2, "Customer" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Address", "Email", "Name", "PhoneNumber", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, null, null, "Staff", null, 1 },
+                    { 2, null, null, "Customer", null, 2 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deliveries_JewelryId",
+                table: "Deliveries",
+                column: "JewelryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deliveries_SalesStaffId",
+                table: "Deliveries",
+                column: "SalesStaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deliveries_WarrantyCardId",
+                table: "Deliveries",
+                column: "WarrantyCardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Jewelries_CustomerId",
@@ -388,11 +457,6 @@ namespace JewelryProductionOrder.Migrations
                 name: "IX_Jewelries_SalesStaffId",
                 table: "Jewelries",
                 column: "SalesStaffId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Jewelries_WarrantyCardId",
-                table: "Jewelries",
-                column: "WarrantyCardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JewelryDesigns_CustomerId",
@@ -450,11 +514,6 @@ namespace JewelryProductionOrder.Migrations
                 column: "SalesStaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests",
-                column: "JewelryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_QuotationRequests_ManagerId",
                 table: "QuotationRequests",
                 column: "ManagerId");
@@ -465,13 +524,14 @@ namespace JewelryProductionOrder.Migrations
                 column: "MaterialSetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuotationRequests_SalesStaffId",
+                name: "IX_QuotationRequests_ProductionRequestId",
                 table: "QuotationRequests",
-                column: "SalesStaffId");
+                column: "ProductionRequestId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalesStaffCustomers_SalesStaffId",
-                table: "SalesStaffCustomers",
+                name: "IX_QuotationRequests_SalesStaffId",
+                table: "QuotationRequests",
                 column: "SalesStaffId");
 
             migrationBuilder.CreateIndex(
@@ -485,6 +545,12 @@ namespace JewelryProductionOrder.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_WarrantyCards_JewelryId",
+                table: "WarrantyCards",
+                column: "JewelryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WarrantyCards_SalesStaffId",
                 table: "WarrantyCards",
                 column: "SalesStaffId");
@@ -493,6 +559,9 @@ namespace JewelryProductionOrder.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Deliveries");
+
             migrationBuilder.DropTable(
                 name: "JewelryDesigns");
 
@@ -506,7 +575,7 @@ namespace JewelryProductionOrder.Migrations
                 name: "QuotationRequests");
 
             migrationBuilder.DropTable(
-                name: "SalesStaffCustomers");
+                name: "WarrantyCards");
 
             migrationBuilder.DropTable(
                 name: "Materials");
@@ -519,9 +588,6 @@ namespace JewelryProductionOrder.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductionRequests");
-
-            migrationBuilder.DropTable(
-                name: "WarrantyCards");
 
             migrationBuilder.DropTable(
                 name: "Users");
