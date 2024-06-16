@@ -28,5 +28,11 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Jewelry.Add(obj);
             return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
         }
+
+        public IActionResult Index()
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll().ToList();
+			return View(jewelries);
+        }
     }
 }

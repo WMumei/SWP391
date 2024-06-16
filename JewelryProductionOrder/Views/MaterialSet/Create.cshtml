@@ -1,17 +1,40 @@
 ﻿@model MaterialSetVM
-<style>
 
-</style>
 <form method="post" class="container">
 	<div class="caption-top row">
-		<h2>PAYMENT AND DELIVERY</h2>
+		<h2>Choose material for jewelry @Model.Jewelry.Name</h2>
 	</div>
 	<div class="form-group">
 		<div class="row">
-			<label asp-for="M.Quantity">Quantity</label>
-			<input asp-for="ProductionRequest.Quantity" type="text" class="form-control" />
+			<div class="col-10">
+				<input asp-for="@Model.Jewelry.Id" class="ms-2" type="hidden" />
+				<div class="form-floating py-2 col-12">
+					<select asp-for="@Model.Gemstone.Id" asp-items="@Model.GemstoneList" class="form-select border-0 shadow">
+						<option disabled selected>--Select Gemstone--</option>
+					</select>
+					<label asp-for="Gemstone" class="ms-2"></label>
+					@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
+				</div>
+				<div class="row">
+
+					<div class="form-floating py-2 col-6">
+						@* Check if we can use @Model.MaterialSet.Materials *@
+						<select asp-for="@Model.Material.Id" asp-items="@Model.MaterialList" class="form-select border-0 shadow">
+							<option disabled selected>--Select Material--</option>
+						</select>
+						<label asp-for="Material" class="ms-2"></label>
+						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
+
+					</div>
+					<div class="col-6 py-2 form-floating">
+						<input asp-for="Weight" class="form-control border-0 shadow" />
+						<label asp-for="Weight" class=""></label>
+					</div>
+				</div>
+			</div>
 		</div>
-		
 	</div>
+	<button type="submit" class="btn btn-primary form-control">Create</button>
+
 
 </form>

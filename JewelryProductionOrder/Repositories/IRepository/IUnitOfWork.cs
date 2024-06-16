@@ -12,6 +12,11 @@ namespace Models.Repositories.Repository.IRepository
         IProductionRequestRepository ProductionRequest { get; }
         IUserRepository User { get; }
         IJewelryRepository Jewelry { get; }
+		IMaterialRepository Material { get; }
+        IMaterialSetRepository MaterialSet { get; }
+		IGemstoneRepository Gemstone { get; }
+		IMaterialSetMaterialRepository MaterialSetMaterial { get; }
+		void Save();
         IQuotationRequestRepository QuotationRequest { get; }
         void Save();
        // void Get();
