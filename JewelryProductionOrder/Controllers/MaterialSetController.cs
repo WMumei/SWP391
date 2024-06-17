@@ -49,7 +49,9 @@ namespace SWP391.Controllers
             materialSet.Gemstones.Add(gemstone);
 			_unitOfWork.MaterialSet.Add(materialSet);
 			_unitOfWork.Save();
-            materialSet.MaterialSetMaterials.First().Weight = Convert.ToDecimal(materialSetVM.Weight);
+            var weight = Convert.ToDecimal(materialSetVM.Weight);
+            materialSet.MaterialSetMaterials.First().Weight = weight;
+			materialSet.TotalPrice = material.Price * weight + gemstone.Price;
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
 			_unitOfWork.Save();
@@ -58,7 +60,7 @@ namespace SWP391.Controllers
         }
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAllWithCustomers().ToList();
+            List<MaterialSet> obj = _unitOfWork.MaterialSet.GetAll().ToList();
             return View(obj);
         }
 

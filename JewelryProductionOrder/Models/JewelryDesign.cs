@@ -13,15 +13,15 @@ namespace JewelryProductionOrder.Models
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
 
-        public int DesignStaffId { get; set; }
+        public int? DesignStaffId { get; set; }
         [ForeignKey("DesignStaffId")]
         public User? DesignStaff { get; set; }
 
-        public int ProductionStaffId { get; set; }
+        public int? ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
         public User? ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }

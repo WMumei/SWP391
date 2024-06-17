@@ -148,21 +148,23 @@ namespace JewelryProductionOrder.Data
 				);
 			modelBuilder.Entity<Role>().HasData(
 				new Role { Id = 1, Name = "Staff" },
-				new Role { Id = 2, Name = "Customer" }
+				new Role { Id = 2, Name = "Customer" },
+				new Role { Id = 3, Name = "Manager" }
 				);
 			modelBuilder.Entity<User>().HasData(
-				new User { Id = 1, Name = "Staff", RoleId = 1 },
-				new User { Id = 2, Name = "Customer", RoleId = 2 }
+				new User { Id = 1, Name = "Staff 1", RoleId = 1 },
+				new User { Id = 2, Name = "Customer 1", RoleId = 2 },
+				new User { Id = 3, Name = "Manager 1", RoleId = 3 }
 				);
 			modelBuilder.Entity<Material>().HasData(
 				new Material { Id = 1, Name = "Gold", Price = 1000 },
-				new Material { Id = 2, Name = "Silver", Price = 200 }
+				new Material { Id = 2, Name = "Silver", Price = 1 }
 				);
 			modelBuilder.Entity<Gemstone>().HasData(
-				new Gemstone { Id = 1, Name = "Diamond", Price = 200000 }
+				new Gemstone { Id = 1, Name = "Diamond", Price = 200000, Weight=2 }
 				);
 			modelBuilder.Entity<Jewelry>().HasData(
-				new Jewelry { Id = 1, Name = "Diamond Necklace", Description="9999Gold for the material and 1 carat diamond for everyday where", Status = "", CreatedAt = DateTime.Now, ProductionRequestId = 1 });
+				new Jewelry { Id = 1, Name = "Diamond Necklace", Description="9999 Gold for the material and 1 carat diamond for everyday wear", Status = "", CreatedAt = DateTime.Now, ProductionRequestId = 1 });
 			//modelBuilder.Entity<QuotationRequest>().HasData(
 			//        new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
 			//        new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
@@ -181,7 +183,7 @@ namespace JewelryProductionOrder.Data
 			modelBuilder.Entity<MaterialSet>()
 				.HasMany(e => e.Materials)
 				.WithMany(e => e.MaterialSets)
-				.UsingEntity<MaterialSetMaterial>();
+				.UsingEntity<MaterialSetMaterial>(j => j.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP"));
 			#endregion
 		}
 

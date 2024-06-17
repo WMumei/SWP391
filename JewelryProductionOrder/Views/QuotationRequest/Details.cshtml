@@ -10,11 +10,11 @@
 				<input asp-for="@Model.Jewelry.Id" hidden />
 				<input asp-for="@Model.MaterialSet.Id" hidden />
 				<div class="col-12 py-2 form-floating">
-					<input asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
+					<input disabled asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
 					<label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
 				</div>
 				<div class="col-12 py-2 form-floating">
-					<input asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
+					<input disabled asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
 					<label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
 				</div>
 				<div class="col-12 py-2 form-floating">
@@ -42,7 +42,7 @@
 				</div>
 				<div class="col-12 py-2 form-floating">
 					<h2>Materials</h2>
-					<table class ="table table-bordered table-striped">
+					<table class="table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -52,20 +52,20 @@
 							</tr>
 						</thead>
 						<tbody>
-								@foreach (Material material in @Model.MaterialSet.Materials)
-								{
-									var weight = material.MaterialSetMaterials.FirstOrDefault(
-												s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
-									<tr>
-										<td>@material.Name</td>
-										<td>@weight</td>
-										<td>@material.Price</td>
-										<td>@(weight * material.Price)</td>
-									</tr>
-								}
+							@foreach (Material material in @Model.MaterialSet.Materials)
+							{
+								var weight = material.MaterialSetMaterials.FirstOrDefault(
+								s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+								<tr>
+									<td>@material.Name</td>
+									<td>@weight</td>
+									<td>@material.Price</td>
+									<td>@(weight * material.Price)</td>
+								</tr>
+							}
 						</tbody>
 					</table>
-					
+
 				</div>
 
 
