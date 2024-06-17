@@ -65,11 +65,11 @@ namespace SWP391.Controllers
 		public IActionResult ManagerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
-			User manager = _unitOfWork.User.Get(u => u.Id == 3);
+			User manager = _unitOfWork.User.Get(u => u.Id == "3");
 			if (req is not null)
 			{
 				req.ManagerId = manager.Id;
-				req.Status = $"Approved by Manager {manager.Name}";
+				req.Status = $"Approved by Manager";
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Index");
@@ -77,11 +77,11 @@ namespace SWP391.Controllers
 		public IActionResult CustomerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
-			User customer = _unitOfWork.User.Get(u => u.Id == 2);
+			User customer = _unitOfWork.User.Get(u => u.Id == "2");
 			if (req is not null)
 			{
 				req.CustomerId = customer.Id;
-				req.Status = $"Approved by Manager {customer.Name}";
+				req.Status = $"Approved by Customer";
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Index");

@@ -11,7 +11,7 @@ namespace JewelryProductionOrder.Models
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiredAt { get; set; }
 
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
 
@@ -20,7 +20,7 @@ namespace JewelryProductionOrder.Models
         public Jewelry Jewelry { get; set; } = null!;
 
         [Required]
-        public int SalesStaffId { get; set; }
+        public string SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
     }

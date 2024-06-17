@@ -1,10 +1,12 @@
 ﻿using JewelryProductionOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace JewelryProductionOrder.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
@@ -19,7 +21,7 @@ namespace JewelryProductionOrder.Data
 		public DbSet<MaterialSet> MaterialSets { get; set; }
 		public DbSet<MaterialSetMaterial> MaterialSetsMaterials { get; set; }
 		public DbSet<Post> Posts { get; set; }
-		public DbSet<Role> Roles { get; set; }
+		//public DbSet<Role> Roles { get; set; }
 		public DbSet<Delivery> Deliveries { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<WarrantyCard> WarrantyCards { get; set; }
@@ -28,8 +30,9 @@ namespace JewelryProductionOrder.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			#region MultipleCascade
-			modelBuilder.Entity<WarrantyCard>()
+			base.OnModelCreating(modelBuilder);
+            #region MultipleCascade
+            modelBuilder.Entity<WarrantyCard>()
 				.HasOne(t => t.SalesStaff)
 				.WithMany()
 				.HasForeignKey(t => t.SalesStaffId)
@@ -145,16 +148,6 @@ namespace JewelryProductionOrder.Data
 			modelBuilder.Entity<ProductionRequest>().HasData(
 				new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity = 1 },
 				new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity = 1 }
-				);
-			modelBuilder.Entity<Role>().HasData(
-				new Role { Id = 1, Name = "Staff" },
-				new Role { Id = 2, Name = "Customer" },
-				new Role { Id = 3, Name = "Manager" }
-				);
-			modelBuilder.Entity<User>().HasData(
-				new User { Id = 1, Name = "Staff 1", RoleId = 1 },
-				new User { Id = 2, Name = "Customer 1", RoleId = 2 },
-				new User { Id = 3, Name = "Manager 1", RoleId = 3 }
 				);
 			modelBuilder.Entity<Material>().HasData(
 				new Material { Id = 1, Name = "Gold", Price = 1000 },
