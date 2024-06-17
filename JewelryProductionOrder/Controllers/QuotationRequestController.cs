@@ -2,9 +2,12 @@
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Repositories;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
+using System.Security.Claims;
 
 namespace SWP391.Controllers
 {
@@ -19,20 +22,21 @@ namespace SWP391.Controllers
 		public IActionResult Index()
         {
             List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().ToList();
-            return View();
+            return View(requests);
         }
 
         public IActionResult Details(int jId)
         {
             QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
             QuotationRequestVM vm = new QuotationRequestVM
             {
                 QuotationRequest = request,
                 Jewelry = jewelry,
-                MaterialSet = jewelry.MaterialSet
+                MaterialSet = materialSet
             };
-            return View(request);
+            return View(vm);
         }
 
         public IActionResult Create(int jId)
@@ -49,42 +53,53 @@ namespace SWP391.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Create(QuotationRequestVM vm)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			vm.QuotationRequest.SalesStaffId = userId;
+            
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
             vm.QuotationRequest.Status = "Pending";
             MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == vm.MaterialSet.Id);
 			vm.QuotationRequest.MaterialSetId = materialSet.Id;
             vm.QuotationRequest.JewelryId = vm.Jewelry.Id;
 			vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
-			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
+            _unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
-			return View("Details", new { jId = vm.Jewelry.Id });
+			return RedirectToAction("Index", "Jewelry");
+			return RedirectToAction("Details", new { jId = vm.Jewelry.Id });
         }
-
+		[Authorize(Roles = SD.Role_Manager)]
 		public IActionResult ManagerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
-			User manager = _unitOfWork.User.Get(u => u.Id == "3");
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is not null)
 			{
-				req.ManagerId = manager.Id;
+				req.ManagerId = userId;
 				req.Status = $"Approved by Manager";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index");
+			return RedirectToAction("Index", "Jewelry");
+			return RedirectToAction("Details", new { jId = req.JewelryId});
 		}
+		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
-			User customer = _unitOfWork.User.Get(u => u.Id == "2");
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is not null)
 			{
-				req.CustomerId = customer.Id;
+				req.CustomerId = userId;
 				req.Status = $"Approved by Customer";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index");
+			return RedirectToAction("Index", "Home");
+            return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
 		//[HttpPost,ActionName("Delete")]

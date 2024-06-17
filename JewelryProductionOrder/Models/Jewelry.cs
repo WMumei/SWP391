@@ -33,5 +33,6 @@ namespace JewelryProductionOrder.Models
         public ProductionRequest ProductionRequest { get; set; }
         public QuotationRequest? QuotationRequest { get; set; }
 
+        public List<JewelryDesign> JewelryDesigns { get; } = [];
     }
 }

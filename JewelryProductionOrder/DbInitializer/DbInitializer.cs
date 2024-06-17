@@ -37,6 +37,21 @@ namespace JewelryProductionOrder.DbInitializer
             }
             catch(Exception ex) { }
 
+            if (!_roleManager.RoleExistsAsync(SD.Role_Manager).GetAwaiter().GetResult())
+            {
+				_roleManager.CreateAsync(new IdentityRole(SD.Role_Manager)).GetAwaiter().GetResult();
+				_userManager.CreateAsync(new User
+				{
+					UserName = "manager@example.com",
+					Email = "manager@example.com",
+					Name = "M01",
+					PhoneNumber = "1112223333",
+				}, "Manager123*").GetAwaiter().GetResult();
+
+				User manager = _db.Users.FirstOrDefault(u => u.Email == "manager@example.com");
+				_userManager.AddToRoleAsync(manager, SD.Role_Manager).GetAwaiter().GetResult();
+			}
+
             // Create roles if they are not created
             if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult()) {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();

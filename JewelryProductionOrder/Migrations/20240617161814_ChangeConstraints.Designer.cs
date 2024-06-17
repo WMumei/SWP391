@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240617161814_ChangeConstraints")]
+    partial class ChangeConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,7 +158,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(2056),
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7976),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -192,7 +195,7 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductionRequestId")
+                    b.Property<int>("ProductionRequestId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductionStaffId")
@@ -375,13 +378,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1871),
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7763),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1881),
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7777),
                             Quantity = 1
                         });
                 });
@@ -807,7 +810,8 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany()
                         .HasForeignKey("ProductionRequestId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()

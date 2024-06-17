@@ -2,7 +2,7 @@
 
 <form method="post" class="container">
 	<div class="caption-top row">
-		<h2>Create a quotation request for Jewelry: @Model.Jewelry.Name</h2>
+		<h2>Quotation request for Jewelry: @Model.Jewelry.Name</h2>
 	</div>
 	<div class="form-group">
 		<div class="row">
@@ -73,10 +73,27 @@
 			</div>
 		</div>
 	</div>
+	<div>
+		<h2>Total Price: @Model.QuotationRequest.TotalPrice</h2>
+	</div>
+</form>
 	<div class="row">
-
-		<button type="submit" class="btn btn-primary form-control col-2">Create</button>
+		@if (User.IsInRole(SD.Role_Manager))
+		{
+			<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+		}
+		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == "Approved by Manager")
+		{
+			<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+		}
+		else if (Model.QuotationRequest.Status == "Approved by Manager")
+		{
+			<h2 class="text-success">Approved by manager!</h2>
+		}
+		else if (Model.QuotationRequest.Status == "Approved by Customer")
+		{
+			<h2 class="text-success">Approved!</h2>
+		}
 	</div>
 
 
-</form>
