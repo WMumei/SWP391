@@ -3,9 +3,9 @@ using Models.Repositories.IRepository;
 
 namespace JewelryProductionOrder.Repositories.IRepository
 {
-    public interface IProductionRequestRepository : IRepository<ProductionRequest>
+    public interface IQuotationRequestRepository : IRepository<QuotationRequest>
     {
-        void Update(ProductionRequest request);
+        void Update(QuotationRequest request);
         void Save();
     }
 }

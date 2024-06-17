@@ -54,7 +54,7 @@ namespace SWP391.Controllers
         }
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAllWithCustomers().ToList();
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties:"Customer").ToList();
             return View(obj);
         }
 

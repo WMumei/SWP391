@@ -34,5 +34,18 @@ namespace JewelryProductionOrder.Controllers
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll().ToList();
 			return View(jewelries);
         }
-    }
+
+		public IActionResult Manufacture(int id)
+		{
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+			User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
+			if (jewelry is not null)
+			{
+				jewelry.ProductionStaffId = productionStaff.Id;
+				jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
+			}
+			_unitOfWork.Save();
+			return RedirectToAction("Index");
+		}
+	}
 }
