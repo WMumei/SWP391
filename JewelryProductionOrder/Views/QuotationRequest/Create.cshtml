@@ -12,13 +12,8 @@
 	<div>
 
 
-		        <select onchange="autofill()" asp-for="Jewelry.Id">
+		<select onchange="autofill()" asp-for="@Model.Jewelry.Id" asp-items="@Model.JewelryList">
 		<option value="" disabled selected >Select a jewelry</option>
-		@*@foreach (var obj in Model.Jewelry)
-		{
-				<option>@obj.Id</option>
-		}
-		*@
 		</select> 
 	</div>
 	<br />
@@ -37,7 +32,7 @@
 		<tbody>
 			<tr>
 				<th>
-					<label Name asp-for="MaterialSet.Materials">Material:</label>
+					<label Name asp-for="@Model.MaterialSet.Materials" >Material:</label>
 					<select Name="Material" asp-for="MaterialSet.Materials">
 						<option value="" disabled selected>--Select material--</option>
 						<option>Gold</option>
