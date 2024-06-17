@@ -13,5 +13,6 @@ namespace JewelryProductionOrder.Models
         [ForeignKey("MaterialSetId")]
         public MaterialSet MaterialSet { get; set; }
         public decimal Weight { get; set; }
-    }
+        public DateTime CreatedAt { get; set; }
+	}
 }

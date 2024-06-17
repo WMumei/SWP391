@@ -1,6 +1,7 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
@@ -10,9 +11,11 @@ namespace SWP391.Controllers
     public class ProductionRequestController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductionRequestController(IUnitOfWork unitOfWork)
+        private readonly UserManager<User> _userManager;
+        public ProductionRequestController(IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
         //public IActionResult Create()
         //{
@@ -36,25 +39,30 @@ namespace SWP391.Controllers
             OrderVM orderVM = new OrderVM
             {
                 ProductionRequest = new ProductionRequest { Quantity = 1},
-                Customer = new User {}
+                //Customer = new User {}
             };
             return View(orderVM);
         }
         [HttpPost]
-        public IActionResult Checkout(OrderVM orderVM)
+        public async Task<IActionResult> Checkout(OrderVM orderVM)
         {
-            orderVM.Customer.RoleId = 2;
+            //orderVM.Customer.RoleId = 2;
             _unitOfWork.User.Add(orderVM.Customer);
             _unitOfWork.Save();
-
-            orderVM.ProductionRequest.CustomerId = orderVM.Customer.Id;
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                // Access user properties
+                var userId = user.Id;
+                orderVM.ProductionRequest.CustomerId = user.Id;
+            }
             _unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
             return View();
         }
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAllWithCustomers().ToList();
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties:"Customer").ToList();
             return View(obj);
         }
 
@@ -62,7 +70,7 @@ namespace SWP391.Controllers
         public IActionResult TakeRequest(int id)
         {
             ProductionRequest req = _unitOfWork.ProductionRequest.Get(req => req.Id == id);
-            User staff = _unitOfWork.User.Get(u => u.Id == 2);
+            User staff = _unitOfWork.User.Get(u => u.Id == "2");
             if (req is not null)
             {
                 req.SalesStaffId = staff.Id;

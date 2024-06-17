@@ -20,7 +20,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -38,10 +38,11 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProductionRequest" asp-action="Index">Production Request</a>
                         </li>
                     </ul>
-                    <form class="d-flex">
+@*                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="search" placeholder="Search" wfd-id="id0">
                         <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    </form> *@
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

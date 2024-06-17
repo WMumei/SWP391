@@ -3,10 +3,11 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Models.Repository;
+using System.Linq.Expressions;
 
 namespace JewelryProductionOrder.Repositories
 {
-    public class QuotationRequestRepository: Repository<QuotationRequest>, IQuotationRequestRepository
+    public class QuotationRequestRepository : Repository<QuotationRequest>, IQuotationRequestRepository
     {
         private ApplicationDbContext _db;
         public QuotationRequestRepository(ApplicationDbContext db) : base(db)
@@ -22,8 +23,8 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.SaveChanges();
         }
-		
-		public void Update(QuotationRequest request)
+
+        public void Update(QuotationRequest request)
         {
             _db.QuotationRequests.Update(request);
         }

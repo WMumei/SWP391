@@ -1,150 +1,82 @@
-﻿@model QuotationVM 
+﻿@model QuotationRequestVM
 
-
-<form method="post">
-
-	<div>
-		<h2 class="text-center">Create Quotation Request</h2>
-		<hr>
-
+<form method="post" class="container">
+	<div class="caption-top row">
+		<h2>Create a quotation request for Jewelry: @Model.Jewelry.Name</h2>
 	</div>
-	<!-- <div asp-validation-summary="All"></div> -->
-	<div>
-
-
-		<select onchange="autofill()" asp-for="@Model.Jewelry.Id" asp-items="@Model.JewelryList">
-		<option value="" disabled selected >Select a jewelry</option>
-		</select> 
-	</div>
-	<br />
-	<table class="table table-bordered table-info">
-		<thead class="table-primary">
-			<tr>
-				<th class="text-center">Item Description</th>
-				<th class="text-center">Weight</th>
-				<th class="text-center">
-					Unit price
-
-				</th>
-				<th class="text-center">Total</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>
-					<label Name asp-for="@Model.MaterialSet.Materials" >Material:</label>
-					<select Name="Material" asp-for="MaterialSet.Materials">
-						<option value="" disabled selected>--Select material--</option>
-						<option>Gold</option>
-						<option>Silver</option>
-					</select>
-
-				</th>
-				@*Nhập weight *@
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" asp-for="MaterialSet.MaterialSetMaterials" />
-					<div class="text-end">unit:gram</div>
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Id" />
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.TotalPrice" />
-				</th>
-			</tr>
-			<tr>
-				<th>
-					<label Name >Gemstone:</label>
-					<select >
-						<option value="" disabled selected>Select Gemstone</option>
-						<option>Diamond</option>
-						<option>Ruby</option>
-					</select>
-				</th>
-				<th>
-					<input type="number" class="form-control" placeholder="0.00" asp-for="MaterialSet.Gemstones" />
-					<div class="text-end">unit: carat</div>
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Gemstones" />
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" asp-for="MaterialSet.Gemstones" />
-				</th>
-			</tr>
-			<tr>
-				<th>
-					<label asp-for="QuotationRequest.LaborPrice">Labor</label>
-				</th>
-				<th>
-					<!--<input Name="MaterialPrice" type="number" class="form-control" />-->
-				</th>
-				<th>
-					<!--<input Name="MaterialPrice" type="number" class="form-control" />-->
-				</th>
-				<th>
-					<input type="number" class="form-control" placeholder="0 VND" asp-for="QuotationRequest.LaborPrice" />
-				</th>
-			</tr>
-			<tr>
-				<th>
-					<label Name>Others</label>
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0.00" />
-					<div class="text-end">unit:gram</div>
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
-				</th>
-				<th>
-					<input Name="MaterialPrice" type="number" class="form-control" placeholder="0 VND" />
-				</th>
-			</tr>
-		</tbody>
-	</table>
-	<div class="container text-end">
+	<div class="form-group">
 		<div class="row">
+			<div class="col-10">
+				<input asp-for="@Model.Jewelry.Id" hidden />
+				<input asp-for="@Model.MaterialSet.Id" hidden />
+				<div class="col-12 py-2 form-floating">
+					<input asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
+					<label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<input asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
+					<label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<h2>Gemstones</h2>
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Weight (carat)</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+							{
+								<tr>
+									<td>@gemstone.Name</td>
+									<td>@gemstone.Weight</td>
+									<td>@gemstone.Price</td>
+								</tr>
+							}
+						</tbody>
+					</table>
 
-			<table class="table table-borderless ">
-				<tbody>
-					<tr>
-						<th>Subtotal: </th>
-						<th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
-					</tr>
-					<tr>
-						<th>Discount: </th>
-						<th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
-					</tr>
-					<tr>
-						<th>Subtotal less Discount: </th>
-						<th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
-					</tr>
-					@*<tr>
-					<th>Tax:</th>
-					<th><input Name type="number" class="form-control" placeholder="0 VND" /></th>
-					</tr>*@
-					<tr>
-						<th asp-for="QuotationRequest.TotalPrice">Total:</th>
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<h2>Materials</h2>
+					<table class ="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Weight (g)</th>
+								<th>Unit Price</th>
+								<th>Total Price</th>
+							</tr>
+						</thead>
+						<tbody>
+								@foreach (Material material in @Model.MaterialSet.Materials)
+								{
+									var weight = material.MaterialSetMaterials.FirstOrDefault(
+												s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+									<tr>
+										<td>@material.Name</td>
+										<td>@weight</td>
+										<td>@material.Price</td>
+										<td>@(weight * material.Price)</td>
+									</tr>
+								}
+						</tbody>
+					</table>
+					
+				</div>
 
-						<th><input asp-for="QuotationRequest.TotalPrice" class="form-control" placeholder="0 VND" /></th>
 
-					</tr>
-				</tbody>
-			</table>
 
+			</div>
 		</div>
 	</div>
-
-
 	<div class="row">
-		<div class="col-6 col-md-3">
-			<button type="submit" class="btn btn-primary form-control">Create</button>
-		</div>
-		<div class="col-6 col-md-3">
-			<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-outline-primary form-control">
-				Back
-			</a>
-		</div>
+
+		<button type="submit" class="btn btn-primary form-control col-2">Create</button>
 	</div>
+
+
 </form>

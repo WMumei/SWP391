@@ -9,10 +9,10 @@ namespace JewelryProductionOrder.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Status {  get; set; }
+        public string? Status {  get; set; }
         public string Name { get; set; }
         public decimal LaborPrice { get; set; }
-        public decimal TotalPrice { get; set; }
+        public decimal? TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
 
 
@@ -28,11 +28,15 @@ namespace JewelryProductionOrder.Models
         [ForeignKey("MaterialSetId")]
         public MaterialSet? MaterialSet { get; set; }
 
-        public int SalesStaffId { get; set; }
+        public string? SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 
-        public int ManagerId { get; set; }
+        public string? CustomerId { get; set; }
+		[ForeignKey("CustomerId")]
+		public User? Customer { get; set; }
+
+		public string? ManagerId { get; set; }
         [ForeignKey("ManagerId")]
         public User? Manager { get; set; }
     }

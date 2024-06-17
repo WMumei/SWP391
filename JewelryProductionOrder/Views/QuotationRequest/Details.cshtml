@@ -1,0 +1,82 @@
+﻿@model QuotationRequestVM
+
+<form method="post" class="container">
+	<div class="caption-top row">
+		<h2>Create a quotation request for Jewelry: @Model.Jewelry.Name</h2>
+	</div>
+	<div class="form-group">
+		<div class="row">
+			<div class="col-10">
+				<input asp-for="@Model.Jewelry.Id" hidden />
+				<input asp-for="@Model.MaterialSet.Id" hidden />
+				<div class="col-12 py-2 form-floating">
+					<input disabled asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
+					<label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<input disabled asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
+					<label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<h2>Gemstones</h2>
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Weight (carat)</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+							{
+								<tr>
+									<td>@gemstone.Name</td>
+									<td>@gemstone.Weight</td>
+									<td>@gemstone.Price</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				</div>
+				<div class="col-12 py-2 form-floating">
+					<h2>Materials</h2>
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Weight (g)</th>
+								<th>Unit Price</th>
+								<th>Total Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (Material material in @Model.MaterialSet.Materials)
+							{
+								var weight = material.MaterialSetMaterials.FirstOrDefault(
+								s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+								<tr>
+									<td>@material.Name</td>
+									<td>@weight</td>
+									<td>@material.Price</td>
+									<td>@(weight * material.Price)</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				</div>
+
+
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+
+		<button type="submit" class="btn btn-primary form-control col-2">Create</button>
+	</div>
+
+
+</form>
