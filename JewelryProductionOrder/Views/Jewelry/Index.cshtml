@@ -74,9 +74,9 @@
 						{
 							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Complete</a></td>
 						}
-						else if (User.IsInRole(SD.Role_Production) && obj.Status != "Currently manufacturing")
+						else if (User.IsInRole(SD.Role_Production) && obj.Status == "Design Approved")
 						{
-							<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Manufacture</a></td>
+							<td><a asp-controller="JewelryDesign" asp-action="Manufacture" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View Design</a></td>
 						}
 						{
 							<td></td>
