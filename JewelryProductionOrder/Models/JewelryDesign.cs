@@ -7,11 +7,11 @@ namespace JewelryProductionOrder.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Image { get; set; }
-        public string DesignFile { get; set; }
-        public string Status { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string? Name { get; set; }
+        public string? Image { get; set; }
+        public string? DesignFile { get; set; }
+        public string? Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
@@ -24,7 +24,7 @@ namespace JewelryProductionOrder.Models
         public string? ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
         public User? ProductionStaff { get; set; }
-        public int ProductionRequestId { get; set; }
+        public int? ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
         public ProductionRequest ProductionRequest { get; set; }
 

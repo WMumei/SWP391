@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240617161814_ChangeConstraints")]
+    partial class ChangeConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,11 +158,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-<<<<<<< HEAD
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(2124),
-=======
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(2056),
->>>>>>> cac1db01ce208b9afbc8a05f22329ead7d3ded12
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7976),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -196,7 +195,7 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductionRequestId")
+                    b.Property<int>("ProductionRequestId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductionStaffId")
@@ -379,21 +378,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-<<<<<<< HEAD
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1877),
-=======
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1871),
->>>>>>> cac1db01ce208b9afbc8a05f22329ead7d3ded12
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7763),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-<<<<<<< HEAD
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1890),
-=======
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1881),
->>>>>>> cac1db01ce208b9afbc8a05f22329ead7d3ded12
+                            CreatedAt = new DateTime(2024, 6, 17, 23, 18, 13, 167, DateTimeKind.Local).AddTicks(7777),
                             Quantity = 1
                         });
                 });
@@ -819,7 +810,8 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany()
                         .HasForeignKey("ProductionRequestId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
@@ -1023,11 +1015,8 @@ namespace JewelryProductionOrder.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
-<<<<<<< HEAD
-=======
                     b.Navigation("JewelryDesigns");
 
->>>>>>> cac1db01ce208b9afbc8a05f22329ead7d3ded12
                     b.Navigation("QuotationRequest");
 
                     b.Navigation("WarrantyCard");

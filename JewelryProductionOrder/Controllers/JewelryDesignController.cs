@@ -2,6 +2,7 @@
 using JewelryProductionOrder.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -37,10 +38,13 @@ namespace JewelryProductionOrder.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
-                obj.DesignFile = @"files" + fileName;
+                obj.DesignFile = Path.Combine(filePath, fileName);
             }
             obj.Status = "Pending";
-            _unitOfWork.JewelryDesign.Add(obj);
+            //obj.JewelryId = obj.Jewelry.Id;
+			_unitOfWork.JewelryDesign.Add(obj);
+            _unitOfWork.Save();
+            return RedirectToAction("Index", "Jewelry");
             return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId});
         }
 
@@ -50,17 +54,24 @@ namespace JewelryProductionOrder.Controllers
 			return View(jewelries);
         }
 
-        public IActionResult CustomerApprove(int id)
+        public IActionResult Details(int jId)
+		{
+			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties:"Jewelry");
+            return View(design);
+		}
+		public IActionResult CustomerApprove(int id)
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
-            User customer = _unitOfWork.User.Get(u => u.Id == "2");
-            if (design is not null)
-            {
-                design.CustomerId = customer.Id;
-                design.Status = $"Approved by Customer {customer.Name}";
-            }
-            _unitOfWork.Save();
-            return RedirectToAction("Index");
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (design is not null)
+			{
+				design.CustomerId = userId;
+				design.Status = $"Approved by Customer";
+			}
+			_unitOfWork.Save();
+			return RedirectToAction("Index", "Home");
+			return RedirectToAction("Index");
         }
     }
 }

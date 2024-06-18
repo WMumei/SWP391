@@ -1,5 +1,4 @@
-﻿@model List<Jewelry>
-<form method="post">
+﻿<form method="post">
     <div>
         <div>
             <h2>View Jewelry</h2>
@@ -15,12 +14,12 @@
                     <th>Materials</th>
                     <th>Quotation</th>
                     <th>Status</th>
-@*                     <th width="13%">Image</th>
+                 <th width="13%">Image</th>
                     <th>Design</th>
                     <th>Customer</th>
                     <th>Staffs</th>
                     <th>Production Request</th>
-                    <th>Warranty Card</th> *@
+                    <th>Warranty Card</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +30,7 @@
 						<td>@obj.CreatedAt</td>
 						<td>@obj.Name</td>
                         <td>@obj.Description</td>
-						@* <td>@obj?.Customer?.Name</td> *@
+						<td>@obj?.Customer?.Name</td>
 
 						@if (obj.MaterialSet is not null)
 						{
@@ -57,4 +56,4 @@
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
         
-</form>
+</form> *@

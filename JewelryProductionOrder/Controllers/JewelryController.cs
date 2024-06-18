@@ -1,7 +1,10 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -22,26 +25,37 @@ namespace JewelryProductionOrder.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Create(Jewelry obj)
         {
             obj.CreatedAt = DateTime.Now;
             _unitOfWork.Jewelry.Add(obj);
-            return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+            //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
         }
-
+        [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll().ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequest,JewelryDesigns").ToList();
 			return View(jewelries);
         }
 
-		public IActionResult Manufacture(int id)
+        public IActionResult RequestIndex(int reqId)
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequest,JewelryDesigns").ToList();
+            return View(jewelries);
+        }
+
+        public IActionResult Manufacture(int id)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			User productionStaff = _unitOfWork.User.Get(u => u.Id == "1");
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
 			if (jewelry is not null)
 			{
-				jewelry.ProductionStaffId = productionStaff.Id;
+				jewelry.ProductionStaffId = userId;
 				jewelry.Status = $"Currently manufacturing";
 			}
 			_unitOfWork.Save();
@@ -64,14 +78,15 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult Deliver(int id)
         {
-            //Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
             //User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
             //if (jewelry is not null)
             //{
             //    jewelry.ProductionStaffId = productionStaff.Id;
             //    jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
             //}
-            //_unitOfWork.Save();
+            jewelry.Status = "Delivered";
+            _unitOfWork.Save();
             return RedirectToAction("Index");
         }
     }
