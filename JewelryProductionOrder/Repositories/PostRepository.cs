@@ -20,7 +20,7 @@ namespace JewelryProductionOrder.Repositories
 
         public void Update(Post post)
         {
-            _db.WarrantyCards.Update(post);
+            _db.Posts.Update(post);
         }
     }
 }
