@@ -85,6 +85,18 @@ body {
         max-width: 50px;
     }
 
+.menu-icon-2 {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 4;
+}
+    .menu-icon-2 img{
+        width: 100%;
+        height: auto;
+        max-width: 60px;
+    }
+
 .container-fluid {
     display: flex;
     align-items: center;
@@ -92,9 +104,9 @@ body {
 }
 
 .menu {
-    width: 250px;
+    width: 300px;
     background-color: transparent;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(15px);
     background-image: linear-gradient(120deg, rgb(0, 0, 0, 0.65), rgb(63, 63, 63, 0.51));
     border: solid;
     border-width: 5px;
@@ -102,10 +114,10 @@ body {
     color: white;
     position: fixed;
     top: 0;
-    left: -250px;
+    left: -300px;
     height: 100%;
     transition: left 0.3s ease;
-    z-index: 1000;
+    z-index: 3;
     padding-top: 60px;
 }
 
@@ -115,10 +127,14 @@ body {
         color: white;
         text-decoration: none;
         padding: 10px 20px;
+
+        transition: all 0.3s /*transform 0.3s, background-color 0.3s, color 0.3s*/;
     }
 
         .menu a:hover {
-            background-color: rgb(83, 190, 255);
+            background-color: rgb(255, 255, 255);
+            font-size: 20px;
+            color: black;
         }
 
 .overlay {
