@@ -20,7 +20,7 @@
     }
 
     function closeMenu() {
-        menu.style.left = "-250px";
+        menu.style.left = "-300px";
         overlay.classList.remove("active");
         document.body.classList.remove("menu-open");
         menuIcon.style.opacity = "1";
