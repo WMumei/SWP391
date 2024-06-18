@@ -17,10 +17,11 @@ namespace Models.Repositories.Repository.IRepository
 		IGemstoneRepository Gemstone { get; }
 		IMaterialSetMaterialRepository MaterialSetMaterial { get; }
 		IQuotationRequestRepository QuotationRequest { get; }
-        IJewelryDesignRepository JewelryDesign { get; }
+		IWarrantyCardRepository WarrantyCard { get; }
+		IJewelryDesignRepository JewelryDesign { get; }
 		void Save();
-        IQuotationRequestRepository QuotationRequest { get; }
-        void Save();
+       
+       
        // void Get();
         //void Find(int id);
     }
