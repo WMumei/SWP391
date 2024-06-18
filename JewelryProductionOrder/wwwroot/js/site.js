@@ -1,10 +1,13 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const menuIcon = document.getElementById("menu-icon");
-    const menuIcon2 = document.getElementById("menu-icon-2");
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
     const menuHeader = document.getElementById("menu-header");
+    const menuIcon2 = document.getElementById("menu-icon-2"); // added
     let isOpen = false;
+
+    // hide menu-icon-2 on page load
+    menuIcon2.style.display = "none"; // added
 
     function openMenu() {
         menu.style.left = "0";
@@ -12,9 +15,9 @@
         document.body.classList.add("menu-open");
         menuIcon.style.opacity = "0";
         menuIcon.style.visibility = "hidden";
-        menuIcon2.style.opacity = "1";
-        menuIcon2.style.visibility = "visible";
+        menuIcon.classList.add("inverted");
         isOpen = true;
+        menuIcon2.style.display = "block"; // show menu-icon-2 when menu is open
     }
 
     function closeMenu() {
@@ -23,9 +26,9 @@
         document.body.classList.remove("menu-open");
         menuIcon.style.opacity = "1";
         menuIcon.style.visibility = "visible";
-        menuIcon2.style.opacity = "0";
-        menuIcon2.style.visibility = "hidden";
+        menuIcon.classList.remove("inverted");
         isOpen = false;
+        menuIcon2.style.display = "none"; // hide menu-icon-2 when menu is closed
     }
 
     menuIcon.addEventListener("click", function () {
@@ -37,11 +40,6 @@
     });
 
     overlay.addEventListener("click", function () {
-        closeMenu();
-    });
-
-    // Allow closing the menu by clicking the second icon
-    menuIcon2.addEventListener("click", function () {
         closeMenu();
     });
 });
