@@ -33,12 +33,8 @@
 <body>
     @if (User.Identity.IsAuthenticated && !User.IsInRole(SD.Role_Customer))
     {
-        <div class="menu-icon" id="menu-icon">
-            <img src="https://imgur.com/BzTWgrX.png" alt="Menu Icon"/>
-        </div>
-
         <div class="menu-icon-2" id="menu-icon-2">
-            <img src="https://imgur.com/flJ3Aj1.png" alt="Blue Menu Icon"/>
+            <img src="~/Images/Inverted Menu Icon.png" alt="Blue Menu Icon"/>
         </div>
 
         <div class="menu-header" id="menu-header">Menu</div>
@@ -67,7 +63,7 @@
     <div class="overlay" id="overlay"></div>
 
     <div class="text-start">
-        <img class="banner" width="100%" src="https://i.imgur.com/WnE3acs.jpeg" />
+        <img class="banner" width="100%" src="~/Images/Banner.jpeg" />
     </div>
     @if (User.Identity.IsAuthenticated)
     {
