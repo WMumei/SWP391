@@ -8,7 +8,7 @@ namespace JewelryProductionOrder.Models
         public string Title { get; set; }
         public string Image { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int SalesStaffId { get; set; }
+        public string SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User SalesStaff { get; set; }
     }

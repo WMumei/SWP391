@@ -17,20 +17,22 @@ namespace JewelryProductionOrder.Models
         public MaterialSet? MaterialSet { get; set; }
         public WarrantyCard? WarrantyCard { get; set; }
 
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
 
-        public int? SalesStaffId { get; set; }
+        public string? SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 
-        public int? ProductionStaffId { get; set; }
+        public string? ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
         public User? ProductionStaff { get; set; }
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
         public ProductionRequest ProductionRequest { get; set; }
+        public QuotationRequest? QuotationRequest { get; set; }
 
+        public List<JewelryDesign> JewelryDesigns { get; } = [];
     }
 }

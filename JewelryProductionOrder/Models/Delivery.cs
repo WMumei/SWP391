@@ -6,11 +6,11 @@ namespace JewelryProductionOrder.Models
     [PrimaryKey(nameof(CustomerId), nameof(SalesStaffId), nameof(JewelryId), nameof(WarrantyCardId))]
     public class Delivery
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
 
-        public int SalesStaffId { get; set; }
+        public string SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 

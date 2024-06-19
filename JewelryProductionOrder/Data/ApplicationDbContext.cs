@@ -1,10 +1,12 @@
 ﻿using JewelryProductionOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace JewelryProductionOrder.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
@@ -19,7 +21,7 @@ namespace JewelryProductionOrder.Data
 		public DbSet<MaterialSet> MaterialSets { get; set; }
 		public DbSet<MaterialSetMaterial> MaterialSetsMaterials { get; set; }
 		public DbSet<Post> Posts { get; set; }
-		public DbSet<Role> Roles { get; set; }
+		//public DbSet<Role> Roles { get; set; }
 		public DbSet<Delivery> Deliveries { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<WarrantyCard> WarrantyCards { get; set; }
@@ -28,8 +30,9 @@ namespace JewelryProductionOrder.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			#region MultipleCascade
-			modelBuilder.Entity<WarrantyCard>()
+			base.OnModelCreating(modelBuilder);
+            #region MultipleCascade
+            modelBuilder.Entity<WarrantyCard>()
 				.HasOne(t => t.SalesStaff)
 				.WithMany()
 				.HasForeignKey(t => t.SalesStaffId)
@@ -146,23 +149,15 @@ namespace JewelryProductionOrder.Data
 				new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Quantity = 1 },
 				new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Quantity = 1 }
 				);
-			modelBuilder.Entity<Role>().HasData(
-				new Role { Id = 1, Name = "Staff" },
-				new Role { Id = 2, Name = "Customer" }
-				);
-			modelBuilder.Entity<User>().HasData(
-				new User { Id = 1, Name = "Staff", RoleId = 1 },
-				new User { Id = 2, Name = "Customer", RoleId = 2 }
-				);
 			modelBuilder.Entity<Material>().HasData(
 				new Material { Id = 1, Name = "Gold", Price = 1000 },
-				new Material { Id = 2, Name = "Silver", Price = 200 }
+				new Material { Id = 2, Name = "Silver", Price = 1 }
 				);
 			modelBuilder.Entity<Gemstone>().HasData(
-				new Gemstone { Id = 1, Name = "Diamond", Price = 200000 }
+				new Gemstone { Id = 1, Name = "Diamond", Price = 200000, Weight=2 }
 				);
 			modelBuilder.Entity<Jewelry>().HasData(
-				new Jewelry { Id = 1, Name = "Diamond Necklace", Description="9999Gold for the material and 1 carat diamond for everyday where", Status = "", CreatedAt = DateTime.Now, ProductionRequestId = 1 });
+				new Jewelry { Id = 1, Name = "Diamond Necklace", Description="9999 Gold for the material and 1 carat diamond for everyday wear", Status = "", CreatedAt = DateTime.Now, ProductionRequestId = 1 });
 			//modelBuilder.Entity<QuotationRequest>().HasData(
 			//        new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
 			//        new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
@@ -181,7 +176,7 @@ namespace JewelryProductionOrder.Data
 			modelBuilder.Entity<MaterialSet>()
 				.HasMany(e => e.Materials)
 				.WithMany(e => e.MaterialSets)
-				.UsingEntity<MaterialSetMaterial>();
+				.UsingEntity<MaterialSetMaterial>(j => j.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP"));
 			#endregion
 		}
 

@@ -1,6 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 <style>
     .button-container {
         display: flex;
@@ -28,40 +31,60 @@
 </style>
 
 <body>
-    <div class="menu-icon-2" id="menu-icon-2">
-        <img src="~/Images/Inverted Menu Icon.png" alt="Blue Menu Icon"/>
-    </div>
+    @if (User.Identity.IsAuthenticated && !User.IsInRole(SD.Role_Customer))
+    {
+        <div class="menu-icon" id="menu-icon">
+            <img src="https://imgur.com/BzTWgrX.png" alt="Menu Icon"/>
+        </div>
 
-    <div class="menu-header" id="menu-header">Menu</div>
-    <div class="menu" id="menu">
-        <div>
-            <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
+        <div class="menu-icon-2" id="menu-icon-2">
+            <img src="https://imgur.com/flJ3Aj1.png" alt="Blue Menu Icon"/>
         </div>
-        <div>
-            <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
+
+        <div class="menu-header" id="menu-header">Menu</div>
+        <div class="menu" id="menu">
+            <div>
+                <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
+            </div>
+            <div>
+                <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
+            </div>
+            <div>
+                <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
+            </div>
+            <div>
+                <a asp-controller="QuotationRequest" asp-action="Index" class="button">View Quotation</a>
+            </div>
+            <div>
+                <a asp-controller="Jewelry" asp-action="Index" class="button">View Jewelry</a>
+            </div>
+            <div>
+                <a asp-controller="Jewelry" asp-action="Create" class="button">Create Jewelry</a>
+            </div>
         </div>
-        <div>
-            <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
-        </div>
-        <div>
-            <a asp-controller="QuotationRequest" asp-action="Index" class="button">View Quotation</a>
-        </div>
-        <div>
-            <a asp-controller="Jewelry" asp-action="Index" class="button">View Jewelry</a>
-        </div>
-        <div>
-            <a asp-controller="Jewelry" asp-action="Create" class="button">Create Jewelry</a>
-        </div>
-    </div>
+    }
 
     <div class="overlay" id="overlay"></div>
 
-    <div class="text-center">
-        <h1 class="display-2">JPO</h1>
-    </div>
     <div class="text-start">
         <img class="banner" width="100%" src="https://i.imgur.com/WnE3acs.jpeg" />
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        
+        <div class="row mt-8">
+            <div class="col-4 mx-auto">
+                <a asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
+            </div>
+            <div class="col-4 mx-auto">
+                <a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+            </div>
+        </div>
+    }
+@*     else
+    {
+        <h2>Log in</h2>
+    } *@
     <br />
 
     <link rel="stylesheet" href="~/css/site.css"/>

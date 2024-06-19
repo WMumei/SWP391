@@ -16,6 +16,8 @@ namespace Models.Repositories.Repository.IRepository
         IMaterialSetRepository MaterialSet { get; }
 		IGemstoneRepository Gemstone { get; }
 		IMaterialSetMaterialRepository MaterialSetMaterial { get; }
+		IQuotationRequestRepository QuotationRequest { get; }
+        IJewelryDesignRepository JewelryDesign { get; }
 		void Save();
     }
 }
