@@ -72,8 +72,8 @@ namespace SWP391.Controllers
 			// Hide the old quotation request
 			if (vm.RedirectedFrom is false)
 			{
-				QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id 
-				&& (vm.QuotationRequest.Status == "Disapproved by Manager" || vm.QuotationRequest.Status == "Disapproved by Customer"));
+				QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
+				&& (r.Status == "Disapproved by Manager" || r.Status == "Disapproved by Customer"));
 				if (oldRequest is not null)
 				{
 					oldRequest.Status = "Disapproved";
