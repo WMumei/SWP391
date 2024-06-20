@@ -80,11 +80,26 @@
 	<div class="row">
 		@if (User.IsInRole(SD.Role_Manager))
 		{
-			<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+			<div class="col text-center">
+				<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+            </div>
+            <div class="col">
+                <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+            </div>
+            
 		}
 		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == "Approved by Manager")
 		{
-			<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+			<div class="col text-center">
+				<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+			</div>
+			<div class="col">
+				<a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+			</div>
+		}
+		@if (User.IsInRole(SD.Role_Sales) && (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer"))
+		{
+			<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Create new quotation</a></td>
 		}
 		else if (Model.QuotationRequest.Status == "Approved by Manager")
 		{
@@ -93,6 +108,10 @@
 		else if (Model.QuotationRequest.Status == "Approved by Customer")
 		{
 			<h2 class="text-success">Approved!</h2>
+		}
+		else if (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer")
+		{
+			<h2 class="text-success">Disapproved!</h2>
 		}
 	</div>
 

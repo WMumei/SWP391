@@ -68,7 +68,6 @@ namespace SWP391.Controllers
 			vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
             _unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Jewelry");
 			return RedirectToAction("Details", new { jId = vm.Jewelry.Id });
         }
 		[Authorize(Roles = SD.Role_Manager)]
@@ -83,10 +82,25 @@ namespace SWP391.Controllers
 				req.Status = $"Approved by Manager";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Jewelry");
 			return RedirectToAction("Details", new { jId = req.JewelryId});
 		}
-		[Authorize(Roles = SD.Role_Customer)]
+
+        [Authorize(Roles = SD.Role_Manager)]
+		public IActionResult ManagerDisapprove(int id)
+		{
+			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (req is not null)
+			{
+				req.ManagerId = userId;
+				req.Status = $"Disapproved by Manager";
+			}
+			_unitOfWork.Save();
+			return RedirectToAction("Details", new { jId = req.JewelryId });
+		}
+
+        [Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
@@ -98,22 +112,36 @@ namespace SWP391.Controllers
 				req.Status = $"Approved by Customer";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
             return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
-		//[HttpPost,ActionName("Delete")]
-		//public IActionResult DeletePOST(int? id)
-		//{
-		//    QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
-		//    if (quorequest == null)
-		//    {
-		//        return NotFound();
-		//    }
-		//    _unitOfWork.QuotationRequest.Remove(quorequest);
-		//    _unitOfWork.SaveChanges();
-		//    return RedirectToAction("Index");
+        [Authorize(Roles = SD.Role_Customer)]
+        public IActionResult CustomerDisapprove(int id)
+        {
+            QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (req is not null)
+            {
+                req.CustomerId = userId;
+                req.Status = $"Disapproved by Customer";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Details", new { jId = req.JewelryId });
+        }
+		
+        //[HttpPost,ActionName("Delete")]
+        //public IActionResult DeletePOST(int? id)
+        //{
+        //    QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
+        //    if (quorequest == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _unitOfWork.QuotationRequest.Remove(quorequest);
+        //    _unitOfWork.SaveChanges();
+        //    return RedirectToAction("Index");
 
-		//}
-	}
+        //}
+    }
 }
