@@ -106,5 +106,9 @@ namespace JewelryProductionOrder.Controllers
 			}
 			return View(vm);
 		}
+		//public IActionResult Details(int? id)
+		//{
+
+		//}
 	}
 }

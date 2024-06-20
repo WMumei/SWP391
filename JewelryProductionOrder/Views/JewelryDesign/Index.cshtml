@@ -1,7 +1,8 @@
-﻿<form method="post">
+﻿@model List<JewelryDesign>
+<form method="post">
     <div>
         <div>
-            <h2>View Jewelry</h2>
+            <h2>View Jewelry Design</h2>
             <hr />
         </div>
         <table class ="table table-bordered table-striped fs-6 fw-normal">
@@ -23,7 +24,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+                
+               @*@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
                 {
 					<tr>
 						<td>@obj.Id</td>
@@ -50,10 +52,10 @@
                         }
 
 					</tr>
-                }
+                }*@
             </tbody>
         </table>
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
         
-</form> *@
+</form> 

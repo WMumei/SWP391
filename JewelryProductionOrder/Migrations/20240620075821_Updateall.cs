@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class SchemasWithIdentity : Migration
+    public partial class Updateall : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -490,15 +490,15 @@ namespace JewelryProductionOrder.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DesignFile = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DesignFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DesignStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductionStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ProductionRequestId = table.Column<int>(type: "int", nullable: false),
+                    ProductionRequestId = table.Column<int>(type: "int", nullable: true),
                     JewelryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -555,14 +555,14 @@ namespace JewelryProductionOrder.Migrations
                 columns: new[] { "Id", "Address", "CreatedAt", "CustomerId", "DesignStaffId", "ProductionStaffId", "Quantity", "QuotationRequestId", "SalesStaffId", "Status" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1877), null, null, null, 1, null, null, null },
-                    { 2, null, new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1890), null, null, null, 1, null, null, null }
+                    { 1, null, new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2896), null, null, null, 1, null, null, null },
+                    { 2, null, new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2914), null, null, null, 1, null, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Jewelries",
                 columns: new[] { "Id", "CreatedAt", "CustomerId", "Description", "Image", "MaterialSetId", "Name", "ProductionRequestId", "ProductionStaffId", "SalesStaffId", "Status" },
-                values: new object[] { 1, new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(2124), null, "9999 Gold for the material and 1 carat diamond for everyday wear", null, null, "Diamond Necklace", 1, null, null, "" });
+                values: new object[] { 1, new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(3306), null, "9999 Gold for the material and 1 carat diamond for everyday wear", null, null, "Diamond Necklace", 1, null, null, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

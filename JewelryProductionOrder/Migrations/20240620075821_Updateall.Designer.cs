@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240617124046_SchemasWithIdentity")]
-    partial class SchemasWithIdentity
+    [Migration("20240620075821_Updateall")]
+    partial class Updateall
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,7 +158,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(2124),
+                            CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(3306),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -174,38 +174,34 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DesignFile")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DesignStaffId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductionRequestId")
+                    b.Property<int?>("ProductionRequestId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -382,13 +378,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1877),
+                            CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2896),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 17, 19, 40, 45, 398, DateTimeKind.Local).AddTicks(1890),
+                            CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2914),
                             Quantity = 1
                         });
                 });
@@ -767,7 +763,7 @@ namespace JewelryProductionOrder.Migrations
                         .HasForeignKey("MaterialSetId");
 
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
-                        .WithMany()
+                        .WithMany("Jewelries")
                         .HasForeignKey("ProductionRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -806,7 +802,7 @@ namespace JewelryProductionOrder.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithMany()
+                        .WithMany("JewelryDesigns")
                         .HasForeignKey("JewelryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -814,8 +810,7 @@ namespace JewelryProductionOrder.Migrations
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany()
                         .HasForeignKey("ProductionRequestId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
@@ -1019,6 +1014,8 @@ namespace JewelryProductionOrder.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
+                    b.Navigation("JewelryDesigns");
+
                     b.Navigation("QuotationRequest");
 
                     b.Navigation("WarrantyCard");
@@ -1034,6 +1031,11 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("Jewelries");
 
                     b.Navigation("MaterialSetMaterials");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
+                {
+                    b.Navigation("Jewelries");
                 });
 #pragma warning restore 612, 618
         }
