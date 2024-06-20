@@ -38,7 +38,7 @@ namespace JewelryProductionOrder.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
-                obj.DesignFile = Path.Combine(filePath, fileName);
+                obj.DesignFile = Path.Combine("\\files", fileName);
             }
             obj.Status = "Pending";
             //obj.JewelryId = obj.Jewelry.Id;
