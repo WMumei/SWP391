@@ -99,7 +99,9 @@
 		}
 		@if (User.IsInRole(SD.Role_Sales) && (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer"))
 		{
-			<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Create new quotation</a></td>
+            <td>
+                <a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.Jewelry.Id" asp-route-redirectedFrom="false" class="btn btn-primary btn-sm">Create new quotation</a>
+            </td>
 		}
 		else if (Model.QuotationRequest.Status == "Approved by Manager")
 		{
@@ -111,7 +113,7 @@
 		}
 		else if (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer")
 		{
-			<h2 class="text-success">Disapproved!</h2>
+			<h2 class="text-danger">Disapproved!</h2>
 		}
 	</div>
 
