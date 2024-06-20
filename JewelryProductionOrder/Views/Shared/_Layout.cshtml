@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using JewelryProductionOrder.Models
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="https://imgur.com/B8XWJwc.png" />
@@ -13,10 +19,12 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <div class="menu-icon" id="menu-icon">
-                    <img src="~/Images/Menu icon.png" alt="Menu Icon" />
-                </div>
-
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="menu-icon" id="menu-icon">
+                        <img src="~/Images/Menu icon.png" alt="Menu Icon" />
+                    </div>
+                }
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/Images/New JPO Logo.png" height="50px" width="50px" />
                 </a>
@@ -29,9 +37,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProductionRequest" asp-action="Index">Production Request</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        </li>
+                        }
                     </ul>
 @*                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="search" placeholder="Search" wfd-id="id0">
@@ -44,6 +59,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+
             @RenderBody()
         </main>
     </div>
