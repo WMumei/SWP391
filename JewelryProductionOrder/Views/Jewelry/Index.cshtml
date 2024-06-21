@@ -52,37 +52,7 @@
 
 						@if (@obj.QuotationRequests.Count != 0)
 						{
-							for (i = 0; i < @obj.QuotationRequests.Count; i++)
-							{
-								var quotationRequest = @obj.QuotationRequests[i];
-								if (quotationRequest.Status != "Disapproved")
-								{
-									if (User.IsInRole(SD.Role_Sales) && quotationRequest.Status == "Disapproved by Manager")
-									{
-										<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-danger btn-sm">Disapproved by Manager</a></td>
-										break;
-									}
-									else if (User.IsInRole(SD.Role_Sales) && quotationRequest.Status == "Disapproved by Customer")
-									{
-										<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-danger btn-sm">Disapproved by Customer</a></td>
-										break;
-									}
-									else if (User.IsInRole(SD.Role_Sales) && quotationRequest.Status == "Approved by Customer")
-									{
-										<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-success btn-sm">Approved</a></td>
-										break;
-									}
-									else
-									{
-										<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-										break;
-									}
-								}
-								else
-								{
-									continue;
-								}
-							}
+							<td><a asp-controller="QuotationRequest" asp-action="Index" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
 						else if (User.IsInRole(SD.Role_Sales))
 						{

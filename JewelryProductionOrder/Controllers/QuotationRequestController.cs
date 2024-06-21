@@ -5,6 +5,7 @@ using JewelryProductionOrder.Repositories;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
@@ -39,7 +40,7 @@ namespace SWP391.Controllers
             return View(vm);
         }
 
-		public IActionResult Create(int jId, bool redirectedFrom)
+        public IActionResult Create(int jId, bool redirectedFrom)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
@@ -76,7 +77,7 @@ namespace SWP391.Controllers
 				&& (r.Status == "Disapproved by Manager" || r.Status == "Disapproved by Customer"));
 				if (oldRequest is not null)
 				{
-					oldRequest.Status = "Disapproved";
+					oldRequest.Status = "Discontinue";
 					_unitOfWork.Save();
 				}				
 			}
