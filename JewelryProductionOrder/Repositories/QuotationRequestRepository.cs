@@ -24,11 +24,11 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.QuotationRequests.Update(request);
         }
-        public IEnumerable<QuotationRequest> GetApprovedQuotationRequests()
-        {
-            return _db.QuotationRequests
-                .Where(qr => qr.Status == "Approved")
-                .Select(qr => new QuotationRequest { Status = qr.Status, TotalPrice = qr.TotalPrice });
-        }
-    }
+		public IEnumerable<QuotationRequest> GetApprovedQuotationRequests()
+		{
+			return dbSet
+				.Where(qr => qr.Status == "Approved")
+				.Select(qr => qr);
+		}
+	}
 }

@@ -1,27 +1,25 @@
 ﻿using JewelryProductionOrder.Data;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Models.Repositories.Repository.IRepository;
 
 public class DashboardController : Controller
 {
-    private readonly QuotationRequestRepository _quotationRequestRepository; //To sum up for total revenue
+	private readonly IUnitOfWork _unitOfWork;
+	public DashboardController(IUnitOfWork unitOfWork)
+	{
+		_unitOfWork = unitOfWork;
+	}
+	public IActionResult Index()
+	{
+		List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().ToList();
+		return View(requests);
+	}
 
-    public DashboardController(QuotationRequestRepository quotationRequestRepository)
-    {
-        _quotationRequestRepository = quotationRequestRepository;
-    }
-
-    //Find quotation request with status = approved and sum total price together
-    public IActionResult GetTotalRevenue()
-    {
-        var approvedQuotationRequests = _quotationRequestRepository.GetApprovedQuotationRequests();
-        var totalRevenue = approvedQuotationRequests.Sum(qr => qr.TotalPrice);
-
-        return Ok(new { TotalRevenue = totalRevenue });
-    }
-
-    public IActionResult Index()
+	//Find quotation request with status = approved and sum total price together
+	public IActionResult GetTotalRevenue()
     {
         return View();
     }
