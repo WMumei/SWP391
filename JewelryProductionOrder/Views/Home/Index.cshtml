@@ -31,36 +31,7 @@
 </style>
 
 <body>
-    @if (User.Identity.IsAuthenticated && !User.IsInRole(SD.Role_Customer))
-    {
-        <div class="menu-icon-2" id="menu-icon-2">
-            <img src="~/Images/Inverted Menu Icon.png" alt="Blue Menu Icon"/>
-        </div>
-
-        <div class="menu-header" id="menu-header">Menu</div>
-        <div class="menu" id="menu">
-            <div>
-                <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
-            </div>
-            <div>
-                <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
-            </div>
-            <div>
-                <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
-            </div>
-            <div>
-                <a asp-controller="QuotationRequest" asp-action="Index" class="button">View Quotation</a>
-            </div>
-            <div>
-                <a asp-controller="Jewelry" asp-action="Index" class="button">View Jewelry</a>
-            </div>
-            <div>
-                <a asp-controller="Jewelry" asp-action="Create" class="button">Create Jewelry</a>
-            </div>
-        </div>
-    }
-
-    <div class="overlay" id="overlay"></div>
+    
 
     <div class="text-start">
         <img class="banner" width="100%" src="~/Images/Banner.jpeg" />

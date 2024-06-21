@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "DashBoard";
 }
-@model DashboardLists
+@model DashboardVM
 
 <link rel="stylesheet" href="~/css/Dashboard.css" />
 
@@ -11,6 +11,8 @@
     <div class="dashboard-container">
         <div class="dashboard-box">
             <h2>Revenue</h2>
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+			<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
         </div>
 
         <div class="dashboard-box">
@@ -22,3 +24,48 @@
         </div>
     </div>
 </body>
+
+<script>
+	window.onload = function () {
+
+		var dps = []; // dataPoints
+		var chart = new CanvasJS.Chart("chartContainer", {
+			title: {
+				text: "Dynamic Data"
+			},
+			data: [{
+				type: "line",
+				dataPoints: dps
+			}]
+		});
+
+		var xVal = 0;
+		var yVal = 100;
+		var updateInterval = 1000;
+		var dataLength = 20; // number of dataPoints visible at any point
+
+		var updateChart = function (count) {
+
+			count = count || 1;
+
+			for (var j = 0; j < count; j++) {
+				yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+				dps.push({
+					x: xVal,
+					y: yVal
+				});
+				xVal++;
+			}
+
+			if (dps.length > dataLength) {
+				dps.shift();
+			}
+
+			chart.render();
+		};
+
+		updateChart(dataLength);
+		setInterval(function () { updateChart() }, updateInterval);
+
+	}
+</script>
