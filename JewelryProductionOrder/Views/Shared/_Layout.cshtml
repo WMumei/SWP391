@@ -19,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                @if (SignInManager.IsSignedIn(User))
+                @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
                 {
                     <div class="menu-icon" id="menu-icon">
                         <img src="~/Images/Menu icon.png" alt="Menu Icon" />
@@ -61,6 +61,7 @@
         </div>
 
         <div class="menu-header" id="menu-header">Menu</div>
+
         <div class="menu" id="menu">
             <div>
                 <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
