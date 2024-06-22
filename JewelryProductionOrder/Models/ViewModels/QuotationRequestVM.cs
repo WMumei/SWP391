@@ -9,6 +9,5 @@ namespace JewelryProductionOrder.Models.ViewModels
 		public Jewelry Jewelry { get; set; }
 		public QuotationRequest QuotationRequest { get; set; }
 		public MaterialSet MaterialSet { get; set; }
-		public bool RedirectedFrom { get; set; }
 	}
 }

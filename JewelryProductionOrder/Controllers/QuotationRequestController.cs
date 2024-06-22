@@ -40,7 +40,7 @@ namespace SWP391.Controllers
             return View(vm);
         }
 
-        public IActionResult Create(int jId, bool redirectedFrom)
+        public IActionResult Create(int jId)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
@@ -48,8 +48,7 @@ namespace SWP391.Controllers
 			{
 				Jewelry = jewelry,
 				QuotationRequest = new QuotationRequest { },
-				MaterialSet = jewelry.MaterialSet,
-				RedirectedFrom = redirectedFrom
+				MaterialSet = jewelry.MaterialSet
 			};
 			return View(vm);
 		}
@@ -70,19 +69,15 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			// Hide the old quotation request
-			if (vm.RedirectedFrom is false)
+			QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
+			&& (r.Status == "Pending"));
+			if (oldRequest is not null)
 			{
-				QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
-				&& (r.Status == "Disapproved by Manager" || r.Status == "Disapproved by Customer"));
-				if (oldRequest is not null)
-				{
-					oldRequest.Status = "Discontinue";
-					_unitOfWork.Save();
-				}				
+				oldRequest.Status = "Discontinue";
+				_unitOfWork.Save();
 			}
 
-			return RedirectToAction("Details", new { jId = vm.Jewelry.Id });
+			return RedirectToAction("Index", new { jId = vm.Jewelry.Id });
 		}
 		[Authorize(Roles = SD.Role_Manager)]
 		public IActionResult ManagerApprove(int id)
