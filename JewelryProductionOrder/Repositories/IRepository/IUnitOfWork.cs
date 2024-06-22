@@ -9,6 +9,7 @@ namespace Models.Repositories.Repository.IRepository
 {
     public interface IUnitOfWork
     {   
+        IDeliveryRepository Delivery { get; }
         IProductionRequestRepository ProductionRequest { get; }
         IUserRepository User { get; }
         IJewelryRepository Jewelry { get; }
