@@ -1,8 +1,10 @@
-﻿using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Data;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -11,15 +13,23 @@ namespace JewelryProductionOrder.Controllers
     public class JewelryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public JewelryController(IUnitOfWork unitOfWork)
+        private readonly ApplicationDbContext _context;
+        public JewelryController(IUnitOfWork unitOfWork, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
+            _context = context;
         }
         public IActionResult Create(int reqId)
         {
+            var productionRequest = _context.ProductionRequests.FirstOrDefault(pr => pr.Id == reqId);
+            if (productionRequest == null)
+            {
+                return NotFound();
+            }
             Jewelry obj = new Jewelry
             {
-                ProductionRequestId = reqId
+                ProductionRequestId = reqId,
+                ProductionRequest = productionRequest
             };
             return View(obj);
         }
