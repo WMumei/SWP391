@@ -17,9 +17,12 @@ namespace JewelryProductionOrder.Controllers
         }
         public IActionResult Create(int reqId)
         {
+            //get pro request tương ứng ra.
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == reqId, includeProperties:"Customer");
             Jewelry obj = new Jewelry
             {
-                ProductionRequestId = reqId
+                ProductionRequestId = reqId,
+                CustomerId = productionRequest.CustomerId
             };
             return View(obj);
         }
@@ -29,7 +32,11 @@ namespace JewelryProductionOrder.Controllers
         public IActionResult Create(Jewelry obj)
         {
             obj.CreatedAt = DateTime.Now;
+            //obj.CustomerId = obj.ProductionRequest.CustomerId;
             _unitOfWork.Jewelry.Add(obj);
+            // ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == obj.ProductionRequestId);
+            obj.CustomerId = productionRequest.CustomerId;
             _unitOfWork.Save();
             return RedirectToAction("Index");
             //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
@@ -37,13 +44,13 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequest,JewelryDesigns").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequest,JewelryDesigns,WarrantyCard").ToList();
 			return View(jewelries);
         }
 
         public IActionResult RequestIndex(int reqId)
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequest,JewelryDesigns").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequest,JewelryDesigns,WarrantyCard").ToList();
             return View(jewelries);
         }
 
@@ -75,11 +82,26 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-        public IActionResult Deliver(int id)
+        /*public IActionResult GetCustomer(int id)
+        {
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (jewelry is not null)
+            {
+                jewelry.CustomerId = userId;
+                jewelry.Status = $"Sending WarrantyCard";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+        */
+        public IActionResult Delivery(int id)
         {
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
 
 			if (jewelry is not null)
 			{
@@ -87,7 +109,7 @@ namespace JewelryProductionOrder.Controllers
 				jewelry.Status = "Delivering";
 			}
             _unitOfWork.Save();
-            return RedirectToAction("Index");
+            return RedirectToAction("Delivery");
         }
 
         //public IActionResult Deliver(int id)

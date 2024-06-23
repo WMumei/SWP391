@@ -12,11 +12,12 @@
             <hr/>
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
-        @* <h1>Customer Information</h1>
+        <h1>Customer Information</h1>
         <div class="col-12 py-2 form-floating">
         <div class="first-col">
-        <label asp-for="@Model.CustomerId" class="ms-2"></label>
-        <input disabled asp-for="@Model.CustomerId" />*@
+        <label asp-for="@Model.Customer.Name" class="ms-2"></label>
+        <input disabled asp-for="@Model.Customer.Name" />
+         
        
               
                 
@@ -43,8 +44,9 @@
         <div class="form-group">
             <div class="first-col">
                 <label for="issued-date" class="labels">Issued Date (dd mm yyyy)</label>
-                <input asp-for="@Model.WarrantyCard.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
+                <input asp-for="@Model.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
             </div>
+        @*
             <div class="first-col">
                 <label for="expired-date" class="labels">Expired Date (dd mm yyyy)</label>
                     <input asp-for="@Model.WarrantyCard.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">

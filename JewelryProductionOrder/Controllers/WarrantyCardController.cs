@@ -31,15 +31,20 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Create(int jId)
 		{
 
-
+			
 
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer");
-		    //var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+		    var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+			if(jewelry.MaterialSet ==null && jewelry.QuotationRequest == null)
+			{
+                TempData["WarningMessage"] = "Please create MaterialSet and QuotationRequest!";
+            }
 			WarrantyCardVM vm = new WarrantyCardVM
 			{
 				Jewelry = jewelry,
 				WarrantyCard = new WarrantyCard { },
-				//Customer = customer
+				CreatedAt = DateTime.Now,
+				Customer = customer
 				//CustomerId = customer.Id
 			};
             return View(vm);
@@ -53,13 +58,19 @@ namespace JewelryProductionOrder.Controllers
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			vm.WarrantyCard.SalesStaffId = userId;
 			
-			vm.WarrantyCard.CreatedAt = DateTime.Now;
+			vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.WarrantyCard.JewelryId, includeProperties: "Customer");
+            var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId );
+            
+            _unitOfWork.Save();
+           
+            vm.WarrantyCard.CreatedAt = DateTime.Now;
 			vm.WarrantyCard.ExpiredAt = vm.WarrantyCard.CreatedAt.AddYears(3);
 
-            //vm.QuotationRequest.MaterialSetId = materialSet.Id;
-            vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
-			//vm.WarrantyCard.CustomerId = vm.CustomerId;
-			//vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
+            
+            
+			vm.WarrantyCard.CustomerId = customer.Id;
+			
 			_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
 			_unitOfWork.Save();
 			return RedirectToAction("Index", "Jewelry");
@@ -68,7 +79,7 @@ namespace JewelryProductionOrder.Controllers
 		{
 			List<WarrantyCard> objWarrantyCardList = _unitOfWork.WarrantyCard.GetAll(includeProperties: "Jewelry,Customer").ToList();
 			//IEnumerable<SelectListItem>
-			return View();
+			return View(objWarrantyCardList);
 		}
 		public IActionResult Delete(int? id)
 		{
@@ -96,11 +107,13 @@ namespace JewelryProductionOrder.Controllers
 		
 		public IActionResult Edit(int? id)
 		{
-			if (id == null || id == 0)
+			//not yet
+            WarrantyCard? warrantyCardFromDb = _unitOfWork.WarrantyCard.Get(u => u.Id == id, includeProperties: "Jewelry,Customer");
+            if (warrantyCardFromDb.Id == null)
 			{
 				return NotFound();
 			}
-			WarrantyCard? warrantyCardFromDb = _warrantyCardRepo.Get(u => u.Id == id, includeProperties: "Jewelry,User");
+			
 			if (warrantyCardFromDb == null)
 			{ return NotFound(); }
 			return View(warrantyCardFromDb);
@@ -113,20 +126,20 @@ namespace JewelryProductionOrder.Controllers
 				_unitOfWork.WarrantyCard.Update(vm.WarrantyCard);
 
 				_unitOfWork.Save();
-				return RedirectToAction("Index", "Jewelry");
+				return RedirectToAction("Index", "WarrantyCard");
 			}
 			return View(vm);
 		}
 		public IActionResult Details(int? id)
 		{
-			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(r => r.JewelryId == id, includeProperties: "Jewelry");
+			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(r => r.JewelryId == id, includeProperties: "Jewelry,Customer");
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == id, includeProperties: "Customer");
             User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 			WarrantyCardVM vm = new WarrantyCardVM
 			{
 				WarrantyCard = warrantyCard,
 				Jewelry = jewelry,
-				//CustomerId = customer.Id
+				Customer = customer
 			};
 			return View(vm);
 		}

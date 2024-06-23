@@ -7,6 +7,7 @@
 
 		//public string? CustomerId { get; set; }
 		//[ForeignKey("CustomerId")]
-		//public User Customer { get; set; }
+		public User Customer { get; set; }
+		public DateTime? CreatedAt { get; set; } = DateTime.Now;
 	}
 }

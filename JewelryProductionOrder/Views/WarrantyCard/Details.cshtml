@@ -8,21 +8,22 @@
 	</div>
 	<div class="col-12 py-2 form-floating">
 		<div class="row">
-			<div class="col-10">
-				<input asp-for="@Model.Jewelry.Id"  hidden/>
-				<input disabled asp-for="@Model.Jewelry.CustomerId"  />
-		    </div>
-			<div class="col-10">
-				<input asp-for="@Model.Jewelry.Id" hidden />
-				<input disabled asp-for="@Model.Jewelry.CustomerId" hidden />
+			@*<div class="col-10">
+			<input asp-for="@Model.Jewelry.Id"  hidden/>
+			<input disabled asp-for="@Model.Jewelry.Name"  />
+			</div>*@
+			<div class="col-12 py-2 form-floating">
+				<label asp-for="@Model.Customer.Name" class="ms-2">Customer's Name</label>
+				<input disabled asp-for="@Model.Customer.Name"  />
+				
 			</div>
 			<div class="col-12 py-2 form-floating">
-				<input disabled asp-for="@Model.WarrantyCard.CreatedAt" class="form-control border-0 shadow" />
-				<label asp-for="@Model.WarrantyCard.CreatedAt" class="ms-2"></label>
+				<input disabled asp-for="@Model.WarrantyCard.CreatedAt" type="date" class="form-control border-0 shadow" />
+				<label asp-for="@Model.WarrantyCard.CreatedAt" type="date"  class="ms-2"></label>
 			</div>
 			<div class="col-12 py-2 form-floating">
-				<input disabled asp-for="@Model.WarrantyCard.ExpiredAt" class="form-control border-0 shadow" />
-				<label asp-for="@Model.WarrantyCard.ExpiredAt" class="ms-2"></label>
+				<input disabled asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="form-control border-0 shadow" />
+				<label asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="ms-2"></label>
 			</div>
 </div>
 </div>

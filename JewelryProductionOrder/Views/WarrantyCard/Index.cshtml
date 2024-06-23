@@ -1,5 +1,57 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<WarrantyCard>
+
+<form method="post">
+    <div>
+        <div>
+            <h2>View Warranty Card</h2>
+            <hr />
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Jewelry's Name</th>
+                    <th>Customer's Name</th>
+                    <th>CreatedAt</th>
+                    <th>ExpiredAt</th>
+                    
+
+                    
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.OrderBy(u => u.CreatedAt)) 
+                @*sắp xếp object theo ngày tạo*@
+                {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Jewelry.Name</td>
+                    <td>@obj.Customer.Name</td>
+                    <td>@obj.CreatedAt</td>
+                    <td>@obj.ExpiredAt</td>
+                 
+                    
+                    <td><div class="w-75 btn-group" role="group">
+                        <a asp-controller="WarrantyCard" asp-action="Edit" class="btn btn-primary mx-2">
+                                <i class="bi bi-pencil"></i> Edit
+                        </a>
+                            <a asp-controller="WarrantyCard" asp-action="Delete" class="btn btn-danger mx-2">
+                                <i class="bi bi-trash-fill"></i>Delete
+                            </a>
+                    </div></td>
+                </tr>
+                }
+              
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-outline-primary form-control">
+            Back 
+        </a>
+    </div>
+
+    <!-- <div asp-validation-summary="All"></div> -->
+</form>

@@ -91,7 +91,8 @@
 						{
 							<td></td>
 						}
-						@if (obj.WarrantyCard is not null)
+
+						@if (@obj.WarrantyCard is not null)
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
@@ -108,9 +109,9 @@
 						{
 							<td><a asp-controller="Jewelry" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
 						}
-						else if (!User.IsInRole(SD.Role_Sales) && obj.Status == "Manufactured")
+						else if (User.IsInRole(SD.Role_Customer) && obj.Status == "Manufactured")
 						{
-							<td></td>
+							<td><a asp-controller="Jewelry" asp-action="DeliverForm" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
 						}
 
 					</tr>
