@@ -38,7 +38,7 @@ namespace Models.Repository
             //{
             //    query = dbSet.AsNoTracking();
             //}
-
+            //whenerver using foreign key
             query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {

@@ -4,6 +4,9 @@
 	{
 		public Jewelry Jewelry { get; set; }
 		public WarrantyCard WarrantyCard { get; set; }
-		public User Customer { get; set; }
+
+		//public string? CustomerId { get; set; }
+		//[ForeignKey("CustomerId")]
+		//public User Customer { get; set; }
 	}
 }

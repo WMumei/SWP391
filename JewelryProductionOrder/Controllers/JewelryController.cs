@@ -71,23 +71,37 @@ namespace JewelryProductionOrder.Controllers
             //    jewelry.ProductionStaffId = productionStaff.Id;
             //    jewelry.Status = $"Manufactured by {productionStaff.Name}";
             //}
-            jewelry.Status = "Manufactured";
+            jewelry.Status = $"Manufactured";
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+        public IActionResult Deliver(int id)
+        {
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			if (jewelry is not null)
+			{
+				jewelry.SalesStaffId = userId;
+				jewelry.Status = "Delivering";
+			}
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
-        public IActionResult Deliver(int id)
-        {
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+        //public IActionResult Deliver(int id)
+        //{
+            //Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
             //User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
             //if (jewelry is not null)
             //{
             //    jewelry.ProductionStaffId = productionStaff.Id;
             //    jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
             //}
-            jewelry.Status = "Delivered";
-            _unitOfWork.Save();
-            return RedirectToAction("Index");
-        }
+           // jewelry.Status = "Delivered";
+            //_unitOfWork.Save();
+            //return RedirectToAction("Index");
+       // }
     }
 }
