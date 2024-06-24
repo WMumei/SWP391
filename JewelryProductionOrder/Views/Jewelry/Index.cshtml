@@ -102,14 +102,14 @@
 						}
 						else
 						{
-							<td></td>
+							<td>Waiting for sale staff</td>
 						}
 
-						@if (User.IsInRole(SD.Role_Sales) && @obj.Status == "Manufactured")
+						@if (User.IsInRole(SD.Role_Sales) && @obj.WarrantyCard is not null)
 						{
-							<td><a asp-controller="Jewelry" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
+							<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
 						}
-						else if (User.IsInRole(SD.Role_Customer) && obj.Status == "Manufactured")
+						else if (User.IsInRole(SD.Role_Customer) && obj.Status == "Delivering")
 						{
 							<td><a asp-controller="Jewelry" asp-action="DeliverForm" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
 						}

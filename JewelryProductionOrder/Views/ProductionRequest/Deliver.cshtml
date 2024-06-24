@@ -3,10 +3,10 @@
 
 <form method="post" class="container">
 	<div class="caption-top row">
-		@*<input asp-for="Jewelry.Id" hidden/>*@
+		<input asp-for="Customer.Id" hidden/>
 		<h2>Deliver to Customer: @Model.Customer.Name</h2>
-		<label asp-for="@Model.Customer.PhoneNumber" class="ms-2"></label>
-		<input disabled asp-for="@Model.Customer.PhoneNumber" />
+		@*<label asp-for="@Model.Customer.PhoneNumber" class="ms-2"></label>
+		<input disabled asp-for="@Model.Customer.PhoneNumber" />*@
 	</div>
 	<div class="col-12 py-2 form-floating">
 		<div class="row">

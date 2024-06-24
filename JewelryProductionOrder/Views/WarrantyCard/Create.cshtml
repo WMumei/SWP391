@@ -8,7 +8,7 @@
             <input asp-for="Jewelry.Id" hidden />
             @*<input asp-for="@Model.CustomerId" hidden />*@
             <!--<input asp-for="Jewelry.CustomerId" hidden/>-->
-            <h2>Create Warranty Card for Jewelry @Model.Jewelry.Name</h2>
+            <h2>Create Warranty Card for Jewelry: @Model.Jewelry.Name</h2>
             <hr/>
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
@@ -46,16 +46,16 @@
                 <label for="issued-date" class="labels">Issued Date (dd mm yyyy)</label>
                 <input asp-for="@Model.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
             </div>
-        @*
+        
             <div class="first-col">
                 <label for="expired-date" class="labels">Expired Date (dd/mm/yyyy)</label>
                     <input asp-for="@Model.WarrantyCard.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">
                 @*2 năm*@
             </div>
         </div>
-  
 
-    <button asp-action="Create"> Create </button> <button>Cancel</button>
+
+            <button asp-action="Create"> Create </button> <button asp-controller="Jewelry" asp-action="Index">Cancel</button>
 
     <script>
         const searchText = document.getElementById("searchText");

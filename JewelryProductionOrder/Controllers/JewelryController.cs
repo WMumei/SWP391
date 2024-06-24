@@ -3,6 +3,7 @@ using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -23,6 +24,7 @@ namespace JewelryProductionOrder.Controllers
             {
                 ProductionRequestId = reqId,
                 CustomerId = productionRequest.CustomerId
+
             };
             return View(obj);
         }
@@ -36,6 +38,8 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Jewelry.Add(obj);
             // ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == obj.ProductionRequestId);
+           // obj.ProductionRequest.Address = productionRequest.Address;
+           //there is no address column in jewelry table
             obj.CustomerId = productionRequest.CustomerId;
             _unitOfWork.Save();
             return RedirectToAction("Index");
@@ -96,21 +100,7 @@ namespace JewelryProductionOrder.Controllers
             return RedirectToAction("Index");
         }
         */
-        public IActionResult Delivery(int id)
-        {
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-
-			if (jewelry is not null)
-			{
-				jewelry.SalesStaffId = userId;
-				jewelry.Status = "Delivering";
-			}
-            _unitOfWork.Save();
-            return RedirectToAction("Delivery");
-        }
+       
 
         //public IActionResult Deliver(int id)
         //{

@@ -43,8 +43,9 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             OrderVM orderVM = new OrderVM
             {
-                ProductionRequest = new ProductionRequest { Quantity = 1},
-                Customer = _unitOfWork.User.Get(User => User.Id == userId)
+                ProductionRequest = new ProductionRequest { Quantity = 1, Address = ""},
+                Customer = _unitOfWork.User.Get(User => User.Id == userId),
+                //Address
             };
             return View(orderVM);
         }
@@ -53,8 +54,12 @@ namespace SWP391.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //var customer= _unitOfWork.User.Get(User => User.Id == userId);
+            //var productionRequest = _unitOfWork.ProductionRequest.Get(U => U.Id == orderVM.ProductionRequest.Id);
+            //_unitOfWork.ProductionRequest.Add(customer);
             orderVM.ProductionRequest.CustomerId = userId;
-            orderVM.ProductionRequest.Address = orderVM.Customer.Address;
+        
+            //customer.Address is null
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
@@ -88,6 +93,25 @@ namespace SWP391.Controllers
             }
             _unitOfWork.Save();
             return RedirectToAction("Index");
+        }
+        public IActionResult Deliver(int id)
+        {
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+
+            productionRequest.CustomerId = customer.Id;
+            if (jewelry is not null)
+            {
+                jewelry.SalesStaffId = userId;
+                jewelry.Status = "Delivering";
+                //jewelry.ProductionRequest = productionRequest;
+                //customer.PhoneNumber = productionRequest.Phone
+            }
+            _unitOfWork.Save();
+            return View("Deliver");
         }
     }
 }

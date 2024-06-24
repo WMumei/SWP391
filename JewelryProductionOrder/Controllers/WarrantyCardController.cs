@@ -37,14 +37,15 @@ namespace JewelryProductionOrder.Controllers
 		    var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 			if(jewelry.MaterialSet ==null && jewelry.QuotationRequest == null)
 			{
-                TempData["WarningMessage"] = "Please create MaterialSet and QuotationRequest!";
+                TempData["WarningMessage"] = "Please create Material Set and Quotation Request!";
             }
 			WarrantyCardVM vm = new WarrantyCardVM
 			{
 				Jewelry = jewelry,
 				WarrantyCard = new WarrantyCard { },
 				CreatedAt = DateTime.Now,
-				Customer = customer
+                ExpiredAt = DateTime.Now,
+                Customer = customer
 				//CustomerId = customer.Id
 			};
             return View(vm);
