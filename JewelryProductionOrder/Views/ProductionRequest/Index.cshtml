@@ -49,13 +49,16 @@
                 @if (@obj.Jewelries.Count != 0)
                 {
                     <td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                        if (User.IsInRole(SD.Role_Sales))
+                        {
+                            <td><a asp-controller="Jewelry" asp-action="Cancel" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm">Cancel</a></td>
+                        }
                 } else if (!User.IsInRole(SD.Role_Customer))
                 {
                      <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                } else
+                }else
                 {
-                    <td>Waiting for sales</td>
-				
+                    <td>Waiting for sales</td>	
                 }
             </tr>
             }
