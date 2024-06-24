@@ -26,18 +26,34 @@ namespace SWP391.Controllers
             return View(requests);
         }
 
-        public IActionResult Details(int jId)
+        public IActionResult Details(int jId, bool checkRedirect)
         {
-            QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
-            QuotationRequestVM vm = new QuotationRequestVM
-            {
-                QuotationRequest = request,
-                Jewelry = jewelry,
-                MaterialSet = materialSet
-            };
-            return View(vm);
+			if (checkRedirect is false)
+			{
+                QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == jId);
+                Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == request.JewelryId, includeProperties: "MaterialSet");
+                MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
+                QuotationRequestVM vm = new QuotationRequestVM
+                {
+                    QuotationRequest = request,
+                    Jewelry = jewelry,
+                    MaterialSet = materialSet
+                };
+                return View(vm);
+            }
+			else
+			{
+				QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
+				Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
+				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
+				QuotationRequestVM vm = new QuotationRequestVM
+				{
+					QuotationRequest = request,
+					Jewelry = jewelry,
+					MaterialSet = materialSet
+				};
+				return View(vm);
+			}
         }
 
         public IActionResult Create(int jId)

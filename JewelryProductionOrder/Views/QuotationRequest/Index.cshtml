@@ -62,7 +62,7 @@
                             <td>@obj.CreatedAt</td>
                             <td>@obj.LaborPrice</td>
                             <td>@obj.TotalPrice</td>
-                            <td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.JewelryId" class="btn btn-primary btn-sm">View</a></td>
+                            <td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" asp-route-checkRedirect="false" class="btn btn-primary btn-sm">View</a></td>
                         </tr>
                     }
                 }
