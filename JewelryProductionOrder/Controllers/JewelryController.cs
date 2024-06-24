@@ -57,7 +57,7 @@ namespace JewelryProductionOrder.Controllers
             return View(jewelries);
         }
 
-        public IActionResult Manufacture(int id)
+        public IActionResult StartManufacture(int id)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
