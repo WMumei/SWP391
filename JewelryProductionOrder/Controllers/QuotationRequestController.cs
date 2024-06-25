@@ -1,4 +1,5 @@
-﻿using JewelryProductionOrder.Data;
+﻿using Azure.Core;
+using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Repositories;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
@@ -20,10 +22,16 @@ namespace SWP391.Controllers
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Index()
+        public IActionResult Index(int jId)
         {
-            List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().ToList();
-            return View(requests);
+            List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().Where(r => r.JewelryId == jId).ToList();
+            bool checkStatus = requests != null && requests.Exists(r => r.Status == "Pending");
+            CheckStatusVM vm = new CheckStatusVM
+            {
+                QuotationRequests = requests,
+                checkStatus = checkStatus
+            };
+            return View(vm);
         }
 
         public IActionResult Details(int jId, bool checkRedirect)
@@ -154,6 +162,16 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Details", new { jId = req.JewelryId });
         }
+        //public bool CheckQuotationStatus(int jId)
+        //{
+        //    QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
+        //    CheckStatusVM vm = new CheckStatusVM
+        //    {
+        //        checkStatus = (request != null && request.Status == "Pending")
+        //    };
+        //    return vm.checkStatus;
+        //}
+
 		
         //[HttpPost,ActionName("Delete")]
         //public IActionResult DeletePOST(int? id)

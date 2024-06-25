@@ -1,4 +1,4 @@
-﻿@model List<QuotationRequest>
+﻿@model CheckStatusVM
 <form method="post">
     <div>
         <div class="row">
@@ -6,34 +6,9 @@
                 <h2>View Quotation Application</h2>
             </div>
             <div class="col text-end">
-                @if (Model.Count > 0 && User.IsInRole(SD.Role_Sales))
+                @if (Model.QuotationRequests.Count > 0 && User.IsInRole(SD.Role_Sales))
                 {
-                    var hasPendingQuotation = true;
-                    foreach (var obj in Model.OrderBy(u => u.CreatedAt))
-                    {
-                        if (obj.JewelryId == Convert.ToInt64(Context.Request.Query["jId"]))
-                        {
-                            @if (obj.Status == "Pending")
-                            {
-                                var confirmMessage = "There is a pending quotation. Do you want to continue?";
-                                <script>
-                                    function confirmQuotation() {
-                                        var confirmResult = window.confirm("@confirmMessage");
-                                        if (confirmResult) {
-                                            window.location.href = '@Url.Action("Create", "QuotationRequest", new { jId = obj.JewelryId })';
-                                        }
-                                    }
-                                </script>
-                                <a onclick="confirmQuotation()" class="btn btn-primary btn-sm" style="margin-top: 10px;">Create new quotation</a>
-                                hasPendingQuotation = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (hasPendingQuotation)
-                    {
-                        <a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.First().JewelryId" class="btn btn-primary btn-sm" style="margin-top: 10px;">Create new quotation</a>
-                    }
+                    <a onclick="confirmQuotation()" class="btn btn-primary btn-sm" style="margin-top: 10px;">Create new quotation</a>
                 }
             </div>
         </div>
@@ -51,20 +26,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.OrderBy(u => u.CreatedAt))
+                @foreach (var obj in Model.QuotationRequests.OrderBy(u => u.CreatedAt))
                 {
-                    if (obj.JewelryId == Convert.ToInt64(Context.Request.Query["jId"]))
-                    {
-                        <tr>
-                            <td>@obj.Id</td>
-                            <td>@obj.Name</td>
-                            <td>@obj.Status</td>
-                            <td>@obj.CreatedAt</td>
-                            <td>@obj.LaborPrice</td>
-                            <td>@obj.TotalPrice</td>
-                            <td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" asp-route-checkRedirect="false" class="btn btn-primary btn-sm">View</a></td>
-                        </tr>
-                    }
+                    <tr>
+                        <td>@obj.Id</td>
+                        <td>@obj.Name</td>
+                        <td>@obj.Status</td>
+                        <td>@obj.CreatedAt</td>
+                        <td>@obj.LaborPrice</td>
+                        <td>@obj.TotalPrice</td>
+                        <td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" asp-route-checkRedirect="false" class="btn btn-primary btn-sm">View</a></td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -78,3 +50,16 @@
 
     <!-- <div asp-validation-summary="All"></div> -->
 </form>
+<script>
+    function confirmQuotation() {
+        if (@Model.checkStatus) {
+            var confirmResult = window.confirm("There is a pending quotation.Do you want to continue?");
+            if (confirmResult) {
+                window.location.href = '@Url.Action("Create", "QuotationRequest", new { jId = Model.QuotationRequests.First().JewelryId })';
+            }
+        }
+        else{
+            window.location.href = '@Url.Action("Create", "QuotationRequest", new { jId = Model.QuotationRequests.First().JewelryId })';
+        }
+    }
+</script>
