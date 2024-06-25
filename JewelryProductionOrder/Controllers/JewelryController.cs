@@ -53,7 +53,7 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult RequestIndex(int reqId)
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequest,JewelryDesigns").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
             return View(jewelries);
         }
 

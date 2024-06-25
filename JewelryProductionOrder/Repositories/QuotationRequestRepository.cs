@@ -24,11 +24,5 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.QuotationRequests.Update(request);
         }
-		public IEnumerable<QuotationRequest> GetApprovedQuotationRequests()
-		{
-			return dbSet
-				.Where(qr => qr.Status == "Approved")
-				.Select(qr => qr);
-		}
 	}
 }
