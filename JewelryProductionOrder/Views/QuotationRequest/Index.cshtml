@@ -52,13 +52,13 @@
 </form>
 <script>
     function confirmQuotation() {
-        if (@Model.checkStatus) {
-            var confirmResult = window.confirm("There is a pending quotation.Do you want to continue?");
+        if (@Model.checkStatus.ToString().ToLower()) {
+            var confirmResult = window.confirm("There is a pending quotation. Do you want to continue?");
             if (confirmResult) {
                 window.location.href = '@Url.Action("Create", "QuotationRequest", new { jId = Model.QuotationRequests.First().JewelryId })';
             }
         }
-        else{
+        else {
             window.location.href = '@Url.Action("Create", "QuotationRequest", new { jId = Model.QuotationRequests.First().JewelryId })';
         }
     }
