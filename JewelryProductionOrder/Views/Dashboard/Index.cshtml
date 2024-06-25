@@ -14,7 +14,7 @@
 <h1>Dashboard</h1>
 <body>
     <div class="dashboard-container">
-        <div class="dashboard-box">
+        <div class="dashboard-box full-width">
             <h2>Revenue</h2>
             <table class="table table-bordered table-striped">
                 <thead>
@@ -31,22 +31,25 @@
                     </tr>
                 </tbody>
             </table>
-@*             <form id="filter-form">
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" />
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" name="endDate" />
-                <button type="submit">Apply Filter</button>
+            @*             <form id="filter-form">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" />
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" />
+            <button type="submit">Apply Filter</button>
             </form> *@
             <canvas id="RevenueChart"></canvas>
         </div>
 
-        <div class="dashboard-box">
-            <h2>Total Jewelry Sold</h2>
-        </div>
+        <div class="dashboard-container">
+            <div class="dashboard-box">
+                <h2>Total Jewelry Sold</h2>
+            </div>
 
-        <div class="dashboard-box">
-            <h2>Total Customers</h2>
+            <div class="dashboard-box">
+                <h2>Total Customers</h2>
+                <p>@ViewBag.CustomerCount</p>
+            </div>
         </div>
     </div>
 
