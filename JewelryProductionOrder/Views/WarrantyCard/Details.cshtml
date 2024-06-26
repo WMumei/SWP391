@@ -8,14 +8,10 @@
 	</div>
 	<div class="col-12 py-2 form-floating">
 		<div class="row">
-			@*<div class="col-10">
-			<input asp-for="@Model.Jewelry.Id"  hidden/>
-			<input disabled asp-for="@Model.Jewelry.Name"  />
-			</div>*@
+
 			<div class="col-12 py-2 form-floating">
-				<label asp-for="@Model.Customer.Name" class="ms-2">Customer's Name</label>
-				<input disabled asp-for="@Model.Customer.Name"  />
-				
+				<input disabled asp-for="@Model.Customer.Name"class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.Name"  class="ms-2"></label>
 			</div>
 			<div class="col-12 py-2 form-floating">
 				<input disabled asp-for="@Model.WarrantyCard.CreatedAt" type="date" class="form-control border-0 shadow" />

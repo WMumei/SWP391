@@ -22,7 +22,7 @@
 @*                 <th>Staffs</th>
                 <th>Quotation</th> *@
                 <th>Jewelries</th>
-                @* <th>Design</th> *@
+                 <th>Delivery</th> 
             </tr>
         </thead>
         <tbody>
@@ -54,13 +54,30 @@
                      <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
                 } else
                 {
-                    <td>Waiting for sales</td>
+                    <td>Waiting for Sale Staff</td>
 				
                 }
+                    @if (User.IsInRole(SD.Role_Sales))
+                    {
+                        //get productionRequestId
+                        <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                    }
+                    //Status of production request
+                    else if (obj.Status == "Delivering")
+                    {
+                        <td>Waiting for Sale Staff</td>
+                    }
+                    else if (obj.Status == "Delivered"){
+                        <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+
+                    }
+
             </tr>
             }
         </tbody>
     </table>
+
+   
 </div>
         <!-- <div asp-validation-summary="All"></div> -->
         

@@ -42,9 +42,9 @@ namespace JewelryProductionOrder.Controllers
 			WarrantyCardVM vm = new WarrantyCardVM
 			{
 				Jewelry = jewelry,
-				WarrantyCard = new WarrantyCard { },
-				CreatedAt = DateTime.Now,
-                ExpiredAt = DateTime.Now,
+				WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },
+				//CreatedAt = DateTime.Now,
+                //ExpiredAt = DateTime.Now,
                 Customer = customer
 				//CustomerId = customer.Id
 			};
@@ -65,8 +65,8 @@ namespace JewelryProductionOrder.Controllers
             
             _unitOfWork.Save();
            
-            vm.WarrantyCard.CreatedAt = DateTime.Now;
-			vm.WarrantyCard.ExpiredAt = vm.WarrantyCard.CreatedAt.AddYears(3);
+            //vm.WarrantyCard.CreatedAt = DateTime.Now;
+			//vm.WarrantyCard.ExpiredAt = vm.WarrantyCard.CreatedAt.AddYears(3);
 
             
             

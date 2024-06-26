@@ -43,12 +43,12 @@
         *@
         <div class="form-group">
             <div class="first-col">
-                <label for="issued-date" class="labels">Issued Date (dd mm yyyy)</label>
-                <input asp-for="@Model.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
+                <label asp-for="@Model.WarrantyCard.CreatedAt" class="labels">Issued Date (mm/dd/yyyy)</label>
+                <input asp-for="@Model.WarrantyCard.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
             </div>
         
             <div class="first-col">
-                <label for="expired-date" class="labels">Expired Date (dd/mm/yyyy)</label>
+                <label asp-for="@Model.WarrantyCard.ExpiredAt" class="labels">Expired Date (mm/dd/yyyy)</label>
                     <input asp-for="@Model.WarrantyCard.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">
                 @*2 năm*@
             </div>

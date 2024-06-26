@@ -23,8 +23,8 @@ namespace JewelryProductionOrder.Controllers
             Jewelry obj = new Jewelry
             {
                 ProductionRequestId = reqId,
-                CustomerId = productionRequest.CustomerId
-
+                CustomerId = productionRequest.CustomerId,
+                ProductionRequest = productionRequest
             };
             return View(obj);
         }
@@ -41,6 +41,7 @@ namespace JewelryProductionOrder.Controllers
            // obj.ProductionRequest.Address = productionRequest.Address;
            //there is no address column in jewelry table
             obj.CustomerId = productionRequest.CustomerId;
+            obj.ProductionRequest.Address = productionRequest.Address;
             _unitOfWork.Save();
             return RedirectToAction("Index");
             //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
