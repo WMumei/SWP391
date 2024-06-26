@@ -1,10 +1,13 @@
-﻿using JewelryProductionOrder.Models;
+﻿using Azure.Core;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using SWP391.Controllers;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -19,7 +22,8 @@ namespace JewelryProductionOrder.Controllers
         {
             Jewelry obj = new Jewelry
             {
-                ProductionRequestId = reqId
+                ProductionRequestId = reqId,
+                Status = "Processing"
             };
             return View(obj);
         }
@@ -38,12 +42,19 @@ namespace JewelryProductionOrder.Controllers
         public IActionResult Index()
         {
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-			return View(jewelries);
+            bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == "Canceled");
+            CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
+            {
+                Jewelries = jewelries,
+                checkStatus = checkStatus
+            };
+			return View(checkJewelryVM);
         }
 
         public IActionResult RequestIndex(int reqId)
         {
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
+
             return View(jewelries);
         }
 
@@ -88,6 +99,28 @@ namespace JewelryProductionOrder.Controllers
             jewelry.Status = "Delivered";
             _unitOfWork.Save();
             return RedirectToAction("Index");
+        }
+
+
+        public IActionResult CancelJewelry(int reqId)
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId).ToList();
+            QuotationRequestController quotationRequestController = new QuotationRequestController(_unitOfWork);
+            if (jewelries.Count > 0)
+            {
+                foreach (Jewelry jewelry in jewelries)
+                {
+                    jewelry.Status = "Canceled";
+                    quotationRequestController.CancelQuotationRequest(jewelry.Id);
+                }
+
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using JewelryProductionOrder.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using SWP391.Controllers;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
@@ -87,5 +88,23 @@ namespace JewelryProductionOrder.Controllers
 			};
 			return View(vm);
 		}
-    }
+		public IActionResult CancelJewelryDesign(int jId)
+		{
+			List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jId).ToList();
+			if (jewelryDesigns.Count > 0)
+			{
+				foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+				{
+					JewelryDesign.Status = "Canceled";
+				}
+
+				_unitOfWork.Save();
+				return RedirectToAction("Index");
+			}
+			else
+			{
+				return NotFound();
+			}
+		}
+	}
 }

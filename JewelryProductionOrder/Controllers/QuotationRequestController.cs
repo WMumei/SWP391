@@ -26,10 +26,12 @@ namespace SWP391.Controllers
         {
             List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().Where(r => r.JewelryId == jId).ToList();
             bool checkStatus = requests != null && requests.Exists(r => r.Status == "Pending");
-            CheckStatusVM vm = new CheckStatusVM
+            bool checkCancel = requests != null && requests.Exists(r => r.Status == "Canceled");
+            CheckQuotationVM vm = new CheckQuotationVM
             {
                 QuotationRequests = requests,
-                checkStatus = checkStatus
+                checkStatus = checkStatus,
+				checkCancel = checkCancel
             };
             return View(vm);
         }
@@ -161,6 +163,21 @@ namespace SWP391.Controllers
             }
             _unitOfWork.Save();
             return RedirectToAction("Details", new { jId = req.JewelryId });
+        }
+        public IActionResult CancelQuotationRequest(int jId)
+        {
+            QuotationRequest req = _unitOfWork.QuotationRequest.Get(q => q.JewelryId == jId);
+            if (req != null)
+            {
+                req.Status = "Canceled";
+
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         //public bool CheckQuotationStatus(int jId)
         //{

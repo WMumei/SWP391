@@ -1,10 +1,12 @@
-﻿using JewelryProductionOrder.Data;
+﻿using JewelryProductionOrder.Controllers;
+using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
@@ -56,6 +58,7 @@ namespace SWP391.Controllers
             orderVM.ProductionRequest.CustomerId = userId;
             orderVM.ProductionRequest.Address = orderVM.Customer.Address;
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
+            orderVM.ProductionRequest.Status = "Processing";
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
             return RedirectToAction("CustomerView");
@@ -87,6 +90,20 @@ namespace SWP391.Controllers
                 req.SalesStaffId = userId;
             }
             _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+        public IActionResult CancelRequest(int id)
+        {
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+            if (req is not null)
+            {
+                req.Status = "Canceled";
+                _unitOfWork.Save();
+            }
+            // Call the Cancel method in JewelryController
+            JewelryController jewelryController = new JewelryController(_unitOfWork);
+            jewelryController.CancelJewelry(id);
+
             return RedirectToAction("Index");
         }
     }

@@ -1,4 +1,4 @@
-﻿@model CheckStatusVM
+﻿@model CheckQuotationVM
 <form method="post">
     <div>
         <div class="row">
@@ -6,7 +6,7 @@
                 <h2>View Quotation Application</h2>
             </div>
             <div class="col text-end">
-                @if (Model.QuotationRequests.Count > 0 && User.IsInRole(SD.Role_Sales))
+                @if (Model.QuotationRequests.Count > 0 && User.IsInRole(SD.Role_Sales) && Model.checkCancel.ToString().ToLower() == "false")
                 {
                     <a onclick="confirmQuotation()" class="btn btn-primary btn-sm" style="margin-top: 10px;">Create new quotation</a>
                 }
