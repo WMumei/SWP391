@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="DB Static\" />
     <Folder Include="Migrations\" />
+    <Folder Include="3D model\" />
     <Folder Include="Views\SpecificProductionRequest\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
