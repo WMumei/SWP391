@@ -37,12 +37,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
                         {
 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                            </li>
                         }
                     </ul>
 @*                     <form class="d-flex">
