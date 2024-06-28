@@ -3,9 +3,9 @@ using Models.Repositories.IRepository;
 
 namespace JewelryProductionOrder.Repositories.IRepository
 {
-    public interface IWarrantyCardRepository : IRepository<WarrantyCard>
+    public interface IPostRepository : IRepository<Post>
     {
-        void Update(WarrantyCard obj);
+        void Update(Post obj);
         void Save();
     }
 }

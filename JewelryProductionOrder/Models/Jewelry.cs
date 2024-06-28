@@ -31,7 +31,7 @@ namespace JewelryProductionOrder.Models
         public int ProductionRequestId { get; set; }
         [ForeignKey("ProductionRequestId")]
         public ProductionRequest ProductionRequest { get; set; }
-		public List<QuotationRequest> QuotationRequests { get; } = [];
+        public List<QuotationRequest> QuotationRequests { get; } = [];
 
 		public List<JewelryDesign> JewelryDesigns { get; } = [];
     }
