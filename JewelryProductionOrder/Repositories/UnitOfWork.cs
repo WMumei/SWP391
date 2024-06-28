@@ -15,6 +15,7 @@ namespace Models.Repositories.Repository
     {
         private ApplicationDbContext _db;
 
+        public IDeliveryRepository Delivery { get; private set; }
         public IProductionRequestRepository ProductionRequest { get; private set; }
         public IUserRepository User { get; private set; }
         public IJewelryRepository Jewelry { get; private set; }
