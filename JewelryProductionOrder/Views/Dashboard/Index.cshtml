@@ -64,26 +64,47 @@
     </div>
 
     <script>
-        const ctx = document.getElementById('RevenueChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(ViewBag.Dates)),
-                datasets: [{
-                    label: 'Revenue',
-                    data: @Html.Raw(Json.Serialize(ViewBag.Revenues)),
+        document.getElementById("filter-form").addEventListener("submit", function (event) {
+            var startDate = new Date(document.getElementById("startDate").value);
+            var endDate = new Date(document.getElementById("endDate").value);
 
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+            if (startDate > endDate) {
+                document.getElementById("invalid-date-range").style.display = "block";
+                event.preventDefault();
+            } else {
+                document.getElementById("invalid-date-range").style.display = "none";
             }
         });
+
+        const ctx = document.getElementById('RevenueChart').getContext('2d');
+        const revenueData = @Html.Raw(Json.Serialize(ViewBag.Revenues));
+
+        if (revenueData.every(x => x === 0)) {
+            ctx.canvas.style.display = "none";
+            document.getElementById("no-record-message").style.display = "block";
+        } else {
+            ctx.canvas.style.display = "block";
+            document.getElementById("no-record-message").style.display = "none";
+
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(ViewBag.Dates)),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: revenueData,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
