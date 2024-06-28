@@ -164,21 +164,7 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Details", new { jId = req.JewelryId });
         }
-        public IActionResult CancelQuotationRequest(int jId)
-        {
-            QuotationRequest req = _unitOfWork.QuotationRequest.Get(q => q.JewelryId == jId);
-            if (req != null)
-            {
-                req.Status = "Canceled";
-
-                _unitOfWork.Save();
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+        
         //public bool CheckQuotationStatus(int jId)
         //{
         //    QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);

@@ -100,27 +100,5 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-
-
-        public IActionResult CancelJewelry(int reqId)
-        {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId).ToList();
-            QuotationRequestController quotationRequestController = new QuotationRequestController(_unitOfWork);
-            if (jewelries.Count > 0)
-            {
-                foreach (Jewelry jewelry in jewelries)
-                {
-                    jewelry.Status = "Canceled";
-                    quotationRequestController.CancelQuotationRequest(jewelry.Id);
-                }
-
-                _unitOfWork.Save();
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
     }
 }

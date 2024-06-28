@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
@@ -92,19 +93,37 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-        public IActionResult CancelRequest(int id)
-        {
-            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
-            if (req is not null)
-            {
-                req.Status = "Canceled";
-                _unitOfWork.Save();
-            }
-            // Call the Cancel method in JewelryController
-            JewelryController jewelryController = new JewelryController(_unitOfWork);
-            jewelryController.CancelJewelry(id);
+		public IActionResult CancelRequest(int id)
+		{
+			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+			if (req is not null)
+			{
+				req.Status = "Canceled";
+				_unitOfWork.Save();
+			}
 
-            return RedirectToAction("Index");
-        }
-    }
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+			if (jewelries.Count > 0)
+			{
+				foreach (Jewelry jewelry in jewelries)
+				{
+					jewelry.Status = "Canceled";
+					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+					if (QuoReq != null)
+					{
+						QuoReq.Status = "Canceled";
+					}
+					List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
+					if (jewelryDesigns.Count > 0)
+					{
+						foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+						{
+							JewelryDesign.Status = "Canceled";
+						}
+					}
+				}
+			}
+			return RedirectToAction("Index");
+		}
+	}
 }
