@@ -3,14 +3,13 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Models.Repository;
-using System.Linq.Expressions;
 
 namespace JewelryProductionOrder.Repositories
 {
-    public class ProductionRequestRepository : Repository<ProductionRequest>, IProductionRequestRepository
+    public class ProductionRequestDetailRepository : Repository<ProductionRequest>, IProductionRequestDetailRepository
     {
         private ApplicationDbContext _db;
-        public ProductionRequestRepository(ApplicationDbContext db) : base(db)
+        public ProductionRequestDetailRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }

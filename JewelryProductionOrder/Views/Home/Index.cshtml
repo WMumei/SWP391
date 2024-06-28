@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@model List<BaseDesign>
 <style>
     .button-container {
         display: flex;
@@ -49,7 +50,7 @@
             </div>
             <div class="content">
                 <h2>Our Services</h2>
-                <p class="paragraph animate-on-scroll">We offer a comprehensive range of jewelry production services to meet all your needs. From custom design to mass production, our team of skilled artisans and modern technology ensures that every piece is crafted to perfection.</p>
+                <p class="paragraph animate-on-scroll">We offer a comprehensive range of jewelry baseDesignion services to meet all your needs. From custom design to mass baseDesignion, our team of skilled artisans and modern technology ensures that every piece is crafted to perfection.</p>
                 <ul>
                     <li>Custom Jewelry Design</li>
                     <li>3D Modeling and Prototyping</li>
@@ -76,14 +77,16 @@
             </div>
             <div class="content">
                 <h2>Punctuality</h2>
-                <p class="paragraph animate-on-scroll">We understand the importance of timely delivery, especially for special occasions. Our efficient production process and dedicated team ensure that your orders are completed and delivered on time, every time. With us, you can have peace of mind knowing that your jewelry will arrive as scheduled.</p>
+                <p class="paragraph animate-on-scroll">We understand the importance of timely delivery, especially for special occasions. Our efficient baseDesignion process and dedicated team ensure that your orders are completed and delivered on time, every time. With us, you can have peace of mind knowing that your jewelry will arrive as scheduled.</p>
             </div>
         </div>
         <div id="order" class="section order-section">
 
+        </div>
+
         @if (User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Customer))
         {
-            @* <div class="row mt-8">
+            <div class="row mt-8">
                 <p>Place your order</p>
                 <div class="col-4 mx-auto">
                     <a asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
@@ -92,7 +95,7 @@
                 <div class="col-4 mx-auto">
                     <a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
                 </div>
-            </div> *@
+            </div>
         }
             @if (!User.Identity.IsAuthenticated)
             {
@@ -110,15 +113,54 @@
 
         <div id="contact" class="section">
             <h2>Contact Us</h2>
-            <p class="paragraph animate-on-scroll">If you have any questions or would like to discuss your jewelry production needs, please don't hesitate to contact us. Our friendly and knowledgeable staff are here to assist you.</p>
+            <p class="paragraph animate-on-scroll">If you have any questions or would like to discuss your jewelry baseDesignion needs, please don't hesitate to contact us. Our friendly and knowledgeable staff are here to assist you.</p>
             <p>Email: JPO@exampleEmail.com</p>
             <p>Phone: 123456789</p>
             <p>Address: AAA</p>
         </div>
+        
     </div>
     <br />
 
+    <div id="listBaseDesign">
+        @foreach (var baseDesign in Model)
+        {
+            <div class="col-lg-3 col-sm-6">
+                <div class="row p-2">
+                    <div class="col-12 p-1">
+                        <div class="card border-0 p-3 shadow  border-top border-5 rounded">
+                            @if (baseDesign.Image != null)
+                            {
+                                <img src="@baseDesign.Image" class="card-img-top rounded" />
+                            }
+                            else
+                            {
+                                <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                            }
+
+                            <div class="card-body pb-0">
+                                <div class="pl-1">
+                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@baseDesign.Name</p>
+                                </div>
+
+                            </div>
+                            <div>
+                                <a asp-controller="ShoppingCart"
+                                   asp-action="Add"
+                                   asp-route-baseDesignId="@baseDesign.Id"
+                                   class="btn btn-primary bg-gradient border-0 form-control">
+                                    Add to cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
     <link rel="stylesheet" href="~/css/HomeIndex.css" />
     <script src="~/js/HomeIndex.js"></script>
+
 </body>
 </html>

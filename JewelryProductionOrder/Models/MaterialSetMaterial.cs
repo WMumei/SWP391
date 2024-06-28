@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
 {
@@ -14,5 +13,5 @@ namespace JewelryProductionOrder.Models
         public MaterialSet MaterialSet { get; set; }
         public decimal Weight { get; set; }
         public DateTime CreatedAt { get; set; }
-	}
+    }
 }

@@ -1,10 +1,7 @@
-﻿using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
-using JewelryProductionOrder.Models.ViewModels;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -19,7 +16,7 @@ namespace JewelryProductionOrder.Controllers
         }
         public IActionResult Create(int reqId)
         {
-            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties:"Jewelries");
+            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties: "Jewelries");
             if (productionRequest == null)
             {
                 return NotFound();
@@ -45,8 +42,8 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-			return View(jewelries);
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
+            return View(jewelries);
         }
 
         public IActionResult RequestIndex(int reqId)
@@ -56,19 +53,19 @@ namespace JewelryProductionOrder.Controllers
         }
 
         public IActionResult StartManufacture(int id)
-		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        {
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			if (jewelry is not null)
-			{
-				jewelry.ProductionStaffId = userId;
-				jewelry.Status = $"Currently manufacturing";
-			}
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+            if (jewelry is not null)
+            {
+                jewelry.ProductionStaffId = userId;
+                jewelry.Status = $"Currently manufacturing";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
 
         public IActionResult Complete(int id)
         {

@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public decimal Price { get; set; }
         public List<MaterialSet> MaterialSets { get; } = [];
-		public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
-	}
+        public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
+    }
 }

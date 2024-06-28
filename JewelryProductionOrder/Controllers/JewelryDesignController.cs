@@ -42,50 +42,50 @@ namespace JewelryProductionOrder.Controllers
             }
             obj.Status = "Pending";
             //obj.JewelryId = obj.Jewelry.Id;
-			_unitOfWork.JewelryDesign.Add(obj);
+            _unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
             return RedirectToAction("Index", "Jewelry");
-            return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId});
+            return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
         }
 
         public IActionResult Index()
         {
             List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
-			return View(jewelries);
+            return View(jewelries);
         }
 
         public IActionResult Details(int jId)
-		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties:"Jewelry");
+        {
+            JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
             return View(design);
-		}
-		public IActionResult CustomerApprove(int id)
+        }
+        public IActionResult CustomerApprove(int id)
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (design is not null)
-			{
-				design.CustomerId = userId;
-				design.Status = $"Approved by Customer";
-			}
-			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
-			return RedirectToAction("Index");
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (design is not null)
+            {
+                design.CustomerId = userId;
+                design.Status = $"Approved by Customer";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
         public IActionResult Manufacture(int jId)
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties:"Materials,Gemstones");
+            MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties: "Materials,Gemstones");
             ManufactureVM vm = new()
             {
                 JewelryDesign = design,
                 MaterialSet = materialSet,
-				Jewelry = jewelry
-			};
-			return View(vm);
-		}
+                Jewelry = jewelry
+            };
+            return View(vm);
+        }
     }
 }

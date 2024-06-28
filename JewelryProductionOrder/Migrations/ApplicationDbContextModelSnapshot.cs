@@ -37,6 +37,35 @@ namespace JewelryProductionOrder.Migrations
                     b.ToTable("GemstoneMaterialSet");
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.BaseDesign", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BaseDesign");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Image = "\\Images\\Ring.webp"
+                        });
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
                 {
                     b.Property<string>("CustomerId")
@@ -105,6 +134,9 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BaseDesignId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -139,6 +171,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BaseDesignId");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("MaterialSetId");
@@ -155,9 +189,10 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5755),
+                            BaseDesignId = 1,
+                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7833),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
-                            Name = "Diamond Necklace",
+                            Name = "Diamond Ring",
                             ProductionRequestId = 1,
                             Status = ""
                         });
@@ -195,10 +230,17 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int?>("ProductionRequestId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductionRequestId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -210,6 +252,8 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("JewelryId");
 
                     b.HasIndex("ProductionRequestId");
+
+                    b.HasIndex("ProductionRequestId1");
 
                     b.HasIndex("ProductionStaffId");
 
@@ -375,13 +419,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5516),
+                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7677),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5528),
+                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7714),
                             Quantity = 1
                         });
                 });
@@ -749,6 +793,10 @@ namespace JewelryProductionOrder.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
+                    b.HasOne("JewelryProductionOrder.Models.BaseDesign", "BaseDesign")
+                        .WithMany()
+                        .HasForeignKey("BaseDesignId");
+
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
@@ -773,6 +821,8 @@ namespace JewelryProductionOrder.Migrations
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("BaseDesign");
 
                     b.Navigation("Customer");
 
@@ -807,6 +857,10 @@ namespace JewelryProductionOrder.Migrations
                         .WithMany()
                         .HasForeignKey("ProductionRequestId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", null)
+                        .WithMany("JewelryDesigns")
+                        .HasForeignKey("ProductionRequestId1");
 
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
@@ -1032,6 +1086,8 @@ namespace JewelryProductionOrder.Migrations
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
                 {
                     b.Navigation("Jewelries");
+
+                    b.Navigation("JewelryDesigns");
                 });
 #pragma warning restore 612, 618
         }
