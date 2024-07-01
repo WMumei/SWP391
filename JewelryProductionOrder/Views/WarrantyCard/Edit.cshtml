@@ -1,0 +1,82 @@
+﻿@model WarrantyCardVM
+<head>
+    <link rel="stylesheet" href="~/css/CreateWarrantyCard.css" />
+</head>
+<form method="post">
+    <div>
+        <div>
+            <input asp-for="Jewelry.Id" hidden />
+            @*<input asp-for="@Model.CustomerId" hidden />*@
+            <!--<input asp-for="Jewelry.CustomerId" hidden/>-->
+            <h2>Edit Warranty Card for Jewelry: @Model.Jewelry.Name</h2>
+            <hr />
+        </div>
+        <!-- <div asp-validation-summary="All"></div> -->
+        <h1>Customer Information</h1>
+        <div class="col-12 py-2 form-floating">
+            <div class="first-col">
+                <label asp-for="@Model.Customer.Name" class="ms-2"></label>
+                <input disabled asp-for="@Model.Customer.Name" />
+
+
+
+
+                @*<select id="searchResults">
+                <option value="">-- Select --</option>
+                </select>
+
+                </div>
+                @*             <div class="first-col">
+                <label Description class="labels">Type in the customer's ID</label>
+                <input Descripsion type="text" id="customer-id" class="input-field" placeholder="Ex : 1A2b3C4d" readonly/>
+                </div> *@
+            </div>
+
+            @* <div class="form-group">
+            <div class="first-col">
+            <label for="jewelryID">Jewelry ID</label>
+            <select id="jewelryID">
+            <option value="" disabled selected>Select jewelry ID</option>
+            </select>
+            </div>
+            </div>
+            *@
+            <div class="form-group">
+                <div class="first-col">
+                    <label asp-for="@Model.WarrantyCard.CreatedAt" class="labels">Issued Date (mm/dd/yyyy)</label>
+                    <input asp-for="@Model.WarrantyCard.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
+                </div>
+
+                <div class="first-col">
+                    <label asp-for="@Model.WarrantyCard.ExpiredAt" class="labels">Expired Date (mm/dd/yyyy)</label>
+                    <input asp-for="@Model.WarrantyCard.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">
+                    @*2 năm*@
+                </div>
+            </div>
+
+
+            <button asp-action="Edit"> Edit </button> <button asp-controller="WarrantyCard" asp-action="Index">Cancel</button>
+
+            <script>
+                const searchText = document.getElementById("searchText");
+                const searchResults = document.getElementById("searchResults");
+                const allOptions = ["Option 1", "Another Option", "Matching Text", "Yet Another Option", "More Matching Text"];
+
+                function filterResults() {
+                    const userInput = searchText.value.toLowerCase();
+                    searchResults.innerHTML = "";
+
+                    allOptions.forEach(option => {
+                        const lowerOption = option.toLowerCase();
+                        if (lowerOption.includes(userInput)) {
+                            const optionElement = document.createElement("option");
+                            optionElement.text = option;
+                            optionElement.value = option;
+                            searchResults.appendChild(optionElement);
+                        }
+                    });
+                }
+
+                searchText.addEventListener("keyup", filterResults);
+            </script>
+</form>
