@@ -41,7 +41,9 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             OrderVM orderVM = new OrderVM
             {
-                ProductionRequest = new ProductionRequest { Quantity = 1 },
+                ProductionRequest = new ProductionRequest { 
+                    //Quantity = 1 
+                },
                 Customer = _unitOfWork.User.Get(User => User.Id == userId)
             };
             return View(orderVM);

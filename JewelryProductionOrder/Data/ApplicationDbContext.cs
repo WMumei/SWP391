@@ -122,11 +122,11 @@ namespace JewelryProductionOrder.Data
                 .WithMany()
                 .HasForeignKey(t => t.ProductionStaffId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<JewelryDesign>()
-                .HasOne(t => t.ProductionRequest)
-                .WithMany()
-                .HasForeignKey(t => t.ProductionRequestId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<JewelryDesign>()
+            //    .HasOne(t => t.ProductionRequest)
+            //    .WithMany()
+            //    .HasForeignKey(t => t.ProductionRequestId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Jewelry>()
                 .HasOne(t => t.Customer)

@@ -45,7 +45,7 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
             return RedirectToAction("Index", "Jewelry");
-            return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
+            //return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
         }
 
         public IActionResult Index()
