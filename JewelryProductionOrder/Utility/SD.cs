@@ -13,6 +13,11 @@
         public const string StatusProcessing = "Processing";
 		public const string StatusDelivered = "Delivered";
 
+        public const string StatusManufaturing = "Currently manufacturing";
+        public const string StatusManufactured = "Manufactured";
+
+        public const string DesignApproved = "Design Approved";
+
         public const string StatusPending = "Pending";
         public const string StatusDiscontinued = "Discontinued";
         public const string CustomerApproved = "Approved by Customer";

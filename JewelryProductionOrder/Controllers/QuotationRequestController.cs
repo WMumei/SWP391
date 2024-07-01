@@ -25,8 +25,8 @@ namespace SWP391.Controllers
         public IActionResult Index(int jId)
         {
             List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().Where(r => r.JewelryId == jId).ToList();
-            bool checkStatus = requests != null && requests.Exists(r => r.Status == "Pending");
-            bool checkCancel = requests != null && requests.Exists(r => r.Status == "Canceled");
+            bool checkStatus = requests != null && requests.Exists(r => r.Status == SD.StatusPending);
+            bool checkCancel = requests != null && requests.Exists(r => r.Status == SD.StatusCancelled);
             CheckQuotationVM vm = new CheckQuotationVM
             {
                 QuotationRequests = requests,
@@ -87,7 +87,7 @@ namespace SWP391.Controllers
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			vm.QuotationRequest.SalesStaffId = userId;
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
-			vm.QuotationRequest.Status = "Pending";
+			vm.QuotationRequest.Status = SD.StatusPending;
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == vm.MaterialSet.Id);
 			vm.QuotationRequest.MaterialSetId = materialSet.Id;
 			vm.QuotationRequest.JewelryId = vm.Jewelry.Id;
@@ -96,10 +96,10 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 
 			QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
-			&& (r.Status == "Pending"));
+			&& (r.Status == SD.StatusPending));
 			if (oldRequest is not null)
 			{
-				oldRequest.Status = "Discontinue";
+				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
 
@@ -114,7 +114,7 @@ namespace SWP391.Controllers
 			if (req is not null)
 			{
 				req.ManagerId = userId;
-				req.Status = $"Approved by Manager";
+				req.Status = SD.ManagerApproved;
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Details", new { jId = req.JewelryId});
@@ -129,7 +129,7 @@ namespace SWP391.Controllers
 			if (req is not null)
 			{
 				req.ManagerId = userId;
-				req.Status = $"Disapproved by Manager";
+				req.Status = SD.ManagerDisapproved;
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Details", new { jId = req.JewelryId });
@@ -144,7 +144,7 @@ namespace SWP391.Controllers
 			if (req is not null)
 			{
 				req.CustomerId = userId;
-				req.Status = $"Approved by Customer";
+				req.Status = SD.CustomerApproved;
 			}
 			_unitOfWork.Save();
             return RedirectToAction("Details", new { jId = req.JewelryId });
@@ -159,7 +159,7 @@ namespace SWP391.Controllers
             if (req is not null)
             {
                 req.CustomerId = userId;
-                req.Status = $"Disapproved by Customer";
+                req.Status = SD.CustomerDisapproved;
             }
             _unitOfWork.Save();
             return RedirectToAction("Details", new { jId = req.JewelryId });

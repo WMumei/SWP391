@@ -1,5 +1,6 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using SWP391.Controllers;
@@ -41,7 +42,7 @@ namespace JewelryProductionOrder.Controllers
                 }
                 obj.DesignFile = Path.Combine("\\files", fileName);
             }
-            obj.Status = "Pending";
+            obj.Status = SD.StatusPending;
             //obj.JewelryId = obj.Jewelry.Id;
 			_unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
@@ -68,7 +69,7 @@ namespace JewelryProductionOrder.Controllers
 			if (design is not null)
 			{
 				design.CustomerId = userId;
-				design.Status = $"Approved by Customer";
+				design.Status = SD.CustomerApproved;
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Index", "Home");

@@ -23,7 +23,7 @@ namespace JewelryProductionOrder.Controllers
             Jewelry obj = new Jewelry
             {
                 ProductionRequestId = reqId,
-                Status = "Processing"
+                Status = SD.StatusProcessing
             };
             return View(obj);
         }
@@ -42,7 +42,7 @@ namespace JewelryProductionOrder.Controllers
         public IActionResult Index()
         {
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-            bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == "Canceled");
+            bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
             CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
             {
                 Jewelries = jewelries,
@@ -67,7 +67,7 @@ namespace JewelryProductionOrder.Controllers
 			if (jewelry is not null)
 			{
 				jewelry.ProductionStaffId = userId;
-				jewelry.Status = $"Currently manufacturing";
+				jewelry.Status = SD.StatusManufaturing;
 			}
 			_unitOfWork.Save();
 			return RedirectToAction("Index");
@@ -82,7 +82,7 @@ namespace JewelryProductionOrder.Controllers
             //    jewelry.ProductionStaffId = productionStaff.Id;
             //    jewelry.Status = $"Manufactured by {productionStaff.Name}";
             //}
-            jewelry.Status = "Manufactured";
+            jewelry.Status = SD.StatusManufactured;
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
@@ -96,7 +96,7 @@ namespace JewelryProductionOrder.Controllers
             //    jewelry.ProductionStaffId = productionStaff.Id;
             //    jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
             //}
-            jewelry.Status = "Delivered";
+            jewelry.Status = SD.StatusDelivered;
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }

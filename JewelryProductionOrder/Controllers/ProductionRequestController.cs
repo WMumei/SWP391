@@ -59,7 +59,7 @@ namespace SWP391.Controllers
             orderVM.ProductionRequest.CustomerId = userId;
             orderVM.ProductionRequest.Address = orderVM.Customer.Address;
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
-            orderVM.ProductionRequest.Status = "Processing";
+            orderVM.ProductionRequest.Status = SD.StatusProcessing;
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
             return RedirectToAction("CustomerView");
@@ -98,7 +98,7 @@ namespace SWP391.Controllers
 			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
 			if (req is not null)
 			{
-				req.Status = "Canceled";
+				req.Status = SD.StatusCancelled;
 				_unitOfWork.Save();
 			}
 
@@ -107,18 +107,18 @@ namespace SWP391.Controllers
 			{
 				foreach (Jewelry jewelry in jewelries)
 				{
-					jewelry.Status = "Canceled";
+					jewelry.Status = SD.StatusCancelled;
 					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
 					if (QuoReq != null)
 					{
-						QuoReq.Status = "Canceled";
+						QuoReq.Status = SD.StatusCancelled;
 					}
 					List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
 					if (jewelryDesigns.Count > 0)
 					{
 						foreach (JewelryDesign JewelryDesign in jewelryDesigns)
 						{
-							JewelryDesign.Status = "Canceled";
+							JewelryDesign.Status = SD.StatusCancelled;
 						}
 					}
 				}
