@@ -1,8 +1,10 @@
-﻿using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Data;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -17,9 +19,15 @@ namespace JewelryProductionOrder.Controllers
         }
         public IActionResult Create(int reqId)
         {
+            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties:"Jewelries");
+            if (productionRequest == null)
+            {
+                return NotFound();
+            }
             Jewelry obj = new Jewelry
             {
-                ProductionRequestId = reqId
+                ProductionRequestId = reqId,
+                ProductionRequest = productionRequest
             };
             return View(obj);
         }
@@ -43,7 +51,7 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult RequestIndex(int reqId)
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest").ToList();
             return View(jewelries);
         }
 
