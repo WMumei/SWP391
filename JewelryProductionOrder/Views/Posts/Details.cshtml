@@ -1,0 +1,30 @@
+﻿@model JewelryProductionOrder.Models.Post
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="display-4">@Model.Title</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <dl class="row">
+            <dt class="col-sm-3">Created At:</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToString("g")</dd>
+            <dt class="col-sm-3">Sales Staff:</dt>
+            <dd class="col-sm-9">@Model.SalesStaff.Name</dd>
+        </dl>
+        <hr />
+        <div>
+            <img src="@Model.Image" alt="Image Link can't be found" class="img-fluid" />
+        </div>
+        <br />
+        <div>
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>

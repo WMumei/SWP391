@@ -25,6 +25,7 @@ namespace Models.Repositories.Repository
         public IQuotationRequestRepository QuotationRequest { get; private set; }
 		public IMaterialSetMaterialRepository MaterialSetMaterial { get; private set; }
         public IJewelryDesignRepository JewelryDesign { get; private set; }
+        public IPostRepository Post { get; private set; }
 		public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -37,6 +38,7 @@ namespace Models.Repositories.Repository
 			MaterialSetMaterial = new MaterialSetMaterialRepository(_db);
 			QuotationRequest = new QuotationRequestRepository(_db);
 			JewelryDesign = new JewelryDesignRepository(_db);
+            Post = new PostRepository(_db);
 		}
 
         public void Save()

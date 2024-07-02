@@ -7,158 +7,106 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
+using Microsoft.AspNetCore.Identity;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
+using Models.Repositories.Repository.IRepository;
+using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public PostsController(ApplicationDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public PostsController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        // GET: Posts
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Posts.Include(p => p.SalesStaff);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
-        // GET: Posts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.SalesStaff)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
-        }
-
-        // GET: Posts/Create
         public IActionResult Create()
         {
-            ViewData["SalesStaffId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Image,Content,CreatedAt,SalesStaffId")] Post post)
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Create(Post post)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SalesStaffId"] = new SelectList(_context.Users, "Id", "Id", post.SalesStaffId);
-            return View(post);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            post.CreatedAt = DateTime.Now;
+            post.SalesStaffId = userId;
+
+            _unitOfWork.Post.Add(post);
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
         }
 
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [Authorize]
+        public IActionResult Index()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var posts = _unitOfWork.Post.GetAll(includeProperties: "SalesStaff").ToList();
+            return View(posts);
+        }
 
-            var post = await _context.Posts.FindAsync(id);
+        public IActionResult Details(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
             if (post == null)
             {
                 return NotFound();
             }
-            ViewData["SalesStaffId"] = new SelectList(_context.Users, "Id", "Id", post.SalesStaffId);
             return View(post);
         }
 
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Image,Content,CreatedAt,SalesStaffId")] Post post)
+        public IActionResult Edit(int id)
         {
-            if (id != post.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SalesStaffId"] = new SelectList(_context.Users, "Id", "Id", post.SalesStaffId);
-            return View(post);
-        }
-
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.SalesStaff)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = _unitOfWork.Post.Get(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
-
             return View(post);
         }
 
-        // POST: Posts/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Edit(Post post)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Post.Update(post);
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            return View(post);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult DeleteConfirmed(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
+            var post = _unitOfWork.Post.Get(p => p.Id == id);
+            if (post == null)
             {
-                _context.Posts.Remove(post);
+                return NotFound();
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
+            _unitOfWork.Post.Remove(post);
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
         }
     }
 }
