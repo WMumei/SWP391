@@ -39,6 +39,7 @@ namespace JewelryProductionOrder.Controllers
             obj.CreatedAt = DateTime.Now;
             _unitOfWork.Jewelry.Add(obj);
             _unitOfWork.Save();
+            TempData["success"] = "Jewelry created successfully";
             return RedirectToAction("Index");
             //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
         }
@@ -67,6 +68,7 @@ namespace JewelryProductionOrder.Controllers
 				jewelry.Status = $"Currently manufacturing";
 			}
 			_unitOfWork.Save();
+			TempData["success"] = "Progess updated";
 			return RedirectToAction("Index");
 		}
 
@@ -81,7 +83,8 @@ namespace JewelryProductionOrder.Controllers
             //}
             jewelry.Status = "Manufactured";
             _unitOfWork.Save();
-            return RedirectToAction("Index");
+			TempData["success"] = "Progress updated";
+			return RedirectToAction("Index");
         }
 
         public IActionResult Deliver(int id)
@@ -95,7 +98,8 @@ namespace JewelryProductionOrder.Controllers
             //}
             jewelry.Status = "Delivered";
             _unitOfWork.Save();
-            return RedirectToAction("Index");
+			TempData["success"] = "Progress updated";
+			return RedirectToAction("Index");
         }
     }
 }

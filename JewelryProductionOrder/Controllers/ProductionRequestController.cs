@@ -58,6 +58,7 @@ namespace SWP391.Controllers
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
+            TempData["success"] = "Request created successfully!";
             return RedirectToAction("CustomerView");
         }
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
@@ -87,6 +88,7 @@ namespace SWP391.Controllers
                 req.SalesStaffId = userId;
             }
             _unitOfWork.Save();
+            TempData["success"] = "Request taken";
             return RedirectToAction("Index");
         }
     }

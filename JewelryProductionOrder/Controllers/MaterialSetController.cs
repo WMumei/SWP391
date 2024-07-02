@@ -55,6 +55,7 @@ namespace SWP391.Controllers
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
 			_unitOfWork.Save();
+            TempData["success"] = "Properties updated";
             return RedirectToAction("Index", "Jewelry");
             //return RedirectToAction("Create", new { jId = jewelry.Id});
         }

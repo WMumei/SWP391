@@ -44,6 +44,7 @@ namespace JewelryProductionOrder.Controllers
             //obj.JewelryId = obj.Jewelry.Id;
 			_unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
+            TempData["success"] = "Design created successfully";
             return RedirectToAction("Index", "Jewelry");
             return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId});
         }
@@ -70,7 +71,8 @@ namespace JewelryProductionOrder.Controllers
 				design.Status = $"Approved by Customer";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
+            TempData["success"] = "Approved successfully";
+            return RedirectToAction("Index", "Home");
 			return RedirectToAction("Index");
         }
 

@@ -68,7 +68,8 @@ namespace SWP391.Controllers
 			vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
             _unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Jewelry");
+            TempData["success"] = "Quotation request created";
+            return RedirectToAction("Index", "Jewelry");
 			return RedirectToAction("Details", new { jId = vm.Jewelry.Id });
         }
 		[Authorize(Roles = SD.Role_Manager)]
@@ -83,7 +84,8 @@ namespace SWP391.Controllers
 				req.Status = $"Approved by Manager";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Jewelry");
+            TempData["success"] = "Approved";
+            return RedirectToAction("Index", "Jewelry");
 			return RedirectToAction("Details", new { jId = req.JewelryId});
 		}
 		[Authorize(Roles = SD.Role_Customer)]
@@ -98,7 +100,8 @@ namespace SWP391.Controllers
 				req.Status = $"Approved by Customer";
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
+            TempData["success"] = "Approved";
+            return RedirectToAction("Index", "Home");
             return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
