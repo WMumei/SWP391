@@ -8,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Staff.Controllers
 {
+    [Area("Staff")]
     public class JewelryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

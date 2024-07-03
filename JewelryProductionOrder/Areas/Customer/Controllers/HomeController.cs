@@ -2,8 +2,9 @@ using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Customer.IdentityControllers
 {
+	[Area("Customer")]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;

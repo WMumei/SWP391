@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
 
-namespace SWP391.Controllers
+namespace SWP391.Areas.Staff.IdentityControllers
 {
+    [Area("Staff")]
     public class MaterialSetController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Staff.Controllers
 {
+    [Area("Staff")]
     public class JewelryDesignController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

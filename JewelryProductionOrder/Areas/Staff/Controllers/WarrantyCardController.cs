@@ -3,8 +3,9 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Staff.IdentityControllers
 {
+    [Area("Staff")]
     public class WarrantyCardController : Controller
     {
         private readonly ApplicationDbContext _db;

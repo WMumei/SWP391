@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+<style>
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+        .button-container .button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #D9D9D9;
+            color: black;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+            .button-container .button:hover {
+                background-color: grey;
+            }
+</style>
+
+<body>
+    <div class="text-start">
+        <img class="banner" width="100%" src="~/Images/Banner.jpeg" />
+    </div>
+
+    <nav id="FourAttributes">
+        <a href="#services">Our Services</a>
+        <a href="#quality">Our Quality</a>
+        <a href="#punctuality">Punctuality</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="container">
+        <div id="services" class="section">
+            <div class="image">
+                <img src="~/Images/CustomerService.png" alt="Our Services">
+            </div>
+            <div class="content">
+                <h2>Our Services</h2>
+                <p class="paragraph animate-on-scroll">We offer a comprehensive range of jewelry production services to meet all your needs. From custom design to mass production, our team of skilled artisans and modern technology ensures that every piece is crafted to perfection.</p>
+                <ul>
+                    <li>Custom Jewelry Design</li>
+                    <li>3D Modeling and Prototyping</li>
+                    <li>Stone Setting</li>
+                    <li>Metal Casting and Fabrication</li>
+                    <li>Engraving and Finishing</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="quality" class="section">
+            <div class="content">
+                <h2>Our Quality</h2>
+                <p class="paragraph animate-on-scroll">Quality is at the heart of everything we do. We use only the finest materials and adhere to strict quality control standards to ensure that every piece of jewelry we produce is of the highest quality. Our commitment to excellence means you can trust us to deliver stunning, durable, and timeless pieces.</p>
+            </div>
+            <div class="image">
+                <img src="~/Images/Quality.jpeg" alt="Our Quality">
+            </div>
+        </div>
+
+        <div id="punctuality" class="section">
+            <div class="image">
+                <img src="~/Images/Punctuality.jpg" alt="Punctuality">
+            </div>
+            <div class="content">
+                <h2>Punctuality</h2>
+                <p class="paragraph animate-on-scroll">We understand the importance of timely delivery, especially for special occasions. Our efficient production process and dedicated team ensure that your orders are completed and delivered on time, every time. With us, you can have peace of mind knowing that your jewelry will arrive as scheduled.</p>
+            </div>
+        </div>
+        <div id="order" class="section order-section">
+
+        @if (User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Customer))
+        {
+            @* <div class="row mt-8">
+                <p>Place your order</p>
+                <div class="col-4 mx-auto">
+                    <a asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
+                </div>
+                <p>View your order</p>
+                <div class="col-4 mx-auto">
+                    <a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                </div>
+            </div> *@
+        }
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <p>What are you waiting for?</p>
+                <h2>Place your order today</h2>
+                <br />
+                <div>
+                    <div>
+                        <a class="btn btn-outline-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Order Jewelry</a>
+                    </div>
+                </div>
+                <p>Or should you have any questions</p>
+                <br />
+            }
+
+        <div id="contact" class="section">
+            <h2>Contact Us</h2>
+            <p class="paragraph animate-on-scroll">If you have any questions or would like to discuss your jewelry production needs, please don't hesitate to contact us. Our friendly and knowledgeable staff are here to assist you.</p>
+            <p>Email: JPO@exampleEmail.com</p>
+            <p>Phone: 123456789</p>
+            <p>Address: AAA</p>
+        </div>
+    </div>
+    <br />
+
+        <script>
+            window.onload = function () {
+                window.scrollTo(0, 0);
+            }
+        </script>
+    <link rel="stylesheet" href="~/css/HomeIndex.css" />
+    <script src="~/js/HomeIndex.js"></script>
+</body>
+</html>
