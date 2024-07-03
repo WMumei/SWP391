@@ -11,7 +11,6 @@ namespace JewelryProductionOrder.Models
 {
     public class ShoppingCart {
         public int Id { get; set; }
-
         public int BaseDesignId { get; set; }
         [ForeignKey("BaseDesignId")]
         [ValidateNever]
