@@ -1,32 +1,24 @@
 using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Mvc;
+using Models.Repositories.Repository.IRepository;
 using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
-    public class HomeController : Controller
+    public class BaseDesignController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+		public BaseDesignController(IUnitOfWork unitOfWork)
         {
-            _logger = logger;
+			_unitOfWork = unitOfWork;
+		}
+
+        public IActionResult Details(int id)
+        {
+            BaseDesign design = _unitOfWork.BaseDesign.Get(d => d.Id == id);
+			return View(design);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

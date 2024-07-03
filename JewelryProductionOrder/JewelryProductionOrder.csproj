@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\SpecificProductionRequest\**" />
+    <Content Remove="Views\SpecificProductionRequest\**" />
+    <EmbeddedResource Remove="Views\SpecificProductionRequest\**" />
+    <None Remove="Views\SpecificProductionRequest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DB Static\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Views\SpecificProductionRequest\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

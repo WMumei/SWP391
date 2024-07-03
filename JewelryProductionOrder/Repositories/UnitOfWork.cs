@@ -20,6 +20,7 @@ namespace Models.Repositories.Repository
         public IJewelryDesignRepository JewelryDesign { get; private set; }
         public IProductionRequestDetailRepository ProductionRequestDetail { get; private set; }
 		public IShoppingCartRepository ShoppingCart { get; private set; }
+        public IBaseDesignRepository BaseDesign { get; private set; }
 		public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -34,6 +35,7 @@ namespace Models.Repositories.Repository
             JewelryDesign = new JewelryDesignRepository(_db);
 			ProductionRequestDetail = new ProductionRequestDetailRepository(_db);
 			ShoppingCart = new ShoppingCartRepository(_db);
+			BaseDesign = new BaseDesignRepository(_db);
 		}
 
         public void Save()

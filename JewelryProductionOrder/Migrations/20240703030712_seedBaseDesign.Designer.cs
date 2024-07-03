@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240703030712_seedBaseDesign")]
+    partial class seedBaseDesign
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -63,29 +66,25 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             Image = "\\Images\\Ring.webp",
-                            Name = "Bezel Solitarie Engagement Ring",
-                            Type = "Company"
+                            Name = "Bezel Solitarie Engagement Ring"
                         },
                         new
                         {
                             Id = 2,
-                            Image = "\\Images\\Pendant.jpg",
-                            Name = "Diamond Reiki Symbol Pendant",
-                            Type = "Company"
+                            Image = "\\Images\\Pendant.webp",
+                            Name = "Diamond Reiki Symbol Pendant"
                         },
                         new
                         {
                             Id = 3,
                             Image = "\\Images\\Necklace.webp",
-                            Name = "Smile Necklace",
-                            Type = "Company"
+                            Name = "Smile Necklace"
                         },
                         new
                         {
                             Id = 4,
                             Image = "\\Images\\Band.webp",
-                            Name = "Swirl Diamond Wedding Band",
-                            Type = "Company"
+                            Name = "Swirl Diamond Wedding Band"
                         });
                 });
 
@@ -213,7 +212,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3575),
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 7, 11, 413, DateTimeKind.Local).AddTicks(8860),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -425,12 +424,12 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3463)
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 7, 11, 413, DateTimeKind.Local).AddTicks(8790)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3516)
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 7, 11, 413, DateTimeKind.Local).AddTicks(8799)
                         });
                 });
 

@@ -147,8 +147,12 @@ namespace JewelryProductionOrder.Data
 
             #region SeedDatabase
             modelBuilder.Entity<BaseDesign>().HasData(
-                new BaseDesign { Id = 1, Image = @"\Images\Ring.webp" }
-                );
+                new BaseDesign { Id = 1, Image = @"\Images\Ring.webp", Name="Bezel Solitarie Engagement Ring", Type="Company" },
+				new BaseDesign { Id = 2, Image = @"\Images\Pendant.jpg", Name = "Diamond Reiki Symbol Pendant", Type="Company" },
+				new BaseDesign { Id = 3, Image = @"\Images\Necklace.webp", Name = "Smile Necklace", Type="Company" },
+				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type="Company" }
+				);     
+
             modelBuilder.Entity<ProductionRequest>().HasData(
                 new ProductionRequest { Id = 1, CreatedAt = DateTime.Now },
                 new ProductionRequest { Id = 2, CreatedAt = DateTime.Now }

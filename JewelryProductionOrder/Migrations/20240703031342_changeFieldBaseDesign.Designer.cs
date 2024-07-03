@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240703031342_changeFieldBaseDesign")]
+    partial class changeFieldBaseDesign
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 2,
-                            Image = "\\Images\\Pendant.jpg",
+                            Image = "\\Images\\Pendant.webp",
                             Name = "Diamond Reiki Symbol Pendant",
                             Type = "Company"
                         },
@@ -213,7 +216,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3575),
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4527),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -425,12 +428,12 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3463)
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4443)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3516)
+                            CreatedAt = new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4457)
                         });
                 });
 

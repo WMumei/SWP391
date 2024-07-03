@@ -9,7 +9,7 @@ namespace JewelryProductionOrder.Models
         public string? Name { get; set; }
         public string? Image { get; set; }
         //public string? DesignFile { get; set; }
-        public string? Status { get; set; }
+        public string? Type { get; set; }
 
     }
 }
