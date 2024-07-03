@@ -9,8 +9,9 @@ using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
-namespace SWP391.Controllers
+namespace SWP391.Areas.Staff.IdentityControllers
 {
+    [Area("Staff")]
     public class QuotationRequestController : Controller
 
     {

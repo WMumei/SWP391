@@ -1,0 +1,66 @@
+﻿@model List<ProductionRequest>
+
+<div class="container">
+	<div class="row">
+		<div class="col-6">
+			<h2>View Production Request</h2>
+
+        </div>
+@*         <div class="col-6 text-end">
+            <a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New
+            </a>
+        </div> *@
+    </div>
+    <table class ="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Created At</th>
+                <th>Quantity</th>
+                <th>Customer</th>
+@*                 <th>Staffs</th>
+                <th>Quotation</th> *@
+                <th>Jewelries</th>
+                @* <th>Design</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var obj in Model.OrderByDescending(u => u.CreatedAt))
+            {
+            <tr>
+                    
+                <td>@obj.Id</td>
+                <td>@obj.CreatedAt</td>
+                <td>@obj.Quantity</td>
+                <td>
+                    @($"{obj?.Customer?.Name}")
+
+                </td>
+@*                 @if (obj.QuotationRequest is not null)
+                {
+                    <td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
+                }
+                else
+                {
+                    <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+                } *@
+                    
+                @if (@obj.Jewelries.Count >= 1)
+                {
+                        <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View @obj.Jewelries.Count/@obj.Quantity</a></td>
+                } else if (!User.IsInRole(SD.Role_Customer))
+                {
+                     <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create @obj.Jewelries.Count/@obj.Quantity</a></td>
+                } else
+                {
+                    <td>Waiting for sales</td>
+				
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+        <!-- <div asp-validation-summary="All"></div> -->
+        
