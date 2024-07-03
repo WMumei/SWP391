@@ -43,6 +43,8 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             OrderVM orderVM = new OrderVM
             {
+                ProductionRequest = new ProductionRequest { Quantity = 1},
+                Customer = _unitOfWork.User.Get(User => User.Id == userId)
                 ProductionRequest = new ProductionRequest { Quantity = 1, Address = "" },
                 Customer = _unitOfWork.User.Get(User => User.Id == userId),
                 //Address
@@ -52,6 +54,12 @@ namespace SWP391.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(OrderVM orderVM)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            orderVM.ProductionRequest.CustomerId = userId;
+            orderVM.ProductionRequest.Address = orderVM.Customer.Address;
+            orderVM.ProductionRequest.CreatedAt = DateTime.Now;
+			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             //var customer= _unitOfWork.User.Get(User => User.Id == userId);
@@ -67,17 +75,28 @@ namespace SWP391.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties:"Customer,Jewelries").ToList();
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
             return View(obj);
         }
 
+		public IActionResult CustomerView()
+		{
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId,includeProperties: "Customer,Jewelries").ToList();
+			return View("Index", obj);
+		}
+
+		//[HttpPost]
+		/*[Authorize(Roles = SD.Role_Sales)]
         public IActionResult CustomerView()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
             return View("Index", obj);
-        }
+        }*/
 
         //[HttpPost]
         [Authorize(Roles = SD.Role_Sales)]
@@ -88,6 +107,7 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (req is not null)
             {
+                req.SalesStaffId = userId;
                 req.SalesStaffId = userId;
             }
             _unitOfWork.Save();

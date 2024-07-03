@@ -21,6 +21,16 @@ body {
   margin-bottom: 60px;
 }
 
+.container{
+    background-color:transparent;
+    color:navy;
+}
+
+.invisible {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
 .form-select {
     display: block;
     width: 100%;
@@ -31,10 +41,6 @@ body {
     line-height: 1.5;
     color: #3e3f3a;
     background-color: #fff;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%233e3f3a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
     border: 1px solid #ced4da;
     border-radius: 0.375rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -67,52 +73,60 @@ body {
             background-color: grey;
         }
 
-.menu-icon,
-.menu-icon-2 {
-    margin-top:70px;
+.menu-icon {
     width: 60px;
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(167, 239, 255);
+    background-color: transparent;
     cursor: pointer;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
-.menu-icon-2 {
-    margin-top:5px;
-    background-color:transparent;
-    opacity: 0;
-    visibility: hidden;
-}
-
-    .menu-icon img,
-    .menu-icon-2 img {
+    .menu-icon img {
         width: 100%;
         height: auto;
         max-width: 50px;
     }
+        .menu-icon img:hover {
+            text-shadow: 0 0 25px white;
+            color: black !important;
+        }
+
+.menu-icon-2 {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 4;
+}
+    .menu-icon-2 img{
+        width: 100%;
+        height: auto;
+        max-width: 60px;
+    }
+
+.container-fluid {
+    display: flex;
+    align-items: center;
+}
 
 .menu {
-    width: 250px;
+    width: 300px;
     background-color: transparent;
-    backdrop-filter: blur(20px);
-    background-image: linear-gradient(120deg, rgba(0, 255, 227, 0.3), rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(15px);
+    background-image: linear-gradient(120deg, rgb(0, 0, 0, 0.65), rgb(63, 63, 63, 0.51));
     border: solid;
     border-width: 5px;
     border-block-color: white;
     color: white;
     position: fixed;
     top: 0;
-    left: -250px;
+    left: -300px;
     height: 100%;
     transition: left 0.3s ease;
-    z-index: 1000;
+    z-index: 3;
     padding-top: 60px;
 }
 
@@ -122,10 +136,14 @@ body {
         color: white;
         text-decoration: none;
         padding: 10px 20px;
+
+        transition: all 0.3s /*transform 0.3s, background-color 0.3s, color 0.3s*/;
     }
 
         .menu a:hover {
-            background-color: #575757;
+            background-color: rgb(255, 255, 255);
+            font-size: 20px;
+            color: black;
         }
 
 .overlay {

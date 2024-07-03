@@ -11,6 +11,7 @@
   <ItemGroup>
     <Folder Include="DB Static\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Views\SpecificProductionRequest\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
@@ -26,8 +27,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.6" />
-	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\JewelryDesign\Manufacture.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,7 @@ namespace Models.Repositories.Repository
     {
         private ApplicationDbContext _db;
 
+        public IDeliveryRepository Delivery { get; private set; }
         public IProductionRequestRepository ProductionRequest { get; private set; }
 		public IQuotationRequestRepository QuotationRequest { get; private set; }
 		public IUserRepository User { get; private set; }
@@ -22,9 +23,12 @@ namespace Models.Repositories.Repository
 		public IMaterialRepository Material { get; private set; }
 		public IMaterialSetRepository MaterialSet { get; private set; }
         public IGemstoneRepository Gemstone { get; private set; }
-        public IWarrantyCardRepository WarrantyCard { get; private set; }
+        //public IQuotationRequestRepository QuotationRequest { get; private set; }
 		public IMaterialSetMaterialRepository MaterialSetMaterial { get; private set; }
         public IJewelryDesignRepository JewelryDesign { get; private set; }
+        public IWarrantyCardRepository WarrantyCard { get; private set; }
+		//public IMaterialSetMaterialRepository MaterialSetMaterial { get; private set; }
+        //public IJewelryDesignRepository JewelryDesign { get; private set; }
 		public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -36,6 +40,8 @@ namespace Models.Repositories.Repository
 			MaterialSet = new MaterialSetRepository(_db);
 			Gemstone = new GemstoneRepository(_db);
 			MaterialSetMaterial = new MaterialSetMaterialRepository(_db);
+			QuotationRequest = new QuotationRequestRepository(_db);
+			JewelryDesign = new JewelryDesignRepository(_db);
 			WarrantyCard = new WarrantyCardRepository(_db);
 			QuotationRequest = new QuotationRequestRepository(_db);
 			JewelryDesign = new JewelryDesignRepository(_db);

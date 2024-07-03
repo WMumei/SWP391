@@ -17,6 +17,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 	);
 
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+//Add login,logout
+//Add authentication
+//Add DistributedMemoryCache
+//Add Session
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
@@ -46,7 +50,7 @@ app.MapControllerRoute(
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
+//Deployment
 void SeedDatabase()
 {
     using (var scope = app.Services.CreateScope())

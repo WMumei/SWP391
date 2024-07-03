@@ -109,10 +109,7 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Delete(int? id)
 		{
 			WarrantyCard warrantyCardFromDb = _warrantyCardRepo.Get(u => u.Id == id);
-			if (warrantyCardFromDb == null)
-			{
-				return NotFound();
-			}
+			
 			
 			return View(warrantyCardFromDb);
 		}
@@ -153,34 +150,34 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Edit(WarrantyCardVM vm)
 			//not yet
 		{
-			
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                vm.WarrantyCard.SalesStaffId = userId;
+			//lưu người sửa
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            vm.WarrantyCard.SalesStaffId = userId;
 
-                vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
-                Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.WarrantyCard.JewelryId, includeProperties: "Customer");
-                var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+           // vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
+            
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer");
+            var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+            _unitOfWork.Save();
+            vm.WarrantyCard.CustomerId = customer.Id;
+           
+			
+			//vm.WarrantyCard.Jewelry = jewelry;
+            _unitOfWork.WarrantyCard.Update(vm.WarrantyCard); //câu lệnh này bị lỗi conflict id của jewelry table
 
                 _unitOfWork.Save();
-
-                //vm.WarrantyCard.CreatedAt = DateTime.Now;
-                //vm.WarrantyCard.ExpiredAt = vm.WarrantyCard.CreatedAt.AddYears(3);
-
+                return RedirectToAction("Index");
+           
 
 
-                vm.WarrantyCard.CustomerId = customer.Id;
+            
 
-                _unitOfWork.WarrantyCard.Update(vm.WarrantyCard);
-                //_unitOfWork.Save();
 
-                _unitOfWork.Save();
-				return RedirectToAction("Index", "WarrantyCard");
-			
             //return View(vm);
             //return RedirectToAction("Index");
         }
-		public IActionResult Details(int? id)
+    public IActionResult Details(int? id)
 		{
 			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(r => r.JewelryId == id, includeProperties: "Jewelry,Customer");
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == id, includeProperties: "Customer");

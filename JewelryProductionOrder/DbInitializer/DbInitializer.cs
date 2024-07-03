@@ -37,7 +37,7 @@ namespace JewelryProductionOrder.DbInitializer
             }
             catch(Exception ex) { }
 
-             if (!_roleManager.RoleExistsAsync(SD.Role_Manager).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(SD.Role_Manager).GetAwaiter().GetResult())
             {
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Manager)).GetAwaiter().GetResult();
 				_userManager.CreateAsync(new User

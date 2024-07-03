@@ -9,6 +9,7 @@ namespace Models.Repositories.Repository.IRepository
 {
     public interface IUnitOfWork
     {   
+        IDeliveryRepository Delivery { get; }
         IProductionRequestRepository ProductionRequest { get; }
         IUserRepository User { get; }
         IJewelryRepository Jewelry { get; }
@@ -17,8 +18,10 @@ namespace Models.Repositories.Repository.IRepository
 		IGemstoneRepository Gemstone { get; }
 		IMaterialSetMaterialRepository MaterialSetMaterial { get; }
 		IQuotationRequestRepository QuotationRequest { get; }
+        IJewelryDesignRepository JewelryDesign { get; }
+		
 		IWarrantyCardRepository WarrantyCard { get; }
-		IJewelryDesignRepository JewelryDesign { get; }
+		
 		void Save();
        
        

@@ -1,6 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using JewelryProductionOrder.Models
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="https://imgur.com/B8XWJwc.png" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - JewelryProductionOrder</title>
@@ -12,8 +19,14 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
+                {
+                    <div class="menu-icon" id="menu-icon">
+                        <img src="~/Images/Menu icon.png" alt="Menu Icon" />
+                    </div>
+                }
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="https://i.imgur.com/1mOOB69.jpg" height="50px" width="50px" />
+                    <img src="~/Images/New JPO Logo.png" height="50px" width="50px" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -24,19 +37,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Role" asp-action="Role">Role</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Customer</a>
-                                <a class="dropdown-item" href="#">Sale Staff</a>
-                                <a class="dropdown-item" href="#">Production Staff</a>
-                                <a class="dropdown-item" href="#">Design Staff</a>
-                                <a class="dropdown-item" href="#">Manager</a>
-                            </div>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
+                        {
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProductionRequest" asp-action="Index">Production Request</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                            </li>
+                        }
                     </ul>
 @*                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="search" placeholder="Search" wfd-id="id0">
@@ -47,8 +63,43 @@
             </div>
         </nav>
     </header>
+    @if (User.Identity.IsAuthenticated && !User.IsInRole(SD.Role_Customer))
+    {
+        <div class="menu-icon-2" id="menu-icon-2">
+            <img src="~/Images/Inverted Menu Icon.png" alt="Blue Menu Icon" />
+        </div>
+
+        <div class="menu-header" id="menu-header">Menu</div>
+
+        <div class="menu" id="menu">
+            <div>
+                <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
+            </div>
+            <div>
+                <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
+            </div>
+            <div>
+                <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
+            </div>
+            <div>
+                <a asp-controller="QuotationRequest" asp-action="Index" class="button">View Quotation</a>
+            </div>
+            <div>
+                <a asp-controller="Jewelry" asp-action="Index" class="button">View Jewelry</a>
+            </div>
+            <div>
+                <a asp-controller="Jewelry" asp-action="Create" class="button">Create Jewelry</a>
+            </div>
+            <div>
+                <a asp-controller="ProductionRequest" asp-action="Index" class="button">Production Request</a>
+            </div>
+        </div>
+    }
+
+    <div class="overlay" id="overlay"></div>
     <div class="container">
         <main role="main" class="pb-3">
+
             @RenderBody()
         </main>
     </div>

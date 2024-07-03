@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using Models.Repositories.IRepository;
 
 namespace JewelryProductionOrder.Repositories.IRepository

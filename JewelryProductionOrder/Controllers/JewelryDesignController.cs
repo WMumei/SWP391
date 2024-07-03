@@ -38,7 +38,7 @@ namespace JewelryProductionOrder.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
-                obj.DesignFile = Path.Combine(filePath, fileName);
+                obj.DesignFile = Path.Combine("\\files", fileName);
             }
             obj.Status = "Pending";
             //obj.JewelryId = obj.Jewelry.Id;
@@ -73,5 +73,19 @@ namespace JewelryProductionOrder.Controllers
 			return RedirectToAction("Index", "Home");
 			return RedirectToAction("Index");
         }
+
+        public IActionResult Manufacture(int jId)
+        {
+            JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties:"Materials,Gemstones");
+            ManufactureVM vm = new()
+            {
+                JewelryDesign = design,
+                MaterialSet = materialSet,
+				Jewelry = jewelry
+			};
+			return View(vm);
+		}
     }
 }

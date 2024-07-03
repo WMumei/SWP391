@@ -28,6 +28,6 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.QuotationRequests.Update(request);
         }
-    }
+	}
 }
 

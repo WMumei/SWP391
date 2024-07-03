@@ -155,7 +155,11 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(3306),
+=======
+                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5755),
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -375,13 +379,21 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2896),
+=======
+                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5516),
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
+<<<<<<< HEAD
                             CreatedAt = new DateTime(2024, 6, 20, 14, 58, 20, 662, DateTimeKind.Local).AddTicks(2914),
+=======
+                            CreatedAt = new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5528),
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
                             Quantity = 1
                         });
                 });
@@ -429,8 +441,12 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("CustomerId");
 
+<<<<<<< HEAD
                     b.HasIndex("JewelryId")
                         .IsUnique();
+=======
+                    b.HasIndex("JewelryId");
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
 
                     b.HasIndex("ManagerId");
 
@@ -899,8 +915,13 @@ namespace JewelryProductionOrder.Migrations
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+<<<<<<< HEAD
                         .WithOne("QuotationRequest")
                         .HasForeignKey("JewelryProductionOrder.Models.QuotationRequest", "JewelryId")
+=======
+                        .WithMany("QuotationRequests")
+                        .HasForeignKey("JewelryId")
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1013,7 +1034,11 @@ namespace JewelryProductionOrder.Migrations
                 {
                     b.Navigation("JewelryDesigns");
 
+<<<<<<< HEAD
                     b.Navigation("QuotationRequest");
+=======
+                    b.Navigation("QuotationRequests");
+>>>>>>> 5c836f4ecc33c861c2b608c6e2a36725b798c754
 
                     b.Navigation("WarrantyCard");
                 });

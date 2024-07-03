@@ -54,7 +54,8 @@
 						<tbody>
 							@foreach (Material material in @Model.MaterialSet.Materials)
 							{
-								var weight = material.MaterialSetMaterials.FirstOrDefault(s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+								var weight = material.MaterialSetMaterials.FirstOrDefault(
+								s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
 								<tr>
 									<td>@material.Name</td>
 									<td>@weight</td>
@@ -75,7 +76,7 @@
 	<div>
 		<h2>Total Price: @Model.QuotationRequest.TotalPrice</h2>
 	</div>
-
+</form>
 	<div class="row">
 		@if (User.IsInRole(SD.Role_Manager))
 		{

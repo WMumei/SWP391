@@ -19,9 +19,9 @@ namespace JewelryProductionOrder.Repositories
             _db.SaveChanges();
         }
 
-        public void Update(WarrantyCard obj)
+        public void Update(WarrantyCard card)
         {
-            _db.WarrantyCards.Update(obj);
+            _db.WarrantyCards.Update(card);
         }
     }
 }
