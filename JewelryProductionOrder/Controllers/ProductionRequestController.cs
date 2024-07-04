@@ -43,10 +43,8 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             OrderVM orderVM = new OrderVM
             {
-                ProductionRequest = new ProductionRequest { Quantity = 1},
-                Customer = _unitOfWork.User.Get(User => User.Id == userId)
                 ProductionRequest = new ProductionRequest { Quantity = 1, Address = "" },
-                Customer = _unitOfWork.User.Get(User => User.Id == userId),
+                Customer = _unitOfWork.User.Get(User => User.Id == userId)
                 //Address
             };
             return View(orderVM);
@@ -60,8 +58,7 @@ namespace SWP391.Controllers
             orderVM.ProductionRequest.Address = orderVM.Customer.Address;
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+           
             //var customer= _unitOfWork.User.Get(User => User.Id == userId);
             //var productionRequest = _unitOfWork.ProductionRequest.Get(U => U.Id == orderVM.ProductionRequest.Id);
             //_unitOfWork.ProductionRequest.Add(customer);
@@ -76,7 +73,7 @@ namespace SWP391.Controllers
         public IActionResult Index()
         {
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties:"Customer,Jewelries").ToList();
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
+            //List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
             return View(obj);
         }
 

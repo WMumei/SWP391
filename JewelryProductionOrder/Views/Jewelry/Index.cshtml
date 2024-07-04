@@ -1,5 +1,7 @@
 ﻿@model List<Jewelry>
+
 <form method="post">
+	@*
 	<div>
 		<div>
 			<h2>View Jewelry</h2>
@@ -12,7 +14,7 @@
 					<th>Created At</th>
 					<th>Name</th>
 					<th width="15%">Description</th>
-					@* <th>Status</th> *@
+					 <th>Status</th> 
 					<th>Materials</th>
 					<th>Quotation</th>
 					<th>Design</th>
@@ -22,12 +24,13 @@
 					<th>Customer</th>
 					<th>Staffs</th>
 					<th>Production Request</th>
-					<th>Warranty Card</th> *@
+					<th>Warranty Card</th> 
 				</tr>
 			</thead>
 			<tbody>
 				@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
 				{
+					*@
 	<div>
 		<div>
 			<h2>View Jewelry</h2>
@@ -88,7 +91,7 @@
 							<td></td>
 						}
 						} 
-						else if (User.IsInRole(SD.Role_Sales))
+						@*else if (User.IsInRole(SD.Role_Sales))
 						{
 							<td><a asp-controller="MaterialSet" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
 						} else
@@ -96,7 +99,7 @@
 							<td></td>
 						}
 
-						@if (@obj.QuotationRequest is not null)
+						@if (@obj.QuotationRequests is not null)
 						{
 							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						} else if (User.IsInRole(SD.Role_Sales))
@@ -106,7 +109,7 @@
 						{
 							<td></td>
 						}
-
+						*@
 						@if (@obj.JewelryDesigns.Count != 0)
 						{
 							<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-jId="@obj." class="btn btn-primary btn-sm">View</a></td>
@@ -143,7 +146,7 @@
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-						else if (User.IsInRole(SD.Role_Sales))
+						else if (User.IsInRole(SD.Role_Sales) )
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
 						}
@@ -158,7 +161,7 @@
 					else if (User.IsInRole(SD.Role_Customer) && obj.Status == "Delivering")
 					{
 					<td><a asp-controller="Jewelry" asp-action="DeliverForm" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
-					}*@
+					}
 						
 
 						@if (@obj.JewelryDesigns.Count != 0)
@@ -193,13 +196,15 @@
 						} else
 						{
 							<td></td>
-						}
+
+					*@
 
 					</tr>
 				}
 			</tbody>
+					
 		</table>
-	</div>
+	
 	<!-- <div asp-validation-summary="All"></div> -->
-
+	</div>
 </form>

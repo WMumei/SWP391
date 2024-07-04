@@ -6,75 +6,56 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class FixRelationship : Migration
+    public partial class newdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests");
-
             migrationBuilder.UpdateData(
                 table: "Jewelries",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5755));
+                value: new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6858));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5516));
+                value: new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6465));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 20, 12, 46, 10, 878, DateTimeKind.Local).AddTicks(5528));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests",
-                column: "JewelryId");
+                value: new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6483));
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests");
-
             migrationBuilder.UpdateData(
                 table: "Jewelries",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(2056));
+                value: new DateTime(2024, 7, 4, 14, 39, 58, 389, DateTimeKind.Local).AddTicks(9498));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1871));
+                value: new DateTime(2024, 7, 4, 14, 39, 58, 389, DateTimeKind.Local).AddTicks(9163));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1881));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuotationRequests_JewelryId",
-                table: "QuotationRequests",
-                column: "JewelryId",
-                unique: true);
+                value: new DateTime(2024, 7, 4, 14, 39, 58, 389, DateTimeKind.Local).AddTicks(9184));
         }
     }
 }

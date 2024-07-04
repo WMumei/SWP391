@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240617161947_updateConstraint")]
-    partial class updateConstraint
+    [Migration("20240704074448_newdatabase")]
+    partial class newdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,7 +158,7 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(2056),
+                            CreatedAt = new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6858),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Necklace",
                             ProductionRequestId = 1,
@@ -378,13 +378,13 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1871),
+                            CreatedAt = new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6465),
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 17, 23, 19, 46, 236, DateTimeKind.Local).AddTicks(1881),
+                            CreatedAt = new DateTime(2024, 7, 4, 14, 44, 47, 698, DateTimeKind.Local).AddTicks(6483),
                             Quantity = 1
                         });
                 });
@@ -432,8 +432,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("JewelryId")
-                        .IsUnique();
+                    b.HasIndex("JewelryId");
 
                     b.HasIndex("ManagerId");
 
@@ -902,8 +901,8 @@ namespace JewelryProductionOrder.Migrations
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithOne("QuotationRequest")
-                        .HasForeignKey("JewelryProductionOrder.Models.QuotationRequest", "JewelryId")
+                        .WithMany("QuotationRequests")
+                        .HasForeignKey("JewelryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1016,7 +1015,7 @@ namespace JewelryProductionOrder.Migrations
                 {
                     b.Navigation("JewelryDesigns");
 
-                    b.Navigation("QuotationRequest");
+                    b.Navigation("QuotationRequests");
 
                     b.Navigation("WarrantyCard");
                 });

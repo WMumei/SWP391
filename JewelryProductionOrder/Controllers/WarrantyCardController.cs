@@ -35,7 +35,7 @@ namespace JewelryProductionOrder.Controllers
 
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer");
 		    var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
-			if(jewelry.MaterialSet ==null && jewelry.QuotationRequest == null)
+			if(jewelry.MaterialSet ==null && jewelry.QuotationRequests == null)
 			{
                 TempData["WarningMessage"] = "Please create Material Set and Quotation Request!";
             }
