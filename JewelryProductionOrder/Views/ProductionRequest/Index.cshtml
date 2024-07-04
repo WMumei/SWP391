@@ -25,7 +25,7 @@
                 @* <th>Design</th> *@
 @*                 <th>Staffs</th>
                 <th>Quotation</th> *@
-                <th>Jewelries</th>
+                @*<th>Jewelries</th>*@
                  <th>Delivery</th> 
             </tr>
         </thead>
@@ -61,32 +61,48 @@
                     <td>Waiting for sales</td>
 				
                 }
-                } 
-                    
-                @if (@obj.Jewelries.Count != 0)
+                }
+                    @*@if (@obj.Jewelries.Count != 0)
                 {
-                    <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
                 } else if (!User.IsInRole(SD.Role_Customer))
                 {
-                     <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+                <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
                 } else
                 {
-                    <td>Waiting for Sale Staff</td>
-				
-                }
+                <td>Waiting for Sale Staff</td>
+
+                }*@
+                
                     @if (User.IsInRole(SD.Role_Sales))
                     {
-                        //get productionRequestId
+                        if(obj.Status == "Delivered")
+                        {
+                            <td>Delivered!</td>
+                        }else{
+                        //start delivering
                         <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                        }
                     }
                     //Status of production request
-                    else if (obj.Status == "Delivering")
+                    else if (!User.IsInRole(SD.Role_Sales) )
                     {
-                        <td>Waiting for Sale Staff</td>
+                        if (obj.Status == "Delivering")
+                        {
+                            <td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                        }
+                        //Customer confirms production request
+                        else if (obj.Status == "Delivered")
+                        {
+                            <td>Done</td>
+                        }
+                        else if (obj.Status == "Confirmed")
+                        {
+                            <td>Confirmed</td>
+                        }
                     }
-                    else if (obj.Status == "Delivered"){
-                        <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-
+                    else {
+                        <td>Waiting for sale staff!</td>
                     }
 
             </tr>

@@ -55,10 +55,11 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             orderVM.ProductionRequest.CustomerId = userId;
-            orderVM.ProductionRequest.Address = orderVM.Customer.Address;
+
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
-			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
-           
+            _unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
+            orderVM.Customer.Address = orderVM.ProductionRequest.Address;
+
             //var customer= _unitOfWork.User.Get(User => User.Id == userId);
             //var productionRequest = _unitOfWork.ProductionRequest.Get(U => U.Id == orderVM.ProductionRequest.Id);
             //_unitOfWork.ProductionRequest.Add(customer);
@@ -72,21 +73,21 @@ namespace SWP391.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties:"Customer,Jewelries").ToList();
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
             //List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
             return View(obj);
         }
 
-		public IActionResult CustomerView()
-		{
+        public IActionResult CustomerView()
+        {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId,includeProperties: "Customer,Jewelries").ToList();
-			return View("Index", obj);
-		}
+            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
+            return View("Index", obj);
+        }
 
-		//[HttpPost]
-		/*[Authorize(Roles = SD.Role_Sales)]
+        //[HttpPost]
+        /*[Authorize(Roles = SD.Role_Sales)]
         public IActionResult CustomerView()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -146,6 +147,7 @@ namespace SWP391.Controllers
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            productionRequest.SalesStaffId = userId;
 
             foreach (var jewelry in jewelries)
             {
@@ -159,10 +161,45 @@ namespace SWP391.Controllers
                     //customer.PhoneNumber = productionRequest.Phone
                 }
 
-                
+
             }
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+        public IActionResult CustomerViewDelivery(int id)
+        {
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            
+            return View("CustomerViewDelivery", productionRequest);
+        }
+        public IActionResult Confirm(int id)
+        {
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            productionRequest.CustomerId = userId;
+
+            foreach (var jewelry in jewelries)
+            {
+                if (jewelry is not null)
+                {
+                    
+                    jewelry.Status = "Confirmed";
+                    jewelry.ProductionRequest.Status = "Confirmed";
+                    //jewelry.ProductionRequest.Address = productionRequest.Address;
+                    //jewelry.ProductionRequest = productionRequest;
+                    //customer.PhoneNumber = productionRequest.Phone
+                }
+
+
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("CustomerView");
+        }
     }
 }

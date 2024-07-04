@@ -27,7 +27,8 @@ namespace JewelryProductionOrder.Controllers
             Jewelry obj = new Jewelry
             {
                 ProductionRequestId = reqId,
-                ProductionRequest = productionRequest
+				CustomerId = productionRequest.CustomerId,
+				ProductionRequest = productionRequest
             };
             return View(obj);
         }
@@ -36,9 +37,11 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Create(Jewelry obj)
         {
-            obj.CreatedAt = DateTime.Now;
-            //obj.CustomerId = obj.ProductionRequest.CustomerId;
-            _unitOfWork.Jewelry.Add(obj);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == obj.ProductionRequestId, includeProperties: "Customer");
+			obj.CreatedAt = DateTime.Now;
+            obj.CustomerId = productionRequest.CustomerId;
+			//obj.ProductionRequest.Address = productionRequest.Address;
+			_unitOfWork.Jewelry.Add(obj);
             _unitOfWork.Save();
             return RedirectToAction("Index");
             //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});

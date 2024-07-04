@@ -118,6 +118,7 @@ namespace JewelryProductionOrder.Controllers
 		
 		public IActionResult DeletePost(int? id)
 		{
+
 			WarrantyCard warrantyCard = _warrantyCardRepo.Get(u => u.Id == id);
 			if (warrantyCard == null)
 			{
