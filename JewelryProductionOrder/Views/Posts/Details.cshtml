@@ -16,11 +16,12 @@
         </dl>
         <hr />
         <div>
-            <img src="@Model.Image" alt="Image Link can't be found" class="img-fluid" />
+            @Model.Image
+            <img src="@Model.Image" alt="Image can't be found" class="img-fluid" />
         </div>
         <br />
         <div>
-            @Html.Raw(Model.Content)
+            @Model.Content
         </div>
     </div>
 </div>
