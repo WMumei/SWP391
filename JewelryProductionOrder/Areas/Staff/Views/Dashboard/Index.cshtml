@@ -43,6 +43,7 @@
                 <button type="submit">Apply Filter</button>
                 <span id="invalid-date-range" style="color: red; display: none;">Invalid date range</span>
             </form>
+            <br/>
             <canvas id="RevenueChart"></canvas>
             <br />
             <div id="no-record-message" style="display: none;">No record on selected date range</div>
@@ -93,13 +94,18 @@
                     datasets: [{
                         label: 'Revenue',
                         data: revenueData,
-                        borderWidth: 1
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    },
+                    plugins: { // added plugins section
+                        legend: {
+                            display: false // show legend
                         }
                     }
                 }
