@@ -43,13 +43,9 @@
                 <button type="submit">Apply Filter</button>
                 <span id="invalid-date-range" style="color: red; display: none;">Invalid date range</span>
             </form>
+            <div id="no-record-message" style="color: red; display: none;">No record on selected date range</div>
             <br/>
             <canvas id="RevenueChart"></canvas>
-            <br />
-            <div id="no-record-message" style="display: none;">No record on selected date range</div>
-            <br />
-            <br />
-            <a id="reset-button" href="#" onclick="location.reload()">Reset</a>
         </div>
 
         <div class="dashboard-container">
@@ -81,8 +77,43 @@
         const revenueData = @Html.Raw(Json.Serialize(ViewBag.Revenues));
 
         if (revenueData.every(x => x === 0)) {
-            ctx.canvas.style.display = "none";
             document.getElementById("no-record-message").style.display = "block";
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['No value can be displayed'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [0],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1,
+                            min: 0,
+                            ticks: {
+                                stepSize: 1 
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                display: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
         } else {
             ctx.canvas.style.display = "block";
             document.getElementById("no-record-message").style.display = "none";
@@ -103,9 +134,9 @@
                             beginAtZero: true
                         }
                     },
-                    plugins: { // added plugins section
+                    plugins: {
                         legend: {
-                            display: false // show legend
+                            display: false
                         }
                     }
                 }
