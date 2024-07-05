@@ -42,3 +42,25 @@
         closeMenu();
     });
 });
+const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+animatedElements.forEach((element) => {
+    element.classList.add('invisible');
+});
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+            entry.target.classList.remove('invisible');
+            entry.target.classList.add('animate');
+            entry.target.classList.add('animated');
+        }
+    });
+}, {
+    root: null,
+    threshold: 1.0,
+});
+
+animatedElements.forEach((element) => {
+    observer.observe(element);
+});

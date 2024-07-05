@@ -1,4 +1,4 @@
-﻿@model List<ProductionRequest>
+@model List<ProductionRequest>
 
 <div class="container">
 	<div class="row">
@@ -46,8 +46,9 @@
                     <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
                 } *@
                     
-                @if (@obj.Jewelries.Count != 0)
+                @if (@obj.Jewelries.Count >= 1)
                 {
+
                     <td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
                         if (User.IsInRole(SD.Role_Sales))
                         {
@@ -57,6 +58,7 @@
                 {
                      <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
                 }else
+
                 {
                     <td>Waiting for sales</td>	
                 }

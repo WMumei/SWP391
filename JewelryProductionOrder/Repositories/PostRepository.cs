@@ -5,10 +5,10 @@ using Models.Repository;
 
 namespace JewelryProductionOrder.Repositories
 {
-    public class WarrantyCardRepository : Repository<WarrantyCard>, IWarrantyCardRepository
+    public class PostRepository : Repository<Post>, IPostRepository
     {
         private ApplicationDbContext _db;
-        public WarrantyCardRepository(ApplicationDbContext db) : base(db)
+        public PostRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
@@ -18,9 +18,9 @@ namespace JewelryProductionOrder.Repositories
             _db.SaveChanges();
         }
 
-        public void Update(WarrantyCard card)
+        public void Update(Post post)
         {
-            _db.WarrantyCards.Update(card);
+            _db.Posts.Update(post);
         }
     }
 }

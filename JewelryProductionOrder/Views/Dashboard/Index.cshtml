@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "DashBoard";
+}
+@model List<QuotationRequest>
+<link rel="stylesheet" href="~/css/Dashboard.css" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<h1>Dashboard</h1>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-box full-width">
+            <h2>Revenue</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal totalPriceSum = Model.Sum(obj => obj.TotalPrice ?? 0);
+                    }
+                    <tr>
+                        <td>@totalPriceSum</td>
+                    </tr>
+                </tbody>
+            </table>
+            @*             <form id="filter-form">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" />
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" />
+            <button type="submit">Apply Filter</button>
+            </form> *@
+            <canvas id="RevenueChart"></canvas>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-box">
+                <h2>Total Jewelry Sold</h2>
+            </div>
+
+            <div class="dashboard-box">
+                <h2>Total Customers</h2>
+                <p>@ViewBag.CustomerCount</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('RevenueChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.Dates)),
+                datasets: [{
+                    label: 'Revenue',
+                    data: @Html.Raw(Json.Serialize(ViewBag.Revenues)),
+
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
