@@ -1,13 +1,16 @@
-﻿using JewelryProductionOrder.Data;
+﻿using JewelryProductionOrder.Controllers;
+using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
@@ -56,6 +59,7 @@ namespace SWP391.Controllers
             orderVM.ProductionRequest.CustomerId = userId;
             orderVM.ProductionRequest.Address = orderVM.Customer.Address;
             orderVM.ProductionRequest.CreatedAt = DateTime.Now;
+            orderVM.ProductionRequest.Status = SD.StatusProcessing;
 			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
             _unitOfWork.Save();
             return RedirectToAction("CustomerView");
@@ -89,5 +93,37 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-    }
+		public IActionResult CancelRequest(int id)
+		{
+			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+			if (req is not null)
+			{
+				req.Status = SD.StatusCancelled;
+				_unitOfWork.Save();
+			}
+
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+			if (jewelries.Count > 0)
+			{
+				foreach (Jewelry jewelry in jewelries)
+				{
+					jewelry.Status = SD.StatusCancelled;
+					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+					if (QuoReq != null)
+					{
+						QuoReq.Status = SD.StatusCancelled;
+					}
+					List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
+					if (jewelryDesigns.Count > 0)
+					{
+						foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+						{
+							JewelryDesign.Status = SD.StatusCancelled;
+						}
+					}
+				}
+			}
+			return RedirectToAction("Index");
+		}
+	}
 }

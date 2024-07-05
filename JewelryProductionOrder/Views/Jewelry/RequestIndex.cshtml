@@ -76,7 +76,7 @@
 						{
 							<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Manufacture</a></td>
 						}
-						@if (User.IsInRole(SD.Role_Production) && obj.Status == "Currently manufacturing")
+						@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusManufaturing)
 						{
 							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Complete</a></td>
 						} else
