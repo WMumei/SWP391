@@ -1,12 +1,9 @@
 
-using JewelryProductionOrder.Data;
-
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using SWP391.Controllers;
 using System.Security.Claims;
@@ -23,7 +20,7 @@ namespace JewelryProductionOrder.Controllers
         }
         public IActionResult Create(int reqId)
         {
-            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties:"Jewelries");
+            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties: "Jewelries");
             if (productionRequest == null)
             {
                 return NotFound();
@@ -32,7 +29,7 @@ namespace JewelryProductionOrder.Controllers
             {
                 ProductionRequestId = reqId,
 
-                Status = SD.StatusProcessing
+                Status = SD.StatusProcessing,
 
                 ProductionRequest = productionRequest
 
@@ -53,6 +50,7 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
+
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns").ToList();
             bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
             CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
@@ -71,10 +69,11 @@ namespace JewelryProductionOrder.Controllers
         }
 
         public IActionResult StartManufacture(int id)
-		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        {
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
 
 			if (jewelry is not null)
 			{

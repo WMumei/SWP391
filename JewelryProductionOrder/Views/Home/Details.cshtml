@@ -1,0 +1,32 @@
+﻿@model ShoppingCart
+
+@* <div class="caption-top row">
+	<h2>Design Details</h2>
+</div> *@
+<br />
+<form method="post">
+	<input hidden asp-for="BaseDesignId" />
+	<div class="form-group">
+		<div class="row">
+			<div class="col-6">
+				<img src="@Model.BaseDesign.Image" width="100%" style="" />
+			</div>
+			<div class="col-6 py-2 text-center">
+				<div class="row">
+					<h3 class="">@Model.BaseDesign.Name</h3>
+				</div>
+				<div class="row">
+					<div class="col-6 row gap-2">
+						<input asp-for="Quantity" class="col-6 form-control text-end w-25" />
+						<button type="submit"
+								class="col-5 btn btn-primary bg-gradient flex-grow-0 p-1">
+							Add to Cart
+						</button>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+</form>
+

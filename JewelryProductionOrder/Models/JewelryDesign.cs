@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
 {
@@ -24,9 +24,13 @@ namespace JewelryProductionOrder.Models
         public string? ProductionStaffId { get; set; }
         [ForeignKey("ProductionStaffId")]
         public User? ProductionStaff { get; set; }
-        public int? ProductionRequestId { get; set; }
-        [ForeignKey("ProductionRequestId")]
-        public ProductionRequest ProductionRequest { get; set; }
+
+        //public int? ProductionRequestId { get; set; }
+        //[ForeignKey("ProductionRequestId")]
+        //public ProductionRequest ProductionRequest { get; set; }
+
+        //public int? BaseDesignId { get; set; }
+        //public BaseDesign BaseDesign { get; set; }
 
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]

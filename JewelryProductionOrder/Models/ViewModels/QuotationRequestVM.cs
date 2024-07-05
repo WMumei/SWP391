@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
-
-namespace JewelryProductionOrder.Models.ViewModels
+﻿namespace JewelryProductionOrder.Models.ViewModels
 {
 	public class QuotationRequestVM
 	{
