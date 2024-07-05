@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  jewelryproductionorder:
+    image: ${DOCKER_REGISTRY-}jewelryproductionorder
+    build:
+      context: .
+      dockerfile: JewelryProductionOrder/Dockerfile

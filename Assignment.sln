@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JewelryProductionOrder", "JewelryProductionOrder\JewelryProductionOrder.csproj", "{0F017377-E09A-4281-87A6-355AF1897BEB}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{287C70D0-BF20-49C3-9712-D8C66D1099D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0F017377-E09A-4281-87A6-355AF1897BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F017377-E09A-4281-87A6-355AF1897BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F017377-E09A-4281-87A6-355AF1897BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{287C70D0-BF20-49C3-9712-D8C66D1099D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{287C70D0-BF20-49C3-9712-D8C66D1099D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{287C70D0-BF20-49C3-9712-D8C66D1099D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{287C70D0-BF20-49C3-9712-D8C66D1099D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

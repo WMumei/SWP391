@@ -118,26 +118,43 @@ namespace SWP391.Controllers
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
             User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
             //ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");
-            //không thể tạo 1 product khi so sánh id của nó với productionRequestID của jewelry
+            
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            //Delivery delivery = _unitOfWork.Delivery.Get(u => u.CustomerId == customer.Id, includeProperties: "Customer, Jewelries, WarrantyCard");
+            
 
             foreach (var jewelry in jewelries)
             {
                 if (jewelry is not null)
                 {
+                    WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.JewelryId == jewelry.Id, includeProperties: "Jewelry");
                     jewelry.SalesStaffId = userId;
+                    
                     jewelry.Status = "Delivering";
                     jewelry.ProductionRequest.Status = "Delivering";
                     jewelry.ProductionRequest.Address = productionRequest.Address;
+                   /* Delivery delivery = new()
+                    {
+                        SalesStaffId = userId,
+                        Customer= customer,
+                        
+                        Jewelry = jewelry,
+                        
+                        WarrantyCard = warrantyCard,
+                        DeliveredAt = DateTime.Now
+                    };
+                   */
                     //jewelry.ProductionRequest = productionRequest;
                     //customer.PhoneNumber = productionRequest.Phone
                 }
                 //productionRequest.Address = customer.Address;
 
                 //productionRequest.Jewelries = jewelries;
+                
             }
+           
             _unitOfWork.Save();
             return View("Deliver", productionRequest);
         }
@@ -148,7 +165,9 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             productionRequest.SalesStaffId = userId;
-
+            User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
+            // Delivery delivery = _unitOfWork.Delivery.Get(u => u.CustomerId == customer.Id, includeProperties: "Customer, Jewelry, WarrantyCard");
+            //delivery.DeliveredAt = DateTime.Now;
             foreach (var jewelry in jewelries)
             {
                 if (jewelry is not null)
@@ -156,9 +175,24 @@ namespace SWP391.Controllers
                     jewelry.SalesStaffId = userId;
                     jewelry.Status = "Delivered";
                     jewelry.ProductionRequest.Status = "Delivered";
-                    //jewelry.ProductionRequest.Address = productionRequest.Address;
-                    //jewelry.ProductionRequest = productionRequest;
-                    //customer.PhoneNumber = productionRequest.Phone
+                    //
+                    //
+                    //
+                    WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.JewelryId == jewelry.Id, includeProperties: "Jewelry");
+                    //lưu data vào entity delivery
+                    Delivery delivery = new Delivery()
+                    {
+                        SalesStaffId = userId,
+                        CustomerId = customer.Id,
+
+                        JewelryId = jewelry.Id,
+
+                        WarrantyCardId = warrantyCard.Id,
+                        DeliveredAt = DateTime.Now
+                    };
+                    _unitOfWork.Delivery.Add(delivery);
+                    _unitOfWork.Delivery.Save();
+
                 }
 
 
@@ -166,6 +200,16 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
+        /*[HttpPost]
+        public IActionResult DeliveryEntity(Delivery delivery)
+        {
+            delivery.DeliveredAt = DateTime.Now;
+            
+            _unitOfWork.Save();
+            return RedirectToAction("Delivered");
+
+        }
+        */
         public IActionResult CustomerViewDelivery(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
@@ -191,9 +235,7 @@ namespace SWP391.Controllers
                     
                     jewelry.Status = "Confirmed";
                     jewelry.ProductionRequest.Status = "Confirmed";
-                    //jewelry.ProductionRequest.Address = productionRequest.Address;
-                    //jewelry.ProductionRequest = productionRequest;
-                    //customer.PhoneNumber = productionRequest.Phone
+                   
                 }
 
 
