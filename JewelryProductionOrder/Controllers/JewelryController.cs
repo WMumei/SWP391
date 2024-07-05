@@ -1,5 +1,6 @@
 
 using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace JewelryProductionOrder.Controllers
             {
                 ProductionRequestId = reqId,
 
-                Status = SD.StatusProcessing
+                Status = SD.StatusProcessing,
 
                 ProductionRequest = productionRequest
 
@@ -49,8 +50,7 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-            return View(jewelries);
+
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns").ToList();
             bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
             CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
@@ -74,14 +74,7 @@ namespace JewelryProductionOrder.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            if (jewelry is not null)
-            {
-                jewelry.ProductionStaffId = userId;
-                jewelry.Status = $"Currently manufacturing";
-            }
-            _unitOfWork.Save();
-            return RedirectToAction("Index");
-        }
+
 			if (jewelry is not null)
 			{
 				jewelry.ProductionStaffId = userId;
