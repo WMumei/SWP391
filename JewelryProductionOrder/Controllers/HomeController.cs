@@ -37,12 +37,12 @@ namespace JewelryProductionOrder.Controllers
         }
 
 
-		public IActionResult Details(int id)
+		public IActionResult Details(int baseDesignId)
 		{
             ShoppingCart cart = new ShoppingCart()
             {
-                BaseDesignId = id,
-                BaseDesign = _unitOfWork.BaseDesign.Get(d => d.Id == id),
+                BaseDesignId = baseDesignId,
+                BaseDesign = _unitOfWork.BaseDesign.Get(d => d.Id == baseDesignId),
                 Quantity = 1
             };
 			return View(cart);
