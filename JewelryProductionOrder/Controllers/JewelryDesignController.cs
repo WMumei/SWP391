@@ -1,7 +1,9 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using SWP391.Controllers;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
@@ -40,7 +42,7 @@ namespace JewelryProductionOrder.Controllers
                 }
                 obj.DesignFile = Path.Combine("\\files", fileName);
             }
-            obj.Status = "Pending";
+            obj.Status = SD.StatusPending;
             //obj.JewelryId = obj.Jewelry.Id;
             _unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
@@ -62,16 +64,16 @@ namespace JewelryProductionOrder.Controllers
         public IActionResult CustomerApprove(int id)
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (design is not null)
-            {
-                design.CustomerId = userId;
-                design.Status = $"Approved by Customer";
-            }
-            _unitOfWork.Save();
-            return RedirectToAction("Index", "Home");
-            return RedirectToAction("Index");
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (design is not null)
+			{
+				design.CustomerId = userId;
+				design.Status = SD.CustomerApproved;
+			}
+			_unitOfWork.Save();
+			return RedirectToAction("Index", "Home");
+			return RedirectToAction("Index");
         }
 
         public IActionResult Manufacture(int jId)
@@ -83,9 +85,10 @@ namespace JewelryProductionOrder.Controllers
             {
                 JewelryDesign = design,
                 MaterialSet = materialSet,
-                Jewelry = jewelry
-            };
-            return View(vm);
-        }
-    }
+				Jewelry = jewelry
+			};
+			return View(vm);
+		}
+		
+	}
 }
