@@ -88,7 +88,7 @@
             </div>
             
 		}
-		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == "Approved by Manager")
+		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
 		{
 			<div class="col text-center">
 				<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
@@ -97,21 +97,18 @@
 				<a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
 			</div>
 		}
-		@if (User.IsInRole(SD.Role_Sales) && (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer"))
-		{
-			<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Create new quotation</a></td>
-		}
-		else if (Model.QuotationRequest.Status == "Approved by Manager")
+
+		else if (Model.QuotationRequest.Status == SD.ManagerApproved)
 		{
 			<h2 class="text-success">Approved by manager!</h2>
 		}
-		else if (Model.QuotationRequest.Status == "Approved by Customer")
+		else if (Model.QuotationRequest.Status == SD.CustomerApproved)
 		{
 			<h2 class="text-success">Approved!</h2>
 		}
-		else if (Model.QuotationRequest.Status == "Disapproved by Manager" || Model.QuotationRequest.Status == "Disapproved by Customer")
+		else if (Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.CustomerDisapproved)
 		{
-			<h2 class="text-success">Disapproved!</h2>
+			<h2 class="text-danger">Disapproved!</h2>
 		}
 	</div>
 

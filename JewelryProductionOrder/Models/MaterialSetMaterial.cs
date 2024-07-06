@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
@@ -12,7 +13,8 @@ namespace JewelryProductionOrder.Models
         public int MaterialSetId { get; set; }
         [ForeignKey("MaterialSetId")]
         public MaterialSet MaterialSet { get; set; }
+        [Range(0, double.MaxValue)]
         public decimal Weight { get; set; }
         public DateTime CreatedAt { get; set; }
-	}
+    }
 }

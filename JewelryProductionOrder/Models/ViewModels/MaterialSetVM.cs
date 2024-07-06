@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace JewelryProductionOrder.Models.ViewModels
 {
@@ -10,8 +11,9 @@ namespace JewelryProductionOrder.Models.ViewModels
 		//public MaterialSet MaterialSet { get; set; }
 		[ValidateNever]
 		public IEnumerable<SelectListItem> MaterialList { get; set; }
-		[DisplayName("Weight")]
-		public double Weight { get; set; }
+        [Range(0, double.MaxValue)]
+        [DisplayName("Weight")]
+        public double Weight { get; set; }
 		[ValidateNever]
 		public IEnumerable<SelectListItem> GemstoneList { get; set; }
 		public Material Material { get; set; }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace JewelryProductionOrder.Models
 {
@@ -8,6 +7,7 @@ namespace JewelryProductionOrder.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
     }

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JewelryProductionOrder.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <header>
@@ -92,6 +93,16 @@
             </div>
             <div>
                 <a asp-controller="ProductionRequest" asp-action="Index" class="button">Production Request</a>
+            </div>
+            @if (User.IsInRole(SD.Role_Sales))
+            {
+                <div>
+                    <a asp-controller="Posts" asp-action="Create" class="button">Create Post</a>
+                </div>
+            }
+            
+            <div>
+                <a asp-controller="Posts" asp-action="Index" class="button">View Post</a>
             </div>
         </div>
     }
