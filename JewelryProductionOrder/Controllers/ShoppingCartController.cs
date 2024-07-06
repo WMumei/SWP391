@@ -2,6 +2,7 @@
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Repositories.IRepository;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -38,10 +39,8 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult Index()
 		{
-
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
 			ShoppingCartVM = new()
 			{
 				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
@@ -50,6 +49,40 @@ namespace JewelryProductionOrder.Controllers
 			};
 
 			return View(ShoppingCartVM);
+		}
+
+		public IActionResult Plus(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			cartFromDb.Quantity += 1;
+			_unitOfWork.ShoppingCart.Update(cartFromDb);
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
+		}
+
+		public IActionResult Minus(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			if (cartFromDb.Quantity <= 1)
+			{
+				_unitOfWork.ShoppingCart.Remove(cartFromDb);
+			}
+			else
+			{
+				cartFromDb.Quantity -= 1;
+				_unitOfWork.ShoppingCart.Update(cartFromDb);
+			}
+
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
+		}
+
+		public IActionResult Remove(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			_unitOfWork.ShoppingCart.Remove(cartFromDb);
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

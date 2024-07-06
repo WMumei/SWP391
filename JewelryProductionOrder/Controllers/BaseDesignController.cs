@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-    public class BaseDesignController : Controller
-    {
+	public class BaseDesignController : Controller
+	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHostEnvironment;
 		public BaseDesignController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
@@ -18,36 +19,49 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		public IActionResult Create()
-        {
-            BaseDesign obj = new BaseDesign
-            {
-            };
-            return View(obj);
-        }
+		{
+			BaseDesign obj = new BaseDesign
+			{
+			};
+			return View(obj);
+		}
 
-        [HttpPost]
-        public IActionResult Create(BaseDesign obj, IFormFile? file)
-        {
-            obj.CreatedAt = DateTime.Now;
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            if (file is not null)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string filePath = Path.Combine(wwwRootPath, @"files");
-                using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-                obj.Image = Path.Combine("\\files", fileName);
-            }
+		[HttpPost]
+		public IActionResult Create(BaseDesign obj, IFormFile? file)
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            _unitOfWork.BaseDesign.Add(obj);
-            _unitOfWork.Save();
+			obj.CreatedAt = DateTime.Now;
 
-            // TODO: Add to shopping cart
+			string wwwRootPath = _webHostEnvironment.WebRootPath;
+			if (file is not null)
+			{
+				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+				string filePath = Path.Combine(wwwRootPath, @"files");
+				using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+				{
+					file.CopyTo(fileStream);
+				}
+				obj.Image = Path.Combine("\\files", fileName);
+			}
 
-            return RedirectToAction("Index", "Home");
-        }
+			_unitOfWork.BaseDesign.Add(obj);
+			_unitOfWork.Save();
 
-    }
+			ShoppingCart shoppingCart = new ShoppingCart
+			{
+				BaseDesignId = obj.Id,
+				Quantity = 1,
+				UserId = userId
+			};
+			_unitOfWork.ShoppingCart.Add(shoppingCart);
+			_unitOfWork.Save();
+
+			TempData["success"] = "Cart updated successfully";
+
+			return RedirectToAction("Index", "Home");
+		}
+
+	}
 }
