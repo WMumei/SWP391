@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
 {
-	public class ProductionRequest
-	{
+    public class ProductionRequest
+    {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public String? Address { get; set; }
         public String? Status { get; set; }
-        public int Quantity { get; set; }
         public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
@@ -27,8 +25,9 @@ namespace JewelryProductionOrder.Models
         // TODO: REMOVE THIS
         public QuotationRequest? QuotationRequest { get; set; }
         //
-        public List<JewelryDesign> JewelryDesigns { get; } = [];
+        
         public List<Jewelry> Jewelries { get; } = [];
+        public List<ProductionRequestDetail> ProductionRequestDetails { get; } = [];
 
     }
 }

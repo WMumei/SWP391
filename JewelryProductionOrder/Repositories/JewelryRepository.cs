@@ -21,5 +21,5 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.Jewelries.Update(jewelry);
         }
-    } 
+    }
 }

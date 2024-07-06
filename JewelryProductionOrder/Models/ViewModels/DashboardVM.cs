@@ -1,5 +1,4 @@
-﻿using JewelryProductionOrder.Models.ViewModels;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 
 public class DashboardVM
 {
