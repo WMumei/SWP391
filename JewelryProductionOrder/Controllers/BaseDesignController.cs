@@ -58,7 +58,7 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.ShoppingCart.Add(shoppingCart);
 			_unitOfWork.Save();
 
-			TempData["success"] = "Cart updated successfully";
+			TempData["success"] = "Create successfully";
 
 			return RedirectToAction("Index", "Home");
 		}

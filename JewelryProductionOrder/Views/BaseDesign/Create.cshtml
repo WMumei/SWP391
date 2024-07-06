@@ -7,21 +7,21 @@
 				<hr />
 			</div>
 			<!-- <div asp-validation-summary="All"></div> -->
-			<div class="form-floating col-6">
-				<label asp-for="Name">Design name:</label>
-				<input asp-for="Name" type="text" class="form-control" />
+			<div class="form-floating col-6 py-2">
+				<input asp-for="Name" type="text" class="form-control border-0 shadow" />
+				<label asp-for="Name" class="ms-2">Design name:</label>
 			</div>
-			<div class="form-floating col-6">
-				<label asp-for="Description">Description:</label>
-				<input asp-for="Description" type="text" class="form-control" />
+			<div class="form-floating col-6 py-2">
+				<input asp-for="Description" type="text" class="form-control border-0 shadow" />
+				<label asp-for="Description" class="ms-2">Description:</label>
 			</div>
-			<div class="form-floating col-6">
+			<div class="form-floating col-6 py-2">
 				<input type="file" name="file" class="form-control border-0 shadow" />
 				<label class="ms-2">Image</label>
 			</div>
 
 			<div class="row">
-				<div class="col-4 col-md-3">
+				<div class="">
 					<button type="submit" class="btn btn-primary form-control">Create</button>
 				</div>
 			</div>

@@ -6,8 +6,13 @@ namespace JewelryProductionOrder.Models
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public String? Address { get; set; }
-        public String? Status { get; set; }
+        public String Address { get; set; } = null!;
+        public String PhoneNumber { get; set; } = null!;
+        public String ContactName { get; set; } = null!;
+        public String Email { get; set; } = null!;
+		public String? Note { get; set; }
+		public String? Status { get; set; }
+
         // Moved quantity to ProductionRequestDetail
         public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]

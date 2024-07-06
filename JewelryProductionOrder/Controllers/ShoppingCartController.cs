@@ -84,5 +84,78 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
 		}
+
+		public IActionResult Summary()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			ShoppingCartVM = new()
+			{
+				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
+				includeProperties: "BaseDesign").ToList(),
+				ProductionRequest = new()
+			};
+
+			User customer = _unitOfWork.User.Get(u => u.Id == userId);
+			ShoppingCartVM.ProductionRequest.Customer = customer;
+			// Default values for shipping
+			ShoppingCartVM.ProductionRequest.ContactName = customer.Name;
+			ShoppingCartVM.ProductionRequest.PhoneNumber = customer.PhoneNumber;
+			ShoppingCartVM.ProductionRequest.Address = customer.Address;
+			ShoppingCartVM.ProductionRequest.Email = customer.Email;
+
+			return View(ShoppingCartVM);
+		}
+
+		[HttpPost]
+		[ActionName("Summary")]
+		public IActionResult SummaryPOST()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
+				includeProperties: "BaseDesign").ToList();
+
+			ShoppingCartVM.ProductionRequest.CustomerId = userId;
+
+			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
+
+			// TODO: Handle status of ProductionRequest
+			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
+
+			_unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
+			_unitOfWork.Save();
+			foreach (var cart in ShoppingCartVM.ShoppingCartList)
+			{
+				ProductionRequestDetail requestDetail = new()
+				{
+					BaseDesignId = cart.BaseDesignId,
+					ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
+					Quantity = cart.Quantity
+				};
+				_unitOfWork.ProductionRequestDetail.Add(requestDetail);
+				_unitOfWork.Save();
+			}
+
+			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.ProductionRequest.Id });
+		}
+
+
+		public IActionResult OrderConfirmation(int id)
+		{
+
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+
+			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+				.GetAll(u => u.UserId == productionRequest.CustomerId).ToList();
+
+			_unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+			_unitOfWork.Save();
+
+			return View(id);
+		}
+
 	}
 }
