@@ -97,6 +97,14 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 //                                .ToList();
                 //List<int> deliveryCounts = dDates.Select(date => deliveries.Where(d => d.DeliveredAt.HasValue && d.DeliveredAt.Value.ToString("yyyy-MM-dd") == date).Count()).ToList();
 
+                if (requests.Count>0)
+                {
+                    TempData["success"] = "Data found";
+                } else
+                {
+                    TempData["error"] = "Data not found";
+                }
+
                 ViewBag.Dates = rDates;
                 ViewBag.Revenues = revenues;
                 ViewBag.CustomerCount = customerCount;
