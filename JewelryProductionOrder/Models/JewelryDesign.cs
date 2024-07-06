@@ -7,6 +7,7 @@ namespace JewelryProductionOrder.Models
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(100)]
         public string? Name { get; set; }
         public string? Image { get; set; }
         public string? DesignFile { get; set; }

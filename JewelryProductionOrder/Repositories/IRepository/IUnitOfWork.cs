@@ -16,7 +16,7 @@ namespace Models.Repositories.Repository.IRepository
 		IShoppingCartRepository ShoppingCart { get; }
 		IProductionRequestDetailRepository ProductionRequestDetail { get; }
 		IBaseDesignRepository BaseDesign { get; }
-
+        IPostRepository Post { get; }
 		void Save();
     }
 }
