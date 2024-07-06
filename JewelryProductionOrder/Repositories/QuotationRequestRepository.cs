@@ -1,9 +1,7 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
-using Microsoft.EntityFrameworkCore;
 using Models.Repository;
-using System.Linq.Expressions;
 
 namespace JewelryProductionOrder.Repositories
 {
@@ -24,5 +22,5 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.QuotationRequests.Update(request);
         }
-	}
+    }
 }

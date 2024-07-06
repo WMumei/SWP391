@@ -1,0 +1,61 @@
+﻿@* @model ShoppingCartVM
+<style>
+
+</style>
+<form method="post" class="container">
+	<div class="caption-top row">
+		<h2>PAYMENT AND DELIVERY</h2>
+	</div>
+	<div class="form-group">
+		@foreach (var cart in Model.ShoppingCarts)
+		{
+			<div class="row">
+				<div class="col-4">
+				<label asp-for="@cart.Quantity">Quantity</label>
+				<input asp-for="@cart.Quantity" type="text" class="form-control" />
+				</div>
+				<div class="col-6">
+					<img src="@cart.BaseDesign.Image" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
+					</div>
+			</div>
+
+		}
+		<div class="row">
+
+			<div class="first-col">
+				<label asp-for="Customer.Name">Name</label>
+				<input asp-for="Customer.Name" type="text" class="form-control" />
+			</div>
+			<br />
+			<div class="first-col">
+				<label Name>Email</label>
+				<input type="text" class="form-control" />
+			</div>
+		</div>
+
+		<div class="accordion-header">
+			<label asp-for="Customer.PhoneNumber">Phone Number</label>
+			<input asp-for="Customer.PhoneNumber" type="text" class="form-control" />
+		</div>
+		<br />
+		<div>
+			<label asp-for="ProductionRequest.Address">Address</label>
+			<input asp-for="ProductionRequest.Address" type="text" class="form-control" />
+		</div>
+		<br />
+		<br />
+
+		<div class="row">
+			<div class="col-6 col-md-3">
+				<button type="submit" class="btn btn-primary form-control">Place order</button>
+			</div>
+			<div class="col-6 col-md-3">
+				<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">
+					Back to Home
+				</a>
+			</div>
+		</div>
+	</div>
+
+</form>
+ *@
