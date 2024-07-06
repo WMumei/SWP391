@@ -11,6 +11,6 @@ namespace JewelryProductionOrder.Models
 		public string? Description { get; set; }
 		//public string? DesignFile { get; set; }
 		public string? Type { get; set; }
-
+		public DateTime? CreatedAt { get; set; }
 	}
 }
