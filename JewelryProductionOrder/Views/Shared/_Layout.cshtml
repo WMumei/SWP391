@@ -94,6 +94,16 @@
             <div>
                 <a asp-controller="ProductionRequest" asp-action="Index" class="button">Production Request</a>
             </div>
+            @if (User.IsInRole(SD.Role_Sales))
+            {
+                <div>
+                    <a asp-controller="Posts" asp-action="Create" class="button">Create Post</a>
+                </div>
+            }
+            
+            <div>
+                <a asp-controller="Posts" asp-action="Index" class="button">View Post</a>
+            </div>
         </div>
     }
 

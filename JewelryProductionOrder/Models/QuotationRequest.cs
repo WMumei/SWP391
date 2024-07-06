@@ -8,9 +8,12 @@ namespace JewelryProductionOrder.Models
     {
         [Key]
         public int Id { get; set; }
-        public string? Status { get; set; }
+        public string? Status {  get; set; }
+        [StringLength(100)]
         public string Name { get; set; }
+        [Range(0, double.MaxValue)]
         public decimal LaborPrice { get; set; }
+        [Range(0, double.MaxValue)]
         public decimal? TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
 
