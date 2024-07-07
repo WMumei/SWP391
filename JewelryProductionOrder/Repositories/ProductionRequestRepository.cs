@@ -23,5 +23,53 @@ namespace JewelryProductionOrder.Repositories
         {
             _db.ProductionRequestDetails.Update(request);
         }
+
+        public void UpdateStatus(int id, string reqStatus, string? paymentStatus = null)
+        {
+            var req = _db.ProductionRequests.FirstOrDefault(x => x.Id == id);
+            if (req != null) {
+                req.Status = reqStatus;
+                if (!string.IsNullOrEmpty(paymentStatus)) {
+                    req.Status = paymentStatus;
+                }
+            }
+        }
+
+        public void updateStripePaymentId(int id, string sessionId, string paymentIntentId)
+        {
+            var req = _db.ProductionRequests.FirstOrDefault(x => x.Id == id);
+            if (!string.IsNullOrEmpty(sessionId)) 
+            {
+                req.SessionId = sessionId;
+            }
+            if (!string.IsNullOrEmpty(paymentIntentId))
+            {
+                req.PaymentIntentId = paymentIntentId;
+            }
+        }
+
+        public void UpdateStatus(int id, string reqStatus, string? paymentStatus = null)
+        {
+            var req = _db.ProductionRequests.FirstOrDefault(x => x.Id == id);
+            if (req != null) {
+                req.Status = reqStatus;
+                if (!string.IsNullOrEmpty(paymentStatus)) {
+                    req.Status = paymentStatus;
+                }
+            }
+        }
+
+        public void updateStripePaymentId(int id, string sessionId, string paymentIntentId)
+        {
+            var req = _db.ProductionRequests.FirstOrDefault(x => x.Id == id);
+            if (!string.IsNullOrEmpty(sessionId)) 
+            {
+                req.SessionId = sessionId;
+            }
+            if (!string.IsNullOrEmpty(paymentIntentId))
+            {
+                req.PaymentIntentId = paymentIntentId;
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using Stripe.Checkout;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -124,5 +125,73 @@ namespace SWP391.Controllers
 			}
 			return RedirectToAction("Index");
 		}
+
+        public bool checkPayment(int pId)
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+
+            foreach (Jewelry jewelry in jewelries)
+            {
+                List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
+
+                bool hasApprovedQuotation = quotations.Any(q => q.Status == SD.CustomerApproved);
+
+                if (!hasApprovedQuotation)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public IActionResult Payment(int pId)
+        {
+            var domain = "https://localhost:7133/";
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain + $"/customer/ProductionRequest/CustomerView?id={pId}",
+                CancelUrl = domain + "customer/ProductionRequest/Index",
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+            };
+
+            var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+
+            if (!jewelries.Any())
+            {
+                return BadRequest("No jewelries found for the given production request.");
+            }
+
+            foreach (var jewelry in jewelries)
+            {
+                var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
+
+                foreach (var quotation in quotations)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(quotation.TotalPrice),
+                            Currency = "VND",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = jewelry.Name
+                            }
+                        },
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+            }
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            _unitOfWork.ProductionRequest.updateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+            _unitOfWork.Save();
+            Response.Headers.Add("Location", session.Url);
+
+            return RedirectToAction("CustomerView");
+        }
 	}
 }

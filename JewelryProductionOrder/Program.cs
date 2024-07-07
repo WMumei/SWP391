@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
+using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using JewelryProductionOrder.DbInitializer;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +21,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(
     o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options => {
@@ -39,7 +49,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

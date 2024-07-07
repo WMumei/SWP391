@@ -7,5 +7,8 @@ namespace JewelryProductionOrder.Repositories.IRepository
     {
         void Update(ProductionRequest request);
         void Save();
+
+        void UpdateStatus(int id, string reqStatus, string? paymentStatus = null);
+        void updateStripePaymentId(int id, string sessionId, string paymentIntentId);
     }
 }

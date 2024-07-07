@@ -410,6 +410,9 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("DesignStaffId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
 
@@ -418,6 +421,9 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("SalesStaffId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SessionId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -440,39 +446,15 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 6, 19, 37, 3, 611, DateTimeKind.Local).AddTicks(2592)
+                            CreatedAt = new DateTime(2024, 7, 5, 16, 4, 54, 195, DateTimeKind.Local).AddTicks(8650),
+                            Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 6, 19, 37, 3, 611, DateTimeKind.Local).AddTicks(2615)
+                            CreatedAt = new DateTime(2024, 7, 5, 16, 4, 54, 195, DateTimeKind.Local).AddTicks(8663),
+                            Quantity = 1
                         });
-                });
-
-            modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequestDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BaseDesignId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductionRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BaseDesignId");
-
-                    b.HasIndex("ProductionRequestId");
-
-                    b.ToTable("ProductionRequestDetails");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>

@@ -23,7 +23,9 @@ namespace JewelryProductionOrder.Models
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
 
-        // TODO: REMOVE THIS
+        public string? SessionId { get; set; }
+        public string? PaymentIntentId { get; set; }
+
         public QuotationRequest? QuotationRequest { get; set; }
         //
         

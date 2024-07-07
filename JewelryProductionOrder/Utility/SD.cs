@@ -12,6 +12,7 @@
         public const string StatusCancelled = "Cancelled";
         public const string StatusProcessing = "Processing";
 		public const string StatusDelivered = "Delivered";
+        public const string StatusPaid = "Paid";
 
         public const string StatusManufaturing = "Currently manufacturing";
         public const string StatusManufactured = "Manufactured";
