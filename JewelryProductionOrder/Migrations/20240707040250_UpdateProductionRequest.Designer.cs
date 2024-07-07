@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240707040250_UpdateProductionRequest")]
+    partial class UpdateProductionRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,15 +55,12 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -176,6 +176,7 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
@@ -222,7 +223,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2972),
+                            CreatedAt = new DateTime(2024, 7, 7, 11, 2, 49, 495, DateTimeKind.Local).AddTicks(7411),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -466,7 +467,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 1,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2897),
+                            CreatedAt = new DateTime(2024, 7, 7, 11, 2, 49, 495, DateTimeKind.Local).AddTicks(7202),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         },
@@ -475,7 +476,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2909),
+                            CreatedAt = new DateTime(2024, 7, 7, 11, 2, 49, 495, DateTimeKind.Local).AddTicks(7346),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         });

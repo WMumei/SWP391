@@ -16,7 +16,7 @@
   <ItemGroup>
     <Folder Include="DB Static\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Views\BaseDesign\" />
+    <Folder Include="Views\ProductionRequestDetail\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

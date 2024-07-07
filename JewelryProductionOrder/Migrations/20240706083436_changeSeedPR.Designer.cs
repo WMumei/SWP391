@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706083436_changeSeedPR")]
+    partial class changeSeedPR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,15 +55,12 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -176,6 +176,7 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
@@ -222,7 +223,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2972),
+                            CreatedAt = new DateTime(2024, 7, 6, 15, 34, 35, 737, DateTimeKind.Local).AddTicks(7021),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -420,22 +421,12 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("DesignStaffId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<int?>("QuotationRequestId")
                         .HasColumnType("int");
@@ -466,8 +457,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 1,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2897),
-                            Email = "test@gmail.com",
+                            CreatedAt = new DateTime(2024, 7, 6, 15, 34, 35, 737, DateTimeKind.Local).AddTicks(6885),
                             PhoneNumber = "0123456769"
                         },
                         new
@@ -475,8 +465,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2909),
-                            Email = "test@gmail.com",
+                            CreatedAt = new DateTime(2024, 7, 6, 15, 34, 35, 737, DateTimeKind.Local).AddTicks(6943),
                             PhoneNumber = "0123456769"
                         });
                 });
