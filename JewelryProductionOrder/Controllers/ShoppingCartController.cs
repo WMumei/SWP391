@@ -95,6 +95,9 @@ namespace JewelryProductionOrder.Controllers
 				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "BaseDesign").ToList(),
 				ProductionRequest = new()
+				{
+					CreatedAt = DateTime.Now
+				}
 			};
 
 			User customer = _unitOfWork.User.Get(u => u.Id == userId);
@@ -142,6 +145,7 @@ namespace JewelryProductionOrder.Controllers
 						Name = cart.BaseDesign.Name,
 						BaseDesignId = cart.BaseDesignId,
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
+						CreatedAt = DateTime.Now
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
 				}
