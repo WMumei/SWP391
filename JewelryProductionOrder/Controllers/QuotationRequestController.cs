@@ -37,7 +37,8 @@ namespace SWP391.Controllers
         {
 			if (checkRedirect is false)
 			{
-                QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == jId);
+				int qId = jId;
+                QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == qId);
                 Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == request.JewelryId, includeProperties: "MaterialSet");
                 MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
                 QuotationRequestVM vm = new QuotationRequestVM
@@ -92,8 +93,12 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
-			&& (r.Status == SD.StatusPending));
+
+			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
+			QuotationRequest oldRequest = _unitOfWork.QuotationRequest
+				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
+				.OrderByDescending(r => r.CreatedAt)
+				.FirstOrDefault();
 			if (oldRequest is not null)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;

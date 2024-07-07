@@ -55,7 +55,7 @@
 							@foreach (Material material in @Model.MaterialSet.Materials)
 							{
 								var weight = material.MaterialSetMaterials.FirstOrDefault(
-								s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+								s => s.MaterialSetId == @Model.QuotationRequest.MaterialSet.Id).Weight;
 								<tr>
 									<td>@material.Name</td>
 									<td>@weight</td>
