@@ -135,6 +135,16 @@ namespace JewelryProductionOrder.Controllers
 					ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 					Quantity = cart.Quantity
 				};
+				for (int i = 0; i < cart.Quantity; i++)
+				{
+					Jewelry jewelry = new Jewelry()
+					{
+						Name = cart.BaseDesign.Name,
+						BaseDesignId = cart.BaseDesignId,
+						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
+					};
+					_unitOfWork.Jewelry.Add(jewelry);
+				}
 				_unitOfWork.ProductionRequestDetail.Add(requestDetail);
 				_unitOfWork.Save();
 			}

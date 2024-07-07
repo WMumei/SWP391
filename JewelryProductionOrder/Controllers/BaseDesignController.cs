@@ -1,5 +1,6 @@
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -27,6 +28,7 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
+		[Authorize]
 		public IActionResult Create(BaseDesign obj, IFormFile? file)
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -45,6 +47,9 @@ namespace JewelryProductionOrder.Controllers
 				}
 				obj.Image = Path.Combine("\\files", fileName);
 			}
+
+			if (User.IsInRole("Customer")) obj.Type = "Customer";
+			else obj.Type = "Company";
 
 			_unitOfWork.BaseDesign.Add(obj);
 			_unitOfWork.Save();

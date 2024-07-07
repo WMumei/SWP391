@@ -6,8 +6,11 @@
                 <h2>Create a design for Jewelry @Model.Jewelry.Name</h2>
                 <hr />
             </div>
+
             <!-- <div asp-validation-summary="All"></div> -->
             <input asp-for="JewelryId" type="hidden" class="form-control" />
+            <img src="@Model.DesignFile" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
+
             <div>
                 <label asp-for="Name">Design name:</label>
                 <input asp-for="Name" type="text" class="form-control" />
