@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>287c70d0-bf20-49c3-9712-d8c66d1099d7</ProjectGuid>
+    <ProjectGuid>75b7fba8-c9cf-4278-8d81-23175ec14271</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>jewelryproductionorder</DockerServiceName>

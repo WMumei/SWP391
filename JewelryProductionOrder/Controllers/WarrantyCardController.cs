@@ -106,21 +106,22 @@ namespace JewelryProductionOrder.Controllers
 			//IEnumerable<SelectListItem>
 			return View(objWarrantyCardList);
 		}
-		public IActionResult Delete(int? id)
+		/*public IActionResult Delete(int? id)
 		{
-			WarrantyCard warrantyCardFromDb = _warrantyCardRepo.Get(u => u.Id == id);
+			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.Id == id);
 			
 			
-			return View(warrantyCardFromDb);
+			return View(warrantyCard);
 		}
+		*/
 		//[HttpPost, ActionName("Delete")]
-		[HttpDelete]
+		//[HttpDelete]
 		
 		public IActionResult DeletePost(int? id)
 		{
 
-			WarrantyCard warrantyCard = _warrantyCardRepo.Get(u => u.Id == id);
-			if (warrantyCard == null)
+			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.Id == id);
+            if (warrantyCard == null)
 			{
 				return NotFound();
 			}
