@@ -154,8 +154,8 @@ namespace JewelryProductionOrder.Data
 				);     
 
             modelBuilder.Entity<ProductionRequest>().HasData(
-                new ProductionRequest { Id = 1, CreatedAt = DateTime.Now },
-                new ProductionRequest { Id = 2, CreatedAt = DateTime.Now }
+                new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Address= "23 Phu Ky Quan 12", ContactName =" Le Hoang", PhoneNumber = "0123456769", Email="test@gmail.com" },
+                new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Address= "23 Phu Ky Quan 12", ContactName =" Le Hoang", PhoneNumber = "0123456769", Email="test@gmail.com" }
                 );
             modelBuilder.Entity<Material>().HasData(
                 new Material { Id = 1, Name = "Gold", Price = 1000 },
