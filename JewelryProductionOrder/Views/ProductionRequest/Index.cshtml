@@ -6,11 +6,6 @@
 			<h2>View Production Request</h2>
 
 		</div>
-		@*         <div class="col-6 text-end">
-		<a asp-controller="ProductionRequest" asp-action="Create" class="btn btn-primary">
-		<i class="bi bi-plus-circle"></i> Create New
-		</a>
-		</div> *@
 	</div>
 	<table class="table table-bordered table-striped">
 		<thead>
@@ -29,42 +24,35 @@
 			@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
 			{
 				<tr>
-
 					<td>@obj.Id</td>
 					<td>@obj.CreatedAt</td>
 					@* <td>@obj.Quantity</td> *@
 					<td>
 						@($"{obj?.Customer?.Name}")
 
-                </td>
-@*                 @if (obj.QuotationRequest is not null)
-                {
-                    <td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
-                }
-                else
-                {
-                    <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                } *@
-                    
-                @if (@obj.Jewelries.Count >= 1)
-                {
+					</td>
 
-                    <td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-                        if (User.IsInRole(SD.Role_Sales))
-                        {
-                            <td><a asp-controller="QuotationRequest" asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
-                        }
-                } else if (!User.IsInRole(SD.Role_Customer))
-                {
-                     <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                }else
+					@if (@obj.Jewelries.Count >= 1)
+					{
 
-                {
-                    <td>Waiting for sales</td>	
-                }
-            </tr>
-            }
-        </tbody>
-    </table>
+						<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						if (User.IsInRole(SD.Role_Sales))
+						{
+							<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
+						}
+					}
+					else if (!User.IsInRole(SD.Role_Customer))
+					{
+						<td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+					}
+					else
+
+					{
+						<td>Waiting for sales</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 <!-- <div asp-validation-summary="All"></div> -->
