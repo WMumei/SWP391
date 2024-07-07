@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,8 +9,11 @@ namespace JewelryProductionOrder.Models
         [Key]
         public int Id { get; set; }
         public string? Status {  get; set; }
+        [StringLength(100)]
         public string Name { get; set; }
+        [Range(0, double.MaxValue)]
         public decimal LaborPrice { get; set; }
+        [Range(0, double.MaxValue)]
         public decimal? TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
 
@@ -33,10 +35,10 @@ namespace JewelryProductionOrder.Models
         public User? SalesStaff { get; set; }
 
         public string? CustomerId { get; set; }
-		[ForeignKey("CustomerId")]
-		public User? Customer { get; set; }
+        [ForeignKey("CustomerId")]
+        public User? Customer { get; set; }
 
-		public string? ManagerId { get; set; }
+        public string? ManagerId { get; set; }
         [ForeignKey("ManagerId")]
         public User? Manager { get; set; }
     }

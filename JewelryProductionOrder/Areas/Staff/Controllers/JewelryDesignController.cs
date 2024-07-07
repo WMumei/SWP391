@@ -1,7 +1,9 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using SWP391.Controllers;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Areas.Staff.Controllers
@@ -41,27 +43,27 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 }
                 obj.DesignFile = Path.Combine("\\files", fileName);
             }
-            obj.Status = "Pending";
+            obj.Status = SD.StatusPending;
             //obj.JewelryId = obj.Jewelry.Id;
-			_unitOfWork.JewelryDesign.Add(obj);
+            _unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
             TempData["success"] = "Design created successfully";
             return RedirectToAction("Index", "Jewelry");
-            return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId});
+            //return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
         }
 
         public IActionResult Index()
         {
             List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
-			return View(jewelries);
+            return View(jewelries);
         }
 
         public IActionResult Details(int jId)
-		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties:"Jewelry");
+        {
+            JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
             return View(design);
-		}
-		public IActionResult CustomerApprove(int id)
+        }
+        public IActionResult CustomerApprove(int id)
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -69,7 +71,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 			if (design is not null)
 			{
 				design.CustomerId = userId;
-				design.Status = $"Approved by Customer";
+				design.Status = SD.CustomerApproved;
 			}
 			_unitOfWork.Save();
             TempData["success"] = "Approved successfully";
@@ -81,7 +83,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
         {
             JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties:"Materials,Gemstones");
+            MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties: "Materials,Gemstones");
             ManufactureVM vm = new()
             {
                 JewelryDesign = design,
@@ -90,5 +92,6 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 			};
 			return View(vm);
 		}
-    }
+		
+	}
 }

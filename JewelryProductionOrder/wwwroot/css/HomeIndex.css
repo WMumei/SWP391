@@ -263,3 +263,35 @@ nav {
         opacity: 1;
     }
 }
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+    .button-container .button {
+        width: 150px;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #D9D9D9;
+        color: black;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+        .button-container .button:hover {
+            background-color: grey;
+        }
+
+.custom-card-body {
+    height: 5rem;
+}
+
+a:link {
+    text-decoration: none;
+}
