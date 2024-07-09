@@ -73,6 +73,12 @@ namespace JewelryProductionOrder.Controllers
 				design.CustomerId = userId;
 				design.Status = SD.CustomerApproved;
 			}
+			_unitOfWork.JewelryDesign.Update(design);
+			_unitOfWork.Save();
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == design.JewelryId);
+			jewelry.Status = SD.DesignApproved;
+			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
 			return RedirectToAction("Index", "Home");
 			return RedirectToAction("Index");

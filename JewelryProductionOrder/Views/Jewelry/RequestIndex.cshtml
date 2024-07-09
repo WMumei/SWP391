@@ -1,5 +1,4 @@
 ﻿@model List<Jewelry>
-<form method="post">
 	<div>
 		<div>
 			<h2>View Jewelry</h2>
@@ -57,7 +56,7 @@
 
 						@if (@obj.QuotationRequests.Count != 0)
 						{
-							<td><a asp-controller="QuotationRequest" asp-action="Index" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
 						else if (User.IsInRole(SD.Role_Sales))
 						{
@@ -68,7 +67,12 @@
 							<td></td>
 						}
 
-						@if (@obj.JewelryDesigns.Count != 0)
+
+						@if (@obj.Status != SD.StatusQuotationApproved)
+						{
+							<td></td>
+						}
+						else if (@obj.JewelryDesigns.Count != 0)
 						{
 							<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
@@ -85,18 +89,30 @@
 							<td></td>
 						}
 
-						@if (User.IsInRole(SD.Role_Production))
-						{
-							<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Manufacture</a></td>
-						}
-						@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusManufaturing)
-						{
-							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Complete</a></td>
-						}
-						else
-						{
-							<td></td>
-						}
+					@if (User.IsInRole(SD.Role_Production))
+					{
+						<td>
+							<form method="post" asp-controller="Jewelry" asp-action="Manufacture">
+								<input type="hidden" name="jId" value="@obj.Id" />
+								<input type="hidden" name="redirectRequest" value="@obj.ProductionRequestId" />
+								<button type="submit" class="btn btn-primary btn-sm">Manufacture</button>
+							</form>
+						</td>
+					}
+					@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusManufaturing)
+					{
+						<td>
+							<form method="post" asp-controller="Jewelry" asp-action="Complete">
+								<input type="hidden" name="jId" value="@obj.Id" />
+								<input type="hidden" name="redirectRequest" value="@obj.ProductionRequestId" />
+								<button type="submit" class="btn btn-primary btn-sm">Complete</button>
+							</form>
+						</td>
+					}
+					else
+					{
+						<td></td>
+					}
 						@*
 					@if (User.IsInRole(SD.Role_Sales))
 					{
@@ -128,4 +144,4 @@
 	</div>
 	<!-- <div asp-validation-summary="All"></div> -->
 
-</form>
+

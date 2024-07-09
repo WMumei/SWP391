@@ -80,7 +80,17 @@
             <div>
                 <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
             </div>
-            
+            @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-cart"></i>
+                    </a>
+                </li>
+            }
             @if (User.IsInRole(SD.Role_Sales))
             {
                 <div>
@@ -89,7 +99,7 @@
             }
             
             <div>
-                <a asp-controller="Posts" asp-action="Index" class="button">View Post</a>
+                <a asp-controller="Posts" asp-action="Index" class="button text-dark">View Post</a>
             </div>
         </div>
     }

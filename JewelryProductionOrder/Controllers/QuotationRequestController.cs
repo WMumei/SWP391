@@ -138,6 +138,13 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerApproved;
 			}
+			_unitOfWork.QuotationRequest.Update(req);
+			_unitOfWork.Save();
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == req.JewelryId);
+			jewelry.Status = SD.StatusQuotationApproved;
+			_unitOfWork.Jewelry.Update(jewelry);
+			_unitOfWork.Save();
 			_unitOfWork.Save();
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}

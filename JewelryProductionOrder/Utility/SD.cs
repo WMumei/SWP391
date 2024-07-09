@@ -11,6 +11,10 @@
 
         public const string StatusCancelled = "Cancelled";
         public const string StatusProcessing = "Processing";
+        public const string StatusQuotationing = "Waiting for Quotation";
+        public const string StatusQuotationApproved = "Quotation Approved";
+        public const string StatusDesigning = "Designing";
+        public const string StatusDesignedApproved = "Design Approved";
 		public const string StatusDelivered = "Delivered";
 
         public const string StatusManufaturing = "Currently manufacturing";

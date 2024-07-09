@@ -56,32 +56,44 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult RequestIndex(int reqId)
 		{
-
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest").ToList();
 			return View(jewelries);
 		}
 
 		[Authorize(SD.Role_Production)]
-		public IActionResult StartManufacture(int id)
+		public IActionResult Manufacture(int jId, int? redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-
-			if (jewelry is not null)
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId);
+			if (jewelry is null)
 			{
-				jewelry.ProductionStaffId = userId;
-				jewelry.Status = SD.StatusManufaturing;
+				return NotFound();
 			}
-			_unitOfWork.Save();
-			TempData["Success"] = "Started Manufacturing Jewelry!";
+			if (jewelry.Status != SD.DesignApproved)
+			{
+				TempData["Error"] = "Jewelry Design has not been approved";
+				return RedirectToAction("Index");
+			}
+			else
+			{
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+				if (jewelry is not null)
+				{
+					jewelry.ProductionStaffId = userId;
+					jewelry.Status = SD.StatusManufaturing;
+				}
+				_unitOfWork.Save();
+				TempData["Success"] = "Started Manufacturing Jewelry!";
+			}
+			if (redirectRequest is not null)
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 			return RedirectToAction("Index");
 		}
 		[Authorize(SD.Role_Production)]
-		public IActionResult Complete(int id)
+		public IActionResult Complete(int jId, int? redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId);
 			//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
 			//if (jewelry is not null)
 			//{
@@ -91,22 +103,26 @@ namespace JewelryProductionOrder.Controllers
 			jewelry.Status = SD.StatusManufactured;
 			_unitOfWork.Save();
 			TempData["Success"] = "Jewelry Completed!";
+			if (redirectRequest is not null)
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 			return RedirectToAction("Index");
 		}
 
-		public IActionResult Deliver(int id)
-		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
-			//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
-			//if (jewelry is not null)
-			//{
-			//    jewelry.ProductionStaffId = productionStaff.Id;
-			//    jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
-			//}
-			jewelry.Status = SD.StatusDelivered;
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+		//public IActionResult Deliver(int id, int? redirectRequest)
+		//{
+		//	Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == id);
+		//	//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
+		//	//if (jewelry is not null)
+		//	//{
+		//	//    jewelry.ProductionStaffId = productionStaff.Id;
+		//	//    jewelry.Status = $"Currently manufacturing by {productionStaff.Name}";
+		//	//}
+		//	jewelry.Status = SD.StatusDelivered;
+		//	_unitOfWork.Save();
+		//	if (redirectRequest is not null)
+		//		return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+		//	return RedirectToAction("Index");
+		//}
 
 		//public IActionResult Create(int reqId)
 		//{
