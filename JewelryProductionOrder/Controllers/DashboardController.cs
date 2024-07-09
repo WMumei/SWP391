@@ -8,7 +8,6 @@ using Models.Repositories.Repository.IRepository;
 
 namespace JewelryProductionOrder.Areas.Staff.Controllers
 {
-    [Area("Staff")]
     public class DashboardController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
