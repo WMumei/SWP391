@@ -51,29 +51,7 @@ namespace JewelryProductionOrder.Controllers
             return View(vm);
         }
 		
-        /*public IActionResult Upsert(int jId)
-        {
-
-
-
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer");
-            var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
-            if (jewelry.MaterialSet == null && jewelry.QuotationRequest == null)
-            {
-                TempData["WarningMessage"] = "Please create Material Set and Quotation Request!";
-            }
-            WarrantyCardVM vm = new WarrantyCardVM
-            {
-                Jewelry = jewelry,
-                WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },
-                //CreatedAt = DateTime.Now,
-                //ExpiredAt = DateTime.Now,
-                Customer = customer
-                //CustomerId = customer.Id
-            };
-            return View(vm);
-        }
-		*/
+        
         [HttpPost]
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Create(WarrantyCardVM vm)
@@ -89,8 +67,7 @@ namespace JewelryProductionOrder.Controllers
             
             _unitOfWork.Save();
            
-            //vm.WarrantyCard.CreatedAt = DateTime.Now;
-			//vm.WarrantyCard.ExpiredAt = vm.WarrantyCard.CreatedAt.AddYears(3);
+       
 
             
             

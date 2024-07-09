@@ -114,10 +114,10 @@ namespace SWP391.Controllers
         [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Deliver(int id)
         {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,WarrantyCard").ToList();
             User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
-            //ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");
+          
             
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -127,28 +127,27 @@ namespace SWP391.Controllers
 
             foreach (var jewelry in jewelries)
             {
-                if (jewelry is not null)
-                {
-                    WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.JewelryId == jewelry.Id, includeProperties: "Jewelry");
+                    
                     jewelry.SalesStaffId = userId;
                     
                     jewelry.Status = "Delivering";
                     jewelry.ProductionRequest.Status = "Delivering";
                     jewelry.ProductionRequest.Address = productionRequest.Address;
-                   /* Delivery delivery = new()
-                    {
-                        SalesStaffId = userId,
-                        Customer= customer,
-                        
-                        Jewelry = jewelry,
-                        
-                        WarrantyCard = warrantyCard,
+               /* Delivery delivery = new()
+                {
+                    SalesStaffId = userId,
+                    Customer = customer,
+
+                    Jewelry = jewelry,
+
+                    WarrantyCard = jewelry.WarrantyCard,
                         DeliveredAt = DateTime.Now
                     };
-                   */
+               */
+  
                     //jewelry.ProductionRequest = productionRequest;
                     //customer.PhoneNumber = productionRequest.Phone
-                }
+                
                 //productionRequest.Address = customer.Address;
 
                 //productionRequest.Jewelries = jewelries;
@@ -160,26 +159,22 @@ namespace SWP391.Controllers
         }
         public IActionResult Delivered(int id)
         {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,WarrantyCard").ToList();
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             productionRequest.SalesStaffId = userId;
             User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
-            // Delivery delivery = _unitOfWork.Delivery.Get(u => u.CustomerId == customer.Id, includeProperties: "Customer, Jewelry, WarrantyCard");
-            //delivery.DeliveredAt = DateTime.Now;
+            
             foreach (var jewelry in jewelries)
             {
-                if (jewelry is not null)
-                {
+                //if (jewelry is not null)
+                //{
                     jewelry.SalesStaffId = userId;
                     jewelry.Status = "Delivered";
                     jewelry.ProductionRequest.Status = "Delivered";
-                    //
-                    //
-                    //
-                    WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.JewelryId == jewelry.Id, includeProperties: "Jewelry");
-                    //lưu data vào entity delivery
+
+                  
                     Delivery delivery = new Delivery()
                     {
                         SalesStaffId = userId,
@@ -187,29 +182,25 @@ namespace SWP391.Controllers
 
                         JewelryId = jewelry.Id,
 
-                        WarrantyCardId = warrantyCard.Id,
+                        WarrantyCardId = jewelry.WarrantyCard.Id,
                         DeliveredAt = DateTime.Now
                     };
+                    delivery.WarrantyCardId = jewelry.WarrantyCard.Id;
+                    delivery.JewelryId = jewelry.Id;
+                    delivery.CustomerId = customer.Id;
+                    delivery.SalesStaffId = userId;
+                    
                     _unitOfWork.Delivery.Add(delivery);
-                    _unitOfWork.Delivery.Save();
+                    _unitOfWork.Save();
 
-                }
+                //}
 
 
             }
-            _unitOfWork.Save();
+            
             return RedirectToAction("Index");
         }
-        /*[HttpPost]
-        public IActionResult DeliveryEntity(Delivery delivery)
-        {
-            delivery.DeliveredAt = DateTime.Now;
-            
-            _unitOfWork.Save();
-            return RedirectToAction("Delivered");
 
-        }
-        */
         public IActionResult CustomerViewDelivery(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");

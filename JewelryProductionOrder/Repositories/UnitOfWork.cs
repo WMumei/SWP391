@@ -45,6 +45,7 @@ namespace Models.Repositories.Repository
 			WarrantyCard = new WarrantyCardRepository(_db);
 			QuotationRequest = new QuotationRequestRepository(_db);
 			JewelryDesign = new JewelryDesignRepository(_db);
+            Delivery = new DeliveryRepository(_db);
 		}
 
         public void Save()

@@ -1,8 +1,21 @@
 version: '3.4'
 
 services:
-  jewelryproductionorder:
+ Jewelry:
+        container_name: SqlServerContainer
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+            - 8002:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=myStong_Password123# 
+ jewelryproductionorder:
+    container_name: jewelryproductionorder
     image: ${DOCKER_REGISTRY-}jewelryproductionorder
+    ports: 
+    - 8001:80
     build:
       context: .
       dockerfile: JewelryProductionOrder/Dockerfile
+    depends_on:
+    - Jewelry
