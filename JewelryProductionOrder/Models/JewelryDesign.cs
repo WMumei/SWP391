@@ -15,7 +15,7 @@ namespace JewelryProductionOrder.Models
         public DateTime? CreatedAt { get; set; }
 
         // Company, Customer, Final
-        public string Type { get; set; }
+        //public string Type { get; set; }
 		public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }

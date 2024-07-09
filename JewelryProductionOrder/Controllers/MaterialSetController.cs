@@ -36,12 +36,12 @@ namespace SWP391.Controllers
             return View(materialSetVM);
         }
         [HttpPost]
-        public IActionResult Create(MaterialSetVM materialSetVM)
+        public IActionResult Create(MaterialSetVM materialSetVM, int reqIndex, int? redirectRequest)
         {
             MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 
-            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id);
-            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id);
+            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
+            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
             materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
@@ -52,7 +52,10 @@ namespace SWP391.Controllers
             materialSet.TotalPrice = material.Price * weight + gemstone.Price;
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
+            _unitOfWork.Jewelry.Update(jewelry);
             _unitOfWork.Save();
+            if (redirectRequest is not null)
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
             return RedirectToAction("Index", "Jewelry");
             //return RedirectToAction("Create", new { jId = jewelry.Id});
         }
