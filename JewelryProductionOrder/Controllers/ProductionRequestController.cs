@@ -108,7 +108,7 @@ namespace SWP391.Controllers
 			var domain = "https://localhost:7133/";
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = domain + $"/customer/ProductionRequest/CustomerView?id={pId}",
+				SuccessUrl = domain,
 				CancelUrl = domain + "customer/ProductionRequest/Index",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment",
@@ -148,6 +148,7 @@ namespace SWP391.Controllers
 			var service = new SessionService();
 			Session session = service.Create(options);
 			_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+			_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusPaid);
 			_unitOfWork.Save();
 			Response.Headers.Add("Location", session.Url);
 

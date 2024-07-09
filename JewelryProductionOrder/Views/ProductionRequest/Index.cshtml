@@ -20,7 +20,7 @@
 
 				@* <th>Details</th> *@
 				<th>Jewelries</th>
-				<th>Cancel</th>
+				<th>Payment</th>
 				<th>Notes</th>
 				@* <th>Design</th> *@
 			</tr>
@@ -44,7 +44,14 @@
 					<td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 					@if (User.IsInRole(SD.Role_Customer))
 					{
-						<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
+						if(obj.Status == SD.StatusPaid)
+						{
+							<td>Paid!</td>
+						}
+						else
+						{
+							<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
+						}
 					}
 					@if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Admin))
 					{
