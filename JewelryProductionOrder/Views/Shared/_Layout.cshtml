@@ -48,10 +48,12 @@
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="Checkout" class="btn btn-outline-primary">Order jewelry</a>
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                                <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index" class="btn btn-outline-primary">
+                                    <i class="bi bi-cart"></i>
+                                </a>
                             </li>
                         }
                     </ul>
@@ -73,27 +75,11 @@
         <div class="menu-header" id="menu-header">Menu</div>
 
         <div class="menu" id="menu">
-            <div>
-                <a asp-controller="ProductionRequest" asp-action="Checkout" class="button">Create Request</a>
-            </div>
+
             <div>
                 <a asp-controller="ProductionRequest" asp-action="Index" class="button">View Requests</a>
             </div>
-            <div>
-                <a asp-controller="WarrantyCard" asp-action="Create" class="button">Create Warranty Card</a>
-            </div>
-            <div>
-                <a asp-controller="QuotationRequest" asp-action="Index" class="button">View Quotation</a>
-            </div>
-            <div>
-                <a asp-controller="Jewelry" asp-action="Index" class="button">View Jewelry</a>
-            </div>
-            <div>
-                <a asp-controller="Jewelry" asp-action="Create" class="button">Create Jewelry</a>
-            </div>
-            <div>
-                <a asp-controller="ProductionRequest" asp-action="Index" class="button">Production Request</a>
-            </div>
+            
             @if (User.IsInRole(SD.Role_Sales))
             {
                 <div>

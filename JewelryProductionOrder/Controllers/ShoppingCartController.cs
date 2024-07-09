@@ -122,14 +122,16 @@ namespace JewelryProductionOrder.Controllers
 				includeProperties: "BaseDesign").ToList();
 
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
+			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
+			ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
 
 			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
 
 			// TODO: Handle status of ProductionRequest
-			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
 
 			_unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
 			_unitOfWork.Save();
+			int quantity = 0;
 			foreach (var cart in ShoppingCartVM.ShoppingCartList)
 			{
 				ProductionRequestDetail requestDetail = new()
@@ -138,6 +140,7 @@ namespace JewelryProductionOrder.Controllers
 					ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 					Quantity = cart.Quantity
 				};
+				quantity += cart.Quantity;
 				for (int i = 0; i < cart.Quantity; i++)
 				{
 					Jewelry jewelry = new Jewelry()
@@ -152,7 +155,9 @@ namespace JewelryProductionOrder.Controllers
 				_unitOfWork.ProductionRequestDetail.Add(requestDetail);
 				_unitOfWork.Save();
 			}
-
+			ShoppingCartVM.ProductionRequest.Quantity = quantity;
+			_unitOfWork.ProductionRequest.Update(ShoppingCartVM.ProductionRequest);
+			_unitOfWork.Save();
 			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.ProductionRequest.Id });
 		}
 
