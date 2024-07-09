@@ -10,6 +10,6 @@ namespace JewelryProductionOrder.Models
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
         public List<MaterialSet> MaterialSets { get; } = [];
-		public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
-	}
+        public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-using Azure.Core;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -57,28 +55,28 @@ public class DashboardController : Controller
     }
 }
 
-    //public IActionResult RevenuePeriod(DateTime? startDate, DateTime? endDate)
-    //{
-    //    List<QuotationRequest> data;
-    //    if (startDate.HasValue && endDate.HasValue)
-    //    {
-    //        if (startDate > endDate)
-    //        {
-    //            data = _unitOfWork.QuotationRequest.GetAll()
-    //            .Where(qr => qr.Status == "Approved" && qr.CreatedAt>= startDate && qr.CreatedAt <= endDate)
-    //            .ToList();
-    //            List<string> dates = data.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
-    //            List<decimal> revenues = dates.Select(date => data.Where(qr => qr.CreatedAt.ToString("yyyy-MM-dd") == date).Sum(qr => qr.TotalPrice ?? 0)).ToList();
+//public IActionResult RevenuePeriod(DateTime? startDate, DateTime? endDate)
+//{
+//    List<QuotationRequest> data;
+//    if (startDate.HasValue && endDate.HasValue)
+//    {
+//        if (startDate > endDate)
+//        {
+//            data = _unitOfWork.QuotationRequest.GetAll()
+//            .Where(qr => qr.Status == "Approved" && qr.CreatedAt>= startDate && qr.CreatedAt <= endDate)
+//            .ToList();
+//            List<string> dates = data.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
+//            List<decimal> revenues = dates.Select(date => data.Where(qr => qr.CreatedAt.ToString("yyyy-MM-dd") == date).Sum(qr => qr.TotalPrice ?? 0)).ToList();
 
-    //            ViewBag.Dates = dates;
-    //            ViewBag.Revenues = revenues;
+//            ViewBag.Dates = dates;
+//            ViewBag.Revenues = revenues;
 
-    //            return View(data);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        return RedirectToAction("Index");
-    //    }
-    //    return View();
-    //}
+//            return View(data);
+//        }
+//    }
+//    else
+//    {
+//        return RedirectToAction("Index");
+//    }
+//    return View();
+//}

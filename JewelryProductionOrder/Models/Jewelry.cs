@@ -10,7 +10,7 @@ namespace JewelryProductionOrder.Models
         [StringLength(100)]
         public string Name { get; set; }
         public string Description { get; set; }
-        public string? Image {  get; set; }
+        public string? Image { get; set; }
         public string? Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? MaterialSetId { get; set; }
@@ -34,6 +34,9 @@ namespace JewelryProductionOrder.Models
         public ProductionRequest ProductionRequest { get; set; }
         public List<QuotationRequest> QuotationRequests { get; } = [];
 
-		public List<JewelryDesign> JewelryDesigns { get; } = [];
+        public int? BaseDesignId { get; set; }
+        public BaseDesign BaseDesign { get; set; }
+
+        public List<JewelryDesign> JewelryDesigns { get; } = [];
     }
 }
