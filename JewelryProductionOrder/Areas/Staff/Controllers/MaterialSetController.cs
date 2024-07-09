@@ -21,7 +21,7 @@ namespace SWP391.Areas.Staff.IdentityControllers
             MaterialSetVM materialSetVM = new MaterialSetVM
             {
                 // Initialize the fields of the MaterialSetVM object
-                //MaterialSet = new MaterialSet { },
+                // MaterialSet = new MaterialSet { },
                 Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId),
                 MaterialList = _unitOfWork.Material.GetAll().Select(u => new SelectListItem
                 {
@@ -41,8 +41,8 @@ namespace SWP391.Areas.Staff.IdentityControllers
         {
             MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 
-            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id);
-            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id);
+            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
+            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
             materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
