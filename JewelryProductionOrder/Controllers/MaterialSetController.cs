@@ -40,10 +40,10 @@ namespace SWP391.Controllers
         {
             MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 
-            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id);
-            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id);
+			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
+			Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
-            materialSet.Materials.Add(material);
+			materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
             _unitOfWork.MaterialSet.Add(materialSet);
             _unitOfWork.Save();
@@ -52,6 +52,7 @@ namespace SWP391.Controllers
             materialSet.TotalPrice = material.Price * weight + gemstone.Price;
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
+            _unitOfWork.Jewelry.Update(jewelry);
             _unitOfWork.Save();
             return RedirectToAction("Index", "Jewelry");
             //return RedirectToAction("Create", new { jId = jewelry.Id});

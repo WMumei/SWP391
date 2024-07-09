@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240707142556_ChangePropBD")]
+    partial class ChangePropBD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +225,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3450),
+                            CreatedAt = new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6960),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -427,9 +430,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentIntentId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -445,9 +445,6 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("SalesStaffId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -472,7 +469,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 1,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3317),
+                            CreatedAt = new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6864),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         },
@@ -481,7 +478,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3345),
+                            CreatedAt = new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6882),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         });
