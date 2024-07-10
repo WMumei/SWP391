@@ -33,8 +33,15 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 {
                     return BadRequest("Error retrieving users in role 'Customer'");
                 }
-
                 int customerCount = userIds.Count;
+
+                var delivered = _unitOfWork.Jewelry.GetAll().Where(r => r.Status == "Delivered").ToList();
+                if (delivered == null)
+                {
+                    return NotFound("Jewelry not found");
+                }
+                int deliveryCount = delivered.Count;
+
                 List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
                .Where(qr => qr.Status == "Approved")
                .ToList();
@@ -45,6 +52,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 ViewBag.Dates = rDates;
                 ViewBag.Revenues = revenues;
                 ViewBag.CustomerCount = customerCount;
+                ViewBag.DeliveryCount = deliveryCount;
 
                 return View(requests);
             }
