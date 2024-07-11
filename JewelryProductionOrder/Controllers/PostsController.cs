@@ -12,15 +12,18 @@ using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
 
 namespace JewelryProductionOrder.Controllers
 {
     public class PostsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PostsController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public PostsController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = hostEnvironment;
         }
 
         public IActionResult Create()
@@ -30,7 +33,7 @@ namespace JewelryProductionOrder.Controllers
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Sales)]
-        public IActionResult Create(Post post)
+        public async Task<IActionResult> Create(Post post, IFormFile ImagePath)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -38,8 +41,21 @@ namespace JewelryProductionOrder.Controllers
             post.CreatedAt = DateTime.Now;
             post.SalesStaffId = userId;
 
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if (ImagePath != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                string filePath = Path.Combine(wwwRootPath, @"Images");
+                using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                {
+                    ImagePath.CopyTo(fileStream);
+                }
+                post.Image = @"Images/" + fileName;
+            }
+
             _unitOfWork.Post.Add(post);
             _unitOfWork.Save();
+            TempData["success"] = "Product created successfully";
             return RedirectToAction("Index");
         }
 
