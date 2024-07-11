@@ -42,7 +42,7 @@ namespace JewelryProductionOrder.Data
 				.WithMany()
 				.HasForeignKey(t => t.CustomerId)
 				.OnDelete(DeleteBehavior.Restrict);
-
+			
 			modelBuilder.Entity<ProductionRequest>()
 				.HasOne(t => t.Customer)
 				.WithMany()

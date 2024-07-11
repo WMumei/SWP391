@@ -17,5 +17,7 @@ services:
     build:
       context: .
       dockerfile: JewelryProductionOrder/Dockerfile
+    # environment:
+    #   ConnectionStrings__DefaultConnection: "Server=Jewelry; Database=Jewelry; User Id=sa; Password=myStong_Password123#;Trust Server Certificate=True;"
     depends_on:
     - Jewelry

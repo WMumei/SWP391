@@ -111,13 +111,13 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Edit(int id)
 
 		{
-            //WarrantyCard warrantyCardFromDb = _unitOfWork.WarrantyCard.Get(u => u.Id == id, includeProperties: "Jewelry,Customer");
+            
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.WarrantyCard.Id== id, includeProperties: "Customer");
 			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 			WarrantyCardVM vm = new()
 			{
-				WarrantyCard = _unitOfWork.WarrantyCard.Get(u => u.Id == id, includeProperties: "Jewelry,Customer"),
-				//Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == WarrantyCard.JewelryId, includeProperties: "Customer"),
+				WarrantyCard = _unitOfWork.WarrantyCard.Get(u => u.Id == id),
+				
 				Jewelry = jewelry,
               Customer= customer
         };
@@ -138,7 +138,7 @@ namespace JewelryProductionOrder.Controllers
             
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer");
             var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
-            _unitOfWork.Save();
+          
             vm.WarrantyCard.CustomerId = customer.Id;
            
 			
@@ -147,14 +147,7 @@ namespace JewelryProductionOrder.Controllers
 
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
-           
-
-
-            
-
-
-            //return View(vm);
-            //return RedirectToAction("Index");
+          
         }
     public IActionResult Details(int? id)
 		{

@@ -78,7 +78,7 @@
                     {
                         if(obj.Status == "Delivered")
                         {
-                            <td>Delivered!</td>
+                            <td>Successful</td>
                         }
                         else if (@obj.Jewelries.Count/@obj.Quantity == 1){
                             //start delivering
@@ -99,16 +99,18 @@
                         //Customer confirms production request
                         else if (obj.Status == "Delivered")
                         {
-                            <td>Done</td>
+                            <td>Successful</td>
                         }
                         else if (obj.Status == "Confirmed")
                         {
                             <td>Confirmed</td>
                         }
+                        else
+                        {
+                            <td>Waiting for sale staff!</td>
+                        }
                     }
-                    else {
-                        <td>Waiting for sale staff!</td>
-                    }
+                    
 
             </tr>
             }
