@@ -1,0 +1,80 @@
+﻿@model ProductionRequest
+
+
+<form method="post" class="container">
+	<div class="caption-top row">
+		<input asp-for="Customer.Id" hidden/>
+		<h2>Deliver for production request: @Model.Id</h2>
+		@*<label asp-for="@Model.Customer.PhoneNumber" class="ms-2"></label>
+		<input disabled asp-for="@Model.Customer.PhoneNumber" />*@
+	</div>
+	<div class="col-12 py-2 form-floating">
+		<div class="row">
+			@*<div class="col-10">
+			<input asp-for="@Model.Jewelry.Id"  hidden/>
+			<input disabled asp-for="@Model.Jewelry.Name"  />
+			</div>*@
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Customer.Name" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.Name" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Customer.PhoneNumber" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.PhoneNumber" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Address" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Address" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				@*<input asp-for="Customer.Id" hidden />*@
+				<h2>Including Jewelries: </h2>
+				@foreach(var jewelry in Model.Jewelries)
+				{
+					<div class="col-12 py-2 form-floating">
+						<div>@jewelry.Name</div>
+
+                        <div>@jewelry.CreatedAt</div>
+					</div>
+				}
+			</div>
+
+			@if (Model.Status == "Delivering")
+			{
+				<div class="text-center">
+					<h2>Delivering... </h2>
+					<br/>
+					<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Confirm</a>
+				</div>
+				
+			}
+
+		</div>
+		<div>
+			<h3>Delivery Policy</h3>
+
+			<p>
+				◊ Due to the characteristics of high-value goods, JPO does not support COD delivery. Leman only ships and delivers goods upon confirmation of payment of 100% of the product value.
+			</p>
+			
+			<p>
+				◊ We encourage customers to receive goods directly at the store to have the best inspection conditions and make corrections quickly when necessary.
+			</p>
+			<h3>CHECKING POLICY</h3>
+			<p>When receiving the goods, we encourage customers to carefully check and confirm the following factors:</p>
+			
+		
+			<p>1. Gemstone check</p>
+			<p>Check weight and visual</p>
+			<p>◊ Check ID of jewelry on receipt with edge code </p>
+		
+			
+			<p>2. Jewelry Check</p>
+			<p>◊ Check your jewelry size to make sure it fits and is comfortable to wear.</p>
+			<p>◊ Visual inspection of external finishing factors (smooth surface, no scratches or manufacturing defects; even and correct color; symmetry, aesthetics of details, engraved text) ).</p>
+			<p>
+				◊ The shank and base are not broken or deformed under normal hand force testing
+			</p>
+		</div>
+	</div>
+</form>

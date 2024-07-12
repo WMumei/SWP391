@@ -17,6 +17,13 @@ namespace Models.Repositories.Repository.IRepository
 		IProductionRequestDetailRepository ProductionRequestDetail { get; }
 		IBaseDesignRepository BaseDesign { get; }
         IPostRepository Post { get; }
+		
+		IWarrantyCardRepository WarrantyCard { get; }
+		
 		void Save();
+       
+       
+       // void Get();
+        //void Find(int id);
     }
 }

@@ -9,23 +9,39 @@ using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-	public class JewelryController : Controller
-	{
-		private readonly IUnitOfWork _unitOfWork;
-		public JewelryController(IUnitOfWork unitOfWork)
-		{
-			_unitOfWork = unitOfWork;
-		}
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult Edit(int id)
-		{
-			var jewelry = _unitOfWork.Jewelry.Get(p => p.Id == id, includeProperties:"BaseDesign");
-			if (jewelry == null)
-			{
-				return NotFound();
-			}
-			return View(jewelry);
-		}
+    public class JewelryController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        public JewelryController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+        public IActionResult Create(int reqId)
+        {
+            var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties:"Jewelries");
+            if (productionRequest == null)
+            {
+                return NotFound();
+            }
+            Jewelry obj = new Jewelry
+            {
+                ProductionRequestId = reqId,
+				CustomerId = productionRequest.CustomerId,
+				ProductionRequest = productionRequest
+            };
+            return View(obj);
+        }
+
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Edit(int id)
+        {
+            var jewelry = _unitOfWork.Jewelry.Get(p => p.Id == id, includeProperties: "BaseDesign");
+            if (jewelry == null)
+            {
+                return NotFound();
+            }
+            return View(jewelry);
+        }
 
 		[HttpPost]
 		[Authorize(Roles = SD.Role_Sales)]
@@ -53,12 +69,31 @@ namespace JewelryProductionOrder.Controllers
 			};
 			return View(checkJewelryVM);
 		}
-
-		public IActionResult RequestIndex(int reqId)
-		{
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest").ToList();
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Create(Jewelry obj)
+        {
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == obj.ProductionRequestId, includeProperties: "Customer");
+			obj.CreatedAt = DateTime.Now;
+            obj.CustomerId = productionRequest.CustomerId;
+			//obj.ProductionRequest.Address = productionRequest.Address;
+			_unitOfWork.Jewelry.Add(obj);
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+            //return View(new Jewelry { ProductionRequestId = obj.ProductionRequestId});
+        }
+        [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
+        public IActionResult Index()
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties:"MaterialSet,QuotationRequests,JewelryDesigns,WarrantyCard").ToList();
 			return View(jewelries);
-		}
+        }
+
+        public IActionResult RequestIndex(int reqId)
+        {
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest,WarrantyCard").ToList();
+            return View(jewelries);
+        }
 
 		[Authorize(SD.Role_Production)]
 		public IActionResult Manufacture(int jId, int? redirectRequest)

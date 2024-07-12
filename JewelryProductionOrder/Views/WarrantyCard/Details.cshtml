@@ -1,0 +1,26 @@
+﻿@model WarrantyCardVM
+
+
+<form method="post" class="container">
+	<div class="caption-top row">
+		@*<input asp-for="Jewelry.Id" hidden/>*@
+		<h2>Warranty Card for Jewelry: @Model.Jewelry.Name</h2>
+	</div>
+	<div class="col-12 py-2 form-floating">
+		<div class="row">
+
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Customer.Name"class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.Name"  class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.WarrantyCard.CreatedAt" type="date" class="form-control border-0 shadow" />
+				<label asp-for="@Model.WarrantyCard.CreatedAt" type="date"  class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="form-control border-0 shadow" />
+				<label asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="ms-2"></label>
+			</div>
+</div>
+</div>
+</form>

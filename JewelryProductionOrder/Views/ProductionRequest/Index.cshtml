@@ -27,6 +27,7 @@
 				}
 				<th>Notes</th>
 				@* <th>Design</th> *@
+				<th>Delivery</th> 
 			</tr>
 		</thead>
 		<tbody>
@@ -41,6 +42,80 @@
 					<td>@obj.Email</td>
 					@* 					<td><a asp-controller="ProductionRequestDetail" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
 
+                </td>
+@*                 @if (obj.QuotationRequest is not null)
+                {
+                    <td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
+                }
+                else
+                {
+                    <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+                } *@
+                    
+                @if (@obj.Jewelries.Count >= 1)
+                {
+                        <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View @obj.Jewelries.Count/@obj.Quantity</a></td>
+                } else if (!User.IsInRole(SD.Role_Customer))
+                {
+                     <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create @obj.Jewelries.Count/@obj.Quantity</a></td>
+                } else
+                {
+                    <td>Waiting for sales</td>
+				
+                }
+                }
+                    @*@if (@obj.Jewelries.Count != 0)
+                {
+                <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                } else if (!User.IsInRole(SD.Role_Customer))
+                {
+                <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
+                } else
+                {
+                <td>Waiting for Sale Staff</td>
+
+                }*@
+                
+                    @if (User.IsInRole(SD.Role_Sales))
+                    {
+                        if(obj.Status == "Delivered")
+                        {
+                            <td>Successful</td>
+                        }
+                        else if (@obj.Jewelries.Count/@obj.Quantity == 1){
+                            //start delivering
+                            <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                        }
+                        else{
+
+                            <td></td>
+                        }
+                    }
+                    //Status of production request
+                    else if (!User.IsInRole(SD.Role_Sales) )
+                    {
+                        if (obj.Status == "Delivering")
+                        {
+                            <td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+                        }
+                        //Customer confirms production request
+                        else if (obj.Status == "Delivered")
+                        {
+                            <td>Successful</td>
+                        }
+                        else if (obj.Status == "Confirmed")
+                        {
+                            <td>Confirmed</td>
+                        }
+                        else
+                        {
+                            <td>Waiting for sale staff!</td>
+                        }
+                    }
+                    
+
+
+   
 					@* 					@if (User.IsInRole(SD.Role_Sales))
 				{
 				<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>

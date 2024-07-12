@@ -12,6 +12,10 @@ namespace JewelryProductionOrder.Repositories
         {
             _db = db;
         }
+        public IEnumerable<QuotationRequest> GetAllWithSaleStaffs()
+        {
+            return dbSet.Include(x => x.SalesStaff).ToList();
+        }
 
         public void Save()
         {
@@ -24,3 +28,4 @@ namespace JewelryProductionOrder.Repositories
         }
     }
 }
+

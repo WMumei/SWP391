@@ -606,6 +606,9 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("JewelryId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("SalesStaffId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -614,8 +617,11 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("JewelryId")
-                        .IsUnique();
+                    b.HasIndex("JewelryId");
+
+                    b.HasIndex("JewelryId1")
+                        .IsUnique()
+                        .HasFilter("[JewelryId1] IS NOT NULL");
 
                     b.HasIndex("SalesStaffId");
 
@@ -1123,10 +1129,14 @@ namespace JewelryProductionOrder.Migrations
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithOne("WarrantyCard")
-                        .HasForeignKey("JewelryProductionOrder.Models.WarrantyCard", "JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", null)
+                        .WithOne("WarrantyCard")
+                        .HasForeignKey("JewelryProductionOrder.Models.WarrantyCard", "JewelryId1");
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()

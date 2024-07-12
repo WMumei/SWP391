@@ -51,7 +51,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
+//Deployment
 void SeedDatabase()
 {
     using (var scope = app.Services.CreateScope())

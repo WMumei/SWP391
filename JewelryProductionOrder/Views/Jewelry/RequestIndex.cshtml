@@ -23,6 +23,8 @@
 					}
 
 					
+					
+					<th>Warranty Card</th>
 					@*                     <th width="13%">Image</th>
 					<th>Customer</th>
 					<th>Staffs</th>
@@ -126,6 +128,24 @@
 						<td>
 							<a asp-controller="Jewelry" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Edit</a>
 						</td>
+						@if (User.IsInRole(SD.Role_Production))
+						{
+							<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Manufacture</a></td>
+						}
+						@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusManufaturing)
+						{
+							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Complete</a></td>
+						} else
+						{
+							<td></td>
+						}
+
+						@if (@obj.WarrantyCard is not null)
+						{
+							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						} else
+						{
+							<td></td>
 						}
 
 					</tr>
