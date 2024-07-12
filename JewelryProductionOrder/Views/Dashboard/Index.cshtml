@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "DashBoard";
+    ViewData["Title"] = "Dashboard";
 }
 @model List<QuotationRequest>
 <link rel="stylesheet" href="~/css/Dashboard.css" />
@@ -11,10 +11,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<h1>Dashboard</h1>
 <body>
+    <h1>Dashboard</h1>
     <div class="dashboard-container">
-        <div class="dashboard-box full-width">
+        <div class="dashboard-box" id="total-jewelry-sold">
+            <h2>Total Jewelry Sold</h2>
+            <p>@ViewBag.DeliveryCount</p>
+        </div>
+
+        <div class="dashboard-box" id="total-customers">
+            <h2>Total Customers</h2>
+            <p>@ViewBag.CustomerCount</p>
+        </div>
+
+        <div class="dashboard-box" id="revenue-chart">
             <h2>Revenue</h2>
             <table class="table table-bordered table-striped">
                 <thead>
@@ -26,8 +36,11 @@
                     @{
                         decimal totalPriceSum = Model.Sum(obj => obj.TotalPrice ?? 0);
                     }
-                    <tr>
-                        <td>@totalPriceSum</td>
+                    <tr id="Revenue">
+                        <td id="highlighted-revenue">
+                            <span class="dollar-sign">$</span>
+                            <span class="total-price">@totalPriceSum</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -46,18 +59,6 @@
 
             <br />
             <canvas id="RevenueChart"></canvas>
-        </div>
-
-        <div class="dashboard-container">
-            <div class="dashboard-box">
-                <h2>Total Jewelry Sold</h2>
-                <p>@ViewBag.DeliveryCount</p>
-            </div>
-
-            <div class="dashboard-box">
-                <h2>Total Customers</h2>
-                <p>@ViewBag.CustomerCount</p>
-            </div>
         </div>
     </div>
 
