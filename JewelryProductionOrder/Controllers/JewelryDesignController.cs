@@ -1,6 +1,7 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using SWP391.Controllers;
@@ -63,7 +64,8 @@ namespace JewelryProductionOrder.Controllers
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
 			return View(design);
 		}
-		public IActionResult CustomerApprove(int id)
+		[Authorize(Roles = SD.Role_Customer)]
+		public IActionResult CustomerApprove(int id, int? redirectRequest)
 		{
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -73,24 +75,32 @@ namespace JewelryProductionOrder.Controllers
 				design.CustomerId = userId;
 				design.Status = SD.CustomerApproved;
 			}
+			_unitOfWork.JewelryDesign.Update(design);
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
-			return RedirectToAction("Index");
-		}
 
-		public IActionResult Manufacture(int jId)
-		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties: "Materials,Gemstones");
-			ManufactureVM vm = new()
-			{
-				JewelryDesign = design,
-				MaterialSet = materialSet,
-				Jewelry = jewelry
-			};
-			return View(vm);
-		}
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == design.JewelryId);
+			jewelry.Status = SD.DesignApproved;
+			_unitOfWork.Jewelry.Update(jewelry);
+			_unitOfWork.Save();
+			TempData["Success"] = "Approved";
+            if (redirectRequest is null)
+                return RedirectToAction("Index", "Home");
+            return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+        }
+
+		//public IActionResult Manufacture(int jId)
+		//{
+		//	JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
+		//	Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
+		//	MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Jewelries.FirstOrDefault().Id == jId, includeProperties: "Materials,Gemstones");
+		//	ManufactureVM vm = new()
+		//	{
+		//		JewelryDesign = design,
+		//		MaterialSet = materialSet,
+		//		Jewelry = jewelry
+		//	};
+		//	return View(vm);
+		//}
 
 	}
 }

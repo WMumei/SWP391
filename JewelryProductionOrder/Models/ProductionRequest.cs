@@ -14,6 +14,9 @@ namespace JewelryProductionOrder.Models
 		public String? Status { get; set; }
 		// Quantity of whole request
 		public int? Quantity { get; set; }
+        public String? SessionId { get; set; }
+        public String? PaymentIntentId { get; set; }
+
 		public string? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public User? Customer { get; set; }
