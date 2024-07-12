@@ -43,7 +43,7 @@ namespace SWP391.Controllers
             Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
             Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
-            materialSet.Materials.Add(material);
+			materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
             _unitOfWork.MaterialSet.Add(materialSet);
             _unitOfWork.Save();

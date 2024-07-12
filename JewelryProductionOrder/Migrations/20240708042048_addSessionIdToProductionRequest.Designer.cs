@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240708042048_addSessionIdToProductionRequest")]
+    partial class addSessionIdToProductionRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +225,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6217),
+                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3450),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -264,6 +267,10 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
