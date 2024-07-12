@@ -16,6 +16,8 @@
         public const string StatusDesigning = "Designing";
         public const string StatusDesignedApproved = "Design Approved";
 		public const string StatusDelivered = "Delivered";
+        public const string StatusConfirmDelivered = "Confirm Delivered";
+        public const string StatusRequestDone = "Done";
 
         public const string StatusManufaturing = "Currently manufacturing";
         public const string StatusManufactured = "Manufactured";

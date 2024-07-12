@@ -66,24 +66,31 @@ namespace SWP391.Controllers
         public IActionResult Deliver(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,WarrantyCard").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
             User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            //Delivery delivery = _unitOfWork.Delivery.Get(u => u.CustomerId == customer.Id, includeProperties: "Customer, Jewelries, WarrantyCard");
-
-
-            productionRequest.Status = "Delivering";
             foreach (var jewelry in jewelries)
             {
                 //jewelry.SalesStaffId = userId;
-                jewelry.Status = "Delivering";
-                jewelry.ProductionRequest.Address = productionRequest.Address;
+                jewelry.Status = SD.StatusDelivered;
+				Delivery delivery = new Delivery()
+				{
+					//SalesStaffId = userId,
+					CustomerId = customer.Id,
+					JewelryId = jewelry.Id,
+					WarrantyCardId = jewelry.WarrantyCard.Id,
+					DeliveredAt = DateTime.Now,
+					SalesStaffId = userId
+				};
 
-            }
+
+				_unitOfWork.Delivery.Add(delivery);
+				_unitOfWork.Save();
+			}
 
             _unitOfWork.Save();
             return View("Deliver", productionRequest);
@@ -108,24 +115,17 @@ namespace SWP391.Controllers
 
                 Delivery delivery = new Delivery()
                 {
-                    SalesStaffId = userId,
+                    //SalesStaffId = userId,
                     CustomerId = customer.Id,
-
                     JewelryId = jewelry.Id,
-
                     WarrantyCardId = jewelry.WarrantyCard.Id,
-                    DeliveredAt = DateTime.Now
+                    DeliveredAt = DateTime.Now,
+                    SalesStaffId = userId
                 };
-                delivery.WarrantyCardId = jewelry.WarrantyCard.Id;
-                delivery.JewelryId = jewelry.Id;
-                delivery.CustomerId = customer.Id;
-                delivery.SalesStaffId = userId;
+
 
                 _unitOfWork.Delivery.Add(delivery);
                 _unitOfWork.Save();
-
-                //}
-
 
             }
 

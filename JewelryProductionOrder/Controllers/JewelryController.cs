@@ -108,7 +108,6 @@ namespace JewelryProductionOrder.Controllers
             if (jewelry.Status != SD.DesignApproved)
             {
                 TempData["Error"] = "Jewelry Design has not been approved";
-                return RedirectToAction("Index");
             }
             else
             {
@@ -119,8 +118,11 @@ namespace JewelryProductionOrder.Controllers
                 {
                     jewelry.ProductionStaffId = userId;
                     jewelry.Status = SD.StatusManufaturing;
+
                 }
-                _unitOfWork.Save();
+				_unitOfWork.Jewelry.Update(jewelry);
+
+				_unitOfWork.Save();
                 TempData["Success"] = "Started Manufacturing Jewelry!";
             }
             if (redirectRequest is not null)
@@ -139,7 +141,9 @@ namespace JewelryProductionOrder.Controllers
             //    jewelry.Status = $"Manufactured by {productionStaff.Name}";
             //}
             jewelry.Status = SD.StatusManufactured;
-            _unitOfWork.Save();
+			_unitOfWork.Jewelry.Update(jewelry);
+
+			_unitOfWork.Save();
             TempData["Success"] = "Jewelry Completed!";
             if (redirectRequest is not null)
                 return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
