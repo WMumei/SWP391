@@ -14,15 +14,17 @@
 <body>
     <h1>Dashboard</h1>
     <div class="dashboard-container">
-        <div class="dashboard-box" id="total-jewelry-sold">
-            <h2>Total Jewelry Sold</h2>
-            <p>@ViewBag.DeliveryCount</p>
+        <div class="dashboard-box2" id="Jewelry-and-customer">
+            <div class="dashboard-box" id="Jewelry-sold">
+                <h2>Total Jewelry Sold</h2>
+                <p>@ViewBag.DeliveryCount</p>
+            </div>
+            <div class="dashboard-box" id="total-customer">
+                <h2>Total Customers</h2>
+                <p>@ViewBag.CustomerCount</p
+            </div>
         </div>
-
-        <div class="dashboard-box" id="total-customers">
-            <h2>Total Customers</h2>
-            <p>@ViewBag.CustomerCount</p>
-        </div>
+    </div>
 
         <div class="dashboard-box" id="revenue-chart">
             <h2>Revenue</h2>
