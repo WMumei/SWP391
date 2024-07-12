@@ -27,10 +27,15 @@
                 </div>
         </div>
     </div>
+
 </form>
 <div class="row">
+
     @if (User.IsInRole(SD.Role_Customer))
     {
-        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Approve</a>
+        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
     }
+
 </div>
+
+

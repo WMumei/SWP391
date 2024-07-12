@@ -6,46 +6,55 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateJDesign : Migration
+    public partial class addSessionIdToProductionRequest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Type",
-                table: "JewelryDesigns");
+            migrationBuilder.AddColumn<string>(
+                name: "PaymentIntentId",
+                table: "ProductionRequests",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "SessionId",
+                table: "ProductionRequests",
+                type: "nvarchar(max)",
+                nullable: true);
 
             migrationBuilder.UpdateData(
                 table: "Jewelries",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(192));
+                value: new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3450));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "CreatedAt",
-                value: new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(119));
+                columns: new[] { "CreatedAt", "PaymentIntentId", "SessionId" },
+                values: new object[] { new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3317), null, null });
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "CreatedAt",
-                value: new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(131));
+                columns: new[] { "CreatedAt", "PaymentIntentId", "SessionId" },
+                values: new object[] { new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3345), null, null });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Type",
-                table: "JewelryDesigns",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.DropColumn(
+                name: "PaymentIntentId",
+                table: "ProductionRequests");
+
+            migrationBuilder.DropColumn(
+                name: "SessionId",
+                table: "ProductionRequests");
 
             migrationBuilder.UpdateData(
                 table: "Jewelries",

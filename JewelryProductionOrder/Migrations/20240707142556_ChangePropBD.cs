@@ -6,70 +6,56 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeSeedDB : Migration
+    public partial class ChangePropBD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.UpdateData(
-                table: "BaseDesigns",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "Image",
-                value: "\\Images\\Pendant.jpg");
-
-            migrationBuilder.UpdateData(
                 table: "Jewelries",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3575));
+                value: new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6960));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3463));
+                value: new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6864));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 14, 56, 793, DateTimeKind.Local).AddTicks(3516));
+                value: new DateTime(2024, 7, 7, 21, 25, 55, 428, DateTimeKind.Local).AddTicks(6882));
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.UpdateData(
-                table: "BaseDesigns",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "Image",
-                value: "\\Images\\Pendant.webp");
-
-            migrationBuilder.UpdateData(
                 table: "Jewelries",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4527));
+                value: new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2972));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4443));
+                value: new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2897));
 
             migrationBuilder.UpdateData(
                 table: "ProductionRequests",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2024, 7, 3, 10, 13, 41, 698, DateTimeKind.Local).AddTicks(4457));
+                value: new DateTime(2024, 7, 7, 13, 45, 36, 179, DateTimeKind.Local).AddTicks(2909));
         }
     }
 }

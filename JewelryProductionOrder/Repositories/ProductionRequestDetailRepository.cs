@@ -6,16 +6,12 @@ using Models.Repository;
 
 namespace JewelryProductionOrder.Repositories
 {
-    public class ProductionRequestRepository : Repository<ProductionRequest>, IProductionRequestRepository
+    public class ProductionRequestDetailRepository : Repository<ProductionRequestDetail>, IProductionRequestDetailRepository
     {
         private ApplicationDbContext _db;
-        public ProductionRequestRepository(ApplicationDbContext db) : base(db)
+        public ProductionRequestDetailRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
-        }
-        public IEnumerable<ProductionRequest> GetAllWithCustomers()
-        {
-            return dbSet.Include(x => x.Customer).ToList();
         }
 
         public void Save()
@@ -23,9 +19,9 @@ namespace JewelryProductionOrder.Repositories
             _db.SaveChanges();
         }
 
-        public void Update(ProductionRequest request)
+        public void Update(ProductionRequestDetail request)
         {
-            _db.ProductionRequests.Update(request);
+            _db.ProductionRequestDetails.Update(request);
         }
     }
 }

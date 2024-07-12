@@ -42,9 +42,9 @@ namespace SWP391.Controllers
 			return View("Index", requests);
 		}
 
-		public IActionResult Details(int qId)
+		public IActionResult Details(int jId)
 		{
-			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == qId, includeProperties: "Jewelry");
+			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId, includeProperties: "Jewelry");
 			if (request is null) return NotFound();
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.Jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
@@ -86,8 +86,11 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
-			&& (r.Status == SD.StatusPending));
+			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
+			QuotationRequest oldRequest = _unitOfWork.QuotationRequest
+				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
+				.OrderByDescending(r => r.CreatedAt)
+				.FirstOrDefault();
 			if (oldRequest is not null)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;
@@ -103,12 +106,15 @@ namespace SWP391.Controllers
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
+			if (req is null)
 			{
+				return NotFound();
+			}
 				req.ManagerId = userId;
 				req.Status = SD.ManagerApproved;
-			}
-			_unitOfWork.Save();
+			_unitOfWork.QuotationRequest.Update(req);
+				_unitOfWork.Save();
+				TempData["Success"] = "Approved!";
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
@@ -118,12 +124,15 @@ namespace SWP391.Controllers
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
+			if (req is null)
 			{
-				req.ManagerId = userId;
-				req.Status = SD.ManagerDisapproved;
+				return NotFound();
 			}
+			req.ManagerId = userId;
+			req.Status = SD.ManagerDisapproved;
+			_unitOfWork.QuotationRequest.Update(req);
 			_unitOfWork.Save();
+			TempData["Success"] = "Disapproved!";
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
@@ -138,6 +147,12 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerApproved;
 			}
+			_unitOfWork.QuotationRequest.Update(req);
+			_unitOfWork.Save();
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == req.JewelryId);
+			jewelry.Status = SD.StatusQuotationApproved;
+			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
