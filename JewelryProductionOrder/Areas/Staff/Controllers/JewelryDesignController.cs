@@ -6,8 +6,9 @@ using Models.Repositories.Repository.IRepository;
 using SWP391.Controllers;
 using System.Security.Claims;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Staff.Controllers
 {
+    [Area("Staff")]
     public class JewelryDesignController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -46,6 +47,7 @@ namespace JewelryProductionOrder.Controllers
             //obj.JewelryId = obj.Jewelry.Id;
             _unitOfWork.JewelryDesign.Add(obj);
             _unitOfWork.Save();
+            TempData["success"] = "Design created successfully";
             return RedirectToAction("Index", "Jewelry");
             //return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
         }
@@ -72,7 +74,8 @@ namespace JewelryProductionOrder.Controllers
 				design.Status = SD.CustomerApproved;
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Index", "Home");
+            TempData["success"] = "Approved successfully";
+            return RedirectToAction("Index", "Home");
 			return RedirectToAction("Index");
         }
 

@@ -47,8 +47,8 @@ app.UseAuthorization();
 SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+	name: "default",
+	pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
 

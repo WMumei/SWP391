@@ -9,8 +9,9 @@ using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace SWP391.Controllers
+namespace SWP391.Areas.Staff.IdentityControllers
 {
+    [Area("Staff")]
     public class QuotationRequestController : Controller
 
     {
@@ -99,7 +100,7 @@ namespace SWP391.Controllers
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
-
+			TempData["success"] = "Request Created";
 			return RedirectToAction("Index", new { jId = vm.Jewelry.Id });
 		}
 		[Authorize(Roles = SD.Role_Manager)]
@@ -114,6 +115,8 @@ namespace SWP391.Controllers
 				req.Status = SD.ManagerApproved;
 			}
 			_unitOfWork.Save();
+            TempData["success"] = "Approved";
+            
 			return RedirectToAction("Details", new { jId = req.JewelryId});
 		}
 

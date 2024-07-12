@@ -6,7 +6,7 @@ using Models.Repositories.Repository.IRepository;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace JewelryProductionOrder.Controllers
+namespace JewelryProductionOrder.Areas.Customer.IdentityControllers
 {
     public class HomeController : Controller
     {

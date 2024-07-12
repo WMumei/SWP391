@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Repositories.Repository.IRepository;
 
-namespace SWP391.Controllers
+namespace SWP391.Areas.Staff.IdentityControllers
 {
+    [Area("Staff")]
     public class MaterialSetController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -20,7 +21,7 @@ namespace SWP391.Controllers
             MaterialSetVM materialSetVM = new MaterialSetVM
             {
                 // Initialize the fields of the MaterialSetVM object
-                //MaterialSet = new MaterialSet { },
+                // MaterialSet = new MaterialSet { },
                 Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId),
                 MaterialList = _unitOfWork.Material.GetAll().Select(u => new SelectListItem
                 {
@@ -40,8 +41,8 @@ namespace SWP391.Controllers
         {
             MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 
-            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id);
-            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id);
+            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
+            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
             materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
@@ -52,7 +53,8 @@ namespace SWP391.Controllers
             materialSet.TotalPrice = material.Price * weight + gemstone.Price;
             Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
-            _unitOfWork.Save();
+			_unitOfWork.Save();
+            TempData["success"] = "Created";
             return RedirectToAction("Index", "Jewelry");
             //return RedirectToAction("Create", new { jId = jewelry.Id});
         }

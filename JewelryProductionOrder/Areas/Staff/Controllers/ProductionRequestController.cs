@@ -8,8 +8,9 @@ using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace SWP391.Controllers
+namespace JewelryProductionOrder.Areas.Staff.Controllers
 {
+    [Area("Staff")]
     public class ProductionRequestController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -21,6 +22,30 @@ namespace SWP391.Controllers
         }
         
 
+        
+        public IActionResult Checkout()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            OrderVM orderVM = new OrderVM
+            {
+                ProductionRequest = new ProductionRequest { Quantity = 1},
+                Customer = _unitOfWork.User.Get(User => User.Id == userId)
+            };
+            return View(orderVM);
+        }
+        [HttpPost]
+        public IActionResult Checkout(OrderVM orderVM)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            orderVM.ProductionRequest.CustomerId = userId;
+            orderVM.ProductionRequest.Address = orderVM.Customer.Address;
+            orderVM.ProductionRequest.CreatedAt = DateTime.Now;
+			_unitOfWork.ProductionRequest.Add(orderVM.ProductionRequest);
+            _unitOfWork.Save();
+            return RedirectToAction("CustomerView");
+        }
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
         public IActionResult Index()
         {
@@ -48,6 +73,7 @@ namespace SWP391.Controllers
                 req.SalesStaffId = userId;
             }
             _unitOfWork.Save();
+            TempData["success"] = "Request taken";
             return RedirectToAction("Index");
         }
 		public IActionResult CancelRequest(int id)

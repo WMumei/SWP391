@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "DashBoard";
+}
+@model List<QuotationRequest>
+<link rel="stylesheet" href="~/css/Dashboard.css" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<h1>Dashboard</h1>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-box full-width">
+            <h2>Revenue</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal totalPriceSum = Model.Sum(obj => obj.TotalPrice ?? 0);
+                    }
+                    <tr>
+                        <td>@totalPriceSum</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form id="filter-form" asp-controller="Dashboard" asp-action="Index" method="post">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" />
+                <br />
+                <br />
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" />
+                <br />
+                <br />
+                <button type="submit">Apply Filter</button>
+                <span id="invalid-date-range" style="color: red; display: none;">Invalid date range</span>
+            </form>
+            
+            <br/>
+            <canvas id="RevenueChart"></canvas>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-box">
+                <h2>Total Jewelry Sold</h2>
+            </div>
+
+            <div class="dashboard-box">
+                <h2>Total Customers</h2>
+                <p>@ViewBag.CustomerCount</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("filter-form").addEventListener("submit", function (event) {
+            var startDate = new Date(document.getElementById("startDate").value);
+            var endDate = new Date(document.getElementById("endDate").value);
+
+            if (startDate > endDate) {
+                document.getElementById("invalid-date-range").style.display = "block";
+                event.preventDefault();
+            } else {
+                document.getElementById("invalid-date-range").style.display = "none";
+            }
+        });
+
+        const ctx = document.getElementById('RevenueChart').getContext('2d');
+        const revenueData = @Html.Raw(Json.Serialize(ViewBag.Revenues));
+
+        if (revenueData.every(x => x === 0)) {
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['No value can be displayed'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [0],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1,
+                            min: 0,
+                            ticks: {
+                                stepSize: 1 
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                display: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        } else {
+            ctx.canvas.style.display = "block";
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(ViewBag.Dates)),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: revenueData,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
