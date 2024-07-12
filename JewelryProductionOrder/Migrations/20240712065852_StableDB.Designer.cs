@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240628064359_AddBaseDesign")]
-    partial class AddBaseDesign
+    [Migration("20240712065852_StableDB")]
+    partial class StableDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,24 +48,56 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BaseDesign");
+                    b.ToTable("BaseDesigns");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Image = "\\Images\\Ring.webp"
+                            Image = "\\Images\\Ring.webp",
+                            Name = "Bezel Solitarie Engagement Ring",
+                            Type = "Company"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Image = "\\Images\\Pendant.jpg",
+                            Name = "Diamond Reiki Symbol Pendant",
+                            Type = "Company"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Image = "\\Images\\Necklace.webp",
+                            Name = "Smile Necklace",
+                            Type = "Company"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Image = "\\Images\\Band.webp",
+                            Name = "Swirl Diamond Wedding Band",
+                            Type = "Company"
                         });
                 });
 
@@ -147,7 +179,6 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
@@ -158,7 +189,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("ProductionRequestId")
                         .HasColumnType("int");
@@ -193,7 +225,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7833),
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6217),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -228,22 +260,13 @@ namespace JewelryProductionOrder.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ProductionRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductionRequestId1")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -253,10 +276,6 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("DesignStaffId");
 
                     b.HasIndex("JewelryId");
-
-                    b.HasIndex("ProductionRequestId");
-
-                    b.HasIndex("ProductionRequestId1");
 
                     b.HasIndex("ProductionStaffId");
 
@@ -273,7 +292,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -347,6 +367,10 @@ namespace JewelryProductionOrder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -360,7 +384,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -378,6 +403,11 @@ namespace JewelryProductionOrder.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -389,10 +419,21 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<string>("DesignStaffId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProductionStaffId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int?>("QuotationRequestId")
@@ -422,15 +463,47 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7677),
-                            Quantity = 1
+                            Address = "23 Phu Ky Quan 12",
+                            ContactName = " Le Hoang",
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6050),
+                            Email = "test@gmail.com",
+                            PhoneNumber = "0123456769"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 28, 13, 43, 58, 65, DateTimeKind.Local).AddTicks(7714),
-                            Quantity = 1
+                            Address = "23 Phu Ky Quan 12",
+                            ContactName = " Le Hoang",
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6065),
+                            Email = "test@gmail.com",
+                            PhoneNumber = "0123456769"
                         });
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequestDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BaseDesignId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductionRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaseDesignId");
+
+                    b.HasIndex("ProductionRequestId");
+
+                    b.ToTable("ProductionRequestDetails");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
@@ -461,7 +534,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SalesStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -485,6 +559,33 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("SalesStaffId");
 
                     b.ToTable("QuotationRequests");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.ShoppingCart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BaseDesignId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaseDesignId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShoppingCarts");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>
@@ -736,10 +837,12 @@ namespace JewelryProductionOrder.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -856,15 +959,6 @@ namespace JewelryProductionOrder.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
-                        .WithMany()
-                        .HasForeignKey("ProductionRequestId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", null)
-                        .WithMany("JewelryDesigns")
-                        .HasForeignKey("ProductionRequestId1");
-
                     b.HasOne("JewelryProductionOrder.Models.User", "ProductionStaff")
                         .WithMany()
                         .HasForeignKey("ProductionStaffId")
@@ -875,8 +969,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("DesignStaff");
 
                     b.Navigation("Jewelry");
-
-                    b.Navigation("ProductionRequest");
 
                     b.Navigation("ProductionStaff");
                 });
@@ -948,6 +1040,25 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("SalesStaff");
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequestDetail", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.BaseDesign", "BaseDesign")
+                        .WithMany()
+                        .HasForeignKey("BaseDesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
+                        .WithMany("ProductionRequestDetails")
+                        .HasForeignKey("ProductionRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BaseDesign");
+
+                    b.Navigation("ProductionRequest");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
@@ -985,6 +1096,25 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("MaterialSet");
 
                     b.Navigation("SalesStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.ShoppingCart", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.BaseDesign", "BaseDesign")
+                        .WithMany()
+                        .HasForeignKey("BaseDesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BaseDesign");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>
@@ -1090,7 +1220,7 @@ namespace JewelryProductionOrder.Migrations
                 {
                     b.Navigation("Jewelries");
 
-                    b.Navigation("JewelryDesigns");
+                    b.Navigation("ProductionRequestDetails");
                 });
 #pragma warning restore 612, 618
         }

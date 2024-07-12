@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="DB Static\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\ProductionRequestDetail\" />
     <Folder Include="wwwroot\files\" />

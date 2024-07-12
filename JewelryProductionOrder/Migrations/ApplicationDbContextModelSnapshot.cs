@@ -222,7 +222,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(192),
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6217),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -462,7 +462,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 1,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(119),
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6050),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         },
@@ -471,7 +471,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 9, 15, 26, 45, 347, DateTimeKind.Local).AddTicks(131),
+                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6065),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         });
@@ -606,9 +606,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("JewelryId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("SalesStaffId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -617,11 +614,8 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("JewelryId");
-
-                    b.HasIndex("JewelryId1")
-                        .IsUnique()
-                        .HasFilter("[JewelryId1] IS NOT NULL");
+                    b.HasIndex("JewelryId")
+                        .IsUnique();
 
                     b.HasIndex("SalesStaffId");
 
@@ -1129,14 +1123,10 @@ namespace JewelryProductionOrder.Migrations
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithMany()
-                        .HasForeignKey("JewelryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("JewelryProductionOrder.Models.Jewelry", null)
                         .WithOne("WarrantyCard")
-                        .HasForeignKey("JewelryProductionOrder.Models.WarrantyCard", "JewelryId1");
+                        .HasForeignKey("JewelryProductionOrder.Models.WarrantyCard", "JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
