@@ -25,7 +25,7 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = hostEnvironment;
         }
-
+        [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Create()
         {
             return View();
