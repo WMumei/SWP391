@@ -10,7 +10,8 @@ namespace Models.Repositories.Repository
         private ApplicationDbContext _db;
 
         public IProductionRequestRepository ProductionRequest { get; private set; }
-        public IUserRepository User { get; private set; }
+		public IQuotationRequestRepository QuotationRequest { get; private set; }
+		public IUserRepository User { get; private set; }
         public IJewelryRepository Jewelry { get; private set; }
         public IMaterialRepository Material { get; private set; }
         public IMaterialSetRepository MaterialSet { get; private set; }
@@ -22,10 +23,14 @@ namespace Models.Repositories.Repository
 		public IShoppingCartRepository ShoppingCart { get; private set; }
         public IBaseDesignRepository BaseDesign { get; private set; }
         public IPostRepository Post { get; private set; }
-		public UnitOfWork(ApplicationDbContext db)
+        public IWarrantyCardRepository WarrantyCard { get; private set; }
+        public IDeliveryRepository Delivery { get; private set; }
+
+        public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             ProductionRequest = new ProductionRequestRepository(_db);
+            QuotationRequest = new QuotationRequestRepository(_db);
             User = new UserRepository(_db);
             Jewelry = new JewelryRepository(_db);
             Material = new MaterialRepository(_db);
@@ -38,6 +43,9 @@ namespace Models.Repositories.Repository
 			ShoppingCart = new ShoppingCartRepository(_db);
 			BaseDesign = new BaseDesignRepository(_db);
             Post = new PostRepository(_db);
+            WarrantyCard = new WarrantyCardRepository(_db);
+            Delivery = new DeliveryRepository(_db);
+
         }
 
         public void Save()

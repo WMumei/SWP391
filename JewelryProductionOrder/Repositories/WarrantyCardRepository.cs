@@ -1,6 +1,7 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Models.Repository;
 
 namespace JewelryProductionOrder.Repositories

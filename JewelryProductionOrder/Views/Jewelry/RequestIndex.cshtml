@@ -17,8 +17,8 @@
 					<th>Quotation</th>
 					<th>Design</th>
 					<th>Manufacture</th>
-					<th>Deliver</th>
-					<th>Edit</th>
+					
+					<th>Warranty Card</th>
 					@*                     <th width="13%">Image</th>
 					<th>Customer</th>
 					<th>Staffs</th>
@@ -85,9 +85,9 @@
 							<td></td>
 						}
 
-						@if (User.IsInRole(SD.Role_Sales))
+						@if (@obj.WarrantyCard is not null)
 						{
-							<td><a asp-controller="Jewelry" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
+							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						} else
 						{
 							<td></td>
