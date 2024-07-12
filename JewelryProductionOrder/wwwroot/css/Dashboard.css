@@ -13,9 +13,19 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-box2 {
-    
+#jewelry-sold {
+    border: 2px solid rgba(0,0,0,0.1);
 }
+    #jewelry-sold p {
+        vertical-align:middle;
+        position: relative;
+        display: inline-flex;
+    }
+    #jewelry-sold img {
+        height:30px;
+        width:30px;
+    }
+    
 
 /*#total-jewelry-sold {
     grid-column: 1;
@@ -28,11 +38,11 @@
 }
 */
 
-#Jewelry-and-customer {
+#jewelry-and-customer {
     grid-column:1;
     grid-row:1;
 }
-    #Jewelry-and-customer p {
+    #jewelry-and-customer p {
         font-weight:bold;
     }
 

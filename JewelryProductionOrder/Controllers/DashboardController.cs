@@ -42,8 +42,9 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 }
                 int deliveryCount = delivered.Count;
 
+                DateTime targetDate = new DateTime(2, 1, 1);
                 List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
-               .Where(qr => qr.Status == "Approved")
+               .Where(qr => qr.Status == "Approved" && qr.CreatedAt <= targetDate)
                .ToList();
 
                 List<string> rDates = requests.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
@@ -73,16 +74,22 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                     return BadRequest("Error retrieving users in role 'Customer'");
                 }
                 int customerCount = userIds.Count;
-
+                Boolean invalidDate = false;
                 List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
                .Where(qr => qr.Status == "Approved")
                .ToList();
-                if (startDate < endDate)
+                if (startDate.HasValue && endDate.HasValue)
                 {
-                    if (startDate.HasValue && endDate.HasValue)
+                    if (startDate < endDate)
                     {
                         requests = requests.Where(qr => qr.CreatedAt >= startDate.Value && qr.CreatedAt <= endDate.Value).ToList();
                     }
+                }
+                else if (!startDate.HasValue || !endDate.HasValue)
+                {
+                    DateTime targetDate = new DateTime(2, 1, 1);
+                    requests = requests.Where(qr => qr.CreatedAt <= targetDate).ToList();
+                    invalidDate = true;
                 }
 
                 List<string> rDates = requests.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
@@ -91,6 +98,10 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 if (requests.Count > 0)
                 {
                     TempData["success"] = "Data found";
+                }
+                else if (invalidDate)
+                {
+                    TempData["error"] = "Invalid date range";
                 }
                 else
                 {
