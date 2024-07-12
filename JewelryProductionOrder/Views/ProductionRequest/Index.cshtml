@@ -57,6 +57,11 @@
                         <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
                 } 
                 
+					@if(obj.Status == SD.StatusAllManufactured && User.IsInRole(SD.Role_Sales))
+					{
+						<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
+					}
+
                     @if (User.IsInRole(SD.Role_Sales))
                     {
                         if(obj.Status == "Delivered")

@@ -4,6 +4,7 @@ using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -73,10 +74,25 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            foreach (var jewelry in jewelries)
-            {
-                //jewelry.SalesStaffId = userId;
-                jewelry.Status = SD.StatusDelivered;
+
+
+            _unitOfWork.Save();
+            return View("Deliver", productionRequest);
+        }
+        public IActionResult Delivered(int id)
+        {
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
+            productionRequest.Status = SD.StatusRequestDone;
+			_unitOfWork.ProductionRequest.Update(productionRequest);
+            _unitOfWork.Save();
+			foreach (var jewelry in jewelries)
+			{
+				//jewelry.SalesStaffId = userId;
+				jewelry.Status = SD.StatusDelivered;
 				Delivery delivery = new Delivery()
 				{
 					//SalesStaffId = userId,
@@ -87,49 +103,12 @@ namespace SWP391.Controllers
 					SalesStaffId = userId
 				};
 
-
+				_unitOfWork.Jewelry.Update(jewelry);
 				_unitOfWork.Delivery.Add(delivery);
 				_unitOfWork.Save();
 			}
 
-            _unitOfWork.Save();
-            return View("Deliver", productionRequest);
-        }
-        public IActionResult Delivered(int id)
-        {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,WarrantyCard").ToList();
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            productionRequest.SalesStaffId = userId;
-            User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
-
-            foreach (var jewelry in jewelries)
-            {
-                //if (jewelry is not null)
-                //{
-                //jewelry.SalesStaffId = userId;
-                jewelry.Status = "Delivered";
-                jewelry.ProductionRequest.Status = "Delivered";
-
-
-                Delivery delivery = new Delivery()
-                {
-                    //SalesStaffId = userId,
-                    CustomerId = customer.Id,
-                    JewelryId = jewelry.Id,
-                    WarrantyCardId = jewelry.WarrantyCard.Id,
-                    DeliveredAt = DateTime.Now,
-                    SalesStaffId = userId
-                };
-
-
-                _unitOfWork.Delivery.Add(delivery);
-                _unitOfWork.Save();
-
-            }
-
-            return RedirectToAction("Index");
+			return RedirectToAction("Index");
         }
 
         public IActionResult CustomerViewDelivery(int id)
@@ -142,6 +121,7 @@ namespace SWP391.Controllers
 
             return View("CustomerViewDelivery", productionRequest);
         }
+        [Authorize(Roles = SD.Role_Customer)]
         public IActionResult Confirm(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
