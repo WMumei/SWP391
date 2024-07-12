@@ -1,6 +1,8 @@
 ﻿using System.Reflection.Metadata;
 using Azure.Core;
 using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository;
@@ -19,6 +21,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+        [Authorize(Roles = SD.Role_Sales)]
         public async Task<ActionResult> Index()
         {
             {
@@ -60,6 +63,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Sales)]
         public async Task<ActionResult> Index(DateTime? startDate, DateTime? endDate)
         {
             {
