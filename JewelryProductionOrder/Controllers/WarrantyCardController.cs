@@ -33,20 +33,19 @@ namespace JewelryProductionOrder.Controllers
 
 			
 
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer");
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer,MaterialSet,QuotationRequests");
 		    var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 			if(jewelry.MaterialSet ==null && jewelry.QuotationRequests == null)
 			{
                 TempData["WarningMessage"] = "Please create Material Set and Quotation Request!";
-            }
+			}
 			WarrantyCardVM vm = new WarrantyCardVM
 			{
 				Jewelry = jewelry,
 				WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },
-				//CreatedAt = DateTime.Now,
-                //ExpiredAt = DateTime.Now,
+				
                 Customer = customer
-				//CustomerId = customer.Id
+				
 			};
             return View(vm);
         }

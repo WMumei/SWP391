@@ -232,7 +232,7 @@ namespace SWP391.Controllers
 
             }
             _unitOfWork.Save();
-            return RedirectToAction("CustomerView");
+            return RedirectToAction("Index");
         }
     }
 }
