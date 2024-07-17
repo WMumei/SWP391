@@ -32,9 +32,10 @@
 				@foreach(var jewelry in Model.Jewelries)
 				{
 					<div class="col-12 py-2 form-floating">
+					
 						<div>@jewelry.Name</div>
 
-                        <div>@jewelry.CreatedAt</div>
+                        <div>@jewelry.Description</div>
 					</div>
 				}
 			</div>
@@ -43,7 +44,7 @@
 				<div class="ms-2">
 			<a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Delivered</a>
 				</div>
-			}//truong hop dang delivering
+			}//truong hop delivering
 			else if(Model.Status =="Delivering")
 			{
 				<div class="text-center">
