@@ -185,10 +185,7 @@ namespace SWP391.Controllers
                         WarrantyCardId = jewelry.WarrantyCard.Id,
                         DeliveredAt = DateTime.Now
                     };
-                    delivery.WarrantyCardId = jewelry.WarrantyCard.Id;
-                    delivery.JewelryId = jewelry.Id;
-                    delivery.CustomerId = customer.Id;
-                    delivery.SalesStaffId = userId;
+                    
                     
                     _unitOfWork.Delivery.Add(delivery);
                     _unitOfWork.Save();

@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.OrderBy(u => u.CreatedAt)) 
+                @foreach (var obj in Model.OrderBy(u => u.Id)) 
                 @*sắp xếp object theo ngày tạo*@
                 {
                 <tr>

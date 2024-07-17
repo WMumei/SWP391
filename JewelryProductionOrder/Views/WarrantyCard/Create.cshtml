@@ -45,6 +45,7 @@
             <div class="first-col">
                 <label asp-for="@Model.WarrantyCard.CreatedAt" class="labels">Issued Date (mm/dd/yyyy)</label>
                 <input asp-for="@Model.WarrantyCard.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
+                <span asp-validation-for="@Model.WarrantyCard.CreatedAt" class="text-danger"></span>
             </div>
         
             <div class="first-col">

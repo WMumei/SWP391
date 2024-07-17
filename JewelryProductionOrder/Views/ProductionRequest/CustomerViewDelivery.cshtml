@@ -39,15 +39,19 @@
 				}
 			</div>
 
-			@if (Model.Status == "Delivering")
-			{
+			
+			
 				<div class="text-center">
 					<h2>Delivering... </h2>
 					<br/>
+				@if (User.IsInRole(SD.Role_Customer))
+				{
 					<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Confirm</a>
+				}
+				
 				</div>
 				
-			}
+			
 
 		</div>
 		<div>

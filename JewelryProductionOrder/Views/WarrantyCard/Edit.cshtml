@@ -1,8 +1,8 @@
-﻿@model WarrantyCardVM
+﻿@model WarrantyCard
 <head>
     <link rel="stylesheet" href="~/css/CreateWarrantyCard.css" />
 </head>
-<form method="post">
+<form asp-action="Edit">
     <div>
         <div>
             <input asp-for="Jewelry.Id" hidden />
@@ -17,10 +17,7 @@
             <div class="first-col">
                 <label asp-for="@Model.Customer.Name" class="ms-2"></label>
                 <input disabled asp-for="@Model.Customer.Name" />
-                @* <label asp-for="@Model.Customer.Id" class="ms-2"></label>
-                <input disabled asp-for="@Model.Customer.Id" /> *@
-
-
+              
 
 
                 @*<select id="searchResults">
@@ -45,20 +42,20 @@
             *@
             <div class="form-group">
                 <div class="first-col">
-                    <label asp-for="@Model.WarrantyCard.CreatedAt" class="labels">Issued Date (mm/dd/yyyy)</label>
-                    <input asp-for="@Model.WarrantyCard.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
+                    <label asp-for="@Model.CreatedAt" class="labels">Issued Date (mm/dd/yyyy)</label>
+                    <input name="CreatedAt" asp-for="@Model.CreatedAt" type="date" id="issued-date" class="input-field" onchange="updateDate('issued-date')">
                 </div>
 
                 <div class="first-col">
-                    <label asp-for="@Model.WarrantyCard.ExpiredAt" class="labels">Expired Date (mm/dd/yyyy)</label>
-                    <input asp-for="@Model.WarrantyCard.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">
+                    <label asp-for="@Model.ExpiredAt" class="labels">Expired Date (mm/dd/yyyy)</label>
+                    <input name="ExpiredAt" asp-for="@Model.ExpiredAt" type="date" id="expired-date" class="input-field" onchange="updateDate('expired-date')">
                     @*2 năm*@
                 </div>
             </div>
 
 
-            <button asp-action="Edit"> Edit </button> <button asp-controller="WarrantyCard" asp-action="Index">Cancel</button>
-
+            <button asp-asp-controller="WarrantyCard" asp-action="Edit"> Edit </button> <button asp-controller="WarrantyCard" asp-action="Index">Cancel</button>
+@* 
             <script>
                 const searchText = document.getElementById("searchText");
                 const searchResults = document.getElementById("searchResults");
@@ -80,5 +77,5 @@
                 }
 
                 searchText.addEventListener("keyup", filterResults);
-            </script>
+            </script> *@
 </form>
