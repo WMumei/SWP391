@@ -10,7 +10,5 @@ namespace JewelryProductionOrder.Models.ViewModels
 		//public string? CustomerId { get; set; }
 		//[ForeignKey("CustomerId")]
 		public User Customer { get; set; }
-		public DateTime CreatedAt { get; set; }
-        public DateTime ExpiredAt { get; set; }
     }
 }

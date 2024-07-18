@@ -168,8 +168,6 @@ namespace SWP391.Controllers
             
             foreach (var jewelry in jewelries)
             {
-                //if (jewelry is not null)
-                //{
                     jewelry.SalesStaffId = userId;
                     jewelry.Status = "Delivered";
                     jewelry.ProductionRequest.Status = "Delivered";
@@ -189,10 +187,6 @@ namespace SWP391.Controllers
                     
                     _unitOfWork.Delivery.Add(delivery);
                     _unitOfWork.Save();
-
-                //}
-
-
             }
             
             return RedirectToAction("Index");

@@ -31,6 +31,7 @@
 				<h2>Including Jewelries: </h2>
 				@foreach(var jewelry in Model.Jewelries)
 				{
+					//tạo bảng
 					<div class="col-12 py-2 form-floating">
 					
 						<div>@jewelry.Name</div>
@@ -41,8 +42,9 @@
 			</div>
 			
 				@if(User.IsInRole(SD.Role_Sales)){
-				<div class="ms-2">
-			<a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Delivered</a>
+				<div class="form-control">
+					<h2>If customer has confirmed order, </h2>
+			 <a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Delivered</a>
 				</div>
 			}//truong hop delivering
 			else if(Model.Status =="Delivering")
@@ -54,7 +56,7 @@
 			}else
 			{
 				<div class="text-center">
-					<h2>Delivered!</h2>
+					<h2>Delivered successfully!</h2>
 
 				</div>
 			}

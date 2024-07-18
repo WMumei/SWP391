@@ -1,5 +1,12 @@
 ﻿@model List<WarrantyCard>
-
+@if (TempData["success"] != null)
+{
+    <div class="table-bordered">
+       <div class="text-center">
+        @TempData["success"]
+       </div>
+        </div>
+}
 <form method="post">
     <div>
         <div>
@@ -12,8 +19,8 @@
                     <th>Id</th>
                     <th>Jewelry's Name</th>
                     <th>Customer's Name</th>
-                    <th>CreatedAt</th>
-                    <th>ExpiredAt</th>
+                    <th>Issued Date</th>
+                    <th>Expired Date</th>
                     
 
                     
@@ -22,14 +29,14 @@
             </thead>
             <tbody>
                 @foreach (var obj in Model.OrderBy(u => u.Id)) 
-                @*sắp xếp object theo ngày tạo*@
+                
                 {
                 <tr>
                     <td>@obj.Id</td>
                     <td>@obj.Jewelry.Name</td>
                     <td>@obj.Customer.Name</td>
-                    <td>@obj.CreatedAt</td>
-                    <td>@obj.ExpiredAt</td>
+                    <td><input disabled asp-for="@obj.CreatedAt" type="date" class="border-0"/></td>
+                        <td><input disabled asp-for="@obj.ExpiredAt" type="date" class="border-0" /></td>
                  
                     
                     <td><div class="w-75 btn-group" role="group">

@@ -35,8 +35,8 @@ namespace JewelryProductionOrder.Controllers
 
 
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer,MaterialSet,QuotationRequests");
-			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
-			if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
+			
+			if (jewelry.MaterialSet == null || jewelry.QuotationRequests == null)
 			{
 				TempData["Error"] = "Please create Material Set and Quotation Request!";
 				if (redirectRequest is not null)
@@ -51,7 +51,7 @@ namespace JewelryProductionOrder.Controllers
 					Jewelry = jewelry,
 					WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },
 
-					Customer = customer
+					Customer = jewelry.Customer
 
 				};
 				return View(vm);
@@ -63,26 +63,37 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Create(WarrantyCardVM vm)
 		{
-            //lưu người tạo
             var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			vm.WarrantyCard.SalesStaffId = userId;
-			
-			vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.WarrantyCard.JewelryId, includeProperties: "Customer");
-            var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId );
-            
-            _unitOfWork.Save();
-           
-       
 
-            
-            
-			vm.WarrantyCard.CustomerId = customer.Id;
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id);
+			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+
+            vm.WarrantyCard.SalesStaffId = userId;
+            vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
+            vm.WarrantyCard.CustomerId = customer.Id;
+            vm.Customer = customer;
+            vm.Jewelry = jewelry;
+            if (vm.WarrantyCard.CreatedAt < DateTime.Now )
+			{
+    
+                    ModelState.AddModelError("WarrantyCard.CreatedAt", "Issued Date is not valid.");
+            }
+            if(vm.WarrantyCard.ExpiredAt < vm.WarrantyCard.CreatedAt.AddYears(1))
+			{
+                ModelState.AddModelError("WarrantyCard.ExpiredAt", "Expired Date is not valid.");
+            }
+			if(vm.WarrantyCard.CreatedAt >= DateTime.Now && vm.WarrantyCard.ExpiredAt >= vm.WarrantyCard.CreatedAt.AddYears(1))
+            {
+
+					_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
+					_unitOfWork.Save();
+                TempData["success"] = "Warranty Card is deleted successfully!";
+                return RedirectToAction("Index", "Jewelry");
+				}
 			
-			_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
-			_unitOfWork.Save();
-			return RedirectToAction("Index", "Jewelry");
+            
+            return View(vm);
 		}
 		public IActionResult Index()
 		{
@@ -118,84 +129,36 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Edit(int id)
 
 		{
-            
-            //ewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id== id,includeProperties:"WarrantyCard,Customer");
 			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == id, includeProperties:"Customer,Jewelry");
-
-   //         WarrantyCardVM vm = new()
-          
-			//{
-				
-			//	WarrantyCard = warrantyCard,
-   //             Jewelry = warrantyCard.Jewelry,
-   //             Customer= warrantyCard.Customer
-   //     };
-            
-           
             return View(warrantyCard);
 		}
 		[HttpPost]
 		public IActionResult Edit( WarrantyCard obj)
 
 		{
-
-
-
-
-			//	Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "WarrantyCard,Customer",tracked: false);
-
-
-
-			// vm.WarrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == jewelry.WarrantyCard.Id,tracked: false);
-			//if (vm.WarrantyCard == null)
-			//{
-			//	// Nếu không tìm thấy WarrantyCard, trả về lỗi
-			//	return NotFound();
-			//}
-
-			//vm.WarrantyCard.CustomerId = vm.Customer.Id;
-
-
-			//_unitOfWork.WarrantyCard.Update(vm.WarrantyCard); 
-
-
-
-
-			//_unitOfWork.Save();
-			//         return RedirectToAction("Index");
-			try
-			{
-				// Lấy thông tin Jewelry liên quan
-				
-
-				
 				WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == obj.Id);
-				warrantyCard.CreatedAt =obj.CreatedAt;
-				warrantyCard.ExpiredAt = obj.ExpiredAt;
-				
-
-				
-			
-							
-
-				// Đánh dấu đối tượng WarrantyCard là đã thay đổi
-				_unitOfWork.WarrantyCard.Update(warrantyCard);
-
-				// Lưu các thay đổi vào cơ sở dữ liệu
-				_unitOfWork.Save();
-
-				// Chuyển hướng đến trang Index
-				return RedirectToAction("Index");
-			}
-			catch (Exception ex)
+			   obj.Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == warrantyCard.JewelryId);
+				obj.Customer = _unitOfWork.User.Get(j => j.Id == warrantyCard.CustomerId);
+            if (obj.CreatedAt < DateTime.Now)
 			{
-				// Log lỗi và hiển thị thông báo lỗi
-				// Bạn có thể sử dụng một công cụ logging như Serilog hoặc NLog để log lỗi
-				Console.WriteLine(ex.Message);
-				return View(obj);
+				ModelState.AddModelError("CreatedAt", "Issued Date is not valid.");
 			}
+				if(obj.ExpiredAt < obj.CreatedAt.AddYears(1))
+			{
+                ModelState.AddModelError("ExpiredAt", "Expired Date is not valid.");
+            }
+				if(obj.CreatedAt >= DateTime.Now && obj.ExpiredAt >= obj.CreatedAt.AddYears(1))
+			{
+                warrantyCard.CreatedAt = obj.CreatedAt;
+                warrantyCard.ExpiredAt = obj.ExpiredAt;
 
+                _unitOfWork.WarrantyCard.Update(warrantyCard);
 
+                _unitOfWork.Save();
+				TempData["success"] = "Warranty Card is updated successfully. ";
+                return RedirectToAction("Index");
+            }
+			return View(obj);
 		}
 		public IActionResult Details(int? id)
 		{
