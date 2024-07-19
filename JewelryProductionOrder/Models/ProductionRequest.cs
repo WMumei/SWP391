@@ -30,10 +30,6 @@ namespace JewelryProductionOrder.Models
         public string? SalesStaffId { get; set; }
         [ForeignKey("SalesStaffId")]
         public User? SalesStaff { get; set; }
-
-        // TODO: REMOVE THIS
-        public QuotationRequest? QuotationRequest { get; set; }
-        //
         
         public List<Jewelry> Jewelries { get; } = [];
         public List<ProductionRequestDetail> ProductionRequestDetails { get; } = [];
