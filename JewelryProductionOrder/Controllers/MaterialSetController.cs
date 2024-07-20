@@ -48,7 +48,7 @@ namespace SWP391.Controllers
             }
             else
             {
-                materialSetVM.MaterialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "MaterialSetMaterials");
+                materialSetVM.MaterialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "MaterialSetMaterials,Gemstones,Materials");
 			}
             
 			return View(materialSetVM);
@@ -104,14 +104,16 @@ namespace SWP391.Controllers
 			Material material = _unitOfWork.Material.Get(m => m.Id == vm.Material.Id, tracked: true);
 			materialSet.Materials.Add(material);
 			_unitOfWork.MaterialSet.Update(materialSet);
-			_unitOfWork.Save();
-
 			var weight = Convert.ToDecimal(vm.Weight);
-            MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(s => s.MaterialId == material.Id && s.MaterialSetId == materialSet.Id);
-            materialSetMaterial.Weight = weight;
-
-			_unitOfWork.MaterialSetMaterial.Update(materialSetMaterial);
+            materialSet.MaterialSetMaterials.Where(s => s.MaterialId == material.Id).FirstOrDefault().Weight = weight;
+			_unitOfWork.MaterialSet.Update(materialSet);
 			_unitOfWork.Save();
+
+   //         MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(s => s.MaterialId == material.Id && s.MaterialSetId == materialSet.Id);
+   //         materialSetMaterial.Weight = weight;
+
+			//_unitOfWork.MaterialSetMaterial.Update(materialSetMaterial);
+			//_unitOfWork.Save();
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
 		}
 
