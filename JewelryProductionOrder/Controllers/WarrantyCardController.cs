@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Repositories.Repository.IRepository;
 using System;
+using System.Drawing;
 using System.Security.Claims;
 using System.Security.Cryptography;
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
@@ -8,7 +9,9 @@ namespace JewelryProductionOrder.Models
 
 
         public int Id { get; set; }
+        [DisplayName("Issued Date (mm/dd/yyyy)")]
         public DateTime CreatedAt { get; set; }
+        [DisplayName("Expired Date (mm/dd/yyyy)")]
         public DateTime ExpiredAt { get; set; }
 
         public string CustomerId { get; set; }

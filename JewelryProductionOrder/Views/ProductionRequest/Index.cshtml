@@ -88,7 +88,7 @@
                             <td>Successful</td>
                         }
                         else if (@obj.Jewelries.Count/@obj.Quantity == 1){
-                            //start delivering
+                            //sale click this button => status delivering
                             <td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
                         }
                         else{

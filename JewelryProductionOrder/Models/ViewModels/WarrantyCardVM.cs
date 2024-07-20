@@ -1,4 +1,6 @@
-﻿namespace JewelryProductionOrder.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace JewelryProductionOrder.Models.ViewModels
 {
 	public class WarrantyCardVM
 	{
@@ -8,7 +10,5 @@
 		//public string? CustomerId { get; set; }
 		//[ForeignKey("CustomerId")]
 		public User Customer { get; set; }
-		public DateTime? CreatedAt { get; set; }
-        public DateTime? ExpiredAt { get; set; }
     }
 }
