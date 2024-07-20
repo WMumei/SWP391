@@ -14,6 +14,8 @@
 					</select>
 					<label asp-for="Gemstone" class="ms-2"></label>
 					@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
+					<button type="button" id="submitAddGemstone" class="btn btn-primary form-control">Submit to Add Gemstone</button>
+
 				</div>
 				<div class="row">
 
@@ -24,6 +26,7 @@
 						</select>
 						<label asp-for="Material" class="ms-2"></label>
 						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
+						<button type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Submit to Add Material</button>
 
 					</div>
 					<div class="col-6 py-2 form-floating">
@@ -34,7 +37,56 @@
 			</div>
 		</div>
 	</div>
-	<button type="submit" class="btn btn-primary form-control">Create</button>
+	<div class="col-12 py-2 form-floating">
+		<h2>Gemstones</h2>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Weight (carat)</th>
+					<th>Price</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+				{
+					<tr>
+						<td>@gemstone.Name</td>
+						<td>@gemstone.Weight</td>
+						<td>@gemstone.Price</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+	<div class="col-12 py-2 form-floating">
+		<h2>Materials</h2>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Weight (g)</th>
+					<th>Unit Price</th>
+					<th>Total Price</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
+				{
+					var material = 
+					<tr>
+						<td>@material.Name</td>
+						<td>@weight</td>
+						<td>@material.Price</td>
+						<td>@(join.Weight * material.Price)</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+	<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 
 
 </form>
@@ -44,4 +96,17 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script>
+		document.getElementById('submitAddGemstone').addEventListener('click', function() {
+			var form = document.getElementById('materialForm');
+			form.action = '@Url.Action("AddGemstone", "MaterialSet")'; // Adjusted to MaterialSetController and AddGemstone action
+			form.submit();
+		});
+
+		document.getElementById('submitAddMaterial').addEventListener('click', function() {
+			var form = document.getElementById('materialForm');
+			form.action = '@Url.Action("AddMaterial", "MaterialSet")'; // Adjusted to MaterialSetController and AddMaterial action
+			form.submit();
+		});
+	</script>
 }
