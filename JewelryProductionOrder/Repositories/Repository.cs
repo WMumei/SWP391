@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Repositories.IRepository;
-using JewelryProductionOrder.Data;
+﻿using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Models.Repositories.IRepository;
+using System.Linq.Expressions;
 
 namespace Models.Repository
 {
@@ -18,7 +12,7 @@ namespace Models.Repository
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            this.dbSet = _db.Set<T>();            
+            this.dbSet = _db.Set<T>();
         }
 
         public void Add(T entity)
@@ -28,16 +22,16 @@ namespace Models.Repository
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query 
-                = dbSet;
-            //if (tracked)
-            //{
-            //    query = dbSet;
-            //}
-            //else
-            //{
-            //    query = dbSet.AsNoTracking();
-            //}
+            IQueryable<T> query;
+                //= dbSet;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
 
             query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))

@@ -1,9 +1,7 @@
-﻿using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Models.Repositories.Repository.IRepository;
 
 namespace SWP391.Controllers
@@ -21,40 +19,43 @@ namespace SWP391.Controllers
 
             MaterialSetVM materialSetVM = new MaterialSetVM
             {
-				// Initialize the fields of the MaterialSetVM object
-				//MaterialSet = new MaterialSet { },
-				Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId),
-				MaterialList = _unitOfWork.Material.GetAll().Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.Id.ToString()
-				}),
-				GemstoneList = _unitOfWork.Gemstone.GetAll().Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.Id.ToString()
-				}),
-			};
+                // Initialize the fields of the MaterialSetVM object
+                //MaterialSet = new MaterialSet { },
+                Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId),
+                MaterialList = _unitOfWork.Material.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                GemstoneList = _unitOfWork.Gemstone.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+            };
             return View(materialSetVM);
         }
         [HttpPost]
-        public IActionResult Create(MaterialSetVM materialSetVM)
+        public IActionResult Create(MaterialSetVM materialSetVM, int reqIndex, int? redirectRequest)
         {
             MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 
-			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id);			
-            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id);
+            Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == materialSetVM.Gemstone.Id, tracked: true);
+            Material material = _unitOfWork.Material.Get(m => m.Id == materialSetVM.Material.Id, tracked: true);
 
 			materialSet.Materials.Add(material);
             materialSet.Gemstones.Add(gemstone);
-			_unitOfWork.MaterialSet.Add(materialSet);
-			_unitOfWork.Save();
+            _unitOfWork.MaterialSet.Add(materialSet);
+            _unitOfWork.Save();
             var weight = Convert.ToDecimal(materialSetVM.Weight);
             materialSet.MaterialSetMaterials.First().Weight = weight;
-			materialSet.TotalPrice = material.Price * weight + gemstone.Price;
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
+            materialSet.TotalPrice = material.Price * weight + gemstone.Price;
+            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == materialSetVM.Jewelry.Id);
             jewelry.MaterialSetId = materialSet.Id;
-			_unitOfWork.Save();
+            _unitOfWork.Jewelry.Update(jewelry);
+            _unitOfWork.Save();
+            if (redirectRequest is not null)
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
             return RedirectToAction("Index", "Jewelry");
             //return RedirectToAction("Create", new { jId = jewelry.Id});
         }

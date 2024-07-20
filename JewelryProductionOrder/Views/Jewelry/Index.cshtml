@@ -58,11 +58,12 @@
 				</tr>
 			</thead>
 			<tbody>
+				@{ var i = 0; }
 				@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
 				{
 					<tr>
 						<td>@obj.Id</td>
-						<td>@obj.CreatedAt</td>
+						<td>@obj.CreatedAt.ToShortDateString()</td>
 						<td>@obj.Name</td>
 						<td>@obj.Description</td>
 						@* <td>@obj.Status</td> *@
@@ -70,23 +71,24 @@
 
 						@if (obj.MaterialSetId is not null)
 						{
-							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
+							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSetId" class="btn btn-primary btn-sm">View</a></td>
 						} 
-						else if (User.IsInRole(SD.Role_Sales))
-						{
+                        else if (User.IsInRole(SD.Role_Sales)
+						@* && Model.checkStatus is false *@
+						)
+                        {
 							<td><a asp-controller="MaterialSet" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-						} else
+						} 
+						else
 						{
 							<td></td>
 						}
 
 						@if (@obj.QuotationRequests.Count != 0)
 						{
-							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-						} else if (User.IsInRole(SD.Role_Sales))
-						{
-							<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-						} else
+							<td><a asp-controller="QuotationRequest" asp-action="Index" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						}
+						else
 						{
 							<td></td>
 						}
@@ -113,15 +115,21 @@
 						@if (@obj.JewelryDesigns.Count != 0)
 						{
 							<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-						} else if (User.IsInRole(SD.Role_Design))
+						}
+						else if (User.IsInRole(SD.Role_Design) 
+						@* && Model.checkStatus is false *@
+						)
 						{
 							<td><a asp-controller="JewelryDesign" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-						} else
+						} 
+						else
 						{
 							<td></td>
 						}
 
-						@if (User.IsInRole(SD.Role_Production) && obj.Status == "Currently manufacturing")
+						@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusManufaturing 
+						@* && Model.checkStatus is false *@
+						)
 						{
 							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Complete</a></td>
 						}
@@ -146,7 +154,7 @@
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-						else if (User.IsInRole(SD.Role_Sales) && obj.WarrantyCard is null )
+						else if (User.IsInRole(SD.Role_Sales))
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
 						}
@@ -180,20 +188,25 @@
 							<td><a asp-controller="Jewelry" asp-action="Complete" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Complete</a></td>
 						}
 						else if (User.IsInRole(SD.Role_Production) && obj.Status == "Design Approved")
+
+						else if (User.IsInRole(SD.Role_Production) && obj.Status == SD.DesignApproved)
 						{
-							<td><a asp-controller="JewelryDesign" asp-action="Manufacture" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View Design</a></td>
+							<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View Design</a></td>
 						}
+						else
 						{
 							<td></td>
 						}
 
-						@if (User.IsInRole(SD.Role_Sales) && @obj.Status == "Manufactured")
+						@if (User.IsInRole(SD.Role_Sales) && @obj.Status == SD.StatusManufactured && Model.checkStatus is false)
 						{
 							<td><a asp-controller="Jewelry" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Deliver</a></td>
-						} else if (@obj.Status == "Delivered")
+						} 
+						else if (@obj.Status == SD.StatusDelivered)
 						{
 							<td>Delivered!</td>
-						} else
+						} 
+						else
 						{
 							<td></td>
 

@@ -54,8 +54,8 @@
 						<tbody>
 							@foreach (Material material in @Model.MaterialSet.Materials)
 							{
-								var weight = material.MaterialSetMaterials.FirstOrDefault(
-								s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+								var weight = @Model.MaterialSet.MaterialSetMaterials.FirstOrDefault(
+								s => s.MaterialId == material.Id)?.Weight;
 								<tr>
 									<td>@material.Name</td>
 									<td>@weight</td>
@@ -78,21 +78,37 @@
 	</div>
 </form>
 	<div class="row">
-		@if (User.IsInRole(SD.Role_Manager))
+		@if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
 		{
-			<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+			<div class="col text-center">
+				<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+            </div>
+            <div class="col">
+                <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+            </div>
+            
 		}
-		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == "Approved by Manager")
+		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
 		{
-			<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-sm">Approve</a>
+			<div class="col text-center">
+				<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+			</div>
+			<div class="col">
+				<a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+			</div>
 		}
-		else if (Model.QuotationRequest.Status == "Approved by Manager")
+
+	@if (!User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
 		{
 			<h2 class="text-success">Approved by manager!</h2>
 		}
-		else if (Model.QuotationRequest.Status == "Approved by Customer")
+		else if (Model.QuotationRequest.Status == SD.CustomerApproved)
 		{
 			<h2 class="text-success">Approved!</h2>
+		}
+		else if (Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.CustomerDisapproved)
+		{
+			<h2 class="text-danger">Disapproved!</h2>
 		}
 	</div>
 

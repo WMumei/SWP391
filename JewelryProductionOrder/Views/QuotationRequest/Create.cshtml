@@ -54,8 +54,8 @@
 						<tbody>
 								@foreach (Material material in @Model.MaterialSet.Materials)
 								{
-									var weight = material.MaterialSetMaterials.FirstOrDefault(
-												s => s.MaterialSetId == @Model.Jewelry.MaterialSet.Id).Weight;
+									var weight = @Model.MaterialSet.MaterialSetMaterials.FirstOrDefault(
+												s => s.MaterialId == material.Id).Weight;
 									<tr>
 										<td>@material.Name</td>
 										<td>@weight</td>
@@ -74,9 +74,14 @@
 		</div>
 	</div>
 	<div class="row">
-
 		<button type="submit" class="btn btn-primary form-control col-2">Create</button>
 	</div>
 
 
 </form>
+@section Scripts
+{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

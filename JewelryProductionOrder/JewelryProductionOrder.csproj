@@ -10,9 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\ProductionRequestDetail\**" />
+    <Compile Remove="Views\SpecificProductionRequest\**" />
+    <Content Remove="Views\ProductionRequestDetail\**" />
+    <Content Remove="Views\SpecificProductionRequest\**" />
+    <EmbeddedResource Remove="Views\ProductionRequestDetail\**" />
+    <EmbeddedResource Remove="Views\SpecificProductionRequest\**" />
+    <None Remove="Views\ProductionRequestDetail\**" />
+    <None Remove="Views\SpecificProductionRequest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DB Static\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Views\SpecificProductionRequest\" />
+    <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
@@ -30,6 +41,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.6" />
 	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Stripe.net" Version="45.2.0" />
   </ItemGroup>
 
   <ItemGroup>

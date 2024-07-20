@@ -3,15 +3,11 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JewelryProductionOrder.DbInitializer
 {
-    public class DbInitializer : IDbInitializer {
+    public class DbInitializer : IDbInitializer
+    {
 
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -20,47 +16,53 @@ namespace JewelryProductionOrder.DbInitializer
         public DbInitializer(
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext db) {
+            ApplicationDbContext db)
+        {
             _roleManager = roleManager;
             _userManager = userManager;
             _db = db;
         }
 
-        public void Initialize() {
+        public void Initialize()
+        {
 
 
             //migrations if they are not applied
-            try {
-                if (_db.Database.GetPendingMigrations().Count() > 0) {
+            try
+            {
+                if (_db.Database.GetPendingMigrations().Count() > 0)
+                {
                     _db.Database.Migrate();
                 }
             }
-            catch(Exception ex) { }
+            catch (Exception ex) { }
 
             if (!_roleManager.RoleExistsAsync(SD.Role_Manager).GetAwaiter().GetResult())
             {
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Manager)).GetAwaiter().GetResult();
-				_userManager.CreateAsync(new User
-				{
-					UserName = "manager@example.com",
-					Email = "manager@example.com",
-					Name = "M01",
-					PhoneNumber = "1112223333",
-				}, "Manager123*").GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Manager)).GetAwaiter().GetResult();
+                _userManager.CreateAsync(new User
+                {
+                    UserName = "manager@example.com",
+                    Email = "manager@example.com",
+                    Name = "M01",
+                    PhoneNumber = "1112223333",
+                }, "Manager123*").GetAwaiter().GetResult();
 
-				User manager = _db.Users.FirstOrDefault(u => u.Email == "manager@example.com");
-				_userManager.AddToRoleAsync(manager, SD.Role_Manager).GetAwaiter().GetResult();
-			}
+                User manager = _db.Users.FirstOrDefault(u => u.Email == "manager@example.com");
+                _userManager.AddToRoleAsync(manager, SD.Role_Manager).GetAwaiter().GetResult();
+            }
 
             // Create roles if they are not created
-            if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult()) {
+            if (!_roleManager.RoleExistsAsync(SD.Role_Production).GetAwaiter().GetResult())
+            {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Sales)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Production)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Design)).GetAwaiter().GetResult();
 
-                _userManager.CreateAsync(new User {
+                _userManager.CreateAsync(new User
+                {
                     UserName = "sales@example.com",
                     Email = "sales@example.com",
                     Name = "S01",
