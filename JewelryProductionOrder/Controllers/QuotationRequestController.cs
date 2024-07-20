@@ -11,26 +11,40 @@ using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
+	[Authorize]
 	public class QuotationRequestController : Controller
 
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		
 		public QuotationRequestController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
 		}
 		public IActionResult Index(int jId)
 		{
-			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().Where(r => r.JewelryId == jId).ToList();
-			bool checkStatus = requests != null && requests.Exists(r => r.Status == SD.StatusPending);
-			bool checkCancel = requests != null && requests.Exists(r => r.Status == SD.StatusCancelled);
-			CheckQuotationVM vm = new CheckQuotationVM
+			List<QuotationRequest> requests;
+			if (User.IsInRole(SD.Role_Customer))
 			{
-				QuotationRequests = requests,
-				checkStatus = checkStatus,
-				checkCancel = checkCancel
-			};
-			return View(vm);
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId && r.CustomerId == userId && r.Status == SD.ManagerApproved, includeProperties: "Jewelry").ToList();
+			}
+			else if (User.IsInRole(SD.Role_Sales))
+			{
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId && r.SalesStaffId == userId, includeProperties: "Jewelry").ToList();
+			}
+			else if (User.IsInRole(SD.Role_Manager))
+			{
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			} else
+			{
+				return NotFound();
+			}
+
+			return View(requests);
 		}
 
 		// Get all quotation of a jewelry

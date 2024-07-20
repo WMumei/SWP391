@@ -121,6 +121,7 @@
 						}
 					}
 					<td>@obj.Note</td>
+					@*
 					@if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Admin))
 					{
 						<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
@@ -128,7 +129,7 @@
 					else if (!User.IsInRole(SD.Role_Customer))
 					{
 						<td></td>
-					} *@
+					}
 
 				</tr>
 			}
