@@ -11,6 +11,7 @@
 				@* <th>Created At</th> *@
 				<th>Name</th>
 				<th>Description</th>
+				<th>Base Design</th>
 				@* <th>Status</th> *@
 				<th>Materials</th>
 				<th>Quotation</th>
@@ -37,6 +38,9 @@
 					@* <td>@obj.CreatedAt</td> *@
 					<td>@obj.Name</td>
 					<td>@obj.Description</td>
+					<td>
+						<a asp-controller="BaseDesign" asp-action="Index" asp-route-id="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+					</td>
 					@* <td>@obj.Status</td> *@
 					@* <td>@obj?.Customer?.Name</td> *@
 

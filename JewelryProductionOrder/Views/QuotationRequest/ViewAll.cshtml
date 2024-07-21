@@ -5,11 +5,11 @@
 		<hr />
 
 		<div class="caption-top row d-flex justify-content-between">
-			<h2 class="col-10">View Quotation Request of Jewelry: @Model.FirstOrDefault().Jewelry.Name</h2>
+			<h2 class="col-10">View Quotation Request of Jewelry: @Model.FirstOrDefault()?.Jewelry?.Name</h2>
 			@if (User.IsInRole(SD.Role_Sales))
 			{
 				<div class="col-2 d-flex justify-content-end">
-					<a class="btn btn-primary btn-lg px-4" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault().Jewelry.Id">Create</a>
+					<a class="btn btn-primary btn-lg px-4" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault()?.Jewelry?.Id">Create</a>
 				</div>
 
 			}
