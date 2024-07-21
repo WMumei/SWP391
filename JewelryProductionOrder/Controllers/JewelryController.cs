@@ -100,7 +100,7 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Production)]
 		public IActionResult Manufacture(int jId, int? redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId, tracked: true);
 			if (jewelry is null)
 			{
 				return NotFound();
@@ -114,12 +114,8 @@ namespace JewelryProductionOrder.Controllers
 				var claimsIdentity = (ClaimsIdentity)User.Identity;
 				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-				if (jewelry is not null)
-				{
-					jewelry.ProductionStaffId = userId;
-					jewelry.Status = SD.StatusManufaturing;
-
-				}
+				jewelry.ProductionStaffId = userId;
+				jewelry.Status = SD.StatusManufaturing;
 				_unitOfWork.Jewelry.Update(jewelry);
 
 				_unitOfWork.Save();
@@ -133,7 +129,7 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Production)]
 		public IActionResult Complete(int jId, int? redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId, tracked: true);
 			//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
 			//if (jewelry is not null)
 			//{
