@@ -10,10 +10,8 @@
 	</div>
 	<div class="col-12 py-2 form-floating">
 		<div class="row">
-			@*<div class="col-10">
-			<input asp-for="@Model.Jewelry.Id"  hidden/>
-			<input disabled asp-for="@Model.Jewelry.Name"  />
-			</div>*@
+
+			<h2 class="text-center">Customer's Contact</h2>
 			<div class="col-12 py-2 form-floating">
 				<input disabled asp-for="@Model.Customer.Name" type="text" class="form-control border-0 shadow" />
 				<label asp-for="@Model.Customer.Name" type="text" class="ms-2"></label>
@@ -28,10 +26,9 @@
 			</div>
 			<div class="col-12 py-2 form-floating">
 
-				<h2>Including Jewelries: </h2>
-				@foreach (var jewelry in Model.Jewelries)
-				{
-					//tạo bảng
+				<h2 class="text-center">Including Jewelries: </h2>
+				
+				
 					<div class="col-12 py-2 form-floating">
 
 						<table class="table table-bordered table-striped">
@@ -42,27 +39,34 @@
 									<th>Description</th>
 								</tr>
 							<tbody>
+								@foreach (var jewelry in Model.Jewelries)
+								{
 								<tr>
 									<th>@jewelry.Name</th>
 									<th>@jewelry.Description</th>
 								</tr>
+								}
 							</tbody>
 						</table>
 					</div>
-				}
+				<h3>Latest status of the order: @Model.Status </h3>
 			</div>
 
-			@if (User.IsInRole(SD.Role_Sales) && @Model.Status == "Delivered")
+			@if (User.IsInRole(SD.Role_Sales))
 			{
-				<div class="col-12 py-2 form-floating">
-					<h2>If customer has confirmed order, </h2>
+				if (@Model.Status == SD.StatusConfirmDelivered)
+				{
+					<div class="col-12 py-2 form-floating">
+						<p style="strong">If customer has confirmed order: </p>
 					<a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-primary ">Delivered</a>
-				</div>
+					</div>
+				}
+				else
+				{
+					
+				}
 			}
-			else
-			{
-
-			}
+			
 
 
 		</div>

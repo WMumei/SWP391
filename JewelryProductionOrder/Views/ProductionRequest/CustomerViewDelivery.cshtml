@@ -62,13 +62,13 @@
 		</div>
 
 
-		@*All Except sale staff*@
+		
 		<div class="text-center">
 			<h2>Latest status of the order: @Model.Status </h2>
 			<br />
 
 
-			@if (Model.Status != "Delivered" && Model.Status != "Confirmed")
+			@if (Model.Status != SD.StatusRequestDone || Model.Status != SD.StatusConfirmDelivered)
 
 			{
 				<h3>Please confirm your order after receiving and checking order with the policies below</h3>

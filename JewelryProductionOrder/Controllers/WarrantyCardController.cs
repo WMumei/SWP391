@@ -30,7 +30,9 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Create(int jId, int? redirectRequest)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer,MaterialSet,QuotationRequests");
-			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
+			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
+			jewelry.CustomerId = customer.Id;	
 			if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
 			{
 				TempData["Error"] = "Please create Material Set and Quotation Request!"; 
@@ -61,8 +63,9 @@ namespace JewelryProductionOrder.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id);
-			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id,includeProperties: "Customer");
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
+			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 			vm.WarrantyCard.SalesStaffId = userId;
 			vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
@@ -71,7 +74,6 @@ namespace JewelryProductionOrder.Controllers
 			vm.Jewelry = jewelry;
 			if (vm.WarrantyCard.CreatedAt < DateTime.Now)
 			{
-
 				ModelState.AddModelError("WarrantyCard.CreatedAt", "Issued Date is not valid.");
 			}
 			if (vm.WarrantyCard.ExpiredAt < vm.WarrantyCard.CreatedAt.AddYears(1))
