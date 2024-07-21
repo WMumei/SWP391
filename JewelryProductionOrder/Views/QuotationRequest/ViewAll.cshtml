@@ -1,0 +1,29 @@
+﻿@model List<QuotationRequest>
+
+<div>
+	<div>
+		<h2>View Quotation Request of Jewelry</h2>
+		<hr />
+	</div>
+	<table class="table table-bordered table-striped fs-6 fw-normal">
+		<thead>
+			<tr class="fw-normal">
+				<th>Id</th>
+				<th>Created At</th>
+				<th>Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+			{
+				<tr>
+					<td>@obj.Id</td>
+					<td>@obj.CreatedAt</td>
+					<td>@obj.Status</td>
+					<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

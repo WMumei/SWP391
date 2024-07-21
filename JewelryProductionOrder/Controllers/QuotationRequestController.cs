@@ -56,9 +56,9 @@ namespace SWP391.Controllers
 			return View("Index", requests);
 		}
 
-		public IActionResult Details(int jId)
+		public IActionResult Details(int id)
 		{
-			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId, includeProperties: "Jewelry");
+			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
 			if (request is null) return NotFound();
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.Jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
@@ -210,5 +210,23 @@ namespace SWP391.Controllers
 		//    return RedirectToAction("Index");
 
 		//}
-	}
+		[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Customer},{SD.Role_Sales}")]
+		public IActionResult ViewAll(int jId)
+		{
+			var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if(User.IsInRole(SD.Role_Customer))
+			{
+				quotationRequests = quotationRequests.Where(r => r.CustomerId == userId && r.Status == SD.ManagerApproved).ToList();
+			}
+			/*else if(User.IsInRole(SD.Role_Sales))
+			{
+				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
+			}*/
+			
+			return View(quotationRequests);
+        }
+
+    }
 }
