@@ -1,10 +1,8 @@
 ﻿using JewelryProductionOrder.Models;
-using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
-using SWP391.Controllers;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
@@ -89,10 +87,10 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.ProductionRequest.Update(req);
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved";
-            if (redirectRequest is null)
-                return RedirectToAction("Index", "Home");
-            return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-        }
+			if (redirectRequest is null)
+				return RedirectToAction("Index", "Home");
+			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+		}
 
 		//public IActionResult Manufacture(int jId)
 		//{

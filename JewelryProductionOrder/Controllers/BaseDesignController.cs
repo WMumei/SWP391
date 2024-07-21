@@ -1,10 +1,8 @@
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
-using System.Diagnostics;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
@@ -19,7 +17,7 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork = unitOfWork;
 			_webHostEnvironment = hostEnvironment;
 		}
-		[Authorize(Roles=$"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
 		public IActionResult Create()
 		{
 			BaseDesign obj = new BaseDesign
