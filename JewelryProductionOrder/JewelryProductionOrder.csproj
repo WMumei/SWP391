@@ -10,20 +10,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
+    <Compile Remove="Repositories\**" />
     <Compile Remove="Views\ProductionRequestDetail\**" />
     <Compile Remove="Views\SpecificProductionRequest\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Repositories\**" />
     <Content Remove="Views\ProductionRequestDetail\**" />
     <Content Remove="Views\SpecificProductionRequest\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Repositories\**" />
     <EmbeddedResource Remove="Views\ProductionRequestDetail\**" />
     <EmbeddedResource Remove="Views\SpecificProductionRequest\**" />
+    <None Remove="Models\**" />
+    <None Remove="Repositories\**" />
     <None Remove="Views\ProductionRequestDetail\**" />
     <None Remove="Views\SpecificProductionRequest\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DB Static\" />
-    <Folder Include="Models\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
