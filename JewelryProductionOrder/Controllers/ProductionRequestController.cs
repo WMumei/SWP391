@@ -36,6 +36,11 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusRequestDelayedPayment);
+			if (request != null)
+			{
+				OrderConfirmation(request.Id);
+			}
             return View("Index", obj);
         }
 
@@ -203,13 +208,13 @@ namespace SWP391.Controllers
 		public IActionResult Payment(int pId)
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId);
-			if (productionRequest.SessionId is null)
+			if (productionRequest.PaymentIntentId is null)
 			{
 				var domain = "https://localhost:7133/";
 				var options = new SessionCreateOptions
 				{
 					SuccessUrl = domain,
-					CancelUrl = domain + "customer/ProductionRequest/Index",
+					CancelUrl = domain,
 					LineItems = new List<SessionLineItemOptions>(),
 					Mode = "payment",
 				};
@@ -248,6 +253,7 @@ namespace SWP391.Controllers
 				var service = new SessionService();
 				Session session = service.Create(options);
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusRequestDelayedPayment);
 				_unitOfWork.Save();
 				Response.Headers.Add("Location", session.Url);
 
@@ -264,7 +270,7 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPending, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusRequestDelayedPayment, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");
