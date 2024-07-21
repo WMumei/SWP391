@@ -68,7 +68,7 @@
 			<br />
 
 
-			@if (Model.Status != SD.StatusRequestDone || Model.Status != SD.StatusConfirmDelivered)
+			@if (Model.Status != SD.StatusRequestDone && Model.Status != SD.StatusConfirmDelivered)
 
 			{
 				<h3>Please confirm your order after receiving and checking order with the policies below</h3>

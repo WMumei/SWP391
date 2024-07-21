@@ -117,5 +117,35 @@ namespace SWP391.Controllers
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
 		}
 
+        public IActionResult DeleteGemstone(MaterialSetVM vm, int gemDeleteId)
+        {
+			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == gemDeleteId);
+			materialSet.Gemstones.Remove(gemstone);
+			_unitOfWork.MaterialSet.Update(materialSet);
+			_unitOfWork.Save();
+			
+			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+		}
+
+		public IActionResult DeleteMaterial(MaterialSetVM vm, int materialDeleteId)
+		{
+			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+			Material material = _unitOfWork.Material.Get(g => g.Id == materialDeleteId);
+			materialSet.Materials.Remove(material);
+			_unitOfWork.MaterialSet.Update(materialSet);
+			_unitOfWork.Save();
+			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+		}		
+		public IActionResult EditMaterial(MaterialSetVM vm, decimal weight, int materialEditId)
+		{
+			//MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+			//Material material = _unitOfWork.Material.Get(m => m.Id == materialEditId);
+			MaterialSetMaterial join = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == vm.MaterialSet.Id && m.MaterialId == materialEditId);
+			join.Weight = weight;
+			_unitOfWork.MaterialSetMaterial.Update(join);
+			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+		}
+
 	}
 }
