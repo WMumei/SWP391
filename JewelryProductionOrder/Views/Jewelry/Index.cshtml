@@ -1,36 +1,6 @@
 ﻿@model List<Jewelry>
 
 <form method="post">
-	@*
-	<div>
-		<div>
-			<h2>View Jewelry</h2>
-			<hr />
-		</div>
-		<table class="table table-bordered table-striped fs-6 fw-normal">
-			<thead>
-				<tr class="fw-normal">
-					<th>Id</th>
-					<th>Created At</th>
-					<th>Name</th>
-					<th width="15%">Description</th>
-					 <th>Status</th> 
-					<th>Materials</th>
-					<th>Quotation</th>
-					<th>Design</th>
-					<th>Manufacture</th>
-					<th>Deliver</th>
-					@*                     <th width="13%">Image</th>
-					<th>Customer</th>
-					<th>Staffs</th>
-					<th>Production Request</th>
-					<th>Warranty Card</th> 
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
-				{
-					*@
 	<div>
 		<div>
 			<h2>View Jewelry</h2>
