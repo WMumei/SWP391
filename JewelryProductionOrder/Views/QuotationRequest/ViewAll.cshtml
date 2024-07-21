@@ -30,7 +30,12 @@
 					<td>@obj.Id</td>
 					<td>@obj.CreatedAt</td>
 					<td>@obj.Status</td>
-					<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+						@if (obj.Status == SD.StatusPending)
+						{
+							
+							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+						}
+
 				</tr>
 			}
 		</tbody>

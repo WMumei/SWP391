@@ -112,6 +112,8 @@ namespace SWP391.Controllers
 		public IActionResult ManagerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (req.Status == SD.StatusDiscontinued) return NotFound();
+
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is null)
@@ -130,6 +132,8 @@ namespace SWP391.Controllers
 		public IActionResult ManagerDisapprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (req.Status == SD.StatusDiscontinued) return NotFound();
+
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is null)
@@ -149,6 +153,8 @@ namespace SWP391.Controllers
 		public IActionResult CustomerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (req.Status == SD.StatusDiscontinued) return NotFound();
+
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is not null)
@@ -181,7 +187,7 @@ namespace SWP391.Controllers
 			}
 			_unitOfWork.ProductionRequest.Update(request);
 			_unitOfWork.Save();
-			TempData["Success"] = "Quotation is approved";
+			TempData["Success"] = "Approved!";
 
 			return RedirectToAction("Details", new { id = req.Id });
 
@@ -191,6 +197,7 @@ namespace SWP391.Controllers
 		public IActionResult CustomerDisapprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			if (req.Status == SD.StatusDiscontinued) return NotFound();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (req is not null)
