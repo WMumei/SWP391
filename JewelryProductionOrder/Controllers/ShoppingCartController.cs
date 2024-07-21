@@ -117,7 +117,7 @@ namespace JewelryProductionOrder.Controllers
 
 			var salesStaffIds = await GetSalesStaffIdsAsync();
 			var assignedStaffId = salesStaffIds[currentSalesStaffIndex];
-			
+			ShoppingCartVM.ProductionRequest.SalesStaffId = assignedStaffId;
 			_unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
 			_unitOfWork.Save();
 			int quantity = 0;

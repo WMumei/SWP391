@@ -30,7 +30,7 @@
 					<td>@obj.Id</td>
 					<td>@obj.CreatedAt</td>
 					<td>@obj.Status</td>
-						@if (obj.Status == SD.StatusPending)
+						@if (obj.Status == SD.StatusPending || obj.Status == SD.ManagerApproved)
 						{
 							
 							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>

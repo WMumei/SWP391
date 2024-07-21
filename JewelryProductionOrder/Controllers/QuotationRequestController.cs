@@ -16,7 +16,7 @@ namespace SWP391.Controllers
 
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		
+
 		public QuotationRequestController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
@@ -39,7 +39,8 @@ namespace SWP391.Controllers
 			else if (User.IsInRole(SD.Role_Manager))
 			{
 				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
-			} else
+			}
+			else
 			{
 				return NotFound();
 			}
@@ -51,7 +52,7 @@ namespace SWP391.Controllers
 		{
 			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
 			if (request is null) return NotFound();
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.Jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
 				QuotationRequest = request,
@@ -88,9 +89,15 @@ namespace SWP391.Controllers
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == vm.MaterialSet.Id);
 			vm.QuotationRequest.MaterialSetId = materialSet.Id;
 			vm.QuotationRequest.JewelryId = vm.Jewelry.Id;
+
 			vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
 
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
+			_unitOfWork.Save();
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest");
+			jewelry.ProductionRequest.Status = SD.StatusQuotationing;
+			_unitOfWork.ProductionRequest.Update(jewelry.ProductionRequest);
 			_unitOfWork.Save();
 
 			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
@@ -102,7 +109,7 @@ namespace SWP391.Controllers
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
-			TempData["success"] = "Created"; 
+			TempData["success"] = "Created";
 			if (redirectRequest is not null)
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 			return RedirectToAction(nameof(ViewAll), new { jId = vm.Jewelry.Id });
@@ -120,11 +127,11 @@ namespace SWP391.Controllers
 			{
 				return NotFound();
 			}
-				req.ManagerId = userId;
-				req.Status = SD.ManagerApproved;
+			req.ManagerId = userId;
+			req.Status = SD.ManagerApproved;
 			_unitOfWork.QuotationRequest.Update(req);
-				_unitOfWork.Save();
-				TempData["Success"] = "Approved!";
+			_unitOfWork.Save();
+			TempData["Success"] = "Approved!";
 			return RedirectToAction("Details", new { id = req.Id });
 		}
 
@@ -170,22 +177,22 @@ namespace SWP391.Controllers
 			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
 
-			ProductionRequest request = _unitOfWork.ProductionRequest.Get(p => p.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(p => p.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries", tracked: true);
 			bool completed = true;
 			foreach (var j in request.Jewelries)
 			{
 				if (j.Status != SD.StatusQuotationApproved)
 				{
 					completed = false;
-					break;	
+					break;
 				}
 			}
 			if (completed)
 			{
 				request.Status = SD.StatusAllQuotationApproved;
-				
+
 			}
-			_unitOfWork.ProductionRequest.Update(request);
+			//_unitOfWork.ProductionRequest.Update(request);
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved!";
 
@@ -241,17 +248,17 @@ namespace SWP391.Controllers
 			var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if(User.IsInRole(SD.Role_Customer))
+			if (User.IsInRole(SD.Role_Customer))
 			{
-				quotationRequests = quotationRequests.Where(r => r.CustomerId == userId && r.Status == SD.ManagerApproved).ToList();
+				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved).ToList();
 			}
 			/*else if(User.IsInRole(SD.Role_Sales))
 			{
 				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
 			}*/
-			
-			return View(quotationRequests);
-        }
 
-    }
+			return View(quotationRequests);
+		}
+
+	}
 }

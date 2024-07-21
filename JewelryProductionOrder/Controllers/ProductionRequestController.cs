@@ -81,6 +81,7 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return View("Deliver", productionRequest);
         }
+        [Authorize(SD.Role_Sales)]
         public IActionResult Delivered(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
@@ -117,13 +118,11 @@ namespace SWP391.Controllers
 		public IActionResult CustomerViewDelivery(int id)
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff").ToList();
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//var saleStaff=_unitOfWork.User.Get(u=>u.Id==userId);
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
+			
                
 
-			return View("CustomerViewDelivery", productionRequest);
+			return View("CustomerViewDelivery", jewelries);
 		}
 		//[Authorize(Roles = SD.Role_Customer)]
         public IActionResult Confirm(int id)

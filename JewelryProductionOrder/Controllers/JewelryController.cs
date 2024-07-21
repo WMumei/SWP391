@@ -133,11 +133,13 @@ namespace JewelryProductionOrder.Controllers
 			//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
 			//if (jewelry is not null)
 			//{
-			//    jewelry.ProductionStaffId = productionStaff.Id;
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			jewelry.ProductionStaffId = userId;
 			//    jewelry.Status = $"Manufactured by {productionStaff.Name}";
 			//}
 			jewelry.Status = SD.StatusManufactured;
-			_unitOfWork.Jewelry.Update(jewelry);
+			//_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
 
 			ProductionRequest request = _unitOfWork.ProductionRequest.Get(p => p.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");

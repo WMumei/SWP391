@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
+	[Authorize]
 	public class JewelryDesignController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -29,6 +30,7 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = SD.Role_Design)]
 		public IActionResult Create(JewelryDesign obj, IFormFile? file, int? redirectRequest)
 		{
 			obj.CreatedAt = DateTime.Now;
@@ -81,6 +83,10 @@ namespace JewelryProductionOrder.Controllers
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == design.JewelryId);
 			jewelry.Status = SD.DesignApproved;
 			_unitOfWork.Jewelry.Update(jewelry);
+			_unitOfWork.Save();
+			ProductionRequest req = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
+			req.Status = SD.DesignApproved;
+			_unitOfWork.ProductionRequest.Update(req);
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved";
             if (redirectRequest is null)

@@ -16,6 +16,7 @@
 				<th>Name</th>
 				<th>Phone</th>
 				<th>Email</th>
+				<th>Status</th>
 				<th>Jewelries</th>
 				@* @if(!User.IsInRole(SD.Role_Customer))
 				{
@@ -35,17 +36,21 @@
 			{
 				if (obj.Status == SD.StatusCancelled)
 				{
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-                    <td><span style="color:red">CANCELED</span></td>
+					<tr>
+
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><span style="color:red">CANCELED</span></td>
+					</tr>
 				}
 				else
 				{
@@ -56,6 +61,7 @@
 						<td>@obj.ContactName</td>
 						<td>@obj.PhoneNumber</td>
 						<td>@obj.Email</td>
+						<td>@obj.Status</td>
 						@* 					<td><a asp-controller="ProductionRequestDetail" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
 
                 

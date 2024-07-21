@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240721175116_EditSeed")]
+    partial class EditSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,7 +157,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 1,
                             Name = "3 carat Diamond",
                             Price = 2000m,
-                            Weight = 3m
+                            Weight = 2m
                         },
                         new
                         {
@@ -169,20 +172,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Name = "Sapphire",
                             Price = 1800m,
                             Weight = 1.8m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "2 carat Diamond",
-                            Price = 1800m,
-                            Weight = 2m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "1 carat Diamond",
-                            Price = 1000m,
-                            Weight = 1m
                         });
                 });
 
