@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.Extensions.Options;
 using Models.Repositories.Repository.IRepository;
 using Stripe.Checkout;
 using System.Security.Claims;
@@ -201,22 +202,9 @@ namespace SWP391.Controllers
 
 		public IActionResult Payment(int pId)
 		{
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId, includeProperties: "Jewelries");
-			if (productionRequest.Status != SD.StatusRequestDelayedPayment)
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId);
+			if (productionRequest.SessionId is null)
 			{
-				var sessionService = new SessionService();
-				var sessionS = sessionService.Get(productionRequest.SessionId);
-				if (sessionS.PaymentStatus.ToLower() == "paid")
-				{
-					_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, sessionS.Id, sessionS.PaymentIntentId);
-					_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusRequestDelayedPayment, SD.StatusPaid);
-					_unitOfWork.Save();
-				}
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
 				var domain = "https://localhost:7133/";
 				var options = new SessionCreateOptions
 				{
@@ -260,56 +248,69 @@ namespace SWP391.Controllers
 				var service = new SessionService();
 				Session session = service.Create(options);
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusPaid);
 				_unitOfWork.Save();
 				Response.Headers.Add("Location", session.Url);
 
 				return new StatusCodeResult(303);
 			}
+			return RedirectToAction(nameof(OrderConfirmation), new {id = pId });
 		}
 
-		//public IActionResult Create()
-		//{
-		//    return View();
-		//}
+		public IActionResult OrderConfirmation(int id)
+		{
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+			var service = new SessionService();
+			Session session = service.Get(productionRequest.SessionId);
+			if (session.PaymentStatus.ToLower() == "paid")
+			{
+				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPending, SD.StatusPaid);
+				_unitOfWork.Save();
+			}
+			return RedirectToAction("CustomerView");
+		}
+			//public IActionResult Create()
+			//{
+			//    return View();
+			//}
 
-        //[HttpPost]
-        //public IActionResult Create(ProductionRequest obj)
-        //{
-        //    obj.CreatedAt = DateTime.Now;
+			//[HttpPost]
+			//public IActionResult Create(ProductionRequest obj)
+			//{
+			//    obj.CreatedAt = DateTime.Now;
 
-        //    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-        //    {
-        //        ProductionRequest = obj,
-        //        Customer = new User()
-        //    };
-        //    return View("Checkout", ShoppingCartVM);
-        //}
-        //public IActionResult Checkout()
-        //{
-        //    var claimsIdentity = (ClaimsIdentity)User.Identity;
-        //    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-        //    {
-        //        ProductionRequest = new ProductionRequest { 
-        //            //Quantity = 1 
-        //        },
-        //        Customer = _unitOfWork.User.Get(User => User.Id == userId)
-        //    };
-        //    return View(ShoppingCartVM);
-        //}
+			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
+			//    {
+			//        ProductionRequest = obj,
+			//        Customer = new User()
+			//    };
+			//    return View("Checkout", ShoppingCartVM);
+			//}
+			//public IActionResult Checkout()
+			//{
+			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
+			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
+			//    {
+			//        ProductionRequest = new ProductionRequest { 
+			//            //Quantity = 1 
+			//        },
+			//        Customer = _unitOfWork.User.Get(User => User.Id == userId)
+			//    };
+			//    return View(ShoppingCartVM);
+			//}
 
-        //[HttpPost]
-        //public IActionResult Checkout(ShoppingCartVM ShoppingCartVM)
-        //{
-        //    var claimsIdentity = (ClaimsIdentity)User.Identity;
-        //    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //    ShoppingCartVM.ProductionRequest.CustomerId = userId;
-        //    ShoppingCartVM.ProductionRequest.Address = ShoppingCartVM.Customer.Address;
-        //    ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-        //    _unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
-        //    _unitOfWork.Save();
-        //    return RedirectToAction("CustomerView");
-        //}
-    }
+			//[HttpPost]
+			//public IActionResult Checkout(ShoppingCartVM ShoppingCartVM)
+			//{
+			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
+			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			//    ShoppingCartVM.ProductionRequest.CustomerId = userId;
+			//    ShoppingCartVM.ProductionRequest.Address = ShoppingCartVM.Customer.Address;
+			//    ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
+			//    _unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
+			//    _unitOfWork.Save();
+			//    return RedirectToAction("CustomerView");
+			//}
+		}
 }
