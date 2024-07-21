@@ -203,10 +203,12 @@ namespace SWP391.Controllers
 		{
             //var domain = "https://localhost:7133/";
             var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-			var options = new SessionCreateOptions
+            //var domain = "https://jpo.somee.com/";
+
+            var options = new SessionCreateOptions
 			{
 				SuccessUrl = domain,
-				CancelUrl = domain + "customer/ProductionRequest/Index",
+				CancelUrl = domain + "ProductionRequest/CustomerView",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment",
 			};

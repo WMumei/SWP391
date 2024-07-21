@@ -12,6 +12,7 @@
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
         <h2>Customer Information:</h2>
+        <label hidden asp-for="@Model.Customer.Id" class="labels"></label>
         <div class="form-floating">
             <div class="first-col">
                 <label asp-for="@Model.Customer.Name" class="labels"></label>

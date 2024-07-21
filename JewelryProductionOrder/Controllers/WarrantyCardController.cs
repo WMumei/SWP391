@@ -30,7 +30,7 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Create(int jId, int? redirectRequest)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "Customer,MaterialSet,QuotationRequests");
-			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.Customer.Id);
 			if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
 			{
 				TempData["Error"] = "Please create Material Set and Quotation Request!"; 
@@ -61,8 +61,8 @@ namespace JewelryProductionOrder.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id);
-			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id,includeProperties: "Customer");
+			var customer = _unitOfWork.User.Get(u => u.Id == jewelry.Customer.Id);
 
 			vm.WarrantyCard.SalesStaffId = userId;
 			vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
