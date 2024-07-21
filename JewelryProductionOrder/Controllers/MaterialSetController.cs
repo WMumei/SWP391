@@ -4,12 +4,13 @@ using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.Repositories.Repository.IRepository;
 
 namespace SWP391.Controllers
 {
-    [Authorize]
-    public class MaterialSetController : Controller
+	[Authorize(Roles = SD.Role_Sales)]
+	public class MaterialSetController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         public MaterialSetController(IUnitOfWork unitOfWork)
@@ -75,6 +76,7 @@ namespace SWP391.Controllers
 			}
 			_unitOfWork.MaterialSet.Update(materialSet);
 			_unitOfWork.Save();
+			TempData["success"] = "Created";
 
 			if (redirectRequest is not null)
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
@@ -90,10 +92,13 @@ namespace SWP391.Controllers
         {
 			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
 			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == vm.Gemstone.Id, tracked: true);
+
 			materialSet.Gemstones.Add(gemstone);
+
 
             _unitOfWork.MaterialSet.Update(materialSet);
             _unitOfWork.Save();
+			TempData["success"] = "Added";
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
         }
 
@@ -102,50 +107,69 @@ namespace SWP391.Controllers
 		{
 			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
 			Material material = _unitOfWork.Material.Get(m => m.Id == vm.Material.Id, tracked: true);
-			materialSet.Materials.Add(material);
-			_unitOfWork.MaterialSet.Update(materialSet);
-			var weight = Convert.ToDecimal(vm.Weight);
-            materialSet.MaterialSetMaterials.Where(s => s.MaterialId == material.Id).FirstOrDefault().Weight = weight;
+			var ids = materialSet.Materials.Select(m => m.Id).ToList();	
+			if (!ids.Contains(material.Id))
+			{
+				materialSet.Materials.Add(material);
+				_unitOfWork.MaterialSet.Update(materialSet);
+				var weight = Convert.ToDecimal(vm.Weight);
+				materialSet.MaterialSetMaterials.Where(s => s.MaterialId == material.Id).FirstOrDefault().Weight = weight;
+				TempData["success"] = "Added";
+			}
+			else
+			{
+				TempData["error"] = "This material already exists in Set.";
+			}
+
 			_unitOfWork.MaterialSet.Update(materialSet);
 			_unitOfWork.Save();
 
-   //         MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(s => s.MaterialId == material.Id && s.MaterialSetId == materialSet.Id);
-   //         materialSetMaterial.Weight = weight;
-
-			//_unitOfWork.MaterialSetMaterial.Update(materialSetMaterial);
-			//_unitOfWork.Save();
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
 		}
 
-        public IActionResult DeleteGemstone(MaterialSetVM vm, int gemDeleteId)
+		public IActionResult DeleteGemstone(int gemDeleteId, int materialSetId)
         {
-			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(s => s.Id == materialSetId, includeProperties:"Gemstones");
 			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == gemDeleteId);
 			materialSet.Gemstones.Remove(gemstone);
 			_unitOfWork.MaterialSet.Update(materialSet);
 			_unitOfWork.Save();
-			
-			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
-		}
 
-		public IActionResult DeleteMaterial(MaterialSetVM vm, int materialDeleteId)
+			//TempData["success"] = "Deleted";
+			//return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+			return Json(new { message = "Deleted" });
+
+		}
+		//[HttpPost]
+
+		public IActionResult DeleteMaterial(int materialId, int materialSetId)
 		{
-			MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
-			Material material = _unitOfWork.Material.Get(g => g.Id == materialDeleteId);
-			materialSet.Materials.Remove(material);
-			_unitOfWork.MaterialSet.Update(materialSet);
+			MaterialSetMaterial obj = _unitOfWork.MaterialSetMaterial.Get(u => u.MaterialSetId == materialSetId && u.MaterialId == materialId);
+			_unitOfWork.MaterialSetMaterial.Remove(obj);
 			_unitOfWork.Save();
-			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
-		}		
-		public IActionResult EditMaterial(MaterialSetVM vm, int materialEditId)
+
+			//TempData["success"] = "Deleted";
+			return Json(new { message = "Deleted" });
+
+			//return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+		}
+		//public IActionResult EditMaterial(MaterialSetVM vm, int materialEditId)
+		//{
+		//	return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+
+		//}
+		//[HttpPost]
+		public IActionResult EditMaterial(int materialId, int materialSetId, decimal weight, int jewelryId)
 		{
-			//MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
-			//Material material = _unitOfWork.Material.Get(m => m.Id == materialEditId);
-			MaterialSetMaterial join = vm.MaterialSet.MaterialSetMaterials.Where(m => m.MaterialSetId == vm.MaterialSet.Id && m.MaterialId == materialEditId).FirstOrDefault();
-			//join.Weight = weight;
+
+			MaterialSetMaterial join = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSetId && m.MaterialId == materialId);
+			join.Weight = weight;
+
 			_unitOfWork.MaterialSetMaterial.Update(join);
 			_unitOfWork.Save();
-			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+			//TempData["success"] = "Edited";
+
+			return Json(new { message = "Edited"});
 		}
 
 		private decimal GetPrice(int materialSetId)

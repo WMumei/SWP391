@@ -19,7 +19,7 @@
 
 					</div>
 					<div class="col-2 my-2">
-						<button  type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
+						<button type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
 					</div>
 				</div>
 				<div class="row">
@@ -66,7 +66,7 @@
 							<td>@gemstone.Weight</td>
 							<td>@gemstone.Price</td>
 							<td>
-								<button type="button" id="submitAddMaterial" class="btn btn-danger form-control">Delete</button>
+								<button onclick="@($"deleteGemstone({gemstone.Id},{Model.MaterialSet.Id})")"  type="button" class="btn btn-danger form-control">Delete</button>
 
 							</td>
 						</tr>
@@ -94,13 +94,19 @@
 					{
 						var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
 						<tr>
-							<td>@material.Name</td>
-							<td><input asp-for="@join.Weight"></input></td>
-							<td>@material.Price</td>
-							<td>@(join.Weight * material.Price)</td>
-							<td>
-								<button asp-route-materialEditId="@join.MaterialId" type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Edit</button>
-								<button type="button" id="submitAddMaterial" class="btn btn-danger form-control">Delete</button>
+							<td>@material?.Name</td>
+							<td><input id="@($"join-{join.MaterialId}-{join.MaterialSetId}")" name="weight" value="@join.Weight" /></td>
+							<td>@material?.Price</td>
+							<td>@(join.Weight * material?.Price)</td>
+							<td class="d-flex gap-2">
+								@* <form asp-controller="MaterialSet" asp-action="EditMaterial" method="post">
+									<input type="hidden" name="materialSetId" value="@Model.MaterialSet.Id" />
+									 <input type="hidden" name="weight" value="@join.Weight" /> 
+									<input type="hidden" name="jewelryId" value="@Model.Jewelry.Id" />
+									<input type="hidden" name="materialEditId" value="@join.MaterialId" />
+								</form> *@
+								<button type="submit" onclick="@($"callEditMaterial({join.MaterialId},{Model.MaterialSet.Id},{Model.Jewelry.Id})")" class="btn btn-secondary form-control btn-sm">Save</button>
+								<button type="button" onclick="@($"callDeleteMaterial({join.MaterialId},{Model.MaterialSet.Id})")" class="btn btn-danger form-control btn-sm">Delete</button>
 
 							</td>
 						</tr>
@@ -109,8 +115,7 @@
 			</table>
 		</div>
 	}
-	<div class="col-6">
-
+	<div class="col-md-3">
 		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
 
@@ -123,16 +128,62 @@
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 	<script>
+		let form = document.getElementById('materialForm');
 		document.getElementById('submitAddGemstone').addEventListener('click', function () {
-			var form = document.getElementById('materialForm');
-			form.action = '@Url.Action("AddGemstone", "MaterialSet")'; // Adjusted to MaterialSetController and AddGemstone action
+			form.action = '@Url.Action("AddGemstone", "MaterialSet")';
 			form.submit();
 		});
-
 		document.getElementById('submitAddMaterial').addEventListener('click', function () {
-			var form = document.getElementById('materialForm');
-			form.action = '@Url.Action("AddMaterial", "MaterialSet")'; // Adjusted to MaterialSetController and AddMaterial action
+
+			form.action = '@Url.Action("AddMaterial", "MaterialSet")';
 			form.submit();
 		});
+		// document.getElementById('submitDeleteGemstone').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("DeleteGemstone", "MaterialSet")';
+		// 	form.submit();
+		// });
+		// document.getElementById('submitDeleteMaterial').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("DeleteMaterial", "MaterialSet")';
+		// 	form.submit();
+		// });
+		// document.getElementById('submitEditMaterial').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
+		// 	form.submit();
+		// });
+
+		const callEditMaterial = (materialId, materialSetId, jewelryId) => {
+			const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
+			const weight = weightInput.value;
+			fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
+				then(data => data.json()).
+				then(e => {
+					toastr.success(e.message);
+					// const myTimeout = setTimeout(myGreeting, 100);
+					location.reload();
+				})
+		};
+		const deleteGemstone = (gemstoneId, materialSetId) => {
+			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId${materialSetId}`).
+			then(data => data.json()).
+			then(e => {
+				toastr.success(e.message);
+				// const myTimeout = setTimeout(myGreeting, 100);
+				location.reload();
+			});
+
+		}
+
+			const callDeleteMaterial = (materialId, materialSetId) => {
+				fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
+					then(data => data.json()).
+					then(e => {
+						toastr.success(e.message);
+						// Optionally, refresh the page or update the UI accordingly
+						location.reload();
+					});
+			}
 	</script>
 }
