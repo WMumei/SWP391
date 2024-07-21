@@ -1,60 +1,61 @@
-﻿@* @model List<MaterialSet>
+﻿@model MaterialSetVM
 
-<div class="container">
-	<div class="row">
-		<div class="col-6">
-			<h2>View Material</h2>
-
-        </div>
-
+<div class="container" id="materialView">
+    <div class="caption-top row">
+        <h2>Material Set for Jewelry: @Model.Jewelry.Name</h2>
     </div>
-    <table class ="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th></th>
-                <th></th>
-                <th>Quantity</th>
-                <th>Customer</th>
-                <th>Staffs</th>
-                <th>Quotation</th>
-                <th>Jewelry</th>
-                <th>Design</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var obj in Model.OrderByDescending(u => u.CreatedAt))
-            {
-            <tr>
-                    
-                <td>@obj.Id</td>
-                <td>@obj.CreatedAt</td>
-                <td>@obj.Quantity</td>
-                <td>@obj?.Customer?.Name</td>
-				@if (obj.SalesStaff is not null)
-				{
-					<td>@obj.SalesStaff.Name</td>
-				}
-				else
-				{
-					<td><a asp-controller="MaterialSet" asp-action="TakeRequest" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Take</a></td>
-				}
-                @if (obj.QuotationRequest is not null)
-                {
-                    <td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
-                }
-                else
-                {
-                    <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                }
-                    <td><a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                 @if (obj.Jewelry is not null)
-                {
-                    <td>@(obj.Jewelry.Name)</td>
-                } 
-            </tr>
-            }
-        </tbody>
-    </table>
+    @if (Model.MaterialSet is not null)
+    {
+        <div class="col-12 py-2">
+            <h3>Gemstones</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Weight (carat)</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+                    {
+                        <tr>
+                            <td>@gemstone.Name</td>
+                            <td>@gemstone.Weight</td>
+                            <td>@gemstone.Price</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 py-2">
+            <h3>Materials</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Weight (g)</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
+                    {
+                        var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
+                        <tr>
+                            <td>@material?.Name</td>
+                            <td>@join.Weight</td>
+                            <td>@material?.Price</td>
+                            <td>@(join.Weight * material?.Price)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No materials or gemstones have been added to this set.</p>
+    }
 </div>
-        <!-- <div asp-validation-summary="All"></div> -->
-        *@

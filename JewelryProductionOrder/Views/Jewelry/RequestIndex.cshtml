@@ -42,11 +42,11 @@
 
 					@if (obj.MaterialSet is not null)
 					{
-						<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
+						<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-jId="@obj.Id" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
 					}
 					else if (User.IsInRole(SD.Role_Sales))
 					{
-						<td><a asp-controller="MaterialSet" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+						<td><a asp-controller="MaterialSet" asp-action="Upsert" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
 					}
 					else
 					{

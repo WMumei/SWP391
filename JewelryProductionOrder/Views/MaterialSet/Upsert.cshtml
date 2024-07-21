@@ -176,14 +176,14 @@
 
 		}
 
-			const callDeleteMaterial = (materialId, materialSetId) => {
-				fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
-					then(data => data.json()).
-					then(e => {
-						toastr.success(e.message);
-						// Optionally, refresh the page or update the UI accordingly
-						location.reload();
-					});
-			}
+		const callDeleteMaterial = (materialId, materialSetId) => {
+			fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
+				then(data => data.json()).
+				then(e => {
+					toastr.success(e.message);
+					// Optionally, refresh the page or update the UI accordingly
+					location.reload();
+				});
+		}
 	</script>
 }
