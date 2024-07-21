@@ -11,74 +11,82 @@ using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
-    public class QuotationRequestController : Controller
+	[Authorize]
+	public class QuotationRequestController : Controller
 
-    {
+	{
 		private readonly IUnitOfWork _unitOfWork;
+		
 		public QuotationRequestController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
 		}
-        public IActionResult Index(int jId)
-        {
-            List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll().Where(r => r.JewelryId == jId).ToList();
-            bool checkStatus = requests != null && requests.Exists(r => r.Status == SD.StatusPending);
-            bool checkCancel = requests != null && requests.Exists(r => r.Status == SD.StatusCancelled);
-            CheckQuotationVM vm = new CheckQuotationVM
-            {
-                QuotationRequests = requests,
-                checkStatus = checkStatus,
-				checkCancel = checkCancel
-            };
-            return View(vm);
-        }
-
-        public IActionResult Details(int jId, bool checkRedirect)
-        {
-			if (checkRedirect is false)
+		public IActionResult Index(int jId)
+		{
+			List<QuotationRequest> requests;
+			if (User.IsInRole(SD.Role_Customer))
 			{
-                QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == jId);
-                Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == request.JewelryId, includeProperties: "MaterialSet");
-                MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
-                QuotationRequestVM vm = new QuotationRequestVM
-                {
-                    QuotationRequest = request,
-                    Jewelry = jewelry,
-                    MaterialSet = materialSet
-                };
-                return View(vm);
-            }
-			else
-			{
-				QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
-				Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
-				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
-				QuotationRequestVM vm = new QuotationRequestVM
-				{
-					QuotationRequest = request,
-					Jewelry = jewelry,
-					MaterialSet = materialSet
-				};
-				return View(vm);
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId && r.CustomerId == userId && r.Status == SD.ManagerApproved, includeProperties: "Jewelry").ToList();
 			}
-        }
+			else if (User.IsInRole(SD.Role_Sales))
+			{
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId && r.SalesStaffId == userId, includeProperties: "Jewelry").ToList();
+			}
+			else if (User.IsInRole(SD.Role_Manager))
+			{
+				requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			} else
+			{
+				return NotFound();
+			}
 
-        public IActionResult Create(int jId)
+			return View(requests);
+		}
+
+		// Get all quotation of a jewelry
+		public IActionResult JewelryView(int jId)
+		{
+			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			if (requests is null) return NotFound();
+
+			return View("Index", requests);
+		}
+
+		public IActionResult Details(int jId)
+		{
+			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId, includeProperties: "Jewelry");
+			if (request is null) return NotFound();
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.Jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
+			QuotationRequestVM vm = new QuotationRequestVM
+			{
+				QuotationRequest = request,
+				Jewelry = request.Jewelry,
+				MaterialSet = materialSet
+			};
+			return View(vm);
+
+		}
+
+		public IActionResult Create(int jId)
 		{
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials");
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
 				Jewelry = jewelry,
 				QuotationRequest = new QuotationRequest { },
-				MaterialSet = jewelry.MaterialSet
+				MaterialSet = materialSet
 			};
 			return View(vm);
 		}
 
 		[HttpPost]
 		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult Create(QuotationRequestVM vm)
+		public IActionResult Create(QuotationRequestVM vm, int? redirectRequest)
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -92,14 +100,18 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			QuotationRequest oldRequest = _unitOfWork.QuotationRequest.Get(r => r.Id < vm.QuotationRequest.Id
-			&& (r.Status == SD.StatusPending));
+			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
+			QuotationRequest oldRequest = _unitOfWork.QuotationRequest
+				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
+				.OrderByDescending(r => r.CreatedAt)
+				.FirstOrDefault();
 			if (oldRequest is not null)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
-
+			if (redirectRequest is not null)
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 			return RedirectToAction("Index", new { jId = vm.Jewelry.Id });
 		}
 		[Authorize(Roles = SD.Role_Manager)]
@@ -108,31 +120,37 @@ namespace SWP391.Controllers
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
+			if (req is null)
 			{
+				return NotFound();
+			}
 				req.ManagerId = userId;
 				req.Status = SD.ManagerApproved;
-			}
-			_unitOfWork.Save();
-			return RedirectToAction("Details", new { jId = req.JewelryId});
+			_unitOfWork.QuotationRequest.Update(req);
+				_unitOfWork.Save();
+				TempData["Success"] = "Approved!";
+			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
-        [Authorize(Roles = SD.Role_Manager)]
+		[Authorize(Roles = SD.Role_Manager)]
 		public IActionResult ManagerDisapprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
+			if (req is null)
 			{
-				req.ManagerId = userId;
-				req.Status = SD.ManagerDisapproved;
+				return NotFound();
 			}
+			req.ManagerId = userId;
+			req.Status = SD.ManagerDisapproved;
+			_unitOfWork.QuotationRequest.Update(req);
 			_unitOfWork.Save();
+			TempData["Success"] = "Disapproved!";
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
-        [Authorize(Roles = SD.Role_Customer)]
+		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id)
 		{
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
@@ -143,48 +161,54 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerApproved;
 			}
+			_unitOfWork.QuotationRequest.Update(req);
 			_unitOfWork.Save();
-            return RedirectToAction("Details", new { jId = req.JewelryId });
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == req.JewelryId);
+			jewelry.Status = SD.StatusQuotationApproved;
+			_unitOfWork.Jewelry.Update(jewelry);
+			_unitOfWork.Save();
+			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 
-        [Authorize(Roles = SD.Role_Customer)]
-        public IActionResult CustomerDisapprove(int id)
-        {
-            QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (req is not null)
-            {
-                req.CustomerId = userId;
-                req.Status = SD.CustomerDisapproved;
-            }
-            _unitOfWork.Save();
-            return RedirectToAction("Details", new { jId = req.JewelryId });
-        }
-        
-        //public bool CheckQuotationStatus(int jId)
-        //{
-        //    QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
-        //    CheckStatusVM vm = new CheckStatusVM
-        //    {
-        //        checkStatus = (request != null && request.Status == "Pending")
-        //    };
-        //    return vm.checkStatus;
-        //}
+		[Authorize(Roles = SD.Role_Customer)]
+		public IActionResult CustomerDisapprove(int id)
+		{
+			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (req is not null)
+			{
+				req.CustomerId = userId;
+				req.Status = SD.CustomerDisapproved;
+			}
+			_unitOfWork.Save();
+			return RedirectToAction("Details", new { jId = req.JewelryId });
+		}
 
-		
-        //[HttpPost,ActionName("Delete")]
-        //public IActionResult DeletePOST(int? id)
-        //{
-        //    QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
-        //    if (quorequest == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _unitOfWork.QuotationRequest.Remove(quorequest);
-        //    _unitOfWork.SaveChanges();
-        //    return RedirectToAction("Index");
+		//public bool CheckQuotationStatus(int jId)
+		//{
+		//    QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.JewelryId == jId);
+		//    CheckStatusVM vm = new CheckStatusVM
+		//    {
+		//        checkStatus = (request != null && request.Status == "Pending")
+		//    };
+		//    return vm.checkStatus;
+		//}
 
-        //}
-    }
+
+		//[HttpPost,ActionName("Delete")]
+		//public IActionResult DeletePOST(int? id)
+		//{
+		//    QuotationRequest quorequest = _unitOfWork.QuotationRequest.Find(id);
+		//    if (quorequest == null)
+		//    {
+		//        return NotFound();
+		//    }
+		//    _unitOfWork.QuotationRequest.Remove(quorequest);
+		//    _unitOfWork.SaveChanges();
+		//    return RedirectToAction("Index");
+
+		//}
+	}
 }

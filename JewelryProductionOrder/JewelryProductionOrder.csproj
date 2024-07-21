@@ -4,35 +4,50 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>99b33947-0c75-4747-b5fc-99aba7a65d51</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\ProductionRequestDetail\**" />
     <Compile Remove="Views\SpecificProductionRequest\**" />
+    <Content Remove="Views\ProductionRequestDetail\**" />
     <Content Remove="Views\SpecificProductionRequest\**" />
+    <EmbeddedResource Remove="Views\ProductionRequestDetail\**" />
     <EmbeddedResource Remove="Views\SpecificProductionRequest\**" />
+    <None Remove="Views\ProductionRequestDetail\**" />
     <None Remove="Views\SpecificProductionRequest\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DB Static\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Views\ProductionRequestDetail\" />
+    <Folder Include="Models\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.6" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
+    <PackageReference Include="Stripe.net" Version="45.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JewelryProductionOrder.DataAccess\JewelryProductionOrder.Repositories.csproj" />
+    <ProjectReference Include="..\..\JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
