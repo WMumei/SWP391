@@ -27,5 +27,23 @@ namespace JewelryProductionOrder.Repositories
         //{
         //    _db.MaterialSets.Where(s => s.Id == id).Include("MaterialSetMaterials").ThenInclude("Material");
         //}
-    }
+
+        public decimal GetTotalPrice(int id)
+        {
+            MaterialSet materialSet = Get(m => m.Id == id, includeProperties: "Materials,MaterialSetMaterials,Gemstones", tracked: true);
+            var materMaterialSetMaterials = materialSet.MaterialSetMaterials;
+            var materials = materialSet.Materials;
+            decimal total = 0;
+            foreach (MaterialSetMaterial join in materMaterialSetMaterials)
+            {
+                var material = materials.FirstOrDefault(m => m.Id == join.MaterialId);
+                total += material.Price * join.Weight;
+            }
+            foreach(Gemstone gemstone in materialSet.Gemstones)
+            {
+                total += gemstone.Price;
+            }
+            return total;
+        }
+	}
 }

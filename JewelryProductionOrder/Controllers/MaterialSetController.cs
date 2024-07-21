@@ -137,14 +137,20 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
 		}		
-		public IActionResult EditMaterial(MaterialSetVM vm, decimal weight, int materialEditId)
+		public IActionResult EditMaterial(MaterialSetVM vm, int materialEditId)
 		{
 			//MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
 			//Material material = _unitOfWork.Material.Get(m => m.Id == materialEditId);
-			MaterialSetMaterial join = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == vm.MaterialSet.Id && m.MaterialId == materialEditId);
-			join.Weight = weight;
+			MaterialSetMaterial join = vm.MaterialSet.MaterialSetMaterials.Where(m => m.MaterialSetId == vm.MaterialSet.Id && m.MaterialId == materialEditId).FirstOrDefault();
+			//join.Weight = weight;
 			_unitOfWork.MaterialSetMaterial.Update(join);
+			_unitOfWork.Save();
 			return RedirectToAction("Create", new { jId = vm.Jewelry.Id });
+		}
+
+		private decimal GetPrice(int materialSetId)
+		{
+			return _unitOfWork.MaterialSet.GetTotalPrice(materialSetId);
 		}
 
 	}

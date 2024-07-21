@@ -8,5 +8,7 @@ namespace JewelryProductionOrder.Repositories.IRepository
     {
         void Update(MaterialSet materialSet);
         void Save();
+
+        decimal GetTotalPrice(int id);    
     }
 }

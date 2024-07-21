@@ -19,7 +19,7 @@
 
 					</div>
 					<div class="col-2 my-2">
-						<button asp-route-gemDeleteId="" type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
+						<button  type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
 					</div>
 				</div>
 				<div class="row">
@@ -55,6 +55,7 @@
 						<th>Name</th>
 						<th>Weight (carat)</th>
 						<th>Price</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -64,6 +65,10 @@
 							<td>@gemstone.Name</td>
 							<td>@gemstone.Weight</td>
 							<td>@gemstone.Price</td>
+							<td>
+								<button type="button" id="submitAddMaterial" class="btn btn-danger form-control">Delete</button>
+
+							</td>
 						</tr>
 					}
 				</tbody>
@@ -94,7 +99,8 @@
 							<td>@material.Price</td>
 							<td>@(join.Weight * material.Price)</td>
 							<td>
-								<button type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Save</button>
+								<button asp-route-materialEditId="@join.MaterialId" type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Edit</button>
+								<button type="button" id="submitAddMaterial" class="btn btn-danger form-control">Delete</button>
 
 							</td>
 						</tr>
