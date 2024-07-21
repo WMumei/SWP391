@@ -19,6 +19,7 @@
         public const string StatusConfirmDelivered = "Confirm Delivered";
 
         public const string StatusRequestDone = "Done";
+        public const string StatusRequestDelayedPayment = "Payment Delayed";
         public const string StatusPaid = "Paid";
 
         public const string StatusManufaturing = "Currently manufacturing";

@@ -180,75 +180,92 @@ namespace SWP391.Controllers
             return RedirectToAction("Index");
         }
 
-		public bool checkPayment(int pId)
-		{
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+		//public bool checkPayment(int pId)
+		//{
+		//	List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
 
-			foreach (Jewelry jewelry in jewelries)
-			{
-				List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
+		//	foreach (Jewelry jewelry in jewelries)
+		//	{
+		//		List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
 
-				bool hasApprovedQuotation = quotations.Any(q => q.Status == SD.CustomerApproved);
+		//		bool hasApprovedQuotation = quotations.Any(q => q.Status == SD.CustomerApproved);
 
-				if (!hasApprovedQuotation)
-				{
-					return false;
-				}
-			}
+		//		if (!hasApprovedQuotation)
+		//		{
+		//			return false;
+		//		}
+		//	}
 
-			return true;
-		}
+		//	return true;
+		//}
 
 		public IActionResult Payment(int pId)
 		{
-			var domain = "https://localhost:7133/";
-			var options = new SessionCreateOptions
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId, includeProperties: "Jewelries");
+			if (productionRequest.Status != SD.StatusRequestDelayedPayment)
 			{
-				SuccessUrl = domain,
-				CancelUrl = domain + "customer/ProductionRequest/Index",
-				LineItems = new List<SessionLineItemOptions>(),
-				Mode = "payment",
-			};
-
-			var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
-
-			if (!jewelries.Any())
-			{
-				return BadRequest("No jewelries found for the given production request.");
-			}
-
-			foreach (var jewelry in jewelries)
-			{
-				//var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
-				var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
-
-				foreach (var quotation in quotations)
+				var sessionService = new SessionService();
+				var sessionS = sessionService.Get(productionRequest.SessionId);
+				if (sessionS.PaymentStatus.ToLower() == "paid")
 				{
-					var sessionLineItem = new SessionLineItemOptions
-					{	
-						Quantity = 1,
-						PriceData = new SessionLineItemPriceDataOptions
-						{
-							UnitAmount = (long)(quotation.TotalPrice),
-							Currency = "USD",
-							ProductData = new SessionLineItemPriceDataProductDataOptions
-							{
-								Name = jewelry.Name
-							}
-						},
-					};
-					options.LineItems.Add(sessionLineItem);
+					_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, sessionS.Id, sessionS.PaymentIntentId);
+					_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusRequestDelayedPayment, SD.StatusPaid);
+					_unitOfWork.Save();
 				}
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+				var domain = "https://localhost:7133/";
+				var options = new SessionCreateOptions
+				{
+					SuccessUrl = domain,
+					CancelUrl = domain + "customer/ProductionRequest/Index",
+					LineItems = new List<SessionLineItemOptions>(),
+					Mode = "payment",
+				};
+
+				var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+
+				if (!jewelries.Any())
+				{
+					return BadRequest("No jewelries found for the given production request.");
+				}
+
+				foreach (var jewelry in jewelries)
+				{
+					//var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
+					var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
+
+					foreach (var quotation in quotations)
+					{
+						var sessionLineItem = new SessionLineItemOptions
+						{
+							Quantity = 1,
+							PriceData = new SessionLineItemPriceDataOptions
+							{
+								UnitAmount = (long)(quotation.TotalPrice),
+								Currency = "USD",
+								ProductData = new SessionLineItemPriceDataProductDataOptions
+								{
+									Name = jewelry.Name
+								}
+							},
+						};
+						options.LineItems.Add(sessionLineItem);
+					}
+				}
+
+				var service = new SessionService();
+				Session session = service.Create(options);
+				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusPaid);
+				_unitOfWork.Save();
+				Response.Headers.Add("Location", session.Url);
+
+				return new StatusCodeResult(303);
 			}
-
-			var service = new SessionService();
-			Session session = service.Create(options);
-			_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-			_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusPaid);
-			_unitOfWork.Save();
-			Response.Headers.Add("Location", session.Url);
-
-			return new StatusCodeResult(303);
 		}
 
 		//public IActionResult Create()
