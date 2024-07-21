@@ -47,15 +47,6 @@ namespace SWP391.Controllers
 			return View(requests);
 		}
 
-		// Get all quotation of a jewelry
-		public IActionResult JewelryView(int jId)
-		{
-			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
-			if (requests is null) return NotFound();
-
-			return View("Index", requests);
-		}
-
 		public IActionResult Details(int id)
 		{
 			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
@@ -93,27 +84,30 @@ namespace SWP391.Controllers
 			vm.QuotationRequest.SalesStaffId = userId;
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
 			vm.QuotationRequest.Status = SD.StatusPending;
+
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == vm.MaterialSet.Id);
 			vm.QuotationRequest.MaterialSetId = materialSet.Id;
 			vm.QuotationRequest.JewelryId = vm.Jewelry.Id;
 			vm.QuotationRequest.TotalPrice = vm.QuotationRequest.LaborPrice + materialSet.TotalPrice;
+
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
 			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
-			QuotationRequest oldRequest = _unitOfWork.QuotationRequest
+			var oldRequests = _unitOfWork.QuotationRequest
 				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
-				.OrderByDescending(r => r.CreatedAt)
-				.FirstOrDefault();
-			if (oldRequest is not null)
+				.OrderByDescending(r => r.CreatedAt);
+			foreach (var oldRequest in oldRequests)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
+			TempData["success"] = "Created"; 
 			if (redirectRequest is not null)
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			return RedirectToAction("Index", new { jId = vm.Jewelry.Id });
+			return RedirectToAction(nameof(ViewAll), new { jId = vm.Jewelry.Id });
 		}
+
 		[Authorize(Roles = SD.Role_Manager)]
 		public IActionResult ManagerApprove(int id)
 		{
@@ -129,7 +123,7 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Update(req);
 				_unitOfWork.Save();
 				TempData["Success"] = "Approved!";
-			return RedirectToAction("Details", new { jId = req.JewelryId });
+			return RedirectToAction("Details", new { id = req.Id });
 		}
 
 		[Authorize(Roles = SD.Role_Manager)]
@@ -147,7 +141,8 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Update(req);
 			_unitOfWork.Save();
 			TempData["Success"] = "Disapproved!";
-			return RedirectToAction("Details", new { jId = req.JewelryId });
+			return RedirectToAction("Details", new { id = req.Id });
+
 		}
 
 		[Authorize(Roles = SD.Role_Customer)]
@@ -176,7 +171,7 @@ namespace SWP391.Controllers
 				if (j.Status != SD.StatusQuotationApproved)
 				{
 					completed = false;
-					break;
+					break;	
 				}
 			}
 			if (completed)
@@ -188,7 +183,8 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			TempData["Success"] = "Quotation is approved";
 
-			return RedirectToAction("Details", new { jId = req.JewelryId });
+			return RedirectToAction("Details", new { id = req.Id });
+
 		}
 
 		[Authorize(Roles = SD.Role_Customer)]
@@ -203,7 +199,9 @@ namespace SWP391.Controllers
 				req.Status = SD.CustomerDisapproved;
 			}
 			_unitOfWork.Save();
-			return RedirectToAction("Details", new { jId = req.JewelryId });
+			TempData["success"] = "Disapproved!";
+			return RedirectToAction("Details", new { id = req.Id });
+
 		}
 
 		//public bool CheckQuotationStatus(int jId)

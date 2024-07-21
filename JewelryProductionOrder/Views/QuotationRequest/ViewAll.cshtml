@@ -2,8 +2,17 @@
 
 <div>
 	<div>
-		<h2>View Quotation Request of Jewelry</h2>
 		<hr />
+
+		<div class="caption-top row d-flex justify-content-between">
+			<h2 class="col-10">View Quotation Request of Jewelry: @Model.FirstOrDefault().Jewelry.Name</h2>
+			@if (User.IsInRole(SD.Role_Sales))
+			{
+				<div class="col-2 d-flex justify-content-end">
+					<a class="btn btn-primary btn-lg px-4" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault().Jewelry.Id">Create</a>
+				</div>
+
+			}
 	</div>
 	<table class="table table-bordered table-striped fs-6 fw-normal">
 		<thead>
@@ -27,3 +36,25 @@
 		</tbody>
 	</table>
 </div>
+
+@* <script>
+	@{
+		bool hasPending = false;
+	}
+	const checkPending() => {
+		@foreach(string status in Model.Select(d => d.Status))
+		{
+			if(status == SD.StatusPending)
+			{
+				hasPending = true;
+				break;
+			}	
+		}
+		@if(hasPending)
+		{
+			
+				@window.confirm("There are pending Quotation Requests. Do you want to proceed? This will discontinue all other requests");
+			</text>
+		}
+		}
+</script> *@

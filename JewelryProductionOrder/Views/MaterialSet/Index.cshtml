@@ -6,7 +6,7 @@
         @if (User.IsInRole(SD.Role_Sales))
         {
             <div class="col-2 d-flex justify-content-end" >
-                <a class="btn btn-primary btn-lg px-4 asp-controller="MaterialSet" asp-action="Upsert" asp-route-jId="@Model.Jewelry.Id">Edit</a>
+                <a class="btn btn-primary btn-lg px-4" asp-controller="MaterialSet" asp-action="Upsert" asp-route-jId="@Model.Jewelry.Id">Edit</a>
             </div>
 
         }

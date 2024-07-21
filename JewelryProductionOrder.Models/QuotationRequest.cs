@@ -17,7 +17,6 @@ namespace JewelryProductionOrder.Models
         public decimal? TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
 
-
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]
         public Jewelry? Jewelry { get; set; }
