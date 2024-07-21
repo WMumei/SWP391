@@ -18,5 +18,6 @@ namespace JewelryProductionOrder.Models.ViewModels
 		public IEnumerable<SelectListItem> GemstoneList { get; set; }
 		public Material Material { get; set; }
 		public Gemstone Gemstone { get; set; }
+		public MaterialSet MaterialSet { get; set; }
 	}
 }

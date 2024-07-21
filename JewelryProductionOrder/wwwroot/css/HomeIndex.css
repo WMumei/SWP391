@@ -295,3 +295,74 @@ nav {
 a:link {
     text-decoration: none;
 }
+
+:root {
+    --btn-color: rgb(0, 0, 0, 0.65);
+    --btn-hover-color: #258cfb;
+    --btn-width: 4px;
+    --btn-duration: 0.25s;
+}
+
+.custom-button {
+    opacity:0.5;
+    font-size:20px;
+    padding:5px;
+    font-weight:bold;
+    text-align:center;
+    background-color:transparent;
+    box-shadow: inset 0 0 0 var(--btn-width) var(--btn-color);
+    color: var(--btn-color);
+    transition: color var(--btn-duration) calc(var(--btn-duration) / 3);
+    position: relative;
+}
+
+    .custom-button::before,
+    .custom-button::after {
+        border: 0 solid transparent;
+        box-sizing: border-box;
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
+    .custom-button::before,
+    .custom-button::after {
+        bottom: 0;
+        right: 0;
+    }
+
+    .custom-button::before {
+        border-bottom-width: var(--btn-width);
+        border-left-width: var(--btn-width);
+        border-right: 0;
+    }
+
+    .custom-button::after {
+        border-top-width: var(--btn-width);
+        border-right-width: var(--btn-width);
+        border-bottom: 0;
+    }
+
+    .custom-button:hover {
+        opacity:1;
+        transition: 0.5s ease;
+        color: var(--btn-hover-color);
+    }
+
+        .custom-button:hover::before,
+        .custom-button:hover::after {
+            border-color: var(--btn-hover-color);
+            transition: border-color 0s, width var(--btn-duration), height var(--btn-duration);
+            width: 100%;
+            height: 100%;
+        }
+
+        .custom-button:hover::before {
+            transition-delay: 0s, 0s, var(--btn-duration);
+        }
+
+        .custom-button:hover::after {
+            transition-delay: 0s, var(--btn-duration), 0s;
+        }

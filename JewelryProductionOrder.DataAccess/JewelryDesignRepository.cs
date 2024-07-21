@@ -5,10 +5,10 @@ using Models.Repository;
 
 namespace JewelryProductionOrder.Repositories
 {
-    public class MaterialSetRepository : Repository<MaterialSet>, IMaterialSetRepository
+    public class JewelryDesignRepository : Repository<JewelryDesign>, IJewelryDesignRepository
     {
         private ApplicationDbContext _db;
-        public MaterialSetRepository(ApplicationDbContext db) : base(db)
+        public JewelryDesignRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
@@ -17,9 +17,9 @@ namespace JewelryProductionOrder.Repositories
             _db.SaveChanges();
         }
 
-        public void Update(MaterialSet materialSet)
+        public void Update(JewelryDesign design)
         {
-            _db.MaterialSets.Update(materialSet);
+            _db.JewelryDesigns.Update(design);
         }
     }
 }

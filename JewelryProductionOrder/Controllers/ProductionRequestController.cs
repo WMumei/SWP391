@@ -156,27 +156,27 @@ namespace SWP391.Controllers
                 _unitOfWork.Save();
             }
 
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
-            if (jewelries.Count > 0)
-            {
-                foreach (Jewelry jewelry in jewelries)
-                {
-                    jewelry.Status = SD.StatusCancelled;
-                    QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
-                    if (QuoReq != null)
-                    {
-                        QuoReq.Status = SD.StatusCancelled;
-                    }
-                    List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
-                    if (jewelryDesigns.Count > 0)
-                    {
-                        foreach (JewelryDesign JewelryDesign in jewelryDesigns)
-                        {
-                            JewelryDesign.Status = SD.StatusCancelled;
-                        }
-                    }
-                }
-            }
+            //List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+            //if (jewelries.Count > 0)
+            //{
+            //    foreach (Jewelry jewelry in jewelries)
+            //    {
+            //        jewelry.Status = SD.StatusCancelled;
+            //        QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+            //        if (QuoReq != null)
+            //        {
+            //            QuoReq.Status = SD.StatusCancelled;
+            //        }
+            //        List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
+            //        if (jewelryDesigns.Count > 0)
+            //        {
+            //            foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+            //            {
+            //                JewelryDesign.Status = SD.StatusCancelled;
+            //            }
+            //        }
+            //    }
+            //}
             return RedirectToAction("Index");
         }
 
