@@ -10,17 +10,17 @@
 				<input asp-for="@Model.Jewelry.Id" class="ms-2" type="hidden" />
 				<div class="row">
 
-				<div class="form-floating py-2 col-10">
-					<select asp-for="@Model.Gemstone.Id" asp-items="@Model.GemstoneList" class="form-select border-0 shadow">
-						<option disabled selected>--Select Gemstone--</option>
-					</select>
-					<label asp-for="Gemstone" class="ms-2"></label>
-					@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
+					<div class="form-floating py-2 col-10">
+						<select asp-for="@Model.Gemstone.Id" asp-items="@Model.GemstoneList" class="form-select border-0 shadow">
+							<option disabled selected>--Select Gemstone--</option>
+						</select>
+						<label asp-for="Gemstone" class="ms-2"></label>
+						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
 
-				</div>
-				<div class="col-2 my-2">
-					<button type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
-				</div>
+					</div>
+					<div class="col-2 my-2">
+						<button asp-route-gemDeleteId="" type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
+					</div>
 				</div>
 				<div class="row">
 
@@ -81,6 +81,7 @@
 						<th>Weight (g)</th>
 						<th>Unit Price</th>
 						<th>Total Price</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -89,9 +90,13 @@
 						var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
 						<tr>
 							<td>@material.Name</td>
-							<td>@join.Weight</td>
+							<td><input asp-for="@join.Weight"></input></td>
 							<td>@material.Price</td>
 							<td>@(join.Weight * material.Price)</td>
+							<td>
+								<button type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Save</button>
+
+							</td>
 						</tr>
 					}
 				</tbody>
