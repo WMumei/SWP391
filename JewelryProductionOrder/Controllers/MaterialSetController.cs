@@ -87,25 +87,32 @@ namespace SWP391.Controllers
         [Authorize(Roles = SD.Role_Sales)]
         public IActionResult AddGemstone(MaterialSetVM vm)
         {
-            MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+            MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "Gemstones").MaterialSet;
             Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == vm.Gemstone.Id, tracked: true);
+            var ids = materialSet.Gemstones.Select(g => g.Id).ToList();
+			if (!ids.Contains(gemstone.Id))
+            {
+                materialSet.Gemstones.Add(gemstone);
+                _unitOfWork.MaterialSet.Update(materialSet);
+                _unitOfWork.Save();
+                materialSet.TotalPrice = GetPrice(materialSet.Id);
 
-            materialSet.Gemstones.Add(gemstone);
+                _unitOfWork.MaterialSet.Update(materialSet);
+                _unitOfWork.Save();
+                TempData["success"] = "Added";
+            }
+            else
+            {
+                TempData["error"] = "This gemstone already exists in Set.";
+			}
 
-            _unitOfWork.MaterialSet.Update(materialSet);
-            _unitOfWork.Save();
-            materialSet.TotalPrice = GetPrice(materialSet.Id);
-
-            _unitOfWork.MaterialSet.Update(materialSet);
-            _unitOfWork.Save();
-            TempData["success"] = "Added";
             return RedirectToAction(nameof(Upsert), new { jId = vm.Jewelry.Id });
         }
 
         [Authorize(Roles = SD.Role_Sales)]
         public IActionResult AddMaterial(MaterialSetVM vm)
         {
-            MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "MaterialSet").MaterialSet;
+            MaterialSet materialSet = _unitOfWork.Jewelry.Get(Jewelry => Jewelry.Id == vm.Jewelry.Id, includeProperties: "Materials").MaterialSet;
             Material material = _unitOfWork.Material.Get(m => m.Id == vm.Material.Id, tracked: true);
             var ids = materialSet.Materials.Select(m => m.Id).ToList();
             if (!ids.Contains(material.Id))
