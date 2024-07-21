@@ -17,7 +17,7 @@
         public const string StatusDesignedApproved = "Design Approved";
 		public const string StatusDelivered = "Delivered";
         public const string StatusConfirmDelivered = "Confirm Delivered";
-        public const string StatusAllQuotationApproved = "All Quotation Approved";
+        public const string StatusAllQuotationApproved = "All Quotations Approved";
 
         public const string StatusRequestDone = "Done";
         public const string StatusPaid = "Paid";

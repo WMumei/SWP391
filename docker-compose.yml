@@ -21,3 +21,13 @@ services:
     #   ConnectionStrings__DefaultConnection: "Server=Jewelry; Database=Jewelry; User Id=sa; Password=myStong_Password123#;Trust Server Certificate=True;"
     depends_on:
     - Jewelry
+ dataaccess:
+    image: dataaccess
+    build:
+      context: .
+      dockerfile: JewelryProductionOrder.DataAccess/Dockerfile
+ models:
+    image: models
+    build:
+      context: .
+      dockerfile: JewelryProductionOrder.Models/Dockerfile

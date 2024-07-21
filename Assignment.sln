@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JewelryProductionOrder", "J
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{75B7FBA8-C9CF-4278-8D81-23175EC14271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JewelryProductionOrder.DataAccess", "JewelryProductionOrder.DataAccess\JewelryProductionOrder.DataAccess.csproj", "{E6017D1C-7969-465F-94DD-68C9EC1A650D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JewelryProductionOrder.DataAccess", "JewelryProductionOrder.DataAccess\JewelryProductionOrder.DataAccess.csproj", "{E6017D1C-7969-465F-94DD-68C9EC1A650D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JewelryProductionOrder.Models", "JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj", "{5BAE83BF-4802-40F2-8132-39CDAE0B5515}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JewelryProductionOrder.Models", "JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj", "{5BAE83BF-4802-40F2-8132-39CDAE0B5515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

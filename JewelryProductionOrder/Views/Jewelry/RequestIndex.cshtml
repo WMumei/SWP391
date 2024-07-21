@@ -111,7 +111,7 @@
 					{
 						<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">View</a></td>
 					}
-					else if (User.IsInRole(SD.Role_Sales))
+					else if (User.IsInRole(SD.Role_Sales) && obj.Status == SD.StatusManufactured)
 					{
 						<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
 					}
