@@ -10,20 +10,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
+    <Compile Remove="Repositories\**" />
     <Compile Remove="Views\ProductionRequestDetail\**" />
     <Compile Remove="Views\SpecificProductionRequest\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Repositories\**" />
     <Content Remove="Views\ProductionRequestDetail\**" />
     <Content Remove="Views\SpecificProductionRequest\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Repositories\**" />
     <EmbeddedResource Remove="Views\ProductionRequestDetail\**" />
     <EmbeddedResource Remove="Views\SpecificProductionRequest\**" />
+    <None Remove="Models\**" />
+    <None Remove="Repositories\**" />
     <None Remove="Views\ProductionRequestDetail\**" />
     <None Remove="Views\SpecificProductionRequest\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DB Static\" />
-    <Folder Include="Models\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
@@ -44,11 +50,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
     <PackageReference Include="Stripe.net" Version="45.3.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\JewelryProductionOrder.DataAccess\JewelryProductionOrder.Repositories.csproj" />
-    <ProjectReference Include="..\..\JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JewelryProductionOrder.DataAccess\JewelryProductionOrder.DataAccess.csproj" />
+		<ProjectReference Include="..\JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj" />
+	</ItemGroup>
 
   <ItemGroup>
     <Content Update="Views\JewelryDesign\Manufacture.cshtml">

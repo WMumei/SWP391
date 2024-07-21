@@ -148,7 +148,8 @@ namespace JewelryProductionOrder.Controllers
 						Name = cart.BaseDesign.Name,
 						BaseDesignId = cart.BaseDesignId,
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
-						CreatedAt = DateTime.Now
+						CreatedAt = DateTime.Now,
+						CustomerId = userId
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
 				}
