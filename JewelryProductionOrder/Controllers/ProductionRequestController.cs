@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Models.Repositories.Repository.IRepository;
 using Stripe.Checkout;
 using System.Security.Claims;
@@ -64,12 +65,12 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = SD.Role_Sales)]
+        //[Authorize(Roles = SD.Role_Sales)]
         public IActionResult Deliver(int id)
         {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id,includeProperties:"Customer,Jewelries");
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
-            User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
+           // User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 
 
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -106,27 +107,29 @@ namespace SWP391.Controllers
 
 				_unitOfWork.Jewelry.Update(jewelry);
 				_unitOfWork.Delivery.Add(delivery);
+				TempData["success"] = "Order is delivered successfully";
 				_unitOfWork.Save();
 			}
 
 			return RedirectToAction("Index");
         }
 
-        public IActionResult CustomerViewDelivery(int id)
-        {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+		public IActionResult CustomerViewDelivery(int id)
+		{
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			//var saleStaff=_unitOfWork.User.Get(u=>u.Id==userId);
+               
 
-
-            return View("CustomerViewDelivery", productionRequest);
-        }
-        [Authorize(Roles = SD.Role_Customer)]
+			return View("CustomerViewDelivery", productionRequest);
+		}
+		//[Authorize(Roles = SD.Role_Customer)]
         public IActionResult Confirm(int id)
         {
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer").ToList();
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,ProductionRequest").ToList();
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             productionRequest.CustomerId = userId;
@@ -136,9 +139,9 @@ namespace SWP391.Controllers
                 if (jewelry is not null)
                 {
 
-                    jewelry.Status = "Confirmed";
-                    jewelry.ProductionRequest.Status = "Confirmed";
-
+                    jewelry.Status = SD.StatusConfirmDelivered;
+					jewelry.ProductionRequest.Status = SD.StatusConfirmDelivered;
+                    TempData["success"] = "Confirmed Order successfully";
                 }
 
 
@@ -201,11 +204,14 @@ namespace SWP391.Controllers
 
 		public IActionResult Payment(int pId)
 		{
-			var domain = "https://localhost:7133/";
-			var options = new SessionCreateOptions
+            //var domain = "https://localhost:7133/";
+            var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+            //var domain = "https://jpo.somee.com/";
+
+            var options = new SessionCreateOptions
 			{
 				SuccessUrl = domain,
-				CancelUrl = domain + "customer/ProductionRequest/Index",
+				CancelUrl = domain + "ProductionRequest/CustomerView",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment",
 			};

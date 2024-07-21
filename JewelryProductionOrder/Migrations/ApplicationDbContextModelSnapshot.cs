@@ -222,7 +222,7 @@ namespace JewelryProductionOrder.Migrations
                         {
                             Id = 1,
                             BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6217),
+                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8874),
                             Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
                             Name = "Diamond Ring",
                             ProductionRequestId = 1,
@@ -468,7 +468,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 1,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3317),
+                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8770),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         },
@@ -477,7 +477,7 @@ namespace JewelryProductionOrder.Migrations
                             Id = 2,
                             Address = "23 Phu Ky Quan 12",
                             ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 8, 11, 20, 46, 454, DateTimeKind.Local).AddTicks(3345),
+                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8806),
                             Email = "test@gmail.com",
                             PhoneNumber = "0123456769"
                         });

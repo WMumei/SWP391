@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.Migrations
 {
     /// <inheritdoc />
-    public partial class StableDB : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -544,6 +544,8 @@ namespace JewelryProductionOrder.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true),
+                    SessionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DesignStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductionStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -638,17 +640,17 @@ namespace JewelryProductionOrder.Migrations
 
             migrationBuilder.InsertData(
                 table: "ProductionRequests",
-                columns: new[] { "Id", "Address", "ContactName", "CreatedAt", "CustomerId", "DesignStaffId", "Email", "Note", "PhoneNumber", "ProductionStaffId", "Quantity", "QuotationRequestId", "SalesStaffId", "Status" },
+                columns: new[] { "Id", "Address", "ContactName", "CreatedAt", "CustomerId", "DesignStaffId", "Email", "Note", "PaymentIntentId", "PhoneNumber", "ProductionStaffId", "Quantity", "QuotationRequestId", "SalesStaffId", "SessionId", "Status" },
                 values: new object[,]
                 {
-                    { 1, "23 Phu Ky Quan 12", " Le Hoang", new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6050), null, null, "test@gmail.com", null, "0123456769", null, null, null, null, null },
-                    { 2, "23 Phu Ky Quan 12", " Le Hoang", new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6065), null, null, "test@gmail.com", null, "0123456769", null, null, null, null, null }
+                    { 1, "23 Phu Ky Quan 12", " Le Hoang", new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8770), null, null, "test@gmail.com", null, null, "0123456769", null, null, null, null, null, null },
+                    { 2, "23 Phu Ky Quan 12", " Le Hoang", new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8806), null, null, "test@gmail.com", null, null, "0123456769", null, null, null, null, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Jewelries",
                 columns: new[] { "Id", "BaseDesignId", "CreatedAt", "CustomerId", "Description", "Image", "MaterialSetId", "Name", "ProductionRequestId", "ProductionStaffId", "SalesStaffId", "Status" },
-                values: new object[] { 1, 1, new DateTime(2024, 7, 12, 13, 58, 51, 841, DateTimeKind.Local).AddTicks(6217), null, "9999 Gold for the material and 1 carat diamond for everyday wear", null, null, "Diamond Ring", 1, null, null, "" });
+                values: new object[] { 1, 1, new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8874), null, "9999 Gold for the material and 1 carat diamond for everyday wear", null, null, "Diamond Ring", 1, null, null, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

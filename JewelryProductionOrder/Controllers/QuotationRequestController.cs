@@ -168,6 +168,26 @@ namespace SWP391.Controllers
 			jewelry.Status = SD.StatusQuotationApproved;
 			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
+
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(p => p.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries");
+			bool completed = true;
+			foreach (var j in request.Jewelries)
+			{
+				if (j.Status != SD.StatusQuotationApproved)
+				{
+					completed = false;
+					break;
+				}
+			}
+			if (completed)
+			{
+				request.Status = SD.StatusAllQuotationApproved;
+				
+			}
+			_unitOfWork.ProductionRequest.Update(request);
+			_unitOfWork.Save();
+			TempData["Success"] = "Quotation is approved";
+
 			return RedirectToAction("Details", new { jId = req.JewelryId });
 		}
 

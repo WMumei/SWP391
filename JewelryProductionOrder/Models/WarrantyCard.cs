@@ -9,10 +9,10 @@ namespace JewelryProductionOrder.Models
 
 
         public int Id { get; set; }
-        [DisplayName("Issued Date")]
+        [DisplayName("Issued Date (mm/dd/yyyy)")]
         public DateTime CreatedAt { get; set; }
-		[DisplayName("Expired Date")]
-		public DateTime ExpiredAt { get; set; }
+        [DisplayName("Expired Date (mm/dd/yyyy)")]
+        public DateTime ExpiredAt { get; set; }
 
         public string CustomerId { get; set; }
         [ForeignKey("CustomerId")]
