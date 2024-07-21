@@ -24,25 +24,25 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
         [Authorize(Roles = SD.Role_Sales)]
         public async Task<ActionResult> Index()
         {
-            var role = await _roleManager.FindByNameAsync("Customer");
-            if (role == null)
-            {
-                return NotFound("Role not found");
-            }
+            //var role = await _roleManager.FindByNameAsync("Customer");
+            //if (role == null)
+            //{
+            //    return NotFound("Role not found");
+            //}
 
-            var userIds = await _userManager.GetUsersInRoleAsync("Customer");
-            if (userIds == null)
-            {
-                return BadRequest("Error retrieving users in role 'Customer'");
-            }
-            int customerCount = userIds.Count;
+            //var userIds = await _userManager.GetUsersInRoleAsync("Customer");
+            //if (userIds == null)
+            //{
+            //    return BadRequest("Error retrieving users in role 'Customer'");
+            //}
+            //int customerCount = userIds.Count;
 
-            var delivered = _unitOfWork.Jewelry.GetAll().Where(r => r.Status == "Delivered").ToList();
-            if (delivered == null)
-            {
-                return NotFound("Jewelry not found");
-            }
-            int deliveryCount = delivered.Count;
+            //var delivered = _unitOfWork.Jewelry.GetAll().Where(r => r.Status == "Delivered").ToList();
+            //if (delivered == null)
+            //{
+            //    return NotFound("Jewelry not found");
+            //}
+            //int deliveryCount = delivered.Count;
 
             DateTime targetDate = new DateTime(2, 1, 1);
             List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
@@ -54,10 +54,10 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 
             ViewBag.Dates = rDates;
             ViewBag.Revenues = revenues;
-            ViewBag.CustomerCount = customerCount;
-            ViewBag.DeliveryCount = deliveryCount;
-            ViewBag.StartDate = DateTime.Now.AddMonths(-1); // default start date
-            ViewBag.EndDate = DateTime.Now; // default end date
+            //ViewBag.CustomerCount = customerCount;
+            //ViewBag.DeliveryCount = deliveryCount;
+            ViewBag.StartDate = DateTime.Now.AddMonths(-1);
+            ViewBag.EndDate = DateTime.Now;
 
             return View(requests);
         }
