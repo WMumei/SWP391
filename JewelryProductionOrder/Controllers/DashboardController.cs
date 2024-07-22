@@ -50,7 +50,9 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 				List<string> rDates = requests.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
 				List<decimal> revenues = rDates.Select(date => requests.Where(qr => qr.CreatedAt.ToString("yyyy-MM-dd") == date).Sum(qr => qr.TotalPrice ?? 0)).ToList();
 
-				ViewBag.Dates = rDates;
+                ViewBag.StartDate = DateTime.Now.AddMonths(-1);
+                ViewBag.EndDate = DateTime.Now;
+                ViewBag.Dates = rDates;
 				ViewBag.Revenues = revenues;
 				ViewBag.CustomerCount = customerCount;
 				ViewBag.DeliveryCount = deliveryCount;
@@ -109,6 +111,8 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 					TempData["error"] = "Data not found";
 				}
 
+				ViewBag.StartDate = startDate;
+				ViewBag.EndDate = endDate;
 				ViewBag.Dates = rDates;
 				ViewBag.Revenues = revenues;
 				ViewBag.CustomerCount = customerCount;
