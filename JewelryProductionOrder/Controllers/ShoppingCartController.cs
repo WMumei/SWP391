@@ -1,9 +1,8 @@
-﻿using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
-using JewelryProductionOrder.Repositories.IRepository;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
@@ -12,30 +11,19 @@ namespace JewelryProductionOrder.Controllers
 {
 	[Authorize]
 	public class ShoppingCartController : Controller
-    {
+	{
 		private readonly IUnitOfWork _unitOfWork;
 		[BindProperty]
 		public ShoppingCartVM ShoppingCartVM { get; set; }
-		public ShoppingCartController(IUnitOfWork unitOfWork)
+		private readonly UserManager<User> _userManager;
+
+		// Implenment Round-Robin only in the controller (not as good as in DB)
+		private static int currentSalesStaffIndex = 0;
+		public ShoppingCartController(IUnitOfWork unitOfWork, UserManager<User> userManager)
 		{
 			_unitOfWork = unitOfWork;
+			_userManager = userManager;
 		}
-
-		//      public IActionResult Checkout()
-		//      {
-		//	var claimsIdentity = (ClaimsIdentity)User.Identity;
-		//	var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-		//	// TODO: handle filling production req
-		//	ShoppingCartVM order = new()
-		//	{
-		//		ShoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
-		//		includeProperties: "BaseDesign").ToList(),
-		//		ProductionRequest = new()
-		//	};
-
-
-		//	return View(order);
-		//}
 
 		public IActionResult Index()
 		{
@@ -113,7 +101,7 @@ namespace JewelryProductionOrder.Controllers
 
 		[HttpPost]
 		[ActionName("Summary")]
-		public IActionResult SummaryPOST()
+		public async Task<IActionResult> SummaryPOST()
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -124,11 +112,12 @@ namespace JewelryProductionOrder.Controllers
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
 			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
 			ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-
+			ShoppingCartVM.ProductionRequest.Status = SD.StatusPending;
 			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
 
-			// TODO: Handle status of ProductionRequest
-
+			var salesStaffIds = await GetSalesStaffIdsAsync();
+			var assignedStaffId = salesStaffIds[currentSalesStaffIndex];
+			ShoppingCartVM.ProductionRequest.SalesStaffId = assignedStaffId;
 			_unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
 			_unitOfWork.Save();
 			int quantity = 0;
@@ -149,7 +138,9 @@ namespace JewelryProductionOrder.Controllers
 						BaseDesignId = cart.BaseDesignId,
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 						CreatedAt = DateTime.Now,
-						CustomerId = userId
+						CustomerId = userId,
+						SalesStaffId = assignedStaffId
+
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
 				}
@@ -161,7 +152,6 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.ProductionRequest.Id });
 		}
-
 
 		public IActionResult OrderConfirmation(int id)
 		{
@@ -177,5 +167,10 @@ namespace JewelryProductionOrder.Controllers
 			return View(id);
 		}
 
+		private async Task<List<string>> GetSalesStaffIdsAsync()
+		{
+			var usersInRole = await _userManager.GetUsersInRoleAsync(SD.Role_Sales);
+			return usersInRole.Select(u => u.Id).ToList();
+		}
 	}
 }
