@@ -92,6 +92,20 @@ namespace JewelryProductionOrder.Controllers
 			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 		}
 
+		[Authorize(Roles = SD.Role_Customer)]
+		public IActionResult CustomerDisapprove(int id, int? redirectRequest)
+		{
+			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
+
+			_unitOfWork.JewelryDesign.Remove(design);
+			_unitOfWork.Save();
+
+			TempData["Success"] = "Disapproved. This design will be removed.";
+			if (redirectRequest is null)
+				return RedirectToAction("Index", "Home");
+			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+		}
+
 		//public IActionResult Manufacture(int jId)
 		//{
 		//	JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId);
@@ -106,23 +120,23 @@ namespace JewelryProductionOrder.Controllers
 		//	return View(vm);
 		//}
 
-		[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Customer},{SD.Role_Sales}")]
-		public IActionResult ViewAll(int jId)
-		{
-			var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (User.IsInRole(SD.Role_Customer))
-			{
-				quotationRequests = quotationRequests.Where(r => r.CustomerId == userId && r.Status == SD.ManagerApproved).ToList();
-			}
-			/*else if(User.IsInRole(SD.Role_Sales))
-			{
-				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
-			}*/
+		//[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Customer},{SD.Role_Sales}")]
+		//public IActionResult ViewAll(int jId)
+		//{
+		//	var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+		//	var claimsIdentity = (ClaimsIdentity)User.Identity;
+		//	var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+		//	if (User.IsInRole(SD.Role_Customer))
+		//	{
+		//		quotationRequests = quotationRequests.Where(r => r.CustomerId == userId && r.Status == SD.ManagerApproved).ToList();
+		//	}
+		//	/*else if(User.IsInRole(SD.Role_Sales))
+		//	{
+		//		quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
+		//	}*/
 
-			return View(quotationRequests);
-		}
+		//	return View(quotationRequests);
+		//}
 
 	}
 }
