@@ -1,60 +1,37 @@
-﻿@* @model List<JewelryDesign>
-<form method="post">
-    <div>
-        <div>
-            <h2>View Jewelry</h2>
-            <hr />
-        </div>
-        <table class ="table table-bordered table-striped fs-6 fw-normal">
-            <thead>
-                <tr class="fw-normal">
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Created At</th>
-                    <th>Description</th>
-                    <th>Materials</th>
-                    <th>Quotation</th>
-                    <th>Status</th>
-                 <th width="13%">Image</th>
-                    <th>Design</th>
-                    <th>Customer</th>
-                    <th>Staffs</th>
-                    <th>Production Request</th>
-                    <th>Warranty Card</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
-                {
-					<tr>
-						<td>@obj.Id</td>
-						<td>@obj.CreatedAt</td>
-						<td>@obj.Name</td>
-                        <td>@obj.Description</td>
-						<td>@obj?.Customer?.Name</td>
+﻿@model List<JewelryDesign>
 
-						@if (obj.MaterialSet is not null)
-						{
-						<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
-						}
-						else
-						{
-						<td><a asp-controller="MaterialSet" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-						}
-                        @if (@obj.QuotationRequest is not null)
-                        {
-                        <td><a asp-controller="QuotationRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
-                        }
-                        else
-                        {
-                        <td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-                        }
+<div>
+	<div>
+		<div class="caption-top row d-flex justify-content-between">
+			<h2 class="col-10">Jewelry Design for Jewelry: @Model.FirstOrDefault().Jewelry.Name</h2>
+			@if (User.IsInRole(SD.Role_Sales))
+			{
+				<div class="col-2 d-flex justify-content-end">
+					<a class="btn btn-primary btn-lg px-4" asp-controller="JewelryDesign" asp-action="Create" asp-route-jId="@Model.FirstOrDefault().Jewelry.Id">Create</a>
+				</div>
 
-					</tr>
-                }
-            </tbody>
-        </table>
-        </div>
-        <!-- <div asp-validation-summary="All"></div> -->
-        
-</form> *@
+			}
+		</div>
+	</div>
+	<table class="table table-bordered table-striped fs-6 fw-normal">
+		<thead>
+			<tr class="fw-normal">
+				<th>Id</th>
+				<th>Created At</th>
+				<th>Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+			{
+				<tr>
+					<td>@obj.Id</td>
+					<td>@obj.CreatedAt</td>
+					<td>@obj.Status</td>
+					<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

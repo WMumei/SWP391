@@ -8,6 +8,7 @@
 		<div class="row">
 			<div class="col-10">
 				<input asp-for="@Model.Jewelry.Id" class="ms-2" type="hidden" />
+				<input asp-for="@Model.Jewelry.MaterialSetId" class="ms-2" type="hidden" />
 				<div class="row">
 
 					<div class="form-floating py-2 col-10">
@@ -55,7 +56,7 @@
 						<th>Name</th>
 						<th>Weight (carat)</th>
 						<th>Price</th>
-						<th></th>
+						<th width="15%"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -153,6 +154,11 @@
 		// 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
 		// 	form.submit();
 		// });
+		// const reloadWithDelay = () => {
+		// 	setTimeout(() => {
+		// 		location.reload();
+		// 	}, 500); // Delay in milliseconds
+		// };
 
 		const callEditMaterial = (materialId, materialSetId, jewelryId) => {
 			const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
@@ -160,8 +166,13 @@
 			fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
 				then(data => data.json()).
 				then(e => {
-					toastr.success(e.message);
-					// const myTimeout = setTimeout(myGreeting, 100);
+					if (e.message == "Edited") {
+						toastr.success("Material edited successfully");
+					}
+					else {
+						toastr.error(e.message);
+					}
+					// reloadWithDelay();
 					location.reload();
 				})
 		};
@@ -170,20 +181,20 @@
 			then(data => data.json()).
 			then(e => {
 				toastr.success(e.message);
-				// const myTimeout = setTimeout(myGreeting, 100);
-				location.reload();
+					// reloadWithDelay();
+					location.reload();
 			});
 
 		}
 
-			const callDeleteMaterial = (materialId, materialSetId) => {
-				fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
-					then(data => data.json()).
-					then(e => {
-						toastr.success(e.message);
-						// Optionally, refresh the page or update the UI accordingly
-						location.reload();
-					});
-			}
+		const callDeleteMaterial = (materialId, materialSetId) => {
+			fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
+				then(data => data.json()).
+				then(e => {
+					toastr.success(e.message);
+					// reloadWithDelay();
+					location.reload();
+				});
+		}
 	</script>
 }
