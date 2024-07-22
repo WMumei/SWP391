@@ -48,7 +48,7 @@ namespace JewelryProductionOrder.Repositories
 			{
 				requestFromDb.SessionId = sessionId;
 			}
-			if (!string.IsNullOrEmpty(sessionId))
+			if (!string.IsNullOrEmpty(paymentIntentId))
 			{
 				requestFromDb.PaymentIntentId = paymentIntentId;
 			}

@@ -39,7 +39,7 @@ namespace SWP391.Controllers
 			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusRequestDelayedPayment);
 			if (request != null)
 			{
-				OrderConfirmation(request.Id);
+				Payment(request.Id);
 			}
             return View("Index", obj);
         }
