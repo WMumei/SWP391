@@ -35,7 +35,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 				}
 				int customerCount = userIds.Count;
 
-				var delivered = _unitOfWork.Jewelry.GetAll().Where(r => r.Status == "Delivered").ToList();
+				var delivered = _unitOfWork.Jewelry.GetAll().Where(r => r.Status == SD.StatusPaid).ToList();
 				if (delivered == null)
 				{
 					return NotFound("Jewelry not found");
@@ -44,7 +44,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 
 				DateTime targetDate = new DateTime(2, 1, 1);
 				List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
-			   .Where(qr => qr.Status == "Approved" && qr.CreatedAt <= targetDate)
+			   .Where(qr => qr.Status == SD.StatusPaid && qr.CreatedAt <= targetDate)
 			   .ToList();
 
 				List<string> rDates = requests.Select(qr => qr.CreatedAt.ToString("yyyy-MM-dd")).Distinct().ToList();
@@ -77,7 +77,7 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
 				int customerCount = userIds.Count;
 				Boolean invalidDate = false;
 				List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll()
-			   .Where(qr => qr.Status == "Approved")
+			   .Where(qr => qr.Status == SD.StatusPaid)
 			   .ToList();
 				if (startDate.HasValue && endDate.HasValue)
 				{
