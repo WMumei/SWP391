@@ -116,7 +116,8 @@ namespace SWP391.Controllers
 
 		public IActionResult CustomerViewDelivery(int id)
 		{
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries,Sale");
+            var saleStaff = _unitOfWork.User.Get(u => u.Id == productionRequest.SalesStaffId);
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
