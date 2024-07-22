@@ -177,7 +177,7 @@
 				})
 		};
 		const deleteGemstone = (gemstoneId, materialSetId) => {
-			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId${materialSetId}`).
+			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId=${materialSetId}`).
 			then(data => data.json()).
 			then(e => {
 				toastr.success(e.message);
