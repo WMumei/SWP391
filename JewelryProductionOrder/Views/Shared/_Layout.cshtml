@@ -101,6 +101,12 @@
             <div>
                 <a asp-controller="Posts" asp-action="Index" class="button text-dark">View Post</a>
             </div>
+            @if (User.IsInRole(SD.Role_Sales))
+            {
+                <div>
+                    <a asp-controller="Gemstone" asp-action="Index" class="button text-dark">View List Gemstone</a>
+                </div>
+            }
             @*
             <div>
                 <a asp-controller="WarrantyCard" asp-action="Index" class="button">View Warranty Card</a>
