@@ -1,13 +1,10 @@
-﻿using Azure.Core;
-using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {

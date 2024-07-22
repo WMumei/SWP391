@@ -1,6 +1,5 @@
 
 using JewelryProductionOrder.Models;
-using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

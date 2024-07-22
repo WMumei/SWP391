@@ -11,7 +11,7 @@ namespace JewelryProductionOrder.Controllers
 {
 	[Authorize]
 	public class ShoppingCartController : Controller
-    {
+	{
 		private readonly IUnitOfWork _unitOfWork;
 		[BindProperty]
 		public ShoppingCartVM ShoppingCartVM { get; set; }
@@ -139,7 +139,7 @@ namespace JewelryProductionOrder.Controllers
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 						CreatedAt = DateTime.Now,
 						CustomerId = userId,
-						SalesStaffId = assignedStaffId 
+						SalesStaffId = assignedStaffId
 
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
