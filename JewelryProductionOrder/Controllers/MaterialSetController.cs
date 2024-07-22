@@ -60,17 +60,20 @@ namespace SWP391.Controllers
 			//MaterialSet materialSet = new MaterialSet { CreatedAt = DateTime.Now };
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(u => u.Id == materialSetVM.Jewelry.MaterialSetId);
 
-			materialSet.TotalPrice = GetPrice(materialSet.Id);
-			_unitOfWork.MaterialSet.Update(materialSet);
-			_unitOfWork.Save();
-			TempData["success"] = "Created";
+			if (materialSet is not null)
+			{
+				materialSet.TotalPrice = GetPrice(materialSet.Id);
+				_unitOfWork.MaterialSet.Update(materialSet);
+				_unitOfWork.Save();
+				TempData["success"] = "Created";
 
-			//if (redirectRequest is not null)
-			//    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				//if (redirectRequest is not null)
+				//    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+			}
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(u => u.Id == materialSetVM.Jewelry.Id);
 			int redirectId = jewelry.ProductionRequestId;
+			TempData["error"] = "Error";
 			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectId });
-
 		}
 		public IActionResult Index(int id, int jId)
 		{

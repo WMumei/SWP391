@@ -30,13 +30,17 @@ namespace JewelryProductionOrder.Repositories
 
 		public void UpdateStatus(int id, string requestStatus, string? paymentStatus = null)
 		{
-			var requestFromDb = _db.ProductionRequests.FirstOrDefault(m => m.Id == id);
+			var requestFromDb = dbSet.Include("Jewelries").FirstOrDefault(m => m.Id == id);
 			if (requestFromDb != null)
 			{
 				requestFromDb.Status = requestStatus;
 				if (!string.IsNullOrEmpty(requestStatus))
 				{
 					requestFromDb.Status = paymentStatus;
+				}
+				foreach (Jewelry jewelry in requestFromDb.Jewelries)
+				{
+					jewelry.Status = paymentStatus;
 				}
 			}
 		}
@@ -48,7 +52,7 @@ namespace JewelryProductionOrder.Repositories
 			{
 				requestFromDb.SessionId = sessionId;
 			}
-			if (!string.IsNullOrEmpty(sessionId))
+			if (!string.IsNullOrEmpty(paymentIntentId))
 			{
 				requestFromDb.PaymentIntentId = paymentIntentId;
 			}

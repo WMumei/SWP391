@@ -218,9 +218,7 @@ namespace SWP391.Controllers
 					CancelUrl = domain + "ProductionRequest/CustomerView",
 					LineItems = new List<SessionLineItemOptions>(),
 					Mode = "payment",
-				}
-			};
-
+				};
 				var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
 
 				if (!jewelries.Any())
@@ -258,11 +256,13 @@ namespace SWP391.Controllers
 				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusRequestDelayedPayment);
 				_unitOfWork.Save();
 				Response.Headers.Add("Location", session.Url);
-
 				return new StatusCodeResult(303);
 			}
+
 			return RedirectToAction(nameof(OrderConfirmation), new {id = pId });
-		}
+
+			}
+		
 
 		public IActionResult OrderConfirmation(int id)
 		{

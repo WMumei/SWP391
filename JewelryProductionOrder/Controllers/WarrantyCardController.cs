@@ -83,8 +83,7 @@ namespace JewelryProductionOrder.Controllers
 				return RedirectToAction("Index", "Jewelry");
 			}
 
-
-			return View(vm);
+			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = productionRequest.Id });
 		}
 		public IActionResult Index()
 		{
