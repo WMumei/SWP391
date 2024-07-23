@@ -31,9 +31,9 @@ namespace JewelryProductionOrder.Controllers
 		}
 
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int mId)
 		{
-			var material = _unitOfWork.Material.Get(m => m.Id == id);
+			var material = _unitOfWork.Material.Get(m => m.Id == mId);
 			if (material == null)
 			{
 				return NotFound();
@@ -55,9 +55,9 @@ namespace JewelryProductionOrder.Controllers
         }
 
 		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
-		public IActionResult Delete(int id)
+		public IActionResult Delete(int mId)
 		{
-			Material material = _unitOfWork.Material.Get(m => m.Id == id);
+			Material material = _unitOfWork.Material.Get(m => m.Id == mId);
 			if (material == null)
 			{
 				return NotFound();
