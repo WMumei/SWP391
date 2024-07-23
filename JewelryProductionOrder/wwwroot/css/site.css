@@ -181,3 +181,7 @@ body {
     top: 10px;
     left: 10px;
 }
+
+.bg-primary {
+    background-color: #445B8D;
+}

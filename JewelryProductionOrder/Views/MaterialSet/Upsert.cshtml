@@ -1,4 +1,4 @@
-﻿@model MaterialSetVM
+﻿@* @model MaterialSetVM
 
 <form method="post" class="container" id="materialForm">
 	<div class="caption-top row">
@@ -16,7 +16,6 @@
 							<option disabled selected>--Select Gemstone--</option>
 						</select>
 						<label asp-for="Gemstone" class="ms-2"></label>
-						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
 
 					</div>
 					<div class="col-2 my-2">
@@ -26,12 +25,10 @@
 				<div class="row">
 
 					<div class="form-floating py-2 col-5">
-						@* Check if we can use @Model.MaterialSet.Materials *@
 						<select asp-for="@Model.Material.Id" asp-items="@Model.MaterialList" class="form-select border-0 shadow">
 							<option disabled selected>--Select Material--</option>
 						</select>
 						<label asp-for="Material" class="ms-2"></label>
-						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
 
 					</div>
 					<div class="col-5 py-2 form-floating">
@@ -100,12 +97,7 @@
 							<td>@material?.Price</td>
 							<td>@(join.Weight * material?.Price)</td>
 							<td class="d-flex gap-2">
-								@* <form asp-controller="MaterialSet" asp-action="EditMaterial" method="post">
-									<input type="hidden" name="materialSetId" value="@Model.MaterialSet.Id" />
-									 <input type="hidden" name="weight" value="@join.Weight" /> 
-									<input type="hidden" name="jewelryId" value="@Model.Jewelry.Id" />
-									<input type="hidden" name="materialEditId" value="@join.MaterialId" />
-								</form> *@
+
 								<button type="submit" onclick="@($"callEditMaterial({join.MaterialId},{Model.MaterialSet.Id},{Model.Jewelry.Id})")" class="btn btn-secondary form-control btn-sm">Save</button>
 								<button type="button" onclick="@($"callDeleteMaterial({join.MaterialId},{Model.MaterialSet.Id})")" class="btn btn-danger form-control btn-sm">Delete</button>
 
@@ -119,34 +111,114 @@
 	<div class="col-md-3">
 		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
-	
-	<table id="materialTable">
-		<thead>
-			<tr>
-				<td>Name</td>
-				<td>Price (USD)</td>
-				@* <td></td> *@
-			</tr>
-
-		</thead>
-
-	</table>	
-	<table id="gemstoneTable">
-		<thead>
-			<tr>
-				<td>Name</td>
-				<td>Price (USD)</td>
-				<td>Weight</td>
-				<td>Carat</td>
-				<td>Color</td>
-				<td>Clarity</td>
-				<td>Cut</td>
-			</tr>
-
-		</thead>
-	</table>
-
 </form>
+	*@
+<div class="card-group">
+	<div class="card shadow border-0 m-2">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="text-white m-0">Current Materials</h2>
+				</div>
+			</div>
+		</div>
+		<div>
+			<table id="currentMaterialTable">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Price (USD)</td>
+						<td></td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="card shadow border-0 m-2">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="text-white m-0">Materials</h2>
+				</div>
+			</div>
+		</div>
+		<div>
+			<table id="materialTable">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Price (USD)</td>
+						<td></td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card-group">
+
+	@* <div class="col-6"> *@
+	<div class="card shadow border-0 m-2">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="text-white m-0">Current Gemstones</h2>
+				</div>
+			</div>
+		</div>
+		<div>
+			<table id="currentGemstoneTable">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Price (USD)</td>
+						<td>Weight</td>
+						<td>Carat</td>
+						<td>Color</td>
+						<td>Clarity</td>
+						<td>Cut</td>
+						<td></td>
+					</tr>
+
+				</thead>
+
+			</table>
+		</div>
+	</div>
+	@* 	</div>
+	<div class="col-6"> *@
+	<div class="card shadow border-0 m-2 w-25">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="text-white m-0">Availabe Gemstones</h2>
+				</div>
+			</div>
+		</div>
+		<div>
+			<table id="gemstoneTable">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Price (USD)</td>
+						<td>Weight</td>
+						<td>Carat</td>
+						<td>Color</td>
+						<td>Clarity</td>
+						<td>Cut</td>
+						<td></td>
+					</tr>
+
+				</thead>
+
+			</table>
+		</div>
+	</div>
+	@* </div> *@
+</div>
+
+
 
 @section Scripts
 {
@@ -154,82 +226,83 @@
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 	<script src="~/js/MaterialSet/Material.js"></script>
+	<script src="~/js/MaterialSet/Gemstone.js"></script>
 	<script>
-		let form = document.getElementById('materialForm');
-		document.getElementById('submitAddGemstone').addEventListener('click', function () {
-			form.action = '@Url.Action("AddGemstone", "MaterialSet")';
-			form.submit();
-		});
-		document.getElementById('submitAddMaterial').addEventListener('click', function () {
-
-			form.action = '@Url.Action("AddMaterial", "MaterialSet")';
-			form.submit();
-		});
-		// document.getElementById('submitDeleteGemstone').addEventListener('click', function () {
-
-		// 	form.action = '@Url.Action("DeleteGemstone", "MaterialSet")';
+		// let form = document.getElementById('materialForm');
+		// document.getElementById('submitAddGemstone').addEventListener('click', function () {
+		// 	form.action = '@Url.Action("AddGemstone", "MaterialSet")';
 		// 	form.submit();
 		// });
-		// document.getElementById('submitDeleteMaterial').addEventListener('click', function () {
+		// document.getElementById('submitAddMaterial').addEventListener('click', function () {
 
-		// 	form.action = '@Url.Action("DeleteMaterial", "MaterialSet")';
+		// 	form.action = '@Url.Action("AddMaterial", "MaterialSet")';
 		// 	form.submit();
 		// });
-		// document.getElementById('submitEditMaterial').addEventListener('click', function () {
+		// // document.getElementById('submitDeleteGemstone').addEventListener('click', function () {
 
-		// 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
-		// 	form.submit();
-		// });
-		// const reloadWithDelay = () => {
-		// 	setTimeout(() => {
-		// 		location.reload();
-		// 	}, 500); // Delay in milliseconds
+		// // 	form.action = '@Url.Action("DeleteGemstone", "MaterialSet")';
+		// // 	form.submit();
+		// // });
+		// // document.getElementById('submitDeleteMaterial').addEventListener('click', function () {
+
+		// // 	form.action = '@Url.Action("DeleteMaterial", "MaterialSet")';
+		// // 	form.submit();
+		// // });
+		// // document.getElementById('submitEditMaterial').addEventListener('click', function () {
+
+		// // 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
+		// // 	form.submit();
+		// // });
+		// // const reloadWithDelay = () => {
+		// // 	setTimeout(() => {
+		// // 		location.reload();
+		// // 	}, 500); // Delay in milliseconds
+		// // };
+
+		// const callEditMaterial = (materialId, materialSetId, jewelryId) => {
+		// 	const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
+		// 	const weight = weightInput.value;
+		// 	fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
+		// 		then(data => data.json()).
+		// 		then(e => {
+		// 			if (e.message == "Edited") {
+		// 				toastr.success("Material edited successfully");
+		// 			}
+		// 			else {
+		// 				toastr.error(e.message);
+		// 			}
+		// 			// reloadWithDelay();
+		// 			// location.reload();
+		// 				setTimeout(() => {
+		// 					location.reload();
+		// 				}, 500);
+		// 		})
 		// };
+		// const deleteGemstone = (gemstoneId, materialSetId) => {
+		// 	fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId=${materialSetId}`).
+		// 	then(data => data.json()).
+		// 	then(e => {
+		// 		toastr.success(e.message);
+		// 			// reloadWithDelay();
+		// 			// location.reload();
+		// 			setTimeout(() => {
+		// 				location.reload();
+		// 			}, 500);
+		// 	});
 
-		const callEditMaterial = (materialId, materialSetId, jewelryId) => {
-			const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
-			const weight = weightInput.value;
-			fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
-				then(data => data.json()).
-				then(e => {
-					if (e.message == "Edited") {
-						toastr.success("Material edited successfully");
-					}
-					else {
-						toastr.error(e.message);
-					}
-					// reloadWithDelay();
-					// location.reload();
-						setTimeout(() => {
-							location.reload();
-						}, 500);
-				})
-		};
-		const deleteGemstone = (gemstoneId, materialSetId) => {
-			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId=${materialSetId}`).
-			then(data => data.json()).
-			then(e => {
-				toastr.success(e.message);
-					// reloadWithDelay();
-					// location.reload();
-					setTimeout(() => {
-						location.reload();
-					}, 500);
-			});
+		// }
 
-		}
-
-		const callDeleteMaterial = (materialId, materialSetId) => {
-			fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
-				then(data => data.json()).
-				then(e => {
-					toastr.success(e.message);
-					// reloadWithDelay();
-					// location.reload();
-					setTimeout(() => {
-						location.reload();
-					}, 500);
-				});
-		}
+		// const callDeleteMaterial = (materialId, materialSetId) => {
+		// 	fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
+		// 		then(data => data.json()).
+		// 		then(e => {
+		// 			toastr.success(e.message);
+		// 			// reloadWithDelay();
+		// 			// location.reload();
+		// 			setTimeout(() => {
+		// 				location.reload();
+		// 			}, 500);
+		// 		});
+		// }
 	</script>
 }

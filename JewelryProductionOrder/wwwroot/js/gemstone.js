@@ -19,8 +19,8 @@ function loadDataTable() {
                 data: "id",
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                    <a href="/gemstone/edit?id=${data}" class="btn btn-primary mx-2"> Edit </a>
-                    <a href="/gemstone/delete?id=${data}" class="btn btn-danger mx-2"> Delete </a>
+                    <a href="/gemstone/edit?id=${data}" class="btn btn-primary "> Edit </a>
+                    <a href="/gemstone/delete?id=${data}" class="btn btn-danger "> Delete </a>
                     </div>`
                 },
             }

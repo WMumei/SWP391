@@ -265,6 +265,11 @@ namespace SWP391.Controllers
 		#endregion
 
 		#region API
+		public IActionResult Upsert(int jId)
+		{
+			return View();
+		}
+
 		[HttpGet]
 		public IActionResult Get(int id)
 		{

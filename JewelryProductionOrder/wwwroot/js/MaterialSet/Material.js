@@ -1,6 +1,6 @@
-$(document).ready(() => loadData());
+$(document).ready(() => loadMaterial());
 
-const loadData = () => {
+const loadMaterial = () => {
     $("#materialTable").DataTable({
         "ajax": { url: '/materialset/getmaterials'},
         "columns": [
