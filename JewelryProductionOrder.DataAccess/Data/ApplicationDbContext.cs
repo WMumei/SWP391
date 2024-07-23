@@ -163,11 +163,11 @@ namespace JewelryProductionOrder.Data
 				new Material { Id = 6, Name = "999 Silver", Price = 70 }
 				);
 			modelBuilder.Entity<Gemstone>().HasData(
-				new Gemstone { Id = 1, Name = "3 carat Diamond", Price = 2000, Weight = 3 },
-				new Gemstone { Id = 2, Name = "Ruby", Price = 1500, Weight = 1.5M },
-				new Gemstone { Id = 3, Name = "Sapphire", Price = 1800, Weight = 1.8M },
-				new Gemstone { Id = 4, Name = "2 carat Diamond", Price = 1800, Weight = 2 },
-				new Gemstone { Id = 5, Name = "1 carat Diamond", Price = 1000, Weight = 1 }
+				new Gemstone { Id = 1, Name = "3 carat Diamond", Price = 2000, Weight = 3, Carat = 3, Color = "White", Clarity = "VS1", Cut = "Round", Status = "Available" },
+				new Gemstone { Id = 2, Name = "Ruby", Price = 1500, Weight = 1.5M, Carat = 1.5M, Color = "Red", Clarity = "VVS1", Cut = "Oval", Status = "Available" },
+				new Gemstone { Id = 3, Name = "Sapphire", Price = 1800, Weight = 1.8M, Carat = 1.8M, Color = "Blue", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+				new Gemstone { Id = 4, Name = "2 carat Diamond", Price = 1800, Weight = 2, Carat = 2, Color = "White", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
+				new Gemstone { Id = 5, Name = "1 carat Diamond", Price = 1000, Weight = 1, Carat = 1, Color = "White", Clarity = "VVS2", Cut = "Marquise", Status = "Available" }
 			);
 
 			#endregion

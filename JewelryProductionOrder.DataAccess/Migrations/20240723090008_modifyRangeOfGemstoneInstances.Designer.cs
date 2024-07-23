@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240723090008_modifyRangeOfGemstoneInstances")]
+    partial class modifyRangeOfGemstoneInstances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,15 +412,10 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("JewelryId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("JewelryId");
 
                     b.ToTable("MaterialSets");
                 });
@@ -976,7 +974,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
-                        .WithMany()
+                        .WithMany("Jewelries")
                         .HasForeignKey("MaterialSetId");
 
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
@@ -1038,17 +1036,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("Jewelry");
 
                     b.Navigation("ProductionStaff");
-                });
-
-            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
-                {
-                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithMany()
-                        .HasForeignKey("JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Jewelry");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -1283,6 +1270,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
+                    b.Navigation("Jewelries");
+
                     b.Navigation("MaterialSetMaterials");
                 });
 
