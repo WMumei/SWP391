@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace JewelryProductionOrder.Models
 {
@@ -8,8 +10,10 @@ namespace JewelryProductionOrder.Models
 		public DateTime CreatedAt { get; set; }
 		[Range(0, double.MaxValue)]
 		public decimal TotalPrice { get; set; }
-		public List<Jewelry> Jewelries { get; } = [];
-		public List<Material> Materials { get; } = [];
+        public int JewelryId { get; set; }
+        [ForeignKey("JewelryId")]
+        public Jewelry Jewelry { get; set; } = null!;
+        public List<Material> Materials { get; } = [];
 		public List<Gemstone> Gemstones { get; } = [];
 		public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
 	}

@@ -365,10 +365,15 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JewelryId");
 
                     b.ToTable("MaterialSets");
                 });
@@ -927,7 +932,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
-                        .WithMany("Jewelries")
+                        .WithMany()
                         .HasForeignKey("MaterialSetId");
 
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
@@ -989,6 +994,17 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("Jewelry");
 
                     b.Navigation("ProductionStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithMany()
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jewelry");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -1223,8 +1239,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
-                    b.Navigation("Jewelries");
-
                     b.Navigation("MaterialSetMaterials");
                 });
 

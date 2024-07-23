@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository;
 using Models.Repositories.Repository.IRepository;
 using Stripe;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

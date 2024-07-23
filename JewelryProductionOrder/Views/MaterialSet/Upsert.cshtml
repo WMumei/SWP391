@@ -119,7 +119,19 @@
 	<div class="col-md-3">
 		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
+	<table id="materialTable">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Price (USD)</td>
+				@* <td></td> *@
+			</tr>
 
+		</thead>
+@* 		<tbody>
+			<tr><td></td></tr>
+		</tbody> *@
+	</table>
 
 </form>
 
@@ -128,6 +140,7 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script src="~/js/MaterialSet/MaterialSet.js"></script>
 	<script>
 		let form = document.getElementById('materialForm');
 		document.getElementById('submitAddGemstone').addEventListener('click', function () {
@@ -173,7 +186,10 @@
 						toastr.error(e.message);
 					}
 					// reloadWithDelay();
-					location.reload();
+					// location.reload();
+						setTimeout(() => {
+							location.reload();
+						}, 500);
 				})
 		};
 		const deleteGemstone = (gemstoneId, materialSetId) => {
@@ -182,7 +198,10 @@
 			then(e => {
 				toastr.success(e.message);
 					// reloadWithDelay();
-					location.reload();
+					// location.reload();
+					setTimeout(() => {
+						location.reload();
+					}, 500);
 			});
 
 		}
@@ -193,7 +212,10 @@
 				then(e => {
 					toastr.success(e.message);
 					// reloadWithDelay();
-					location.reload();
+					// location.reload();
+					setTimeout(() => {
+						location.reload();
+					}, 500);
 				});
 		}
 	</script>

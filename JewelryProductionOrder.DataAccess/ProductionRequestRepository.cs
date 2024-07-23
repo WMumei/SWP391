@@ -41,6 +41,8 @@ namespace JewelryProductionOrder.Repositories
 				foreach (Jewelry jewelry in requestFromDb.Jewelries)
 				{
 					jewelry.Status = paymentStatus;
+					// Remember to check quotation is lastest and status == SD.CustomerApproved
+					// Then change status of that quotation to paymentStatus
 				}
 			}
 		}
