@@ -32,7 +32,6 @@
     <Folder Include="DB Static\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
-    <Folder Include="wwwroot\js\MaterialSet\" />
   </ItemGroup>
 
   <ItemGroup>

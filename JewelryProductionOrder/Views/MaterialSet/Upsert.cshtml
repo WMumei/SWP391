@@ -119,6 +119,7 @@
 	<div class="col-md-3">
 		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
+	
 	<table id="materialTable">
 		<thead>
 			<tr>
@@ -128,9 +129,21 @@
 			</tr>
 
 		</thead>
-@* 		<tbody>
-			<tr><td></td></tr>
-		</tbody> *@
+
+	</table>	
+	<table id="gemstoneTable">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Price (USD)</td>
+				<td>Weight</td>
+				<td>Carat</td>
+				<td>Color</td>
+				<td>Clarity</td>
+				<td>Cut</td>
+			</tr>
+
+		</thead>
 	</table>
 
 </form>
@@ -140,7 +153,7 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-	<script src="~/js/MaterialSet/MaterialSet.js"></script>
+	<script src="~/js/MaterialSet/Material.js"></script>
 	<script>
 		let form = document.getElementById('materialForm');
 		document.getElementById('submitAddGemstone').addEventListener('click', function () {

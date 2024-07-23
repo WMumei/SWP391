@@ -278,8 +278,24 @@ namespace SWP391.Controllers
 			var materials = _unitOfWork.Material.GetAll();
 			return Json(new { data = materials });
 		}
+		[HttpGet]
+		public IActionResult GetGemstones()
+		{
+			var gemstones = _unitOfWork.Gemstone.GetAll();
+			return Json(new { data = gemstones });
+		}
 
+		//[HttpGet]
+		//public IActionResult GetSessionMaterials()
+		//{
 
+		//}
+
+		//[HttpGet]
+		//public IActionResult GetSessionGemstones()
+		//{
+
+		//}
 		#endregion
 	}
 }
