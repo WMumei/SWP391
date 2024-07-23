@@ -42,6 +42,11 @@ namespace JewelryProductionOrder.Controllers
             post.CreatedAt = DateTime.Now;
             post.SalesStaffId = userId;
 
+            if (ImagePath == null)
+            {
+                ModelState.AddModelError("ImagePath", "Please upload an image.");
+            }
+
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             if (ImagePath != null)
             {
