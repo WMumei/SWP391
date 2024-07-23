@@ -7,6 +7,5 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
     public class GemstoneController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly GemstoneManager<Gemstone>  
     }
 }
