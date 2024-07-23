@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 
-namespace JewelryProductionOrder.Areas.Staff.Controllers
+namespace JewelryProductionOrder.Controllers
 {
 	public class DashboardController : Controller
 	{

@@ -1,0 +1,67 @@
+﻿@model Gemstone
+
+<div class="card-block shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Edit Gemstone</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <div class="border p-3">
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Name" class="form-control border-0 shadow" />
+                    <label asp-for="Name" class="ms-2"></label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Price" class="form-control border-0 shadow" />
+                    <label asp-for="Price" class="ms-2"></label>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Weight" class="form-control border-0 shadow" />
+                    <label asp-for="Weight" class="ms-2"></label>
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Carat" class="form-control border-0 shadow" />
+                    <label asp-for="Carat" class="ms-2"></label>
+                    <span asp-validation-for="Carat" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Color" class="form-control border-0 shadow" />
+                    <label asp-for="Color" class="ms-2"></label>
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Clarity" class="form-control border-0 shadow" />
+                    <label asp-for="Clarity" class="ms-2"></label>
+                    <span asp-validation-for="Clarity" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Cut" class="form-control border-0 shadow" />
+                    <label asp-for="Cut" class="ms-2"></label>
+                    <span asp-validation-for="Cut" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Status" disabled class="form-control border-0 shadow" />
+                    <label asp-for="Status" class="ms-2"></label>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Edit</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="Gemstone" asp-action="Index" class="btn btn-outline-primaty">
+                            Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
