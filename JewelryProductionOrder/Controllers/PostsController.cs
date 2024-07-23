@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
-using Microsoft.AspNetCore.Identity;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Models.Repositories.Repository.IRepository;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Models.Repositories.Repository.IRepository;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -25,6 +25,7 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = hostEnvironment;
         }
+
         [Authorize(Roles = SD.Role_Sales)]
         public IActionResult Create()
         {
@@ -52,10 +53,14 @@ namespace JewelryProductionOrder.Controllers
                 }
                 post.Image = @"Images/" + fileName;
             }
+            else
+            {
+                return NotFound();
+            }
 
             _unitOfWork.Post.Add(post);
             _unitOfWork.Save();
-            TempData["success"] = "Product created successfully";
+            TempData["success"] = "Post created successfully";
             return RedirectToAction("Index");
         }
 
@@ -78,7 +83,7 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult Edit(int id)
         {
-            var post = _unitOfWork.Post.Get(p => p.Id == id);
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
             if (post == null)
             {
                 return NotFound();
@@ -89,13 +94,37 @@ namespace JewelryProductionOrder.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.Role_Sales)]
-        public IActionResult Edit(Post post)
+        public IActionResult Edit(int id, string title, string content, string description, IFormFile ImagePath)
         {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
             if (ModelState.IsValid)
             {
+
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (ImagePath != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                    string filePath = Path.Combine(wwwRootPath, @"Images");
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                    {
+                        ImagePath.CopyTo(fileStream);
+                    }
+                    post.Image = @"Images/" + fileName;
+                }
+                else
+                {
+                    return NotFound();
+                }
+                
+                post.Title = title;
+                post.Content = content;
+                post.Description = description;
+
                 _unitOfWork.Post.Update(post);
                 _unitOfWork.Save();
+                TempData["success"] = "Post updated successfully";
                 return RedirectToAction("Index");
+                
             }
             return View(post);
         }
@@ -120,8 +149,19 @@ namespace JewelryProductionOrder.Controllers
             {
                 return NotFound();
             }
+
+            if (!string.IsNullOrEmpty(post.Image))
+            {
+                var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, post.Image.TrimStart('\\'));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
             _unitOfWork.Post.Remove(post);
             _unitOfWork.Save();
+            TempData["success"] = "Post deleted successfully";
             return RedirectToAction("Index");
         }
     }

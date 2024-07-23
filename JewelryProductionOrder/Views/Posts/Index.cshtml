@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Blog</h1>
 @if (User.IsInRole(SD.Role_Sales))
 {
     <p>
@@ -20,15 +20,18 @@
                 <div class="card">
                     @if (!string.IsNullOrEmpty(item.Image))
                     {
-                        <img src="~/@item.Image" class="card-img-top" alt="Image for @item.Title" />
+                        <a asp-action="Details" asp-route-id="@item.Id">
+                            <img src="~/@item.Image" class="card-img-top" alt="Image for @item.Title" />
+                        </a>
                     }
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
                         <p class="card-text">Created At: @item.CreatedAt.ToString("g")</p>
                         <p class="card-text">Sales Staff: @item.SalesStaff.Name</p>
-                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
+                        <p class="card-text">@item.Description</p>
                         @if (User.IsInRole(SD.Role_Sales))
                         {
+                            <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
                             <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
                             <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
                         }

@@ -15,11 +15,20 @@
             <dd class="col-sm-9">@Model.SalesStaff.Name</dd>
         </dl>
         <hr />
+
         <div>
              <img src="~/@Model.Image" alt="Image can't be found'" class="img-fluid" />
             
         </div>
+
         <br />
+
+        <div>
+            @Html.Raw(Model.Description.Replace("\n", "<br />").Replace("\r", ""))
+        </div>
+
+        <br />
+
         <div>
             @Html.Raw(Model.Content.Replace("\n", "<br />").Replace("\r", ""))
         </div>
