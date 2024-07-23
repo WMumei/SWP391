@@ -127,7 +127,6 @@ namespace JewelryProductionOrder.Controllers
 		}
 		[HttpPost]
 		public IActionResult Edit(WarrantyCard obj)
-
 		{
 			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == obj.Id);
 			obj.Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == warrantyCard.JewelryId);

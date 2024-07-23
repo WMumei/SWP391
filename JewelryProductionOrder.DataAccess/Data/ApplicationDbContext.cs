@@ -153,10 +153,7 @@ namespace JewelryProductionOrder.Data
 				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type = "Company" }
 				);
 
-			//modelBuilder.Entity<ProductionRequest>().HasData(
-			//	new ProductionRequest { Id = 1, CreatedAt = DateTime.Now, Address = "23 Phu Ky Quan 12", ContactName = " Le Hoang", PhoneNumber = "0123456769", Email = "test@gmail.com" },
-			//	new ProductionRequest { Id = 2, CreatedAt = DateTime.Now, Address = "23 Phu Ky Quan 12", ContactName = " Le Hoang", PhoneNumber = "0123456769", Email = "test@gmail.com" }
-			//	);
+
 			modelBuilder.Entity<Material>().HasData(
 				new Material { Id = 1, Name = "White Gold", Price = 100 },
 				new Material { Id = 2, Name = "Rose Gold", Price = 50 },
@@ -172,12 +169,7 @@ namespace JewelryProductionOrder.Data
 				new Gemstone { Id = 4, Name = "2 carat Diamond", Price = 1800, Weight = 2 },
 				new Gemstone { Id = 5, Name = "1 carat Diamond", Price = 1000, Weight = 1 }
 			);
-			//modelBuilder.Entity<Jewelry>().HasData(
-			//	new Jewelry { Id = 1, Name = "Diamond Ring", Description = "9999 Gold for the material and 1 carat diamond for everyday wear", Status = "", CreatedAt = DateTime.Now, ProductionRequestId = 1, BaseDesignId = 1 });
-			//modelBuilder.Entity<QuotationRequest>().HasData(
-			//        new QuotationRequest { Id = 1, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 },
-			//        new QuotationRequest { Id = 2, Name = "abc", Status = "", CreatedAt = DateTime.Now, LaborPrice = 1000000, TotalPrice = 200000 }
-			//    );
+
 			#endregion
 
 			#region OneToOne
