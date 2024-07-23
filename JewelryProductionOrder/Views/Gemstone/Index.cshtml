@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table id="tblData" class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -29,39 +29,13 @@
                     <th>Clarity</th>
                     <th>Color</th>
                     <th>Cut</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var obj in Model.OrderByDescending(u => u.Name))
-                {
-                    <tr>
-                        <td>@obj.Name</td>
-                        <td>@obj.Price</td>
-                        <td>@obj.Weight</td>
-                        <td>@obj.Carat</td>
-                        <td>@obj.Clarity</td>
-                        <td>@obj.Color</td>
-                        <td>@obj.Cut</td>
-                        <td>
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Gemstone" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary">
-                                    Edit
-                                </a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="w-75 btn-group" role="group">
-
-                                <a asp-controller="Gemstone" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-primary">
-                                    Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/gemstone.js"></script>
+}

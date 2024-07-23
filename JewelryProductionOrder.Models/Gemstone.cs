@@ -6,11 +6,12 @@
 		{
 			public int Id { get; set; }
 			public string Name { get; set; }
-			[Range(0, double.MaxValue)]
+			[Range(0.01, 100000000)]
 			public decimal Price { get; set; }
-			[Range(0, double.MaxValue)]
+			[Range(0.01, 100000000)]
 			public decimal Weight { get; set; }
-			public decimal Carat { get; set; }
+	        [Range(0.01, 100000000)]
+		    public decimal Carat { get; set; }
 			public string Color { get; set; }
 			public string Clarity { get; set; }
 			public string Cut { get; set; }

@@ -98,5 +98,29 @@ namespace JewelryProductionOrder.Controllers
             TempData["success"] = "Gemstone removed";
             return RedirectToAction("Index");
         }
+
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Gemstone> objGemstoneList = _unitOfWork.Gemstone.GetAll().Where(u => u.Status == "Available").ToList();
+            return Json(new { data = objGemstoneList });
+        }
+
+        //[HttpDelete]
+        //public IActionResult Delete(int? id)
+        //{
+        //    var productToBeDeleted = _unitOfWork.Gemstone.Get(u => u.Id == id);
+        //    if (productToBeDeleted == null)
+        //    {
+        //        return Json(new { success = false, message = "Error while deleting" });
+        //    }
+        //    productToBeDeleted.Status = "Unavailable";
+        //    _unitOfWork.Gemstone.Update(productToBeDeleted);
+        //    _unitOfWork.Save();
+        //    TempData["success"] = "Gemstone removed";
+        //    return Json(new { success = true, message = "Gemstone removed" });
+        //}
+        #endregion
     }
 }
