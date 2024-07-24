@@ -113,12 +113,13 @@
 	</div>
 </form>
 	*@
-<div class="card-group">
-	<div class="card shadow border-0 m-2">
+<div id="material-card-group" class="card-group my-5 d-flex justify-content-between">
+	<div class="col-md-8 card shadow border-0 m-1" style="flex: 0 0 60%;">
+
 		<div class="card-header bg-primary" style="background-color: #445B8D;">
 			<div class="row">
 				<div class="col-12 text-center">
-					<h2 class="text-white m-0">Current Materials</h2>
+					<h4 class="text-white m-0">Current Materials</h4>
 				</div>
 			</div>
 		</div>
@@ -127,18 +128,23 @@
 				<thead>
 					<tr>
 						<td>Name</td>
-						<td>Price (USD)</td>
+						<td>Unit Price (USD)</td>
+						<td>Weight (g)</td>
+						<td>Total Price (USD)</td>
+						@* Remember to reserve a column for actions *@
 						<td></td>
 					</tr>
 				</thead>
 			</table>
 		</div>
+
 	</div>
-	<div class="card shadow border-0 m-2">
-		<div class="card-header bg-primary" style="background-color: #445B8D;">
+	<div class="col-md-4 card shadow border-0 m-1" style="flex: 0 0 35%;">
+
+		<div class="card-header bg-primary" >
 			<div class="row">
 				<div class="col-12 text-center">
-					<h2 class="text-white m-0">Materials</h2>
+					<h4 class="text-white m-0">Materials</h4>
 				</div>
 			</div>
 		</div>
@@ -147,7 +153,7 @@
 				<thead>
 					<tr>
 						<td>Name</td>
-						<td>Price (USD)</td>
+						<td>Unit Price (USD)</td>
 						<td></td>
 					</tr>
 				</thead>
@@ -155,15 +161,15 @@
 		</div>
 	</div>
 </div>
-
-<div class="card-group">
+<hr />
+<div id="gemstone-card-group" class="card-group my-5">
 
 	@* <div class="col-6"> *@
 	<div class="card shadow border-0 m-2">
 		<div class="card-header bg-primary" style="background-color: #445B8D;">
 			<div class="row">
 				<div class="col-12 text-center">
-					<h2 class="text-white m-0">Current Gemstones</h2>
+					<h4 class="text-white m-0">Current Gemstones</h4>
 				</div>
 			</div>
 		</div>
@@ -188,11 +194,11 @@
 	</div>
 	@* 	</div>
 	<div class="col-6"> *@
-	<div class="card shadow border-0 m-2 w-25">
+	<div class="card shadow border-0 m-2 ">
 		<div class="card-header bg-primary" style="background-color: #445B8D;">
 			<div class="row">
 				<div class="col-12 text-center">
-					<h2 class="text-white m-0">Availabe Gemstones</h2>
+					<h4 class="text-white m-0">Availabe Gemstones</h4>
 				</div>
 			</div>
 		</div>
@@ -202,7 +208,7 @@
 					<tr>
 						<td>Name</td>
 						<td>Price (USD)</td>
-						<td>Weight</td>
+						<td>Weight (g)</td>
 						<td>Carat</td>
 						<td>Color</td>
 						<td>Clarity</td>

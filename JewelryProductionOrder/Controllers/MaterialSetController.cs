@@ -1,11 +1,16 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Models.ViewModels.MaterialSetViewModels;
 using JewelryProductionOrder.Repositories;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Models.Repositories.Repository.IRepository;
+using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace SWP391.Controllers
 {
@@ -13,6 +18,16 @@ namespace SWP391.Controllers
 	public class MaterialSetController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		public List<MaterialVM> MaterialListSession
+		{
+			get => HttpContext.Session.Get<List<MaterialVM>>(SessionConst.MATERIAL_LIST_KEY) ?? new List<MaterialVM>();
+		}
+
+		public List<Gemstone> GemstoneListSession
+		{
+			get => HttpContext.Session.Get<List<Gemstone>>(SessionConst.GEMSTONE_LIST_KEY) ?? new List<Gemstone>();
+		}
+
 		public MaterialSetController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
@@ -265,7 +280,7 @@ namespace SWP391.Controllers
 		#endregion
 
 		#region API
-		public IActionResult Upsert(int jId)
+		public IActionResult Upsert(int id)
 		{
 			return View();
 		}
@@ -290,17 +305,125 @@ namespace SWP391.Controllers
 			return Json(new { data = gemstones });
 		}
 
-		//[HttpGet]
-		//public IActionResult GetSessionMaterials()
-		//{
+		[HttpGet]
+		public IActionResult GetSessionMaterials()
+		{
+			return Json(new { data = MaterialListSession });
+		}
 
-		//}
+		[HttpGet]
+		public IActionResult GetSessionGemstones()
+		{
+			return Json(new { data = GemstoneListSession });
+		}
 
-		//[HttpGet]
-		//public IActionResult GetSessionGemstones()
-		//{
+		public IActionResult AddMaterial(int id)
+		{
+			// Fail if the material already exists in current set
+			if (MaterialListSession.Exists(m => m.Material.Id == id))
+			{
+				return Json(new { success = false, message = "Material already exists in the set" });
+			}
 
-		//}
+			// Otherwise, add that to session if material exists 
+			Material? material = _unitOfWork.Material.Get(m => m.Id == id);
+			if (material is null)
+			{
+				return Json(new { success = false, message = "Material not found" });
+			}
+			var materialVM = new MaterialVM { Material = material, Weight = 1, Price = material.Price };
+			var list = MaterialListSession;
+			list.Add(materialVM);
+			HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, list);
+
+			return Json(new { success = true, message = "Material added successfully" });
+		}
+
+		public IActionResult AddGemstone(int id)
+		{
+			// Fail if the gemstone already exists in current set
+			if (GemstoneListSession.Exists(g => g.Id == id))
+			{
+				return Json(new { success = false, message = "Gemstone already exists in the set" });
+			}
+
+			// Otherwise, add that to session if gemstone exists 
+			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == id);
+			if (gemstone is null)
+			{
+				return Json(new { success = false, message = "Gemstone not found" });
+			}
+
+			var gemstoneList = GemstoneListSession;
+			gemstoneList.Add(gemstone);
+			HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstoneList);
+
+			return Json(new { success = true, message = "Gemstone added successfully" });
+		}
+
+
+
+		public IActionResult UpdateWeight(int id, decimal weight)
+		{
+			// Weight validation
+			if (weight <= 0)
+			{
+				return Json(new { success = false, message = "Please enter a valid weight" });
+			}
+
+			// Update the material if found in set
+			var materials = MaterialListSession;
+			var materialVM = materials.FirstOrDefault(m => m.Material.Id == id);
+			if (materialVM is not null)
+			{
+				materials.Remove(materialVM);
+				materialVM.Weight = weight;
+				materials.Add(materialVM);
+
+				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materials);
+				return Json(new { success = true, message = $"Material {materialVM.Material.Name} updated successfully" });
+			}
+			return Json(new { success = false, message = "Material not found" });
+		}
+
+		public IActionResult DeleteMaterial(int id)
+		{
+			// Find the material in the session list
+			var material = MaterialListSession.FirstOrDefault(m => m.Material.Id == id);
+			if (material != null)
+			{
+				// Remove the material from the session list
+				var materials = MaterialListSession;
+				materials.Remove(material);
+				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materials);
+				return Json(new { success = true, message = "Material deleted successfully" });
+			}
+			return Json(new { success = false, message = "Material not found" });
+		}
+
+		public IActionResult DeleteGemstone(int id)
+		{
+			// Find the gemstone in the session list
+			var gemstone = GemstoneListSession.FirstOrDefault(g => g.Id == id);
+			if (gemstone != null)
+			{
+				// Remove the gemstone from the session list
+				var gemstones = GemstoneListSession;
+				gemstones.Remove(gemstone);
+				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstones);
+				return Json(new { success = true, message = "Gemstone deleted successfully" });
+			}
+			return Json(new { success = false, message = "Gemstone not found" });
+		}
+
+
 		#endregion
+
+		private string GetCurrentUserId()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		}
+
 	}
 }

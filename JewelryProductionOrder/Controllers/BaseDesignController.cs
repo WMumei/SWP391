@@ -47,20 +47,22 @@ namespace JewelryProductionOrder.Controllers
 				obj.Image = Path.Combine("\\files", fileName);
 			}
 
-			if (User.IsInRole("Customer")) obj.Type = "Customer";
+			if (User.IsInRole(SD.Role_Customer)) obj.Type = "Customer";
 			else obj.Type = "Company";
 
 			_unitOfWork.BaseDesign.Add(obj);
 			_unitOfWork.Save();
-
-			ShoppingCart shoppingCart = new ShoppingCart
+			if (User.IsInRole(SD.Role_Customer))
 			{
-				BaseDesignId = obj.Id,
-				Quantity = 1,
-				UserId = userId
-			};
-			_unitOfWork.ShoppingCart.Add(shoppingCart);
-			_unitOfWork.Save();
+				ShoppingCart shoppingCart = new ShoppingCart
+				{
+					BaseDesignId = obj.Id,
+					Quantity = 1,
+					UserId = userId
+				};
+				_unitOfWork.ShoppingCart.Add(shoppingCart);
+				_unitOfWork.Save();
+			}
 
 			TempData["success"] = "Create successfully";
 
