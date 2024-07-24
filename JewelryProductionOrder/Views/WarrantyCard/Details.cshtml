@@ -21,6 +21,17 @@
 				<input disabled asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="form-control border-0 shadow" />
 				<label asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="ms-2"></label>
 			</div>
+			@if (User.IsInRole(SD.Role_Customer))
+			{
+				<div>
+					To ensure your jewelry remains in the best possible condition, please follow these care instructions:
+
+					Remove jewelry before swimming, showering, or engaging in physical activities.
+					Store jewelry in a clean, dry place, preferably in a jewelry box or pouch.
+					Avoid exposing jewelry to harsh chemicals, perfumes, and lotions.
+					Clean jewelry with a soft cloth and mild soap solution; avoid using abrasive materials.
+				</div>
+			}
 </div>
 </div>
 

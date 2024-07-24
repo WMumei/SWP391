@@ -1,14 +1,13 @@
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
-using System.Diagnostics;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
+	[Authorize]
 	public class BaseDesignController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +17,7 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork = unitOfWork;
 			_webHostEnvironment = hostEnvironment;
 		}
-
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
 		public IActionResult Create()
 		{
 			BaseDesign obj = new BaseDesign
@@ -28,7 +27,7 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
-		[Authorize]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
 		public IActionResult Create(BaseDesign obj, IFormFile? file)
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -67,6 +66,10 @@ namespace JewelryProductionOrder.Controllers
 
 			return RedirectToAction("Index", "Home");
 		}
-
+		public IActionResult Index(int id)
+		{
+			BaseDesign design = _unitOfWork.BaseDesign.Get(d => d.Id == id);
+			return View(design);
+		}
 	}
 }

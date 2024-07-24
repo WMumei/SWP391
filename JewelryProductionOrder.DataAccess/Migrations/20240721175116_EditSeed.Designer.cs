@@ -4,20 +4,23 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JewelryProductionOrder.Migrations
+namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240721175116_EditSeed")]
+    partial class EditSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -152,9 +155,23 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Diamond",
-                            Price = 200000m,
+                            Name = "3 carat Diamond",
+                            Price = 2000m,
                             Weight = 2m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Ruby",
+                            Price = 1500m,
+                            Weight = 1.5m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sapphire",
+                            Price = 1800m,
+                            Weight = 1.8m
                         });
                 });
 
@@ -216,18 +233,6 @@ namespace JewelryProductionOrder.Migrations
                     b.HasIndex("SalesStaffId");
 
                     b.ToTable("Jewelries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BaseDesignId = 1,
-                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8874),
-                            Description = "9999 Gold for the material and 1 carat diamond for everyday wear",
-                            Name = "Diamond Ring",
-                            ProductionRequestId = 1,
-                            Status = ""
-                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
@@ -303,14 +308,38 @@ namespace JewelryProductionOrder.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Gold",
-                            Price = 1000m
+                            Name = "White Gold",
+                            Price = 100m
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Silver",
-                            Price = 1m
+                            Name = "Rose Gold",
+                            Price = 50m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Yellow Gold",
+                            Price = 80m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Green Gold",
+                            Price = 90m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "925 Silver",
+                            Price = 60m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "999 Silver",
+                            Price = 70m
                         });
                 });
 
@@ -436,9 +465,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuotationRequestId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SalesStaffId")
                         .HasColumnType("nvarchar(450)");
 
@@ -456,31 +482,9 @@ namespace JewelryProductionOrder.Migrations
 
                     b.HasIndex("ProductionStaffId");
 
-                    b.HasIndex("QuotationRequestId");
-
                     b.HasIndex("SalesStaffId");
 
                     b.ToTable("ProductionRequests");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "23 Phu Ky Quan 12",
-                            ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8770),
-                            Email = "test@gmail.com",
-                            PhoneNumber = "0123456769"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "23 Phu Ky Quan 12",
-                            ContactName = " Le Hoang",
-                            CreatedAt = new DateTime(2024, 7, 18, 21, 47, 48, 30, DateTimeKind.Local).AddTicks(8806),
-                            Email = "test@gmail.com",
-                            PhoneNumber = "0123456769"
-                        });
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequestDetail", b =>
@@ -749,7 +753,7 @@ namespace JewelryProductionOrder.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
+                    b.HasDiscriminator().HasValue("IdentityUser");
 
                     b.UseTphMappingStrategy();
                 });
@@ -1023,10 +1027,6 @@ namespace JewelryProductionOrder.Migrations
                         .HasForeignKey("ProductionStaffId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("JewelryProductionOrder.Models.QuotationRequest", "QuotationRequest")
-                        .WithMany()
-                        .HasForeignKey("QuotationRequestId");
-
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
@@ -1037,8 +1037,6 @@ namespace JewelryProductionOrder.Migrations
                     b.Navigation("DesignStaff");
 
                     b.Navigation("ProductionStaff");
-
-                    b.Navigation("QuotationRequest");
 
                     b.Navigation("SalesStaff");
                 });

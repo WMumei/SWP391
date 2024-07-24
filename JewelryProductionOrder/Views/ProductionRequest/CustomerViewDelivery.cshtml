@@ -1,10 +1,10 @@
-﻿@model ProductionRequest
+﻿@model List<Jewelry>
 
 
 <form method="post" class="container">
 	<div class="caption-top row">
-		<input asp-for="Customer.Id" hidden />
-		<h1>Deliver production request: @Model.Id</h1>
+		<input asp-for="@Model.FirstOrDefault().Customer.Id" hidden />
+		<h1>Deliver production request: @Model.FirstOrDefault().ProductionRequest.Id</h1>
 		</br>
 		</br>
 		<h2 class="text-center">JPO's Contact</h2>
@@ -18,16 +18,16 @@
 			<input disabled asp-for="@Model.Jewelry.Name"  />
 			</div>*@
 			<div class="col-12 py-2 form-floating">
-				<input disabled asp-for="@Model.SalesStaff.Name" type="text" class="form-control border-0 shadow" />
-				<label asp-for="@Model.SalesStaff.Name" type="text" class="ms-2">Sales Staff's Name:</label>
+				<input disabled asp-for="@Model.FirstOrDefault().SalesStaff.Name" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.FirstOrDefault().SalesStaff.Name" type="text" class="ms-2">Sales Staff's Name:</label>
 			</div>
 			<div class="col-12 py-2 form-floating">
-				<input disabled asp-for="@Model.SalesStaff.PhoneNumber" type="text" class="form-control border-0 shadow" />
-				<label asp-for="@Model.SalesStaff.PhoneNumber" type="text" class="ms-2">Sales Staff's Phone Number:</label>
+				<input disabled asp-for="@Model.FirstOrDefault().SalesStaff.PhoneNumber" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.FirstOrDefault().SalesStaff.PhoneNumber" type="text" class="ms-2">Sales Staff's Phone Number:</label>
 			</div>
 			<div class="col-12 py-2 form-floating">
-				<input disabled asp-for="@Model.Address" type="text" class="form-control border-0 shadow" />
-				<label asp-for="@Model.Address" type="text" class="ms-2"></label>
+				<input disabled asp-for="@Model.FirstOrDefault().ProductionRequest.Address" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.FirstOrDefault().ProductionRequest.Address" type="text" class="ms-2"></label>
 			</div>
 			<div class="col-12 py-2 form-floating">
 				@*<input asp-for="Customer.Id" hidden />*@
@@ -42,7 +42,7 @@
 								<th>Description</th>
 
 							</tr>
-							@foreach (var jewelry in Model.Jewelries)
+							@foreach (var jewelry in Model)
 							{
 							<tbody>
 
@@ -64,15 +64,15 @@
 
 		
 		<div class="text-center">
-			<h2>Latest status of the order: @Model.Status </h2>
+			<h2>Latest status of the order: @Model.FirstOrDefault().ProductionRequest.Status </h2>
 			<br />
 
 
-			@if (Model.Status != SD.StatusRequestDone && Model.Status != SD.StatusConfirmDelivered)
+			@if (@Model.FirstOrDefault().ProductionRequest.Status != SD.StatusRequestDone && @Model.FirstOrDefault().ProductionRequest.Status != SD.StatusConfirmDelivered)
 
 			{
 				<h3>Please confirm your order after receiving and checking order with the policies below</h3>
-				<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Confirm</a>
+				<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.FirstOrDefault().ProductionRequest.Id" class="btn btn-primary btn-sm">Confirm</a>
 			}
 
 

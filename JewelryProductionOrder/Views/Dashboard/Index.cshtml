@@ -1,137 +1,316 @@
-﻿@{
-    ViewData["Title"] = "Dashboard";
-}
-@model List<QuotationRequest>
-<link rel="stylesheet" href="~/css/Dashboard.css" />
+﻿
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewelry Dashboard</title>
+    <link rel="stylesheet" href="~/css/Dashboard1.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style >
+       #validation{
+           display:none;
+        color:red;
+       }
+    </style>
 </head>
-
 <body>
-    <h1>Dashboard</h1>
-    @* <div class="dashboard-container">
-        <div class="dashboard-box2" id="jewelry-and-customer">
+    <div class="container">
+        <header>
+            <h1 class="text-center">JPO Dashboard</h1>
+        </header>
+        <main>
             <div class="dashboard-box">
-                <h2>Total Jewelry Sold</h2>
-                <div  id="jewelry-sold">
-                    <img src="~/Images/Jewelry Icon.png" alt="Jewelry Icon">
-                    <p>@ViewBag.DeliveryCount</p>
-                </div>
-            </div>
-            </br>
-            <div class="dashboard-box" id="total-customer">
-                <h2>Total Customers</h2>
-                <p>@ViewBag.CustomerCount</p
-            </div>
-        </div>
-    </div> *@
+   
+                <section class="stats">
 
-        <div class="dashboard-box" id="revenue-chart">
-            <h2>Revenue</h2>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Total Revenue</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        decimal totalPriceSum = Model.Sum(obj => obj.TotalPrice ?? 0);
-                    }
-                    <tr id="Revenue">
-                        <td id="highlighted-revenue">
-                            <span class="dollar-sign">$</span>
-                            <span class="total-price">@totalPriceSum</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <form id="filter-form" asp-controller="Dashboard" asp-action="Index" method="post">
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" />
-                <br />
-                <br />
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" name="endDate" />
-                <br />
-                <br />
-                <button type="submit">Apply Filter</button>
-                <span id="missing-input" style="color:red; display:none">Missing Start date or End date, please fill in both</span>
-                <span id="invalid-date-range" style="color: red; display: none;">Invalid date range</span>
-            </form>
+                    <br />
+                    <div class="card">
+                        <h2>Revenue</h2>
+                    
+                        <select id="select" onchange="myFunction()">
+                            <option disabled selected>--Select type--</option>
+                            <option value="m">Monthly</option>
+                            <option value="y">Yearly</option>
+                            <option value="option">Optional</option>
+                        </select>
+                        <div id="validation">
+                        <span >Please select type for diagram.</span>
+                        </div>
+                        <div id="date" style="display:none">
+                            <label for="year" >Year: </label>
 
-            <br />
-            <canvas id="RevenueChart"></canvas>
-        </div>
+                            <select id="year" class="dropdown">
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+ 
+                        </select>
+                            <span id="validation1" style="display:none; color:red">Please enter year.</span>
+                        </div>
+                    
+                        <div id="monthdiv" style="display:none">
+                            <label for="month">Month:</label>
+                            <select id="month" class="dropdown">
+                            <option value="01">Jan</option>
+                            <option value="02">Feb</option>
+                            <option value="03">Mar</option>
+                            <option value="04">Apr</option>
+                            <option value="05">May</option>
+                            <option value="06">Jun</option>
+                            <option value="07">Jul</option>
+                            <option value="08">Aug</option>
+                            <option value="09">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                            </select>
+                            <span id="validation2" style="display:none; color:red">Please enter month.</span>
+                        </div>
+                        <div id="optiondate" style="display:none">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" onchange="updateDate('issued-date')" />
+                            
+                           
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" onchange="updateDate('issued-date')" />
+                            <br />
+                          
+                        </div>
+                        <div>
+                            <button id="click">Show</button>
+                            
+                        </div>
+
+                        <div id="total">
+                            <label>Total: <span id="totalvalue"></span>$</label>
+                        </div>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+
+                    <!------------------------------------------------------->
+                    <div class="card">
+                        <h2>Jewelry Sold </h2>
+                        <select id="selectJe" onchange="myFunctionJewelry()">
+                            <option disabled selected>--Select type--</option>
+                            <option value="mJe"> Monthly</option>
+                            <option value="yJe"> Yearly</option>
+                            <option value="optionJe">Optional</option>
+                        </select>
+                        <div id="validation">
+                            <span>Please select type for diagram.</span>
+                        </div>
+                        <div class="yearmonth">
+                            <div id="dateJe" style="display:none">
+                                <label for="yearJe">Year:</label>
+                                <select id="yearJe" class="dropdown">
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+
+                                </select>
+                                <span id="validation1" style="display:none; color:red">Please enter year.</span>
+                            </div>
+                            <div id="monthdivJe" style="display:none">
+                                <label for="monthJe">Month:</label>
+                                <select id="monthJe" class="dropdown">
+                                    <option value="01">Jan</option>
+                                    <option value="02">Feb</option>
+                                    <option value="03">Mar</option>
+                                    <option value="04">Apr</option>
+                                    <option value="05">May</option>
+                                    <option value="06">Jun</option>
+                                    <option value="07">Jul</option>
+                                    <option value="08">Aug</option>
+                                    <option value="09">Sep</option>
+                                    <option value="10">Oct</option>
+                                    <option value="11">Nov</option>
+                                    <option value="12">Dec</option>
+                                </select>
+                                <span id="validation2" style="display:none; color:red">Please enter month.</span>
+                            </div>
+                            <div id="optiondateJe" style="display:none">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" name="startDate" onchange="updateDate('issued-date')" />
+
+
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" name="endDate" onchange="updateDate('issued-date')" />
+                                <br />
+
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <button id="clickJe">Show</button>
+                        </div>
+                        <div id="total">
+                            <label>Total: <span id="totalvalueJe"></span>$</label>
+                        </div>
+                        <canvas id="jewelrychart"></canvas>
+                    </div>
+                    
+                </section>
+                
+            </div>
+        </main>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.getElementById("filter-form").addEventListener("submit", function (event) {
-            var startDate = new Date(document.getElementById("startDate").value);
-            var endDate = new Date(document.getElementById("endDate").value);
-
-            if (startDate > endDate) {
-                document.getElementById("invalid-date-range").style.display = "block";
-                event.preventDefault();
-            } else {
-                document.getElementById("invalid-date-range").style.display = "none";
+        var myChart = null;
+        var monthValue = 0;
+        var x = null;
+        // var monthLabelChart = 0;
+        var yearLabelChart = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        //TODO:Check so ngay trong thang
+        var monthLabelChart = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+        var labelChart = yearLabelChart;
+        // xử lý chọn yearly hoặc monthly
+        function myFunction() {
+            x = document.getElementById("select").value;
+            $("#optiondate,#monthdiv,#date").hide();
+            if (x == 'm') {
+                $("#validation,#validation1,#validation2").hide();
+                $("#monthdiv").show();
+                $("#date").show();
+                labelChart = monthLabelChart;
             }
-        });
+            else if (x == 'y') {
 
-        const ctx = document.getElementById('RevenueChart').getContext('2d');
-        const revenueData = @Html.Raw(Json.Serialize(ViewBag.Revenues));
+                $("#validation,#validation1,#validation2").hide();
+                $("#date").show();
+               
+                monthValue = 0;
+                labelChart = yearLabelChart;
+            } else {
+                $("#optiondate").show();
+            }
+        }
+        //end myFunction()
+        
+        //start myFunctionJewelry()
+        function myFunctionJewelry() {
+            x = document.getElementById("selectJe").value;
+            $("#optiondateJe,#monthdivJe,#dateJe").hide();
+            if (x == 'mJe') {
+                $("#validation,#validation1,#validation2").hide();
+                $("#monthdivJe").show();
+                $("#dateJe").show();
+                labelChart = monthLabelChart;
+            }
+            else if (x == 'yJe') {
 
-        if (revenueData.every(x => x === 0)) {
-            const myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['No value can be displayed'],
-                    datasets: [{
-                        label: 'Revenue',
-                        data: [0],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 1,
-                            min: 0,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                display: true,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
+                $("#validation,#validation1,#validation2").hide();
+                $("#dateJe").show();
+
+                monthValue = 0;
+                labelChart = yearLabelChart;
+            } else {
+                $("#optiondateJe").show();
+            }
+        }
+        //end myFunctionJewelry()
+        $(document).ready(function () {
+            $('#click').click(function () {
+
+                    // Get the value from the input field
+                    
+                if (x == null) {
+                    
+                    $("#validation").show();
+                } else {
+                    
+                    var year = $('#year').val();
+                    if (year == 0) {
+                        $("#validation1").show();
+                    }
+                    if (x == "m") {
+                        monthValue = $('#month').val();
+                        if (monthValue==0) {
+                            $("#validation2").show();
                         }
                     }
                 }
+                    
+                    // Trigger the AJAX call
+                    $.ajax({
+                        url: '/Dashboard/GetRevenueByYear',
+                        type: 'GET',
+                        data: { year: year, month: monthValue },
+                        success: function (data) {
+                            if (myChart) {
+                                myChart.clear();
+                                myChart.destroy();
+                            }
+                            //calculate total revenue
+                            //data is an array
+                        const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                        $("#totalvalue").text(sum);
+                               
+                            
+                            // Revenue Chart
+                            const ctxDaily = document.getElementById('revenueChart').getContext('2d');
+                            myChart = new Chart(ctxDaily, {
+                                type: 'line',
+                                data: {
+                                    labels: labelChart,
+                                    datasets: [{
+                                        label: '$',
+                                        data: data,
+                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                        borderColor: 'rgba(119, 212, 42, 1)',
+                                        borderWidth: 1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            //
+                        },
+                        error: function () {
+                            $('#output').text('An error occurred');
+                        }
+                    });
             });
-        } else {
-            ctx.canvas.style.display = "block";
-            const myChart = new Chart(ctx, {
-                type: 'bar',
+        });
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sample data
+            // const revenue = 15000;
+            const revenue = [0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            const monthlySales = [150, 200, 180, 220, 170, 210, 190, 230, 240, 260, 280, 300];
+
+            // Display revenue
+            // document.getElementById('revenue').innerText = `$${revenue.toLocaleString()}`;
+
+            // Revenue Chart
+            const ctxDaily = document.getElementById('revenueChart').getContext('2d');
+            if (myChart) {
+                myChart.clear();
+                myChart.destroy();
+            }
+            myChart = new Chart(ctxDaily, {
+                type: 'line',
                 data: {
-                    labels: @Html.Raw(Json.Serialize(ViewBag.Dates)),
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
-                        label: 'Revenue',
-                        data: revenueData,
-                        borderWidth: 2
+                        label: '$',
+                        data: revenue,
+                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                        borderColor: 'rgba(119, 212, 42, 1)',
+                        borderWidth: 1,
+                        fill: true
                     }]
                 },
                 options: {
@@ -139,15 +318,72 @@
                         y: {
                             beginAtZero: true
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
+                    }
+                }
+            });
+
+            // Jewelry Chart
+            // $(document).ready(function () {
+            //     $('#clickJe').click(function () {
+
+            //         // Get the value from the input field
+
+            //         if (x == null) {
+
+            //             $("#validation").show();
+            //         } else {
+
+            //             var yearJe = $('#yearJe').val();
+            //             if (yearJe == 0) {
+            //                 $("#validation1").show();
+            //             }
+            //             if (x == "mJe") {
+            //                 monthje = $('#monthJe').val();
+            //                 if (monthje == 0) {
+            //                     $("#validation2").show();
+            //                 }
+            //             }
+            //         }
+
+            //         Trigger the AJAX call
+            //         $.ajax({
+            //             url: '/Dashboard/GetJewelrySold',
+            //             type: 'GET',
+            //             data: { year: yearJe, month: monthJe },
+            //             success: function (data) {
+            //                 if (myChart) {
+            //                     myChart.clear();
+            //                     myChart.destroy();
+            //                 }
+            //                 //calculate total revenue
+            //                 //data is an array
+            //                 const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            //                 $("#totalvalueJe").text(sum);
+     // Jewelry Chart
+            const ctxMonthly = document.getElementById('jewelrychart').getContext('2d');
+            new Chart(ctxMonthly, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Jewelry',
+                        data: data,
+                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                        borderColor: 'rgba(119, 212, 42, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
             });
-        }
+        });
+
     </script>
 </body>
 </html>
