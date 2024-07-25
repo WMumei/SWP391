@@ -73,21 +73,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Gemstones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Gemstones", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Materials",
                 columns: table => new
                 {
@@ -362,21 +347,24 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GemstoneMaterialSet",
+                name: "Gemstones",
                 columns: table => new
                 {
-                    GemstonesId = table.Column<int>(type: "int", nullable: false),
-                    MaterialSetsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Carat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Clarity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cut = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaterialSetId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GemstoneMaterialSet", x => new { x.GemstonesId, x.MaterialSetsId });
-                    table.ForeignKey(
-                        name: "FK_GemstoneMaterialSet_Gemstones_GemstonesId",
-                        column: x => x.GemstonesId,
-                        principalTable: "Gemstones",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Gemstones", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -539,7 +527,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     MaterialId = table.Column<int>(type: "int", nullable: false),
                     MaterialSetId = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
@@ -622,14 +610,14 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Gemstones",
-                columns: new[] { "Id", "Name", "Price", "Weight" },
+                columns: new[] { "Id", "Carat", "Clarity", "Color", "Cut", "MaterialSetId", "Name", "Price", "Status", "Weight" },
                 values: new object[,]
                 {
-                    { 1, "3 carat Diamond", 2000m, 3m },
-                    { 2, "Ruby", 1500m, 1.5m },
-                    { 3, "Sapphire", 1800m, 1.8m },
-                    { 4, "2 carat Diamond", 1800m, 2m },
-                    { 5, "1 carat Diamond", 1000m, 1m }
+                    { 1, 3m, "VS1", "White", "Round", null, "3 carat Diamond", 2000m, "Available", 3m },
+                    { 2, 1.5m, "VVS1", "Red", "Oval", null, "Ruby", 1500m, "Available", 1.5m },
+                    { 3, 1.8m, "VS2", "Blue", "Princess", null, "Sapphire", 1800m, "Available", 1.8m },
+                    { 4, 2m, "VS2", "White", "Emerald", null, "2 carat Diamond", 1800m, "Available", 2m },
+                    { 5, 1m, "VVS2", "White", "Marquise", null, "1 carat Diamond", 1000m, "Available", 1m }
                 });
 
             migrationBuilder.InsertData(
@@ -700,9 +688,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 column: "WarrantyCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GemstoneMaterialSet_MaterialSetsId",
-                table: "GemstoneMaterialSet",
-                column: "MaterialSetsId");
+                name: "IX_Gemstones_MaterialSetId",
+                table: "Gemstones",
+                column: "MaterialSetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Jewelries_BaseDesignId",
@@ -867,12 +855,11 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_GemstoneMaterialSet_MaterialSets_MaterialSetsId",
-                table: "GemstoneMaterialSet",
-                column: "MaterialSetsId",
+                name: "FK_Gemstones_MaterialSets_MaterialSetId",
+                table: "Gemstones",
+                column: "MaterialSetId",
                 principalTable: "MaterialSets",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Jewelries_MaterialSets_MaterialSetId",
@@ -936,7 +923,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 name: "Deliveries");
 
             migrationBuilder.DropTable(
-                name: "GemstoneMaterialSet");
+                name: "Gemstones");
 
             migrationBuilder.DropTable(
                 name: "JewelryDesigns");
@@ -961,9 +948,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "WarrantyCards");
-
-            migrationBuilder.DropTable(
-                name: "Gemstones");
 
             migrationBuilder.DropTable(
                 name: "Materials");

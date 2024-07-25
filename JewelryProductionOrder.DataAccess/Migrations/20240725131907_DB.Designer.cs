@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240723001406_SeedGem2")]
-    partial class SeedGem2
+    [Migration("20240725131907_DB")]
+    partial class DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
-                {
-                    b.Property<int>("GemstonesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaterialSetsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GemstonesId", "MaterialSetsId");
-
-                    b.HasIndex("MaterialSetsId");
-
-                    b.ToTable("GemstoneMaterialSet");
-                });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.BaseDesign", b =>
                 {
@@ -152,6 +137,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MaterialSetId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -167,6 +155,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialSetId");
 
                     b.ToTable("Gemstones");
 
@@ -412,10 +402,15 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JewelryId");
 
                     b.ToTable("MaterialSets");
                 });
@@ -428,7 +423,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<int>("MaterialSetId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -912,21 +907,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
-                {
-                    b.HasOne("JewelryProductionOrder.Models.Gemstone", null)
-                        .WithMany()
-                        .HasForeignKey("GemstonesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialSetsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
@@ -962,6 +942,15 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("WarrantyCard");
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Gemstone", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany("Gemstones")
+                        .HasForeignKey("MaterialSetId");
+
+                    b.Navigation("MaterialSet");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.BaseDesign", "BaseDesign")
@@ -974,7 +963,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
-                        .WithMany("Jewelries")
+                        .WithMany()
                         .HasForeignKey("MaterialSetId");
 
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
@@ -1036,6 +1025,17 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("Jewelry");
 
                     b.Navigation("ProductionStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithMany()
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jewelry");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -1270,7 +1270,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
-                    b.Navigation("Jewelries");
+                    b.Navigation("Gemstones");
 
                     b.Navigation("MaterialSetMaterials");
                 });

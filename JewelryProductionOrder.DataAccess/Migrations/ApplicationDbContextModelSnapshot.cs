@@ -22,21 +22,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
-                {
-                    b.Property<int>("GemstonesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaterialSetsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GemstonesId", "MaterialSetsId");
-
-                    b.HasIndex("MaterialSetsId");
-
-                    b.ToTable("GemstoneMaterialSet");
-                });
-
             modelBuilder.Entity("JewelryProductionOrder.Models.BaseDesign", b =>
                 {
                     b.Property<int>("Id")
@@ -149,6 +134,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MaterialSetId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -164,6 +152,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialSetId");
 
                     b.ToTable("Gemstones");
 
@@ -430,7 +420,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<int>("MaterialSetId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -914,21 +904,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
-                {
-                    b.HasOne("JewelryProductionOrder.Models.Gemstone", null)
-                        .WithMany()
-                        .HasForeignKey("GemstonesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialSetsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.User", "Customer")
@@ -962,6 +937,15 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("SalesStaff");
 
                     b.Navigation("WarrantyCard");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Gemstone", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany("Gemstones")
+                        .HasForeignKey("MaterialSetId");
+
+                    b.Navigation("MaterialSet");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
@@ -1283,6 +1267,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
+                    b.Navigation("Gemstones");
+
                     b.Navigation("MaterialSetMaterials");
                 });
 

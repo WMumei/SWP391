@@ -294,7 +294,7 @@ namespace SWP391.Controllers
             // Check again to make sure that all gemstones are available in the process of adding 
             // (no one else added it to a set while the user was selecting and adding)
             var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
-            var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status != SD.StatusUnavailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
+            var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusAvailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
 
             // Check if there aren't anything in the set
             if (materials.Count == 0 && gemstones.Count == 0)
@@ -307,7 +307,7 @@ namespace SWP391.Controllers
             {
                 MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = (int)jId };
                 _unitOfWork.MaterialSet.Add(materialSet);
-				
+				_unitOfWork.Save();
                 // Add each material to the set
                 foreach (var material in materials)
                 {
