@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
+using NuGet.Protocol.Plugins;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -21,6 +22,11 @@ namespace JewelryProductionOrder.Controllers
             _userManager = userManager;
         }
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult RoleManagement(string userId)
         {
             return View();
         }
@@ -42,6 +48,7 @@ namespace JewelryProductionOrder.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Role = roleName,
+                    LockoutEnd = user.LockoutEnd,
                     Id = user.Id
                 });
             }
@@ -49,13 +56,28 @@ namespace JewelryProductionOrder.Controllers
             return Json(new { data = usersWithRoles });
         }
 
-        //[HttpPost]
-        //public IActionResult LockUnlock([FromBody]string id)
-        //{
-        //    var objFromDb = _userManager.Users.
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
+        {
+            var objFromDb = _unitOfWork.User.Get(u => u.Id == id);
+            if (objFromDb == null)
+            {
+                return Json(new { success = false });
+            }
 
-        //    return Json(new { success = true, message = "Delete successful" });
-        //}
+            if (objFromDb.LockoutEnd!=null && objFromDb.LockoutEnd > DateTime.Now)
+            {
+                objFromDb.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                objFromDb.LockoutEnd= DateTime.Now.AddDays(7);
+            }
+            _unitOfWork.User.Update(objFromDb);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Operation successful" });
+        }
         #endregion
     }
 }
