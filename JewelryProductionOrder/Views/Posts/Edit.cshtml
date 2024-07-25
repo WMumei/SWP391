@@ -20,10 +20,7 @@
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <div>
-                    @if (!string.IsNullOrEmpty(Model.Image))
-                    {
-                        <img src="~/@Model.Image" alt="Current Image" class="img-thumbnail" width="200" />
-                    }
+                    <img name="oldImage" src="~/@Model.Image" alt="Current Image" class="img-thumbnail" width="200" />
                 </div>
                 <input type="file" name="ImagePath" class="form-control border-0 shadow mt-2" />
                 <span asp-validation-for="Image" class="text-danger"></span>

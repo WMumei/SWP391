@@ -30,7 +30,9 @@
         <br />
 
         <div>
-            @Html.Raw(Model.Content.Replace("\n", "<br />").Replace("\r", ""))
+
+            @Html.Raw(Model.Content)
+
         </div>
     </div>
 </div>
@@ -38,3 +40,4 @@
 <div>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
+

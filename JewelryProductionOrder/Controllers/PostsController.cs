@@ -42,10 +42,11 @@ namespace JewelryProductionOrder.Controllers
             post.CreatedAt = DateTime.Now;
             post.SalesStaffId = userId;
 
-            if (ImagePath == null)
+            if (post.Content == null)
             {
-                ModelState.AddModelError("ImagePath", "Please upload an image.");
-            }
+                return NotFound();
+            }    
+
 
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             if (ImagePath != null)
@@ -63,6 +64,7 @@ namespace JewelryProductionOrder.Controllers
                 return NotFound();
             }
 
+            post.Content = post.Content.Replace("../Images/", "/Images/");
             _unitOfWork.Post.Add(post);
             _unitOfWork.Save();
             TempData["success"] = "Post created successfully";
@@ -102,12 +104,21 @@ namespace JewelryProductionOrder.Controllers
         public IActionResult Edit(int id, string title, string content, string description, IFormFile ImagePath)
         {
             var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+            if (post == null)
+            {
+                return NotFound();
+            }
+            
             if (ModelState.IsValid)
             {
-
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (ImagePath != null)
                 {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, post.Image.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
                     string filePath = Path.Combine(wwwRootPath, @"Images");
                     using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
@@ -120,7 +131,7 @@ namespace JewelryProductionOrder.Controllers
                 {
                     return NotFound();
                 }
-                
+
                 post.Title = title;
                 post.Content = content;
                 post.Description = description;
@@ -168,6 +179,27 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Save();
             TempData["success"] = "Post deleted successfully";
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return Json(new { location = "" });
+            }
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string filePath = Path.Combine(wwwRootPath, "Images", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            string fileUrl = Url.Content($"~/Images/{fileName}");
+            return Json(new { location = fileUrl });
         }
     }
 }
