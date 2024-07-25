@@ -287,17 +287,103 @@ namespace SWP391.Controllers
 
 		[HttpPost]
 		[ActionName("Upsert")]
-		public IActionResult UpsertPOST(int id)
-		{
-			return Json(new {success = true, message = "Submit successfully" });
-		}
+        public IActionResult UpsertPOST(int id, int? jId)
+        {
+            var materials = MaterialListSession;
+            // Retrieve all available gemstones
+            // Check again to make sure that all gemstones are available in the process of adding 
+            // (no one else added it to a set while the user was selecting and adding)
+            var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
+            var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status != SD.StatusUnavailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
 
-		[HttpGet]
-		public IActionResult Get(int id)
-		{
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == id);
-			return Json(new { data = materialSet });
-		}
+            // Check if there aren't anything in the set
+            if (materials.Count == 0 && gemstones.Count == 0)
+            {
+                return Json(new { success = false, message = "The Material Set could not be empty!" });
+            }
+
+            // Case Insert
+            if (id == 0 && jId is not null)
+            {
+                MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = (int)jId };
+                _unitOfWork.MaterialSet.Add(materialSet);
+				
+                // Add each material to the set
+                foreach (var material in materials)
+                {
+					if (material.Weight <= 0)
+					{
+                        return Json(new { success = false, message = "Please enter a valid weight" });
+                    }
+
+                    var join = new MaterialSetMaterial()
+                    {
+                        MaterialId = material.Material.Id,
+                        Weight = material.Weight,
+                        MaterialSetId = materialSet.Id
+                    };
+                    _unitOfWork.MaterialSetMaterial.Add(join);
+                }
+
+                // Add each gemstone to the material set
+                foreach (var gemstone in gemstones)
+                {
+                    gemstone.MaterialSetId = materialSet.Id;
+                    gemstone.Status = SD.StatusUnavailable;
+                    _unitOfWork.Gemstone.Update(gemstone);
+                }
+                _unitOfWork.Save();
+				ClearSession();
+                return Json(new { success = true, message = "Material Set created!" });
+            }
+            // Case Update
+            else
+            {
+                MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == id, tracked: true);
+                if (materialSet == null)
+                {
+                    return Json(new { success = false, message = "Material Set not found!" });
+                }
+
+                // Remove existing materials and gemstones
+                var existingMaterials = _unitOfWork.MaterialSetMaterial.GetAll(m => m.MaterialSetId == id).ToList();
+                var existingGemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
+
+                _unitOfWork.MaterialSetMaterial.RemoveRange(existingMaterials);
+
+                foreach (var existingGemstone in existingGemstones)
+                {
+                    existingGemstone.MaterialSetId = null;
+                    existingGemstone.Status = SD.StatusAvailable;
+                    _unitOfWork.Gemstone.Update(existingGemstone);
+                }
+
+                // Add materials to the set
+                foreach (var material in materials)
+                {
+                    var join = new MaterialSetMaterial()
+                    {
+                        MaterialId = material.Material.Id,
+                        Weight = material.Weight,
+                        MaterialSetId = materialSet.Id
+                    };
+                    _unitOfWork.MaterialSetMaterial.Add(join);
+                }
+
+                // Add gemstones to the material set
+                foreach (var gemstone in gemstones)
+                {
+                    gemstone.MaterialSetId = materialSet.Id;
+                    gemstone.Status = SD.StatusUnavailable;
+                    _unitOfWork.Gemstone.Update(gemstone);
+                }
+
+                _unitOfWork.Save();
+				ClearSession();
+                return Json(new { success = true, message = "Material Set updated!" });
+            }
+        }
+
 
 		[HttpGet]
 		public IActionResult GetMaterials()
@@ -314,17 +400,19 @@ namespace SWP391.Controllers
 			return Json(new { data = gemstones });
 		}
 
+
 		[HttpGet]
 		public IActionResult GetSessionMaterials()
 		{
 			return Json(new { data = MaterialListSession });
 		}
-
 		[HttpGet]
 		public IActionResult GetSessionGemstones()
 		{
 			return Json(new { data = GemstoneListSession });
 		}
+
+
 		[HttpPost]
 		public IActionResult AddMaterial(int id)
 		{
@@ -395,6 +483,8 @@ namespace SWP391.Controllers
 			}
 			return Json(new { success = false, message = "Material not found" });
 		}
+
+
 		[HttpDelete]
 		public IActionResult DeleteMaterial(int id)
 		{
@@ -425,6 +515,8 @@ namespace SWP391.Controllers
 			}
 			return Json(new { success = false, message = "Gemstone not found" });
 		}
+
+
 		[HttpGet]
 		public IActionResult GetPrice()
 		{
@@ -460,5 +552,11 @@ namespace SWP391.Controllers
 			}
 			return total;
 		}
+
+		private void ClearSession()
+		{
+            HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+            HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
+        }
 	}
 }

@@ -19,7 +19,7 @@ namespace JewelryProductionOrder.Models
 			public string Clarity { get; set; }
 			public string Cut { get; set; }
 			public string Status { get; set; }
-			[JsonIgnore]
-			public List<MaterialSet> MaterialSets { get; } = [];
-		}
+			public int? MaterialSetId { get; set; }
+			public MaterialSet MaterialSet { get; set; } = null!;
+    }
 	}

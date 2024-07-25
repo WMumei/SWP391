@@ -14,6 +14,6 @@ namespace JewelryProductionOrder.Models
 		public MaterialSet MaterialSet { get; set; }
 		[Range(0, double.MaxValue)]
 		public decimal Weight { get; set; }
-		public DateTime CreatedAt { get; set; }
+		public DateTime? CreatedAt { get; set; }
 	}
 }

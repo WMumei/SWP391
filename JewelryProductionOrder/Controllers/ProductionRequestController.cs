@@ -272,7 +272,7 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusRequestDelayedPayment, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPaid, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");
