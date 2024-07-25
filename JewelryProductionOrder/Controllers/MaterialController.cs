@@ -1,8 +1,13 @@
-﻿using JewelryProductionOrder.Models;
+﻿using Humanizer;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Models.Repositories.Repository.IRepository;
+using static System.Collections.Specialized.BitVector32;
+using System;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -20,6 +25,13 @@ namespace JewelryProductionOrder.Controllers
 			List<Material> materialList = _unitOfWork.Material.GetAll().ToList();
 			return View(materialList);
 		}
+
+        [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
+        public IActionResult Create()
+        {
+            Material material = new Material();
+            return View(material);
+        }
 
         [HttpPost]
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
@@ -51,7 +63,7 @@ namespace JewelryProductionOrder.Controllers
             dbM.Name = material.Name;
 			_unitOfWork.Material.Update(dbM);
 			_unitOfWork.Save();
-            return RedirectToAction(nameof(Edit));
+            return RedirectToAction("Index");
         }
 
 		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
@@ -67,6 +79,13 @@ namespace JewelryProductionOrder.Controllers
 			return RedirectToAction("Index");
 		}
 
-
-	}
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Material> objMaterial = _unitOfWork.Material.GetAll().ToList();
+            return Json(new { data = objMaterial });
+        }
+        #endregion
+    }
 }

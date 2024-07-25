@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="~/JewelryProductionOrder.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-</head>
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.0/css/dataTables.dataTables.min.css" />
+@*     <link rel="stylesheet" href="//cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+ *@</head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -98,14 +100,32 @@
                 </div>
             }
             
-            <div>
-                <a asp-controller="Posts" asp-action="Index" class="button text-dark">View Post</a>
-            </div>
+            
 
             @if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Manager))
             {
                 <div>
                     <a asp-controller="Material" asp-action="Index" class="button">Manage Material</a>
+                </div>
+
+                <div>
+                    <a asp-controller="User" asp-action="Index" class="button text-light">User management</a>
+                </div>
+            }
+
+            @if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Manager) || User.IsInRole(SD.Role_Design))
+			{
+				<div>
+					<a asp-controller="BaseDesign" asp-action="Index" class="button">Manage BaseDesign</a>
+				</div>
+			}
+            <div>
+                <a asp-controller="Posts" asp-action="Index" class="button text-light">View Post</a>
+            </div>
+            @if (User.IsInRole(SD.Role_Sales))
+            {
+                <div>
+                    <a asp-controller="Gemstone" asp-action="Index" class="button text-light">View List Gemstone</a>
                 </div>
             }
             @*
@@ -132,6 +152,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="//cdn.datatables.net/2.1.0/js/dataTables.min.js" asp-append-version="true"></script>
+@*     <script src="//cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+ *@    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
