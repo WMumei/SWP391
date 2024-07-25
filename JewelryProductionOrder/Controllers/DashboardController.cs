@@ -199,11 +199,11 @@ namespace JewelryProductionOrder.Areas.Staff.Controllers
                 {
 					//check jewelry nao co trong thang do
 					//lay ngay deliveredAt
-					soldData[delivery.DeliveredAt.Month - 1] = deliveries.Count();
+					soldData[delivery.DeliveredAt.Day - 1] += 1;
                 }
                 else
                 {
-                    soldData[delivery.DeliveredAt.Year - 1] = deliveries.Count();
+                    soldData[delivery.DeliveredAt.Month - 1] += 1;
                 }
 
             }

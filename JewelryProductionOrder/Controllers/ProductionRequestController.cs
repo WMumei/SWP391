@@ -85,22 +85,18 @@ namespace SWP391.Controllers
 		{
 
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "SalesStaff,Jewelries", tracked: true);
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard,SalesStaff,ProductionRequest").ToList();
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard,SalesStaff").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 
-			productionRequest.Status = SD.StatusRequestDone;
-			//_unitOfWork.ProductionRequest.Update(productionRequest);
 			
-			_unitOfWork.Save();
+		
 			foreach (var jewelry in jewelries)
 			{
-				//jewelry.SalesStaffId = userId;
-				jewelry.Status = SD.StatusDelivered;
-				//jewelry.ProductionRequest.Status = SD.StatusRequestDone;
-				if(jewelry.WarrantyCard.Id == null)
+
+				if(jewelry.WarrantyCard == null)
 				{
 					TempData["error"] = "Warranty Card is not available";
 				}
@@ -115,8 +111,9 @@ namespace SWP391.Controllers
 						DeliveredAt = DateTime.Now,
 						SalesStaffId = userId
 					};
-
-					_unitOfWork.Jewelry.Update(jewelry);
+                    productionRequest.Status = SD.StatusRequestDone;
+                    jewelry.Status = SD.StatusDelivered;
+                    _unitOfWork.Jewelry.Update(jewelry);
 					_unitOfWork.Delivery.Add(delivery);
 					TempData["success"] = "Order is delivered successfully";
 					_unitOfWork.Save();

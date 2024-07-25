@@ -34,6 +34,7 @@
                             <option value="m">Monthly</option>
                             <option value="y">Yearly</option>
                             <option value="option">Optional</option>
+                            <option value="alltime">All Time</option>
                         </select>
                         <div id="validation">
                         <span >Please select type for diagram.</span>
@@ -82,8 +83,9 @@
                         </div>
                         <div>
                             <button id="click">Show</button>
-                            
+                            <ul id="dateList"></ul>
                         </div>
+                        
 
                         <div id="total">
                             <label>Total: <span id="totalvalue"></span>$</label>
@@ -99,9 +101,10 @@
                             <option value="mJe"> Monthly</option>
                             <option value="yJe"> Yearly</option>
                             <option value="optionJe">Optional</option>
+                            <option value="alltimeJe">All Time</option>
                         </select>
-                        <div id="validation">
-                            <span>Please select type for diagram.</span>
+                        <div>
+                            <span id="validationJe" style="display:none; color:red">Please select type for diagram.</span>
                         </div>
                         <div class="yearmonth">
                             <div id="dateJe" style="display:none">
@@ -114,7 +117,7 @@
                                     <option value="2020">2020</option>
 
                                 </select>
-                                <span id="validation1" style="display:none; color:red">Please enter year.</span>
+                                
                             </div>
                             <div id="monthdivJe" style="display:none">
                                 <label for="monthJe">Month:</label>
@@ -132,15 +135,16 @@
                                     <option value="11">Nov</option>
                                     <option value="12">Dec</option>
                                 </select>
-                                <span id="validation2" style="display:none; color:red">Please enter month.</span>
+                                
                             </div>
                             <div id="optiondateJe" style="display:none">
                                 <label for="startDate">Start Date:</label>
-                                <input type="date" id="startDate" name="startDate" onchange="updateDate('issued-date')" />
-
+                                <input type="date" id="startDate" name="startDate" onchange="updateDate()" />
+                                <span id="validation1" style="display:none; color:red">Please enter start date.</span>
 
                                 <label for="endDate">End Date:</label>
-                                <input type="date" id="endDate" name="endDate" onchange="updateDate('issued-date')" />
+                                <input type="date" id="endDate" name="endDate" onchange="updateDate()" />
+                                <span id="validation2" style="display:none; color:red">Please enter end date.</span>
                                 <br />
 
                             </div>
@@ -150,7 +154,7 @@
                             <button id="clickJe">Show</button>
                         </div>
                         <div id="total">
-                            <label>Total: <span id="totalvalueJe"></span>$</label>
+                            <label>Total: <span id="totalvalueJe"></span>  Jewelries</label>
                         </div>
                         <canvas id="jewelrychart"></canvas>
                     </div>
@@ -163,58 +167,116 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var myChart = null;
+        var myChart1 = null;
         var monthValue = 0;
+        var monthValue1 = 0;
         var x = null;
-        // var monthLabelChart = 0;
+        var x1 = null;
+        var startDate = null;
+        var endDate = null;
+
+        var optionLabelChart = null;
         var yearLabelChart = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         //TODO:Check so ngay trong thang
         var monthLabelChart = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         var labelChart = yearLabelChart;
-        // xử lý chọn yearly hoặc monthly
+        
+
+
+        var yearLabelChart1 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        //TODO:Check so ngay trong thang
+        var monthLabelChart1 = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+        var labelChart1 = yearLabelChart1;
+      
+
         function myFunction() {
             x = document.getElementById("select").value;
-            $("#optiondate,#monthdiv,#date").hide();
+            $("#optiondate,#monthdiv,#date,#validation").hide();
             if (x == 'm') {
-                $("#validation,#validation1,#validation2").hide();
+
                 $("#monthdiv").show();
                 $("#date").show();
                 labelChart = monthLabelChart;
             }
             else if (x == 'y') {
 
-                $("#validation,#validation1,#validation2").hide();
+
                 $("#date").show();
-               
+
                 monthValue = 0;
                 labelChart = yearLabelChart;
-            } else {
+            } else if (x == 'option') {
                 $("#optiondate").show();
-            }
+                // labelChart = optionLabelChart;
+            } 
         }
-        //end myFunction()
+        
         
         //start myFunctionJewelry()
         function myFunctionJewelry() {
-            x = document.getElementById("selectJe").value;
-            $("#optiondateJe,#monthdivJe,#dateJe").hide();
-            if (x == 'mJe') {
-                $("#validation,#validation1,#validation2").hide();
+            x1 = document.getElementById("selectJe").value;
+            $("#optiondateJe,#monthdivJe,#dateJe,#validationJe").hide();
+           
+            if (x1 == 'mJe') {
+                
                 $("#monthdivJe").show();
                 $("#dateJe").show();
-                labelChart = monthLabelChart;
+                labelChart1 = monthLabelChart1;
             }
-            else if (x == 'yJe') {
+            else if (x1 == 'yJe') {
 
-                $("#validation,#validation1,#validation2").hide();
+               
                 $("#dateJe").show();
 
-                monthValue = 0;
-                labelChart = yearLabelChart;
-            } else {
+                monthValue1 = 0;
+                labelChart1= yearLabelChart1;
+            } else if (x1 == 'optionJe') {
                 $("#optiondateJe").show();
+
             }
         }
         //end myFunctionJewelry()
+        function updateDate() {
+            startDate = $('#startDate').val();
+            endDate = $('#endDate').val();
+
+            if (startDate && endDate) {
+                // Convert to Date objects
+                var start = new Date(startDate);
+                var end = new Date(endDate);
+
+                // Get all dates in range
+                var dates = generateDateRange(start, end);
+
+                // Display dates
+                
+                // var dateList = $('#dateList');
+                // dateList.empty();
+                // dates.forEach(function (date) {
+                //     var listItem = $('<li>').text(formatDate(date));
+                //     dateList.append(listItem);
+                // });
+            } else {
+                alert('Please select both start and end dates.');
+            }
+        }
+
+        function generateDateRange(startDate, endDate) {
+            var dates = [];
+            var currentDate = new Date(startDate);
+
+            while (currentDate <= endDate) {
+                dates.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return dates;
+        }
+
+        function formatDate(date) {
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        }
         $(document).ready(function () {
             $('#click').click(function () {
 
@@ -223,17 +285,49 @@
                 if (x == null) {
                     
                     $("#validation").show();
-                } else {
+                } else if(x == "option"){
+                    
+                    var startDate = $('#startDate').val();
+                    var endDate = $('#endDate').val();
+                    if (startDate && endDate) {
+                        // Convert to Date objects
+                        var start = new Date(startDate);
+                        var end = new Date(endDate);
+
+                        // Calculate the difference in milliseconds
+                        var diffInMs = end - start;
+
+                        // Convert milliseconds to days
+                        var diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+                        console.log(diffInDays);
+                        if (diffInDays <= 30) {
+                            //lấy mảng date 
+                            var dates = generateDateRange(start, end);
+                            //display dates
+                            var dateList = $('#dateList');
+                            dateList.empty();
+                            dates.forEach(function (date) {
+                                var listItem = $('<li>').text(formatDate(date));
+                                dateList.append(listItem);
+                            });
+                            
+                        } else {
+                            //Trường hợp lớn hơn 30
+                            alert('Please select both start and end dates.');
+                        }
+                    } else {
+                        //trường hợp startDate và endDate null
+                        $("#validation1,#validation2").show();
+                    }
+                }
+                //trường hợp yearly và monthly
+                else {
                     
                     var year = $('#year').val();
-                    if (year == 0) {
-                        $("#validation1").show();
-                    }
+                    
                     if (x == "m") {
                         monthValue = $('#month').val();
-                        if (monthValue==0) {
-                            $("#validation2").show();
-                        }
+                        
                     }
                 }
                     
@@ -283,13 +377,76 @@
                         }
                     });
             });
+            // Jewelry Chart
+            $('#clickJe').click(function () {
+                if (x1 == null) {
+
+                    $("#validationJe").show();
+                } else {
+                   
+                    var yearJe = $('#yearJe').val();
+
+                    if (x1 == "mJe") {
+                        monthValue1 = $('#monthJe').val();
+
+                    }
+                }
+
+                console.log("aaaa");
+                // Trigger the AJAX call
+                $.ajax({
+                    url: '/Dashboard/GetJewelrySold',
+                    type: 'GET',
+                    data: { year: yearJe, month: monthValue1 },
+                    success: function (data) {
+                        if (myChart1) {
+                            myChart1.clear();
+                            myChart1.destroy();
+                        }
+                        //calculate total revenue
+                        //data is an array
+                        const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                        $("#totalvalueJe").text(sum);
+
+
+                        // Revenue Chart
+                        const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
+                        myChart1 = new Chart(ctxDaily, {
+                            type: 'line',
+                            data: {
+                                labels: labelChart1,
+                                datasets: [{
+                                    label: 'Jewelries',
+                                    data: data,
+                                    backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                    borderColor: 'rgba(119, 212, 42, 1)',
+                                    borderWidth: 1,
+                                    fill: true
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        //
+                    },
+                    error: function () {
+                        $('#output').text('An error occurred');
+                    }
+                });
+
+            });
         });
     
         document.addEventListener('DOMContentLoaded', function () {
             // Sample data
             // const revenue = 15000;
-            const revenue = [0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            const monthlySales = [150, 200, 180, 220, 170, 210, 190, 230, 240, 260, 280, 300];
+            const revenue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            const monthlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
             // Display revenue
             // document.getElementById('revenue').innerText = `$${revenue.toLocaleString()}`;
@@ -321,53 +478,19 @@
                     }
                 }
             });
-
-            // Jewelry Chart
-            // $(document).ready(function () {
-            //     $('#clickJe').click(function () {
-
-            //         // Get the value from the input field
-
-            //         if (x == null) {
-
-            //             $("#validation").show();
-            //         } else {
-
-            //             var yearJe = $('#yearJe').val();
-            //             if (yearJe == 0) {
-            //                 $("#validation1").show();
-            //             }
-            //             if (x == "mJe") {
-            //                 monthje = $('#monthJe').val();
-            //                 if (monthje == 0) {
-            //                     $("#validation2").show();
-            //                 }
-            //             }
-            //         }
-
-            //         Trigger the AJAX call
-            //         $.ajax({
-            //             url: '/Dashboard/GetJewelrySold',
-            //             type: 'GET',
-            //             data: { year: yearJe, month: monthJe },
-            //             success: function (data) {
-            //                 if (myChart) {
-            //                     myChart.clear();
-            //                     myChart.destroy();
-            //                 }
-            //                 //calculate total revenue
-            //                 //data is an array
-            //                 const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            //                 $("#totalvalueJe").text(sum);
-     // Jewelry Chart
-            const ctxMonthly = document.getElementById('jewelrychart').getContext('2d');
-            new Chart(ctxMonthly, {
+            //Jewelry chart
+            const ctxDaily1 = document.getElementById('jewelrychart').getContext('2d');
+            if (myChart1) {
+                myChart1.clear();
+                myChart1.destroy();
+            }
+            myChart1 = new Chart(ctxDaily1, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
-                        label: 'Jewelry',
-                        data: data,
+                        label: 'Jewelries',
+                        data: monthlySales,
                         backgroundColor: 'rgba(119, 212, 42, 0.2)',
                         borderColor: 'rgba(119, 212, 42, 1)',
                         borderWidth: 1,
@@ -383,7 +506,6 @@
                 }
             });
         });
-
     </script>
 </body>
 </html>
