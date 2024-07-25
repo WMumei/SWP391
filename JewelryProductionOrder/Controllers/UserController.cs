@@ -38,7 +38,7 @@ namespace JewelryProductionOrder.Controllers
                 var roleName = string.Join(", ", userRoles);
                 usersWithRoles.Add(new UserVM
                 {
-                    Name = user.UserName,
+                    Name = user.Name,
                     UserName = user.UserName,
                     Email = user.Email,
                     Role = roleName,
