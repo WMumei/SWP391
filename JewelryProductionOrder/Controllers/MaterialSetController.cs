@@ -285,6 +285,13 @@ namespace SWP391.Controllers
 			return View();
 		}
 
+		[HttpPost]
+		[ActionName("Upsert")]
+		public IActionResult UpsertPOST(int id)
+		{
+			return Json(new {success = true, message = "Submit successfully" });
+		}
+
 		[HttpGet]
 		public IActionResult Get(int id)
 		{
@@ -295,13 +302,15 @@ namespace SWP391.Controllers
 		[HttpGet]
 		public IActionResult GetMaterials()
 		{
-			var materials = _unitOfWork.Material.GetAll();
+			var sessionMaterialIds = MaterialListSession.Select(m => m.Material.Id).ToList();
+			var materials = _unitOfWork.Material.GetAll(m => !sessionMaterialIds.Contains(m.Id));
 			return Json(new { data = materials });
 		}
 		[HttpGet]
 		public IActionResult GetGemstones()
 		{
-			var gemstones = _unitOfWork.Gemstone.GetAll();
+			var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
+			var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status != SD.StatusUnavailable && !sessionGemstoneIds.Contains(g.Id));
 			return Json(new { data = gemstones });
 		}
 
@@ -316,7 +325,7 @@ namespace SWP391.Controllers
 		{
 			return Json(new { data = GemstoneListSession });
 		}
-
+		[HttpPost]
 		public IActionResult AddMaterial(int id)
 		{
 			// Fail if the material already exists in current set
@@ -338,7 +347,7 @@ namespace SWP391.Controllers
 
 			return Json(new { success = true, message = "Material added successfully" });
 		}
-
+		[HttpPost]
 		public IActionResult AddGemstone(int id)
 		{
 			// Fail if the gemstone already exists in current set
@@ -347,11 +356,11 @@ namespace SWP391.Controllers
 				return Json(new { success = false, message = "Gemstone already exists in the set" });
 			}
 
-			// Otherwise, add that to session if gemstone exists 
-			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == id);
+			// Otherwise, add that to session if gemstone exists and available
+			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == id && g.Status == SD.StatusAvailable);
 			if (gemstone is null)
 			{
-				return Json(new { success = false, message = "Gemstone not found" });
+				return Json(new { success = false, message = "Gemstone not found or unavailable" });
 			}
 
 			var gemstoneList = GemstoneListSession;
@@ -362,8 +371,8 @@ namespace SWP391.Controllers
 		}
 
 
-
-		public IActionResult UpdateWeight(int id, decimal weight)
+		[HttpPost]
+		public IActionResult UpdateMaterial(int id, decimal weight)
 		{
 			// Weight validation
 			if (weight <= 0)
@@ -378,44 +387,51 @@ namespace SWP391.Controllers
 			{
 				materials.Remove(materialVM);
 				materialVM.Weight = weight;
+				materialVM.Price = weight * materialVM.Material.Price;
 				materials.Add(materialVM);
 
 				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materials);
-				return Json(new { success = true, message = $"Material {materialVM.Material.Name} updated successfully" });
+				return Json(new { success = true, message = $"Material updated successfully" });
 			}
 			return Json(new { success = false, message = "Material not found" });
 		}
-
+		[HttpDelete]
 		public IActionResult DeleteMaterial(int id)
 		{
 			// Find the material in the session list
-			var material = MaterialListSession.FirstOrDefault(m => m.Material.Id == id);
+			var materials = MaterialListSession;
+			var material = materials.FirstOrDefault(m => m.Material.Id == id);
 			if (material != null)
 			{
 				// Remove the material from the session list
-				var materials = MaterialListSession;
 				materials.Remove(material);
 				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materials);
 				return Json(new { success = true, message = "Material deleted successfully" });
 			}
 			return Json(new { success = false, message = "Material not found" });
 		}
-
+		[HttpDelete]
 		public IActionResult DeleteGemstone(int id)
 		{
 			// Find the gemstone in the session list
-			var gemstone = GemstoneListSession.FirstOrDefault(g => g.Id == id);
+			var gemstones = GemstoneListSession;
+			var gemstone = gemstones.FirstOrDefault(g => g.Id == id);
 			if (gemstone != null)
 			{
 				// Remove the gemstone from the session list
-				var gemstones = GemstoneListSession;
 				gemstones.Remove(gemstone);
 				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstones);
 				return Json(new { success = true, message = "Gemstone deleted successfully" });
 			}
 			return Json(new { success = false, message = "Gemstone not found" });
 		}
-
+		[HttpGet]
+		public IActionResult GetPrice()
+		{
+			decimal materialTotal = GetMaterialTotal();
+			decimal gemstoneTotal = GetGemstoneTotal();
+			return Json(new { materialTotal, gemstoneTotal, setTotal = materialTotal + gemstoneTotal });
+		}
 
 		#endregion
 
@@ -425,5 +441,24 @@ namespace SWP391.Controllers
 			return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
 
+		private decimal GetMaterialTotal()
+		{
+			decimal total = 0;
+			foreach (var material in MaterialListSession)
+			{
+				total += material.Price;
+			}
+			return total;
+		}
+
+		private decimal GetGemstoneTotal()
+		{
+			decimal total = 0;
+			foreach (var gemstone in GemstoneListSession)
+			{
+				total += gemstone.Price;
+			}
+			return total;
+		}
 	}
 }

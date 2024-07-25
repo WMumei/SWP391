@@ -35,5 +35,9 @@
 		public const string CustomerDisapproved = "Disapproved by Customer";
 		public const string ManagerApproved = "Approved by Manager";
 		public const string ManagerDisapproved = "Disapproved by Manager";
+
+		public const string StatusUnavailable = "Unavailable";
+		public const string StatusAvailable = "Available";
+
 	}
 }

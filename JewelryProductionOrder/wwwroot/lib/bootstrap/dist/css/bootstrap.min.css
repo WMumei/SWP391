@@ -2958,8 +2958,8 @@ textarea.form-control-lg {
 
     .btn-primary:hover {
         color: #fff;
-        background-color: #0b5ed7;
-        border-color: #0a58ca
+        background-color: #1A2A50;
+        border-color: #1A2A50
     }
 
     .btn-check:focus + .btn-primary, .btn-primary:focus {
@@ -3231,14 +3231,14 @@ textarea.form-control-lg {
     }
 
 .btn-outline-primary {
-    color: #0d6efd;
-    border-color: #0d6efd
+    color: #445B8D;
+    border-color: #445B8D
 }
 
     .btn-outline-primary:hover {
         color: #fff;
-        background-color: #0d6efd;
-        border-color: #0d6efd
+        background-color: #1A2A50;
+        border-color: #1A2A50
     }
 
     .btn-check:focus + .btn-outline-primary, .btn-outline-primary:focus {

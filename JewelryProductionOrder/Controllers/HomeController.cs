@@ -1,4 +1,5 @@
 using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -35,7 +36,6 @@ namespace JewelryProductionOrder.Controllers
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
 
-
 		public IActionResult Details(int baseDesignId)
 		{
 			ShoppingCart cart = new ShoppingCart()
@@ -48,7 +48,7 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
-		[Authorize]
+		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult Details(ShoppingCart shoppingCart)
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;

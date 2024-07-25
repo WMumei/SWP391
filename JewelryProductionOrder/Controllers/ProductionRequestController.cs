@@ -277,48 +277,6 @@ namespace SWP391.Controllers
 			}
 			return RedirectToAction("CustomerView");
 		}
-			//public IActionResult Create()
-			//{
-			//    return View();
-			//}
 
-			//[HttpPost]
-			//public IActionResult Create(ProductionRequest obj)
-			//{
-			//    obj.CreatedAt = DateTime.Now;
-
-			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-			//    {
-			//        ProductionRequest = obj,
-			//        Customer = new User()
-			//    };
-			//    return View("Checkout", ShoppingCartVM);
-			//}
-			//public IActionResult Checkout()
-			//{
-			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
-			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-			//    {
-			//        ProductionRequest = new ProductionRequest { 
-			//            //Quantity = 1 
-			//        },
-			//        Customer = _unitOfWork.User.Get(User => User.Id == userId)
-			//    };
-			//    return View(ShoppingCartVM);
-			//}
-
-			//[HttpPost]
-			//public IActionResult Checkout(ShoppingCartVM ShoppingCartVM)
-			//{
-			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
-			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//    ShoppingCartVM.ProductionRequest.CustomerId = userId;
-			//    ShoppingCartVM.ProductionRequest.Address = ShoppingCartVM.Customer.Address;
-			//    ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-			//    _unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
-			//    _unitOfWork.Save();
-			//    return RedirectToAction("CustomerView");
-			//}
 		}
 }
