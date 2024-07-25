@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240723090343_modifyRangeOfGemstoneInstances2")]
+    partial class modifyRangeOfGemstoneInstances2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("MaterialSetsId");
 
-                    b.ToTable("GemstoneMaterialSet", (string)null);
+                    b.ToTable("GemstoneMaterialSet");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.BaseDesign", b =>
@@ -65,7 +68,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BaseDesigns", (string)null);
+                    b.ToTable("BaseDesigns");
 
                     b.HasData(
                         new
@@ -123,7 +126,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("WarrantyCardId");
 
-                    b.ToTable("Deliveries", (string)null);
+                    b.ToTable("Deliveries");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Gemstone", b =>
@@ -165,7 +168,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gemstones", (string)null);
+                    b.ToTable("Gemstones");
 
                     b.HasData(
                         new
@@ -287,7 +290,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("Jewelries", (string)null);
+                    b.ToTable("Jewelries");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.JewelryDesign", b =>
@@ -336,7 +339,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("ProductionStaffId");
 
-                    b.ToTable("JewelryDesigns", (string)null);
+                    b.ToTable("JewelryDesigns");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Material", b =>
@@ -357,7 +360,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materials", (string)null);
+                    b.ToTable("Materials");
 
                     b.HasData(
                         new
@@ -414,7 +417,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MaterialSets", (string)null);
+                    b.ToTable("MaterialSets");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -437,7 +440,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("MaterialSetId");
 
-                    b.ToTable("MaterialSetsMaterials", (string)null);
+                    b.ToTable("MaterialSetsMaterials");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Post", b =>
@@ -472,7 +475,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>
@@ -539,7 +542,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("ProductionRequests", (string)null);
+                    b.ToTable("ProductionRequests");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequestDetail", b =>
@@ -565,7 +568,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("ProductionRequestId");
 
-                    b.ToTable("ProductionRequestDetails", (string)null);
+                    b.ToTable("ProductionRequestDetails");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.QuotationRequest", b =>
@@ -620,7 +623,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("QuotationRequests", (string)null);
+                    b.ToTable("QuotationRequests");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ShoppingCart", b =>
@@ -647,7 +650,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ShoppingCarts", (string)null);
+                    b.ToTable("ShoppingCarts");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.WarrantyCard", b =>
@@ -684,7 +687,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasIndex("SalesStaffId");
 
-                    b.ToTable("WarrantyCards", (string)null);
+                    b.ToTable("WarrantyCards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

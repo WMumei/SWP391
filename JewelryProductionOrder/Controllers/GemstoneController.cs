@@ -27,22 +27,10 @@ namespace JewelryProductionOrder.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_unitOfWork.Gemstone.GetAll().Any(u => u.Carat == objGemstone.Carat
-                                                            && u.Cut == objGemstone.Cut
-                                                            && u.Clarity == objGemstone.Clarity
-                                                            && u.Color == objGemstone.Color
-                                                            && u.Weight == objGemstone.Weight
-                                                            && u.Name == objGemstone.Name))
-                {
-                    TempData["error"] = "A gemstone with such instances have existed, please double check your information.";
-                }
-                else
-                {
-                    _unitOfWork.Gemstone.Add(objGemstone);
-                    _unitOfWork.Save();
-                    TempData["success"] = "Gemstone added";
-                    return RedirectToAction("Index");
-                }
+                _unitOfWork.Gemstone.Add(objGemstone);
+                _unitOfWork.Save();
+                TempData["success"] = "Gemstone added";
+                return RedirectToAction("Index");
             }
             return View();
         }
