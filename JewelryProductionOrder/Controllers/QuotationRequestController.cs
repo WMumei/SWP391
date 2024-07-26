@@ -209,7 +209,8 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerDisapproved;
 			}
-			_unitOfWork.Save();
+            _unitOfWork.QuotationRequest.Update(req);
+            _unitOfWork.Save();
 			TempData["success"] = "Disapproved!";
 			return RedirectToAction("Details", new { id = req.Id });
 

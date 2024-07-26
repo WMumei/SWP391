@@ -50,7 +50,7 @@
                                 <option value="2020">2020</option>
  
                         </select>
-                            <span id="validation1" style="display:none; color:red">Please enter year.</span>
+                           
                         </div>
                     
                         <div id="monthdiv" style="display:none">
@@ -69,21 +69,24 @@
                             <option value="11">Nov</option>
                             <option value="12">Dec</option>
                             </select>
-                            <span id="validation2" style="display:none; color:red">Please enter month.</span>
+                            
                         </div>
                         <div id="optiondate" style="display:none">
+                            <span id="validationBefore">Start date and end start date should be at most 40 days apart!</span>
+                            <br/>
                             <label for="startDate">Start Date:</label>
-                            <input type="date" id="startDate" name="startDate" onchange="updateDate('issued-date')" />
-                            
-                           
+                            <input type="date" id="startDate" name="startDate" />
+
                             <label for="endDate">End Date:</label>
-                            <input type="date" id="endDate" name="endDate" onchange="updateDate('issued-date')" />
+                            <input type="date" id="endDate" name="endDate" />
+                           
                             <br />
-                          
+                            <span id="validation1" style="display:none; color:red">Please enter start date and end date.</span>
+                            <span id="validationStartEndDate" style="display:none; color:red">End Date is invalid.</span>
                         </div>
                         <div>
-                            <button id="click">Show</button>
-                            <ul id="dateList"></ul>
+                            <button id="click" class="btn-primary">Show</button>
+                           
                         </div>
                         
 
@@ -138,20 +141,22 @@
                                 
                             </div>
                             <div id="optiondateJe" style="display:none">
-                                <label for="startDate">Start Date:</label>
-                                <input type="date" id="startDate" name="startDate" onchange="updateDate()" />
-                                <span id="validation1" style="display:none; color:red">Please enter start date.</span>
-
-                                <label for="endDate">End Date:</label>
-                                <input type="date" id="endDate" name="endDate" onchange="updateDate()" />
-                                <span id="validation2" style="display:none; color:red">Please enter end date.</span>
+                                <span id="validationBeforeJe">Start date and end start date should be at most 40 days apart!</span>
                                 <br />
+                                <label for="startDateJe">Start Date:</label>
+                                <input type="date" id="startDateJe" name="startDate"  />
+                                
+                                <label for="endDateJe">End Date:</label>
+                                <input type="date" id="endDateJe" name="endDate"  />
+                                <br/>
+                                <span id="validation1Je" style="display:none; color:red">Please enter start date and end date.</span>
+                                <span id="validationStartEndDateJe" style="display:none; color:red">End date is invalid.</span>
 
                             </div>
                         </div>
                         
                         <div>
-                            <button id="clickJe">Show</button>
+                            <button id="clickJe" class="btn-primary">Show</button>
                         </div>
                         <div id="total">
                             <label>Total: <span id="totalvalueJe"></span>  Jewelries</label>
@@ -174,13 +179,13 @@
         var x1 = null;
         var startDate = null;
         var endDate = null;
-
-        var optionLabelChart = null;
+  
         var yearLabelChart = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         //TODO:Check so ngay trong thang
         var monthLabelChart = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         var labelChart = yearLabelChart;
         
+
 
 
         var yearLabelChart1 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -191,7 +196,7 @@
 
         function myFunction() {
             x = document.getElementById("select").value;
-            $("#optiondate,#monthdiv,#date,#validation").hide();
+            $("#optiondate,#monthdiv,#date,#validation,#validation1").hide();
             if (x == 'm') {
 
                 $("#monthdiv").show();
@@ -215,58 +220,34 @@
         //start myFunctionJewelry()
         function myFunctionJewelry() {
             x1 = document.getElementById("selectJe").value;
-            $("#optiondateJe,#monthdivJe,#dateJe,#validationJe").hide();
+            $("#optiondateJe,#monthdivJe,#dateJe,#validationJe,#validation1Je").hide();
            
             if (x1 == 'mJe') {
-                
+
                 $("#monthdivJe").show();
                 $("#dateJe").show();
                 labelChart1 = monthLabelChart1;
             }
             else if (x1 == 'yJe') {
 
-               
+
                 $("#dateJe").show();
 
                 monthValue1 = 0;
-                labelChart1= yearLabelChart1;
+                labelChart1 = yearLabelChart1;
             } else if (x1 == 'optionJe') {
                 $("#optiondateJe").show();
 
-            }
+            } 
         }
         //end myFunctionJewelry()
-        function updateDate() {
-            startDate = $('#startDate').val();
-            endDate = $('#endDate').val();
-
-            if (startDate && endDate) {
-                // Convert to Date objects
-                var start = new Date(startDate);
-                var end = new Date(endDate);
-
-                // Get all dates in range
-                var dates = generateDateRange(start, end);
-
-                // Display dates
-                
-                // var dateList = $('#dateList');
-                // dateList.empty();
-                // dates.forEach(function (date) {
-                //     var listItem = $('<li>').text(formatDate(date));
-                //     dateList.append(listItem);
-                // });
-            } else {
-                alert('Please select both start and end dates.');
-            }
-        }
 
         function generateDateRange(startDate, endDate) {
             var dates = [];
             var currentDate = new Date(startDate);
 
             while (currentDate <= endDate) {
-                dates.push(new Date(currentDate));
+                dates.push(formatDate(new Date(currentDate)));
                 currentDate.setDate(currentDate.getDate() + 1);
             }
 
@@ -286,39 +267,151 @@
                     
                     $("#validation").show();
                 } else if(x == "option"){
-                    
+                    $("#validation1,#validationStartEndDate").hide();
                     var startDate = $('#startDate').val();
                     var endDate = $('#endDate').val();
                     if (startDate && endDate) {
+                        
                         // Convert to Date objects
                         var start = new Date(startDate);
                         var end = new Date(endDate);
+                        var currentDate = new Date();
+
+                        // Set the time of currentDate to 00:00:00 to compare only the dates
+                        // currentDate.setHours(0, 0, 0, 0);
 
                         // Calculate the difference in milliseconds
                         var diffInMs = end - start;
+                        if (diffInMs <= 0 || end > currentDate) {
+                            $("#validationStartEndDate").show();
 
-                        // Convert milliseconds to days
-                        var diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-                        console.log(diffInDays);
-                        if (diffInDays <= 30) {
-                            //lấy mảng date 
-                            var dates = generateDateRange(start, end);
-                            //display dates
-                            var dateList = $('#dateList');
-                            dateList.empty();
-                            dates.forEach(function (date) {
-                                var listItem = $('<li>').text(formatDate(date));
-                                dateList.append(listItem);
-                            });
-                            
-                        } else {
-                            //Trường hợp lớn hơn 30
-                            alert('Please select both start and end dates.');
+
+                        } 
+                        else {
+                            // Convert milliseconds to days
+                            var diffInDays = (diffInMs / (1000 * 60 * 60 * 24)) + 1;
+                            if (diffInDays <= 40) {
+                                //lấy mảng date
+                                labelChart = generateDateRange(start, end);
+
+                                $.ajax({
+                                    url: '/Dashboard/GetRevenueByDateRange',
+                                    type: 'GET',
+                                    data: { startDate: startDate, endDate: endDate, diffInDays: diffInDays },
+                                    success: function (data) {
+                                        if (myChart) {
+                                            myChart.clear();
+                                            myChart.destroy();
+                                        }
+                                        //calculate total revenue
+                                        //data is an array
+                                        const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                                        $("#totalvalue").text(sum);
+                                        console.log(data);
+
+                                        // Revenue Chart
+                                        const ctxDaily = document.getElementById('revenueChart').getContext('2d');
+                                        myChart = new Chart(ctxDaily, {
+                                            type: 'line',
+                                            data: {
+                                                labels: labelChart,
+                                                datasets: [{
+                                                    label: '$',
+                                                    data: data,
+                                                    backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                                    borderColor: 'rgba(119, 212, 42, 1)',
+                                                    borderWidth: 1,
+                                                    fill: true
+                                                }]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        //
+                                    },
+                                    error: function () {
+                                        $('#output').text('An error occurred');
+                                    }
+                                });
+
+                            } else {
+                                //Trường hợp lớn hơn 30
+                                alert('Please select yearly type.');
+                            }
                         }
+
+                        
                     } else {
+
+                            $("#validation1").show();
+
                         //trường hợp startDate và endDate null
-                        $("#validation1,#validation2").show();
+                        
                     }
+                } else if (x == "alltime") {
+                    
+                    $.ajax({
+                        url: '/Dashboard/GetRevenueByAll',
+                        type: 'GET',
+                        data: { },
+                        success: function (data) {
+                            if (myChart) {
+                                myChart.clear();
+                                myChart.destroy();
+                            }
+                           
+                            labelChart = data.Value2;
+                            price = data.Value1;
+                            //sort years in order
+                            // labelChart.sort(function (a, b) {
+                            //     return a - b;
+                            // });
+                            console.log(data);
+                            //calculate total revenue
+                            const combined = labelChart.map((label, index) => ({ label, value: price[index] }));
+                            combined.sort((a, b) => a.label - b.label);
+
+                            labelChart = combined.map(item => item.label);
+                            price = combined.map(item => item.value);
+
+                            const sum = price.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                            $("#totalvalue").text(sum);
+ 
+
+                            // Revenue Chart
+                            const ctxDaily = document.getElementById('revenueChart').getContext('2d');
+                            myChart = new Chart(ctxDaily, {
+                                type: 'line',
+                                data: {
+                                    labels: labelChart,
+                                    datasets: [{
+                                        label: '$',
+                                        data: price,
+                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                        borderColor: 'rgba(119, 212, 42, 1)',
+                                        borderWidth: 1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            //
+                        },
+                        error: function () {
+                            $('#output').text('An error occurred');
+                        }
+                    });
                 }
                 //trường hợp yearly và monthly
                 else {
@@ -329,9 +422,6 @@
                         monthValue = $('#month').val();
                         
                     }
-                }
-                    
-                    // Trigger the AJAX call
                     $.ajax({
                         url: '/Dashboard/GetRevenueByYear',
                         type: 'GET',
@@ -343,10 +433,10 @@
                             }
                             //calculate total revenue
                             //data is an array
-                        const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                        $("#totalvalue").text(sum);
-                               
-                            
+                            const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                            $("#totalvalue").text(sum);
+                            console.log(data);
+
                             // Revenue Chart
                             const ctxDaily = document.getElementById('revenueChart').getContext('2d');
                             myChart = new Chart(ctxDaily, {
@@ -376,13 +466,155 @@
                             $('#output').text('An error occurred');
                         }
                     });
+                }
+
+                console.log(year);
+                    // Trigger the AJAX call
+                    
             });
             // Jewelry Chart
             $('#clickJe').click(function () {
                 if (x1 == null) {
 
                     $("#validationJe").show();
-                } else {
+                } else if (x1 == "optionJe") {
+                    $("#validation1Je,#validationStartEndDateJe").hide();
+                    var startDate = $('#startDateJe').val();
+                    var endDate = $('#endDateJe').val();
+                    if (startDate && endDate) {
+
+                        // Convert to Date objects
+                        var start = new Date(startDate);
+                        var end = new Date(endDate);
+                        var currentDate = new Date();
+
+                        // Calculate the difference in milliseconds
+                        var diffInMs = end - start;
+                        if (diffInMs <= 0 || end > currentDate) {
+                            $("#validationStartEndDateJe").show();
+                        }
+                        else {
+                            // Convert milliseconds to days
+                            var diffInDays = (diffInMs / (1000 * 60 * 60 * 24)) + 1;
+                            if (diffInDays <= 40) {
+                                //lấy mảng date
+                                labelChart = generateDateRange(start, end);
+
+                                $.ajax({
+                                    url: '/Dashboard/GetJewelryByDateRange',
+                                    type: 'GET',
+                                    data: { startDate: startDate, endDate: endDate, diffInDays: diffInDays },
+                                    success: function (data) {
+                                        if (myChart1) {
+                                            myChart1.clear();
+                                            myChart1.destroy();
+                                        }
+                                        //calculate total revenue
+                                        //data is an array
+                                        const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                                        $("#totalvalueJe").text(sum);
+                                        console.log(data);
+
+                                        // Revenue Chart
+                                        const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
+                                        myChart1 = new Chart(ctxDaily, {
+                                            type: 'line',
+                                            data: {
+                                                labels: labelChart,
+                                                datasets: [{
+                                                    label: 'Jewelries',
+                                                    data: data,
+                                                    backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                                    borderColor: 'rgba(119, 212, 42, 1)',
+                                                    borderWidth: 1,
+                                                    fill: true
+                                                }]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        //
+                                    },
+                                    error: function () {
+                                        $('#output').text('An error occurred');
+                                    }
+                                });
+
+                            } else {
+                                //Trường hợp lớn hơn 30
+                                alert('Please select yearly type.');
+                            }
+                        }
+
+
+                    } else {
+
+                        $("#validation1Je").show();
+
+                        //trường hợp startDate và endDate null
+
+                    }
+                }
+                else if (x1 == "alltimeJe"){
+                    $.ajax({
+                        url: '/Dashboard/GetJewelryByAll',
+                        type: 'GET',
+                        data: {},
+                        success: function (data) {
+                            if (myChart1) {
+                                myChart1.clear();
+                                myChart1.destroy();
+                            }
+
+                            labelChart = data.Value2;
+                            price = data.Value1;
+                            //sort years in order
+                            // labelChart.sort(function (a, b) {
+                            //     return a - b;
+                            // });
+                            console.log(data);
+                            //calculate total revenue
+
+                            // const sum = data.Value1.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                            // $("#totalvalue").text(sum);
+
+
+                            // Revenue Chart
+                            const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
+                            myChart = new Chart(ctxDaily, {
+                                type: 'line',
+                                data: {
+                                    labels: labelChart,
+                                    datasets: [{
+                                        label: 'Jewelries',
+                                        data: price,
+                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                        borderColor: 'rgba(119, 212, 42, 1)',
+                                        borderWidth: 1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            //
+                        },
+                        error: function () {
+                            $('#output').text('An error occurred');
+                        }
+                    });
+                }
+                else {
                    
                     var yearJe = $('#yearJe').val();
 
