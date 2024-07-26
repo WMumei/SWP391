@@ -144,6 +144,11 @@ namespace JewelryProductionOrder.Data
 				.WithMany()
 				.HasForeignKey(t => t.ProductionStaffId)
 				.OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<Comment>()
+				.HasOne(t => t.Owner)
+				.WithMany()
+				.HasForeignKey(t => t.OwnerId)
+				.OnDelete(DeleteBehavior.Restrict);
 			#endregion
 
 			#region SeedDatabase

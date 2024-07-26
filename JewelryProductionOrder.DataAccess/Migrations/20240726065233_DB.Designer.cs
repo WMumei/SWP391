@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240726043502_DB")]
+    [Migration("20240726065233_DB")]
     partial class DB
     {
         /// <inheritdoc />
@@ -924,7 +924,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.Post", "Post")

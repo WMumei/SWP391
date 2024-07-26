@@ -921,7 +921,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasOne("JewelryProductionOrder.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JewelryProductionOrder.Models.Post", "Post")
