@@ -24,6 +24,12 @@ namespace JewelryProductionOrder.Controllers
 			return View(designs);
 		}
 
+		public IActionResult ViewMore()
+		{
+			List<BaseDesign> designs = _unitOfWork.BaseDesign.GetAll(d => d.Type == "Company").ToList();
+			return View(designs);
+		}
+
 		public IActionResult Privacy()
 		{
 			return View();

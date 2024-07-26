@@ -63,8 +63,11 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 
 			TempData["success"] = "Create successfully";
-
-			return RedirectToAction("Index", "Home");
+			if (User.IsInRole("Customer"))
+			{
+				return RedirectToAction("RequestIndex", "Jewelry");
+			}
+			return RedirectToAction("Index");
 		}
 
 		[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Design}")]
@@ -131,6 +134,10 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.BaseDesign.Update(existingDesign);
 			_unitOfWork.Save();
 
+			if (User.IsInRole("Customer"))
+			{
+				return RedirectToAction("RequestIndex", "Jewelry");
+			}
 			return RedirectToAction("Index");
 		}
 
