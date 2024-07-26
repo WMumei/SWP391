@@ -172,7 +172,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Clarity = "VS1",
                             Color = "White",
                             Cut = "Round",
-                            Name = "3 carat Diamond",
+                            Name = "Diamond",
                             Price = 2000m,
                             Status = "Available"
                         },
@@ -205,7 +205,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Clarity = "VS2",
                             Color = "White",
                             Cut = "Emerald",
-                            Name = "2 carat Diamond",
+                            Name = "Diamond",
                             Price = 1800m,
                             Status = "Available"
                         },
@@ -216,7 +216,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Clarity = "VVS2",
                             Color = "White",
                             Cut = "Marquise",
-                            Name = "1 carat Diamond",
+                            Name = "Diamond",
                             Price = 1000m,
                             Status = "Available"
                         },
@@ -381,7 +381,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Clarity = "VS1",
                             Color = "Blue",
                             Cut = "Cushion",
-                            Name = "Lapis Lazuli",
+                            Name = "Lapis",
                             Price = 550m,
                             Status = "Available"
                         },
@@ -634,7 +634,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Clarity = "VS1",
                             Color = "Brown",
                             Cut = "Oval",
-                            Name = "Tigers Eye",
+                            Name = "TigersEye",
                             Price = 250m,
                             Status = "Available"
                         },
@@ -861,7 +861,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "White",
                             Price = 100m,
                             Purity = "14K",
-                            Type = "White Gold"
+                            Type = "Gold"
                         },
                         new
                         {
@@ -869,7 +869,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Rose",
                             Price = 50m,
                             Purity = "10K",
-                            Type = "Rose Gold"
+                            Type = "Gold"
                         },
                         new
                         {
@@ -877,7 +877,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Yellow",
                             Price = 80m,
                             Purity = "18K",
-                            Type = "Yellow Gold"
+                            Type = "Gold"
                         },
                         new
                         {
@@ -885,7 +885,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Green",
                             Price = 90m,
                             Purity = "14K",
-                            Type = "Green Gold"
+                            Type = "Gold"
                         },
                         new
                         {
@@ -893,7 +893,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Silver",
                             Price = 60m,
                             Purity = "925",
-                            Type = "925 Silver"
+                            Type = "Silver"
                         },
                         new
                         {
@@ -901,7 +901,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Silver",
                             Price = 70m,
                             Purity = "999",
-                            Type = "999 Silver"
+                            Type = "Silver"
                         },
                         new
                         {
@@ -941,7 +941,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Color = "Silver",
                             Price = 45m,
                             Purity = "304",
-                            Type = "Stainless Steel"
+                            Type = "Steel"
                         },
                         new
                         {
