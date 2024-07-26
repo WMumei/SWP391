@@ -37,6 +37,37 @@
     </div>
 </div>
 <br />
+@if (User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Customer))
+{
+    <div>
+        <h3>Leave a Comment</h3>
+        <form asp-action="AddComment" method="post">
+            <input type="hidden" name="PostId" value="@Model.Id" />
+            <div class="form-group">
+                <textarea name="Content" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+}
+
+
+<br />
+
+<div>
+    <h3>Comments</h3>
+    @foreach (var comment in Model.Comments)
+    {
+        <div class="comment">
+            <p><strong>@comment.Owner.Name</strong> @comment.CreatedAt.ToString("g")</p>
+            @Html.Raw(comment.Content.Replace("\n", "<br />").Replace("\r", ""))
+        </div>
+        <hr />
+    }
+</div>
+
+<br />
+
 <div>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>

@@ -80,7 +80,7 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult Details(int id)
 		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner");
 			if (post == null)
 			{
 				return NotFound();
@@ -166,6 +166,11 @@ namespace JewelryProductionOrder.Controllers
                 return NotFound();
             }
 
+            foreach (var comment in post.Comments)
+            {
+                _unitOfWork.Comment.Remove(comment);
+            }
+
             if (!string.IsNullOrEmpty(post.Image))
             {
                 var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, post.Image.TrimStart('\\'));
@@ -201,5 +206,27 @@ namespace JewelryProductionOrder.Controllers
             string fileUrl = Url.Content($"~/Images/{fileName}");
             return Json(new { location = fileUrl });
         }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddComment(int PostId, string Content)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var comment = new Comment
+            {
+                Content = Content,
+                CreatedAt = DateTime.Now,
+                OwnerId = userId,
+                PostId = PostId
+            };
+
+            _unitOfWork.Comment.Add(comment);
+            _unitOfWork.Save();
+            return RedirectToAction("Details", new { id = PostId });
+        }
+
     }
+
 }

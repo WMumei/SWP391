@@ -15,5 +15,6 @@ namespace JewelryProductionOrder.Models
 		public string SalesStaffId { get; set; }
 		[ForeignKey("SalesStaffId")]
 		public User SalesStaff { get; set; }
-	}
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    }
 }
