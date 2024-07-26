@@ -61,6 +61,18 @@
         <div class="comment">
             <p><strong>@comment.Owner.Name</strong> @comment.CreatedAt.ToString("g")</p>
             @Html.Raw(comment.Content.Replace("\n", "<br />").Replace("\r", ""))
+
+            <br />
+            <br />
+
+            @if (User.Identity.IsAuthenticated && comment.Owner.Email == User.Identity.Name)
+            {
+                <form asp-action="DeleteComment" method="post" style="display:inline;">
+                    <input type="hidden" name="CommentId" value="@comment.Id" />
+                    <input type="hidden" name="PostId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            }
         </div>
         <hr />
     }

@@ -85,7 +85,11 @@ namespace JewelryProductionOrder.Controllers
 			{
 				return NotFound();
 			}
-			return View(post);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ViewData["CurrentUserId"] = userId;
+
+            return View(post);
 		}
 
         public IActionResult Edit(int id)
@@ -224,6 +228,30 @@ namespace JewelryProductionOrder.Controllers
 
             _unitOfWork.Comment.Add(comment);
             _unitOfWork.Save();
+            return RedirectToAction("Details", new { id = PostId });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteComment(int CommentId, int PostId)
+        {
+            var comment = _unitOfWork.Comment.Get(c => c.Id == CommentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (comment.OwnerId != userId)
+            {
+                return Forbid();
+            }
+
+            _unitOfWork.Comment.Remove(comment);
+            _unitOfWork.Save();
+
             return RedirectToAction("Details", new { id = PostId });
         }
 
