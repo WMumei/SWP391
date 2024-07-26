@@ -39,8 +39,8 @@ namespace JewelryProductionOrder.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            post.CreatedAt = DateTime.Now;
-            post.SalesStaffId = userId;
+			post.CreatedAt = DateTime.Now;
+			post.SalesStaffId = userId;
 
             if (post.Content == null)
             {
@@ -71,22 +71,22 @@ namespace JewelryProductionOrder.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize]
-        public IActionResult Index()
-        {
-            var posts = _unitOfWork.Post.GetAll(includeProperties: "SalesStaff").ToList();
-            return View(posts);
-        }
+		[Authorize]
+		public IActionResult Index()
+		{
+			var posts = _unitOfWork.Post.GetAll(includeProperties: "SalesStaff").ToList();
+			return View(posts);
+		}
 
-        public IActionResult Details(int id)
-        {
-            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return View(post);
-        }
+		public IActionResult Details(int id)
+		{
+			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+			if (post == null)
+			{
+				return NotFound();
+			}
+			return View(post);
+		}
 
         public IActionResult Edit(int id)
         {
@@ -145,15 +145,15 @@ namespace JewelryProductionOrder.Controllers
             return View(post);
         }
 
-        public IActionResult Delete(int id)
-        {
-            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return View(post);
-        }
+		public IActionResult Delete(int id)
+		{
+			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+			if (post == null)
+			{
+				return NotFound();
+			}
+			return View(post);
+		}
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

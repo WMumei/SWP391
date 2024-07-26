@@ -1,0 +1,74 @@
+﻿@model ProductionRequest
+
+
+<form method="post" class="container">
+	<div class="caption-top row">
+		<input asp-for="Customer.Id" hidden />
+		<h1>Deliver for production request: @Model.Id</h1>
+		@*<label asp-for="@Model.Customer.PhoneNumber" class="ms-2"></label>
+		<input disabled asp-for="@Model.Customer.PhoneNumber" />*@
+	</div>
+	<div class="col-12 py-2 form-floating">
+		<div class="row">
+
+			<h2 class="text-center">Customer's Contact</h2>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Customer.Name" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.Name" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Customer.PhoneNumber" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Customer.PhoneNumber" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+				<input disabled asp-for="@Model.Address" type="text" class="form-control border-0 shadow" />
+				<label asp-for="@Model.Address" type="text" class="ms-2"></label>
+			</div>
+			<div class="col-12 py-2 form-floating">
+
+				<h2 class="text-center">Including Jewelries: </h2>
+				
+				
+					<div class="col-12 py-2 form-floating">
+
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+
+									<th>Name</th>
+									<th>Description</th>
+								</tr>
+							<tbody>
+								@foreach (var jewelry in Model.Jewelries)
+								{
+								<tr>
+									<th>@jewelry.Name</th>
+									<th>@jewelry.Description</th>
+								</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				Latest status of the order: <h3>@Model.Status </h3>
+			</div>
+
+			@if (User.IsInRole(SD.Role_Sales))
+			{
+				if (@Model.Status == SD.StatusConfirmDelivered)
+				{
+					<div class="col-12 py-2 form-floating">
+						<p style="strong">If customer has confirmed order: </p>
+					<a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-primary ">Delivered</a>
+					</div>
+				}
+				else
+				{
+					
+				}
+			}
+			
+
+
+		</div>
+	</div>
+</form>

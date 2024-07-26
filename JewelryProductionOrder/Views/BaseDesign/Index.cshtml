@@ -1,0 +1,17 @@
+﻿@model BaseDesign
+
+<div class="caption-top row d-flex align-items-center justify-content-center">
+	<h2 style="width: 700px; text-align: center;">@Model?.Name</h2>
+</div>
+<br />
+<form method="post">
+	@* <input hidden asp-for="BaseDesignId" /> *@
+	<div class="form-group">
+		<div class="row d-flex align-items-center justify-content-center">
+			<div class="col-6">
+				<img src="@Model.Image" width="100%" style="" />
+			</div>
+			
+		</div>
+</form>
+

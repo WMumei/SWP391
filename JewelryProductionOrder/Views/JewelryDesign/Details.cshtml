@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-10">
                 <input asp-for="@Model.Jewelry.Id" hidden />
-                <div class="col-12 py-2 form-floating">
+                <div class="col-6 py-2 form-floating my-2">
                     <input disabled asp-for="@Model.Name" class="form-control border-0 shadow" />
                     <label asp-for="@Model.Name" class="ms-2"></label>
                 </div>
@@ -27,10 +27,15 @@
                 </div>
         </div>
     </div>
+
 </form>
 <div class="row">
-    @if (User.IsInRole(SD.Role_Customer))
+
+    @if (User.IsInRole(SD.Role_Customer) && Model.Status != SD.CustomerApproved)
     {
-        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Approve</a>
+        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm col-4 my-2" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
     }
+
 </div>
+
+
