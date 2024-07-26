@@ -25,11 +25,11 @@ function loadUserTable() {
                 }
             },
             {
-                data: { id: "id", lockoutEnd: "lockoutEnd" },
+                data: { id: "id", lockoutEnd: "lockoutEnd", role: "role" },
                 "render": function (data) {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
-
+                    
                     if (lockout > today) {
                         return `
                         <div class="text-center">
@@ -39,12 +39,16 @@ function loadUserTable() {
                         </div>`
                     }
                     else {
-                        return `
-                        <div class="text-center">
-                            <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
-                                Lock
-                            </a>    
-                        </div>`
+                        if (data.role == "Admin") {
+                            return `<div></div>`
+                        } else {
+                            return `
+                                <div class="text-center">
+                                    <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
+                                        Lock
+                                    </a>    
+                                </div>`
+                        }
                     }
 
                 },
