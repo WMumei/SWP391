@@ -56,17 +56,20 @@
 @* 	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">Or</div> *@
 
 	<div class="col-12 d-flex justify-content-center align-items-center mb-5">
-		<a 
-			asp-controller="BaseDesign"
-			asp-action="Create"
-			class="btn btn-primary">
-			Upload your design
-		</a>
-		<a asp-controller="Home"
-		   asp-action="ViewMore"
-		   class="btn btn-primary">
-			View more
-		</a>
+        <div class="col-12 d-flex justify-content-center align-items-center mb-5">
+            <a 
+                asp-controller="BaseDesign"
+                asp-action="Create"
+                class="btn btn-primary">
+                Upload your design
+            </a>
+            <span class="mx-2"></span>
+            <a asp-controller="Home"
+               asp-action="ViewMore"
+               class="btn btn-primary">
+                View more
+            </a>
+        </div>
 	</div>
 
 
