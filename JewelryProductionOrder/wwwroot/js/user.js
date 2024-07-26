@@ -17,27 +17,33 @@ function loadUserTable() {
                 "render": function (data) {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
+                    if (lockout > today) {
+                        return `<div>Locked</div>`
+                    } else {
+                        return `<div>Not locked</div>`
+                    }
+                }
+            },
+            {
+                data: { id: "id", lockoutEnd: "lockoutEnd" },
+                "render": function (data) {
+                    var today = new Date().getTime();
+                    var lockout = new Date(data.lockoutEnd).getTime();
 
                     if (lockout > today) {
                         return `
                         <div class="text-center">
-                            <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
-                                Lock
-                            </a>    
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
-                                Permission
+                            <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer;width:100px;">
+                                Unlock
                             </a>
                         </div>`
                     }
                     else {
                         return `
                         <div class="text-center">
-                            <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer;width:100px;">
-                                Unlock
-                            </a>
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
-                                Permission
-                            </a>
+                            <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
+                                Lock
+                            </a>    
                         </div>`
                     }
 
