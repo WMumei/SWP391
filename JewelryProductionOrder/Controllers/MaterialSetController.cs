@@ -280,109 +280,165 @@ namespace SWP391.Controllers
 		#endregion
 
 		#region API
-		public IActionResult Upsert(int id)
+		/// <summary>
+		/// Handles the GET request for creating or updating a material set.
+		/// </summary>
+		/// <param name="id">The ID of the material set.</param>
+		/// <param name="jId">The ID of the jewelry.</param>
+		/// <returns>The view for creating or updating a material set.</returns>
+		public IActionResult Upsert(int id, int jId, int redirectRequest)
 		{
+			// Create case
+			if (id != 0)
+			{
+				// If a jewelry has its quotation approved by a customer, its material set can not be modified
+
+				// This prevents changing the set after the quotation has been paid
+				// and makes the set consistent throughtout the manufacturing process
+				Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId && j.Status == SD.StatusQuotationApproved);
+				if (jewelry is not null)
+				{
+					TempData["error"] = "The Material Set can not be modified after the quotation of its jewelry has been approved!";
+					// Return to the jewelries in a production request page
+					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				}
+
+				// Load the material set materials (join entity) to fill up the session list
+				var materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(msm => msm.MaterialSetId == id,includeProperties: "Material").ToList();
+
+				if (materialSetMaterials == null)
+				{
+					return NotFound();
+				}
+
+				// Populate the session lists with the materials and gemstones
+				var materialList = materialSetMaterials.Select(msm => new MaterialVM
+				{
+					Material = msm.Material,
+					Weight = msm.Weight,
+					Price = msm.Weight * msm.Material.Price
+				}).ToList();
+				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materialList);
+
+				var gemstoneList = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
+				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstoneList);
+
+			}
+			else
+			{
+				ClearSession();
+			}
+
 			return View();
 		}
 
+
 		[HttpPost]
 		[ActionName("Upsert")]
-        public IActionResult UpsertPOST(int id, int? jId)
-        {
-            var materials = MaterialListSession;
-            // Retrieve all available gemstones
-            // Check again to make sure that all gemstones are available in the process of adding 
-            // (no one else added it to a set while the user was selecting and adding)
-            var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
-            var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusAvailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
+		public IActionResult UpsertPOST(int id, int jId)
+		{
 
-            // Check if there aren't anything in the set
-            if (materials.Count == 0 && gemstones.Count == 0)
-            {
-                return Json(new { success = false, message = "The Material Set could not be empty!" });
-            }
+			var materials = MaterialListSession;
+			// Retrieve all available gemstones
+			// Check again to make sure that all gemstones are available in the process of adding 
+			// (no one else added it to a set while the user was selecting and adding)
+			var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
+			var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusAvailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
 
-            // Case Insert
-            if (id == 0 && jId is not null)
-            {
-                MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = (int)jId };
-                _unitOfWork.MaterialSet.Add(materialSet);
+			// Check if there aren't anything in the set
+			if (materials.Count == 0 && gemstones.Count == 0)
+			{
+				return Json(new { success = false, message = "The Material Set could not be empty!" });
+			}
+
+			// Can not modify the set if the quotation of its jewelry has been approved
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId && j.Status == SD.StatusQuotationApproved);
+			if (jewelry is not null)
+			{
+				return Json(new { success = false, message = "The Material Set can not be modified after the quotation of its jewelry has been approved!" });
+			}
+
+			// Case Insert
+			if (id == 0)
+			{
+				MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = jId, TotalPrice = GetSetTotal() };
+				_unitOfWork.MaterialSet.Add(materialSet);
 				_unitOfWork.Save();
-                // Add each material to the set
-                foreach (var material in materials)
-                {
+				// Add each material to the set
+				foreach (var material in materials)
+				{
 					if (material.Weight <= 0)
 					{
-                        return Json(new { success = false, message = "Please enter a valid weight" });
-                    }
+						return Json(new { success = false, message = "Please enter a valid weight" });
+					}
 
-                    var join = new MaterialSetMaterial()
-                    {
-                        MaterialId = material.Material.Id,
-                        Weight = material.Weight,
-                        MaterialSetId = materialSet.Id
-                    };
-                    _unitOfWork.MaterialSetMaterial.Add(join);
-                }
+					var join = new MaterialSetMaterial()
+					{
+						MaterialId = material.Material.Id,
+						Weight = material.Weight,
+						MaterialSetId = materialSet.Id
+					};
+					_unitOfWork.MaterialSetMaterial.Add(join);
+				}
 
-                // Add each gemstone to the material set
-                foreach (var gemstone in gemstones)
-                {
-                    gemstone.MaterialSetId = materialSet.Id;
-                    gemstone.Status = SD.StatusUnavailable;
-                    _unitOfWork.Gemstone.Update(gemstone);
-                }
-                _unitOfWork.Save();
+				// Add each gemstone to the material set
+				foreach (var gemstone in gemstones)
+				{
+					gemstone.MaterialSetId = materialSet.Id;
+					gemstone.Status = SD.StatusUnavailable;
+					_unitOfWork.Gemstone.Update(gemstone);
+				}
+				_unitOfWork.Save();
 				ClearSession();
-                return Json(new { success = true, message = "Material Set created!" });
-            }
-            // Case Update
-            else
-            {
-                MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == id, tracked: true);
-                if (materialSet == null)
-                {
-                    return Json(new { success = false, message = "Material Set not found!" });
-                }
+				return Json(new { success = true, message = "Material Set created!" });
+			}
+			// Case Update
+			else
+			{
+				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == id, tracked: true);
+				if (materialSet == null)
+				{
+					return Json(new { success = false, message = "Material Set not found!" });
+				}
 
-                // Remove existing materials and gemstones
-                var existingMaterials = _unitOfWork.MaterialSetMaterial.GetAll(m => m.MaterialSetId == id).ToList();
-                var existingGemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
+				// Remove existing materials and gemstones
+				var existingMaterials = _unitOfWork.MaterialSetMaterial.GetAll(m => m.MaterialSetId == id).ToList();
+				var existingGemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
 
-                _unitOfWork.MaterialSetMaterial.RemoveRange(existingMaterials);
+				_unitOfWork.MaterialSetMaterial.RemoveRange(existingMaterials);
 
-                foreach (var existingGemstone in existingGemstones)
-                {
-                    existingGemstone.MaterialSetId = null;
-                    existingGemstone.Status = SD.StatusAvailable;
-                    _unitOfWork.Gemstone.Update(existingGemstone);
-                }
+				foreach (var existingGemstone in existingGemstones)
+				{
+					existingGemstone.MaterialSetId = null;
+					existingGemstone.Status = SD.StatusAvailable;
+					_unitOfWork.Gemstone.Update(existingGemstone);
+				}
 
-                // Add materials to the set
-                foreach (var material in materials)
-                {
-                    var join = new MaterialSetMaterial()
-                    {
-                        MaterialId = material.Material.Id,
-                        Weight = material.Weight,
-                        MaterialSetId = materialSet.Id
-                    };
-                    _unitOfWork.MaterialSetMaterial.Add(join);
-                }
+				// Add materials to the set
+				foreach (var material in materials)
+				{
+					var join = new MaterialSetMaterial()
+					{
+						MaterialId = material.Material.Id,
+						Weight = material.Weight,
+						MaterialSetId = materialSet.Id
+					};
+					_unitOfWork.MaterialSetMaterial.Add(join);
+				}
 
-                // Add gemstones to the material set
-                foreach (var gemstone in gemstones)
-                {
-                    gemstone.MaterialSetId = materialSet.Id;
-                    gemstone.Status = SD.StatusUnavailable;
-                    _unitOfWork.Gemstone.Update(gemstone);
-                }
+				// Add gemstones to the material set
+				foreach (var gemstone in gemstones)
+				{
+					gemstone.MaterialSetId = materialSet.Id;
+					gemstone.Status = SD.StatusUnavailable;
+					_unitOfWork.Gemstone.Update(gemstone);
+				}
 
-                _unitOfWork.Save();
+				_unitOfWork.Save();
 				ClearSession();
-                return Json(new { success = true, message = "Material Set updated!" });
-            }
-        }
+				return Json(new { success = true, message = "Material Set updated!" });
+			}
+		}
 
 
 		[HttpGet]
@@ -527,6 +583,11 @@ namespace SWP391.Controllers
 
 		#endregion
 
+		private decimal GetSetTotal()
+		{
+			return GetMaterialTotal() + GetGemstoneTotal();
+		}
+
 		private string GetCurrentUserId()
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -555,8 +616,8 @@ namespace SWP391.Controllers
 
 		private void ClearSession()
 		{
-            HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
-            HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
-        }
+			HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
+		}
 	}
 }

@@ -293,81 +293,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductionRequestDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductionRequestId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    BaseDesignId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductionRequestDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductionRequestDetails_BaseDesigns_BaseDesignId",
-                        column: x => x.BaseDesignId,
-                        principalTable: "BaseDesigns",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductionRequestDetails_ProductionRequests_ProductionRequestId",
-                        column: x => x.ProductionRequestId,
-                        principalTable: "ProductionRequests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Deliveries",
-                columns: table => new
-                {
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SalesStaffId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    JewelryId = table.Column<int>(type: "int", nullable: false),
-                    WarrantyCardId = table.Column<int>(type: "int", nullable: false),
-                    DeliveredAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Deliveries", x => new { x.CustomerId, x.SalesStaffId, x.JewelryId, x.WarrantyCardId });
-                    table.ForeignKey(
-                        name: "FK_Deliveries_AspNetUsers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Deliveries_AspNetUsers_SalesStaffId",
-                        column: x => x.SalesStaffId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Gemstones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Carat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Clarity = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cut = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaterialSetId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Gemstones", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Jewelries",
                 columns: table => new
                 {
@@ -378,7 +303,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MaterialSetId = table.Column<int>(type: "int", nullable: true),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     SalesStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductionStaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -413,6 +337,33 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Jewelries_ProductionRequests_ProductionRequestId",
+                        column: x => x.ProductionRequestId,
+                        principalTable: "ProductionRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductionRequestDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductionRequestId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    BaseDesignId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductionRequestDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductionRequestDetails_BaseDesigns_BaseDesignId",
+                        column: x => x.BaseDesignId,
+                        principalTable: "BaseDesigns",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductionRequestDetails_ProductionRequests_ProductionRequestId",
                         column: x => x.ProductionRequestId,
                         principalTable: "ProductionRequests",
                         principalColumn: "Id",
@@ -521,6 +472,32 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Gemstones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Carat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Clarity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cut = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaterialSetId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gemstones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Gemstones_MaterialSets_MaterialSetId",
+                        column: x => x.MaterialSetId,
+                        principalTable: "MaterialSets",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MaterialSetsMaterials",
                 columns: table => new
                 {
@@ -593,6 +570,45 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         name: "FK_QuotationRequests_MaterialSets_MaterialSetId",
                         column: x => x.MaterialSetId,
                         principalTable: "MaterialSets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Deliveries",
+                columns: table => new
+                {
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SalesStaffId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    JewelryId = table.Column<int>(type: "int", nullable: false),
+                    WarrantyCardId = table.Column<int>(type: "int", nullable: false),
+                    DeliveredAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deliveries", x => new { x.CustomerId, x.SalesStaffId, x.JewelryId, x.WarrantyCardId });
+                    table.ForeignKey(
+                        name: "FK_Deliveries_AspNetUsers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_AspNetUsers_SalesStaffId",
+                        column: x => x.SalesStaffId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_Jewelries_JewelryId",
+                        column: x => x.JewelryId,
+                        principalTable: "Jewelries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deliveries_WarrantyCards_WarrantyCardId",
+                        column: x => x.WarrantyCardId,
+                        principalTable: "WarrantyCards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -703,11 +719,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Jewelries_MaterialSetId",
-                table: "Jewelries",
-                column: "MaterialSetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Jewelries_ProductionRequestId",
                 table: "Jewelries",
                 column: "ProductionRequestId");
@@ -745,7 +756,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MaterialSets_JewelryId",
                 table: "MaterialSets",
-                column: "JewelryId");
+                column: "JewelryId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaterialSetsMaterials_MaterialSetId",
@@ -837,73 +849,11 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 name: "IX_WarrantyCards_SalesStaffId",
                 table: "WarrantyCards",
                 column: "SalesStaffId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Deliveries_Jewelries_JewelryId",
-                table: "Deliveries",
-                column: "JewelryId",
-                principalTable: "Jewelries",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Deliveries_WarrantyCards_WarrantyCardId",
-                table: "Deliveries",
-                column: "WarrantyCardId",
-                principalTable: "WarrantyCards",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Gemstones_MaterialSets_MaterialSetId",
-                table: "Gemstones",
-                column: "MaterialSetId",
-                principalTable: "MaterialSets",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Jewelries_MaterialSets_MaterialSetId",
-                table: "Jewelries",
-                column: "MaterialSetId",
-                principalTable: "MaterialSets",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Jewelries_AspNetUsers_CustomerId",
-                table: "Jewelries");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Jewelries_AspNetUsers_ProductionStaffId",
-                table: "Jewelries");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Jewelries_AspNetUsers_SalesStaffId",
-                table: "Jewelries");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProductionRequests_AspNetUsers_CustomerId",
-                table: "ProductionRequests");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProductionRequests_AspNetUsers_DesignStaffId",
-                table: "ProductionRequests");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProductionRequests_AspNetUsers_ProductionStaffId",
-                table: "ProductionRequests");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProductionRequests_AspNetUsers_SalesStaffId",
-                table: "ProductionRequests");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_MaterialSets_Jewelries_JewelryId",
-                table: "MaterialSets");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -953,7 +903,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 name: "Materials");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "MaterialSets");
 
             migrationBuilder.DropTable(
                 name: "Jewelries");
@@ -962,10 +912,10 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 name: "BaseDesigns");
 
             migrationBuilder.DropTable(
-                name: "MaterialSets");
+                name: "ProductionRequests");
 
             migrationBuilder.DropTable(
-                name: "ProductionRequests");
+                name: "AspNetUsers");
         }
     }
 }

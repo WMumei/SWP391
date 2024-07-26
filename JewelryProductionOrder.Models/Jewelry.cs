@@ -13,8 +13,7 @@ namespace JewelryProductionOrder.Models
 		public string? Image { get; set; }
 		public string? Status { get; set; }
 		public DateTime CreatedAt { get; set; }
-		public int? MaterialSetId { get; set; }
-		[ForeignKey("MaterialSetId")]
+
 		public MaterialSet? MaterialSet { get; set; }
 		public WarrantyCard? WarrantyCard { get; set; }
 

@@ -243,9 +243,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaterialSetId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -268,8 +265,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasIndex("BaseDesignId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("MaterialSetId");
 
                     b.HasIndex("ProductionRequestId");
 
@@ -407,7 +402,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JewelryId");
+                    b.HasIndex("JewelryId")
+                        .IsUnique();
 
                     b.ToTable("MaterialSets");
                 });
@@ -959,10 +955,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
-                        .WithMany()
-                        .HasForeignKey("MaterialSetId");
-
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany("Jewelries")
                         .HasForeignKey("ProductionRequestId")
@@ -982,8 +974,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("BaseDesign");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("MaterialSet");
 
                     b.Navigation("ProductionRequest");
 
@@ -1027,8 +1017,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
-                        .WithMany()
-                        .HasForeignKey("JewelryId")
+                        .WithOne("MaterialSet")
+                        .HasForeignKey("JewelryProductionOrder.Models.MaterialSet", "JewelryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1254,6 +1244,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
                     b.Navigation("JewelryDesigns");
+
+                    b.Navigation("MaterialSet");
 
                     b.Navigation("QuotationRequests");
 

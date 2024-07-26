@@ -8,7 +8,7 @@ namespace JewelryProductionOrder.Models
 	{
 		public int Id { get; set; }
 		public DateTime CreatedAt { get; set; }
-		[Range(0, double.MaxValue)]
+		[Range(0.001, double.MaxValue)]
 		public decimal TotalPrice { get; set; }
         public int JewelryId { get; set; }
         [ForeignKey("JewelryId")]
