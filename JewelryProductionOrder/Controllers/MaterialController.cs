@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Models.Repositories.Repository.IRepository;
 using static System.Collections.Specialized.BitVector32;
 using System;
+using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -57,13 +58,25 @@ namespace JewelryProductionOrder.Controllers
         [Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
         public IActionResult Edit(Material material)
 		{
-
-			Material dbM = _unitOfWork.Material.Get(m => m.Id == material.Id);
-            dbM.Price = material.Price;
-            dbM.Name = material.Name;
-			_unitOfWork.Material.Update(dbM);
-			_unitOfWork.Save();
-            return RedirectToAction("Index");
+			if (ModelState.IsValid)
+			{
+				_unitOfWork.Material.Update(material);
+				_unitOfWork.Save();
+				TempData["success"] = "Gemstone updated";
+				return RedirectToAction("Index");
+			}
+			if (!ModelState.IsValid)
+			{
+				foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+				{
+					Debug.WriteLine(error.ErrorMessage);
+				}
+				// ...
+			}
+			return View();
+			//_unitOfWork.Material.Update(dbM);
+			//_unitOfWork.Save();
+   //         return RedirectToAction("Index");
         }
 
 		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]

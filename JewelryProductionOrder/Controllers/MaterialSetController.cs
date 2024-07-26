@@ -26,7 +26,7 @@ namespace SWP391.Controllers
 				Jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId),
 				MaterialList = _unitOfWork.Material.GetAll().Select(u => new SelectListItem
 				{
-					Text = u.Name,
+					Text = u.Type,
 					Value = u.Id.ToString()
 				}),
 				GemstoneList = _unitOfWork.Gemstone.GetAll().Select(u => new SelectListItem

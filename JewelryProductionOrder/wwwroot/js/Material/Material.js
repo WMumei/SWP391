@@ -9,7 +9,9 @@ function loadDataTable() {
         "ajax": { url: '/material/getall' },
         "columns": [
             { data: 'id' },
-            { data: 'name' },
+            { data: 'type' },
+            { data: 'purity' },
+            { data: 'color' },
             { data: 'price' },
             {
                 data: "id",

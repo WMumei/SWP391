@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240721175254_SeedGem")]
-    partial class SeedGem
+    [Migration("20240726052726_AddDatasIntoTableWithModifiedColumns")]
+    partial class AddDatasIntoTableWithModifiedColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,6 +137,21 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("Carat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Clarity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cut")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -144,8 +159,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -155,37 +171,552 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 1,
+                            Carat = 3m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Round",
                             Name = "3 carat Diamond",
                             Price = 2000m,
-                            Weight = 3m
+                            Status = "Available"
                         },
                         new
                         {
                             Id = 2,
+                            Carat = 1.5m,
+                            Clarity = "VVS1",
+                            Color = "Red",
+                            Cut = "Oval",
                             Name = "Ruby",
                             Price = 1500m,
-                            Weight = 1.5m
+                            Status = "Available"
                         },
                         new
                         {
                             Id = 3,
+                            Carat = 1.8m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Princess",
                             Name = "Sapphire",
                             Price = 1800m,
-                            Weight = 1.8m
+                            Status = "Available"
                         },
                         new
                         {
                             Id = 4,
+                            Carat = 2m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Emerald",
                             Name = "2 carat Diamond",
                             Price = 1800m,
-                            Weight = 2m
+                            Status = "Available"
                         },
                         new
                         {
                             Id = 5,
+                            Carat = 1m,
+                            Clarity = "VVS2",
+                            Color = "White",
+                            Cut = "Marquise",
                             Name = "1 carat Diamond",
                             Price = 1000m,
-                            Weight = 1m
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Carat = 2.5m,
+                            Clarity = "VS1",
+                            Color = "Green",
+                            Cut = "Cushion",
+                            Name = "Emerald",
+                            Price = 2500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Carat = 1.2m,
+                            Clarity = "SI1",
+                            Color = "Purple",
+                            Cut = "Heart",
+                            Name = "Amethyst",
+                            Price = 600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Carat = 1.8m,
+                            Clarity = "VS1",
+                            Color = "Yellow",
+                            Cut = "Oval",
+                            Name = "Topaz",
+                            Price = 800m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Carat = 1.9m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Marquise",
+                            Name = "Aquamarine",
+                            Price = 1100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Carat = 1.4m,
+                            Clarity = "VS1",
+                            Color = "Red",
+                            Cut = "Round",
+                            Name = "Garnet",
+                            Price = 700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Carat = 1.5m,
+                            Clarity = "SI1",
+                            Color = "Green",
+                            Cut = "Princess",
+                            Name = "Peridot",
+                            Price = 500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Carat = 1.3m,
+                            Clarity = "VS2",
+                            Color = "Yellow",
+                            Cut = "Emerald",
+                            Name = "Citrine",
+                            Price = 400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Carat = 1.7m,
+                            Clarity = "VS1",
+                            Color = "Pink",
+                            Cut = "Cushion",
+                            Name = "Morganite",
+                            Price = 1200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Carat = 1.6m,
+                            Clarity = "VS2",
+                            Color = "Multi",
+                            Cut = "Heart",
+                            Name = "Opal",
+                            Price = 900m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Carat = 1.3m,
+                            Clarity = "VS1",
+                            Color = "Red",
+                            Cut = "Oval",
+                            Name = "Spinel",
+                            Price = 950m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Carat = 2m,
+                            Clarity = "VS2",
+                            Color = "Green",
+                            Cut = "Round",
+                            Name = "Tourmaline",
+                            Price = 1000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Carat = 1.8m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Marquise",
+                            Name = "Tanzanite",
+                            Price = 1300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Carat = 1.2m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Princess",
+                            Name = "Zircon",
+                            Price = 450m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Carat = 1.5m,
+                            Clarity = "SI1",
+                            Color = "Green",
+                            Cut = "Emerald",
+                            Name = "Jade",
+                            Price = 700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Carat = 1.4m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Cushion",
+                            Name = "Lapis Lazuli",
+                            Price = 550m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Carat = 1.3m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Heart",
+                            Name = "Turquoise",
+                            Price = 600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Carat = 1.1m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Moonstone",
+                            Price = 400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Carat = 1.2m,
+                            Clarity = "SI1",
+                            Color = "Black",
+                            Cut = "Round",
+                            Name = "Onyx",
+                            Price = 350m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Carat = 1.5m,
+                            Clarity = "VS2",
+                            Color = "Green",
+                            Cut = "Princess",
+                            Name = "Alexandrite",
+                            Price = 3000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Carat = 1.0m,
+                            Clarity = "VS1",
+                            Color = "Orange",
+                            Cut = "Emerald",
+                            Name = "Carnelian",
+                            Price = 200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Carat = 1.7m,
+                            Clarity = "VS2",
+                            Color = "Pink",
+                            Cut = "Cushion",
+                            Name = "Kunzite",
+                            Price = 850m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Carat = 1.3m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Heart",
+                            Name = "Larimar",
+                            Price = 400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Carat = 1.2m,
+                            Clarity = "SI1",
+                            Color = "Green",
+                            Cut = "Oval",
+                            Name = "Malachite",
+                            Price = 300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Carat = 1.1m,
+                            Clarity = "VS2",
+                            Color = "Black",
+                            Cut = "Round",
+                            Name = "Obsidian",
+                            Price = 200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Carat = 1.0m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Round",
+                            Name = "Pearl",
+                            Price = 100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Carat = 2m,
+                            Clarity = "VS2",
+                            Color = "Green",
+                            Cut = "Marquise",
+                            Name = "Beryl",
+                            Price = 1300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Carat = 1.3m,
+                            Clarity = "SI1",
+                            Color = "Green",
+                            Cut = "Princess",
+                            Name = "Bloodstone",
+                            Price = 500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Carat = 1.1m,
+                            Clarity = "VS1",
+                            Color = "Red",
+                            Cut = "Emerald",
+                            Name = "Coral",
+                            Price = 400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Carat = 1.0m,
+                            Clarity = "VS2",
+                            Color = "Black",
+                            Cut = "Cushion",
+                            Name = "Hematite",
+                            Price = 300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Carat = 1.4m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Heart",
+                            Name = "Iolite",
+                            Price = 700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Carat = 1.0m,
+                            Clarity = "SI1",
+                            Color = "Red",
+                            Cut = "Oval",
+                            Name = "Jasper",
+                            Price = 200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Carat = 1.5m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Round",
+                            Name = "Kyanite",
+                            Price = 600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Carat = 1.2m,
+                            Clarity = "VS1",
+                            Color = "Grey",
+                            Cut = "Marquise",
+                            Name = "Labradorite",
+                            Price = 500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Carat = 1.1m,
+                            Clarity = "VS2",
+                            Color = "Pink",
+                            Cut = "Princess",
+                            Name = "Rhodochrosite",
+                            Price = 450m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Carat = 1.2m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Emerald",
+                            Name = "Sodalite",
+                            Price = 300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Carat = 1.3m,
+                            Clarity = "SI1",
+                            Color = "Purple",
+                            Cut = "Cushion",
+                            Name = "Sugilite",
+                            Price = 350m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Carat = 1.4m,
+                            Clarity = "VS2",
+                            Color = "Orange",
+                            Cut = "Heart",
+                            Name = "Sunstone",
+                            Price = 400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Carat = 1.1m,
+                            Clarity = "VS1",
+                            Color = "Brown",
+                            Cut = "Oval",
+                            Name = "Tigers Eye",
+                            Price = 250m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Carat = 1.2m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Round",
+                            Name = "Turquoise",
+                            Price = 500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Carat = 1.0m,
+                            Clarity = "SI1",
+                            Color = "Green",
+                            Cut = "Marquise",
+                            Name = "Unakite",
+                            Price = 200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Carat = 1.5m,
+                            Clarity = "VS1",
+                            Color = "Green",
+                            Cut = "Princess",
+                            Name = "Variscite",
+                            Price = 600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Carat = 1.6m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Emerald",
+                            Name = "Zircon",
+                            Price = 700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Carat = 1.7m,
+                            Clarity = "VS1",
+                            Color = "Purple",
+                            Cut = "Cushion",
+                            Name = "Ametrine",
+                            Price = 1000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Carat = 1.8m,
+                            Clarity = "VS2",
+                            Color = "Blue",
+                            Cut = "Heart",
+                            Name = "Benitoite",
+                            Price = 3000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Carat = 1.2m,
+                            Clarity = "VS1",
+                            Color = "Blue",
+                            Cut = "Oval",
+                            Name = "Chalcedony",
+                            Price = 450m,
+                            Status = "Available"
                         });
                 });
 
@@ -306,13 +837,21 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Color")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Purity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -322,38 +861,122 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "White Gold",
-                            Price = 100m
+                            Color = "White",
+                            Price = 100m,
+                            Purity = "14K",
+                            Type = "White Gold"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Rose Gold",
-                            Price = 50m
+                            Color = "Rose",
+                            Price = 50m,
+                            Purity = "10K",
+                            Type = "Rose Gold"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Yellow Gold",
-                            Price = 80m
+                            Color = "Yellow",
+                            Price = 80m,
+                            Purity = "18K",
+                            Type = "Yellow Gold"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Green Gold",
-                            Price = 90m
+                            Color = "Green",
+                            Price = 90m,
+                            Purity = "14K",
+                            Type = "Green Gold"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "925 Silver",
-                            Price = 60m
+                            Color = "Silver",
+                            Price = 60m,
+                            Purity = "925",
+                            Type = "925 Silver"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "999 Silver",
-                            Price = 70m
+                            Color = "Silver",
+                            Price = 70m,
+                            Purity = "999",
+                            Type = "999 Silver"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Color = "White",
+                            Price = 120m,
+                            Purity = "950",
+                            Type = "Platinum"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Color = "Red",
+                            Price = 30m,
+                            Purity = "99.9%",
+                            Type = "Copper"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Color = "Golden",
+                            Price = 40m,
+                            Purity = "60%",
+                            Type = "Brass"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Color = "Grey",
+                            Price = 50m,
+                            Purity = "99.9%",
+                            Type = "Titanium"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Color = "Silver",
+                            Price = 45m,
+                            Purity = "304",
+                            Type = "Stainless Steel"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Color = "Grey",
+                            Price = 20m,
+                            Purity = "99.9%",
+                            Type = "Zinc"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Color = "White",
+                            Price = 150m,
+                            Purity = "99.9%",
+                            Type = "Rhodium"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Color = "White",
+                            Price = 100m,
+                            Purity = "95%",
+                            Type = "Palladium"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Color = "Grey",
+                            Price = 180m,
+                            Purity = "99.9%",
+                            Type = "Iridium"
                         });
                 });
 

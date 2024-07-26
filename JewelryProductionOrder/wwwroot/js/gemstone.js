@@ -10,7 +10,6 @@ function loadDataTable() {
         "columns": [
             { data: 'name' },
             { data: 'price' },
-            { data: 'weight' },
             { data: 'carat' },
             { data: 'clarity' },
             { data: 'color' },

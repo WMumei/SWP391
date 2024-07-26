@@ -154,34 +154,89 @@ namespace JewelryProductionOrder.Data
 				);
 
 
-			modelBuilder.Entity<Material>().HasData(
-				new Material { Id = 1, Name = "White Gold", Price = 100 },
-				new Material { Id = 2, Name = "Rose Gold", Price = 50 },
-				new Material { Id = 3, Name = "Yellow Gold", Price = 80 },
-				new Material { Id = 4, Name = "Green Gold", Price = 90 },
-				new Material { Id = 5, Name = "925 Silver", Price = 60 },
-				new Material { Id = 6, Name = "999 Silver", Price = 70 }
+            modelBuilder.Entity<Material>().HasData(
+				new Material { Id = 1, Type = "White Gold", Purity = "14K", Color = "White", Price = 100m },
+				new Material { Id = 2, Type = "Rose Gold", Purity = "10K", Color = "Rose", Price = 50m },
+				new Material { Id = 3, Type = "Yellow Gold", Purity = "18K", Color = "Yellow", Price = 80m },
+				new Material { Id = 4, Type = "Green Gold", Purity = "14K", Color = "Green", Price = 90m },
+				new Material { Id = 5, Type = "925 Silver", Purity = "925", Color = "Silver", Price = 60m },
+				new Material { Id = 6, Type = "999 Silver", Purity = "999", Color = "Silver", Price = 70m },
+				new Material { Id = 7, Type = "Platinum", Purity = "950", Color = "White", Price = 120m },
+				new Material { Id = 8, Type = "Copper", Purity = "99.9%", Color = "Red", Price = 30m },
+				new Material { Id = 9, Type = "Brass", Purity = "60%", Color = "Golden", Price = 40m },
+				new Material { Id = 10, Type = "Titanium", Purity = "99.9%", Color = "Grey", Price = 50m },
+				new Material { Id = 11, Type = "Stainless Steel", Purity = "304", Color = "Silver", Price = 45m },
+				new Material { Id = 12, Type = "Zinc", Purity = "99.9%", Color = "Grey", Price = 20m },
+				new Material { Id = 13, Type = "Rhodium", Purity = "99.9%", Color = "White", Price = 150m },
+				new Material { Id = 14, Type = "Palladium", Purity = "95%", Color = "White", Price = 100m },
+				new Material { Id = 15, Type = "Iridium", Purity = "99.9%", Color = "Grey", Price = 180m }
 				);
-			modelBuilder.Entity<Gemstone>().HasData(
-				new Gemstone { Id = 1, Name = "3 carat Diamond", Price = 2000, Weight = 3, Carat = 3, Color = "White", Clarity = "VS1", Cut = "Round", Status = "Available" },
-				new Gemstone { Id = 2, Name = "Ruby", Price = 1500, Weight = 1.5M, Carat = 1.5M, Color = "Red", Clarity = "VVS1", Cut = "Oval", Status = "Available" },
-				new Gemstone { Id = 3, Name = "Sapphire", Price = 1800, Weight = 1.8M, Carat = 1.8M, Color = "Blue", Clarity = "VS2", Cut = "Princess", Status = "Available" },
-				new Gemstone { Id = 4, Name = "2 carat Diamond", Price = 1800, Weight = 2, Carat = 2, Color = "White", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
-				new Gemstone { Id = 5, Name = "1 carat Diamond", Price = 1000, Weight = 1, Carat = 1, Color = "White", Clarity = "VVS2", Cut = "Marquise", Status = "Available" }
-			);
 
-			#endregion
+            modelBuilder.Entity<Gemstone>().HasData(
+                new Gemstone { Id = 1, Name = "3 carat Diamond", Price = 2000, Carat = 3, Color = "White", Clarity = "VS1", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 2, Name = "Ruby", Price = 1500, Carat = 1.5M, Color = "Red", Clarity = "VVS1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 3, Name = "Sapphire", Price = 1800, Carat = 1.8M, Color = "Blue", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 4, Name = "2 carat Diamond", Price = 1800, Carat = 2, Color = "White", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 5, Name = "1 carat Diamond", Price = 1000, Carat = 1, Color = "White", Clarity = "VVS2", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 6, Name = "Emerald", Price = 2500, Carat = 2.5M, Color = "Green", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 7, Name = "Amethyst", Price = 600, Carat = 1.2M, Color = "Purple", Clarity = "SI1", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 8, Name = "Topaz", Price = 800, Carat = 1.8M, Color = "Yellow", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 9, Name = "Aquamarine", Price = 1100, Carat = 1.9M, Color = "Blue", Clarity = "VS2", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 10, Name = "Garnet", Price = 700, Carat = 1.4M, Color = "Red", Clarity = "VS1", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 11, Name = "Peridot", Price = 500, Carat = 1.5M, Color = "Green", Clarity = "SI1", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 12, Name = "Citrine", Price = 400, Carat = 1.3M, Color = "Yellow", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 13, Name = "Morganite", Price = 1200, Carat = 1.7M, Color = "Pink", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 14, Name = "Opal", Price = 900, Carat = 1.6M, Color = "Multi", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 15, Name = "Spinel", Price = 950, Carat = 1.3M, Color = "Red", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 16, Name = "Tourmaline", Price = 1000, Carat = 2M, Color = "Green", Clarity = "VS2", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 17, Name = "Tanzanite", Price = 1300, Carat = 1.8M, Color = "Blue", Clarity = "VS1", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 18, Name = "Zircon", Price = 450, Carat = 1.2M, Color = "Blue", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 19, Name = "Jade", Price = 700, Carat = 1.5M, Color = "Green", Clarity = "SI1", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 20, Name = "Lapis Lazuli", Price = 550, Carat = 1.4M, Color = "Blue", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 21, Name = "Turquoise", Price = 600, Carat = 1.3M, Color = "Blue", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 22, Name = "Moonstone", Price = 400, Carat = 1.1M, Color = "White", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 23, Name = "Onyx", Price = 350, Carat = 1.2M, Color = "Black", Clarity = "SI1", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 24, Name = "Alexandrite", Price = 3000, Carat = 1.5M, Color = "Green", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 25, Name = "Carnelian", Price = 200, Carat = 1.0M, Color = "Orange", Clarity = "VS1", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 26, Name = "Kunzite", Price = 850, Carat = 1.7M, Color = "Pink", Clarity = "VS2", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 27, Name = "Larimar", Price = 400, Carat = 1.3M, Color = "Blue", Clarity = "VS1", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 28, Name = "Malachite", Price = 300, Carat = 1.2M, Color = "Green", Clarity = "SI1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 29, Name = "Obsidian", Price = 200, Carat = 1.1M, Color = "Black", Clarity = "VS2", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 30, Name = "Pearl", Price = 100, Carat = 1.0M, Color = "White", Clarity = "VS1", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 31, Name = "Beryl", Price = 1300, Carat = 2M, Color = "Green", Clarity = "VS2", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 32, Name = "Bloodstone", Price = 500, Carat = 1.3M, Color = "Green", Clarity = "SI1", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 33, Name = "Coral", Price = 400, Carat = 1.1M, Color = "Red", Clarity = "VS1", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 34, Name = "Hematite", Price = 300, Carat = 1.0M, Color = "Black", Clarity = "VS2", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 35, Name = "Iolite", Price = 700, Carat = 1.4M, Color = "Blue", Clarity = "VS1", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 36, Name = "Jasper", Price = 200, Carat = 1.0M, Color = "Red", Clarity = "SI1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 37, Name = "Kyanite", Price = 600, Carat = 1.5M, Color = "Blue", Clarity = "VS2", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 38, Name = "Labradorite", Price = 500, Carat = 1.2M, Color = "Grey", Clarity = "VS1", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 39, Name = "Rhodochrosite", Price = 450, Carat = 1.1M, Color = "Pink", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 40, Name = "Sodalite", Price = 300, Carat = 1.2M, Color = "Blue", Clarity = "VS1", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 41, Name = "Sugilite", Price = 350, Carat = 1.3M, Color = "Purple", Clarity = "SI1", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 42, Name = "Sunstone", Price = 400, Carat = 1.4M, Color = "Orange", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 43, Name = "Tigers Eye", Price = 250, Carat = 1.1M, Color = "Brown", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+                new Gemstone { Id = 44, Name = "Turquoise", Price = 500, Carat = 1.2M, Color = "Blue", Clarity = "VS2", Cut = "Round", Status = "Available" },
+                new Gemstone { Id = 45, Name = "Unakite", Price = 200, Carat = 1.0M, Color = "Green", Clarity = "SI1", Cut = "Marquise", Status = "Available" },
+                new Gemstone { Id = 46, Name = "Variscite", Price = 600, Carat = 1.5M, Color = "Green", Clarity = "VS1", Cut = "Princess", Status = "Available" },
+                new Gemstone { Id = 47, Name = "Zircon", Price = 700, Carat = 1.6M, Color = "Blue", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
+                new Gemstone { Id = 48, Name = "Ametrine", Price = 1000, Carat = 1.7M, Color = "Purple", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+                new Gemstone { Id = 49, Name = "Benitoite", Price = 3000, Carat = 1.8M, Color = "Blue", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+                new Gemstone { Id = 50, Name = "Chalcedony", Price = 450, Carat = 1.2M, Color = "Blue", Clarity = "VS1", Cut = "Oval", Status = "Available" }
+            );
 
-			#region OneToOne
-			//modelBuilder.Entity<Jewelry>()
-			//        .HasOne(e => e.WarrantyCard)
-			//        .WithOne(e => e.Jewelry)
-			//        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
-			//        .IsRequired();
+            #endregion
 
-			#endregion
-			#region ManyToMany
-			modelBuilder.Entity<MaterialSet>()
+            #region OneToOne
+            //modelBuilder.Entity<Jewelry>()
+            //        .HasOne(e => e.WarrantyCard)
+            //        .WithOne(e => e.Jewelry)
+            //        .HasForeignKey<WarrantyCard>(e => e.JewelryId)
+            //        .IsRequired();
+
+            #endregion
+            #region ManyToMany
+            modelBuilder.Entity<MaterialSet>()
 				.HasMany(e => e.Materials)
 				.WithMany(e => e.MaterialSets)
 				.UsingEntity<MaterialSetMaterial>(j => j.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP"));
