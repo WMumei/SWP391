@@ -8,8 +8,8 @@
 			public string Name { get; set; }
 			[Range(0.01, 100000000)]
 			public decimal Price { get; set; }
-			[Range(0.01, 100000000)]
-			public decimal Weight { get; set; }
+			//[Range(0.01, 100000000)]
+			//public decimal Weight { get; set; }
 	        [Range(0.01, 100000000)]
 		    public decimal Carat { get; set; }
 			public string Color { get; set; }
