@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDatasIntoTableWithModifiedColumns : Migration
+    public partial class newDatas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -647,11 +647,11 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 columns: new[] { "Id", "Carat", "Clarity", "Color", "Cut", "Name", "Price", "Status" },
                 values: new object[,]
                 {
-                    { 1, 3m, "VS1", "White", "Round", "3 carat Diamond", 2000m, "Available" },
+                    { 1, 3m, "VS1", "White", "Round", "Diamond", 2000m, "Available" },
                     { 2, 1.5m, "VVS1", "Red", "Oval", "Ruby", 1500m, "Available" },
                     { 3, 1.8m, "VS2", "Blue", "Princess", "Sapphire", 1800m, "Available" },
-                    { 4, 2m, "VS2", "White", "Emerald", "2 carat Diamond", 1800m, "Available" },
-                    { 5, 1m, "VVS2", "White", "Marquise", "1 carat Diamond", 1000m, "Available" },
+                    { 4, 2m, "VS2", "White", "Emerald", "Diamond", 1800m, "Available" },
+                    { 5, 1m, "VVS2", "White", "Marquise", "Diamond", 1000m, "Available" },
                     { 6, 2.5m, "VS1", "Green", "Cushion", "Emerald", 2500m, "Available" },
                     { 7, 1.2m, "SI1", "Purple", "Heart", "Amethyst", 600m, "Available" },
                     { 8, 1.8m, "VS1", "Yellow", "Oval", "Topaz", 800m, "Available" },
@@ -666,7 +666,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     { 17, 1.8m, "VS1", "Blue", "Marquise", "Tanzanite", 1300m, "Available" },
                     { 18, 1.2m, "VS2", "Blue", "Princess", "Zircon", 450m, "Available" },
                     { 19, 1.5m, "SI1", "Green", "Emerald", "Jade", 700m, "Available" },
-                    { 20, 1.4m, "VS1", "Blue", "Cushion", "Lapis Lazuli", 550m, "Available" },
+                    { 20, 1.4m, "VS1", "Blue", "Cushion", "Lapis", 550m, "Available" },
                     { 21, 1.3m, "VS2", "Blue", "Heart", "Turquoise", 600m, "Available" },
                     { 22, 1.1m, "VS1", "White", "Oval", "Moonstone", 400m, "Available" },
                     { 23, 1.2m, "SI1", "Black", "Round", "Onyx", 350m, "Available" },
@@ -689,7 +689,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     { 40, 1.2m, "VS1", "Blue", "Emerald", "Sodalite", 300m, "Available" },
                     { 41, 1.3m, "SI1", "Purple", "Cushion", "Sugilite", 350m, "Available" },
                     { 42, 1.4m, "VS2", "Orange", "Heart", "Sunstone", 400m, "Available" },
-                    { 43, 1.1m, "VS1", "Brown", "Oval", "Tigers Eye", 250m, "Available" },
+                    { 43, 1.1m, "VS1", "Brown", "Oval", "TigersEye", 250m, "Available" },
                     { 44, 1.2m, "VS2", "Blue", "Round", "Turquoise", 500m, "Available" },
                     { 45, 1.0m, "SI1", "Green", "Marquise", "Unakite", 200m, "Available" },
                     { 46, 1.5m, "VS1", "Green", "Princess", "Variscite", 600m, "Available" },
@@ -704,17 +704,17 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 columns: new[] { "Id", "Color", "Price", "Purity", "Type" },
                 values: new object[,]
                 {
-                    { 1, "White", 100m, "14K", "White Gold" },
-                    { 2, "Rose", 50m, "10K", "Rose Gold" },
-                    { 3, "Yellow", 80m, "18K", "Yellow Gold" },
-                    { 4, "Green", 90m, "14K", "Green Gold" },
-                    { 5, "Silver", 60m, "925", "925 Silver" },
-                    { 6, "Silver", 70m, "999", "999 Silver" },
+                    { 1, "White", 100m, "14K", "Gold" },
+                    { 2, "Rose", 50m, "10K", "Gold" },
+                    { 3, "Yellow", 80m, "18K", "Gold" },
+                    { 4, "Green", 90m, "14K", "Gold" },
+                    { 5, "Silver", 60m, "925", "Silver" },
+                    { 6, "Silver", 70m, "999", "Silver" },
                     { 7, "White", 120m, "950", "Platinum" },
                     { 8, "Red", 30m, "99.9%", "Copper" },
                     { 9, "Golden", 40m, "60%", "Brass" },
                     { 10, "Grey", 50m, "99.9%", "Titanium" },
-                    { 11, "Silver", 45m, "304", "Stainless Steel" },
+                    { 11, "Silver", 45m, "304", "Steel" },
                     { 12, "Grey", 20m, "99.9%", "Zinc" },
                     { 13, "White", 150m, "99.9%", "Rhodium" },
                     { 14, "White", 100m, "95%", "Palladium" },
