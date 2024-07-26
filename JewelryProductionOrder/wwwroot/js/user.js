@@ -35,7 +35,7 @@ function loadUserTable() {
                             <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer;width:100px;">
                                 Unlock
                             </a>
-                            <a href="/user/RoleManagement?userId=${data.id} class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
+                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
                                 Permission
                             </a>
                         </div>`
