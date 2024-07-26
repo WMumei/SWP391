@@ -15,5 +15,10 @@ namespace JewelryProductionOrder.Models
 		public int PostId { get; set;}
 		[ForeignKey("PostId")]
 		public Post Post { get; set; }
+
+		public int? CommentId { get; set; }
+		[ForeignKey("CommentId")]
+		public List<Comment> Replies { get; set; } = new List<Comment>();
+
 	}
 }
