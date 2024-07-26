@@ -40,7 +40,7 @@
 @if (User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Customer))
 {
     <div>
-        <h3>Leave a Comment</h3>
+        <h3>Comments</h3>
         <form asp-action="AddComment" method="post">
             <input type="hidden" name="PostId" value="@Model.Id" />
             <div class="form-group">
@@ -55,7 +55,7 @@
 <br />
 
 <div>
-    <h3>Comments</h3>
+    
     @foreach (var comment in Model.Comments)
     {
         <div class="comment">
