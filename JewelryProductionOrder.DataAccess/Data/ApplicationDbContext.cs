@@ -19,6 +19,7 @@ namespace JewelryProductionOrder.Data
 		public DbSet<MaterialSet> MaterialSets { get; set; }
 		public DbSet<MaterialSetMaterial> MaterialSetsMaterials { get; set; }
 		public DbSet<Post> Posts { get; set; }
+		public DbSet<Comment> Comments { get; set; }
 		//public DbSet<Role> Roles { get; set; }
 		public DbSet<Delivery> Deliveries { get; set; }
 		public DbSet<User> Users { get; set; }
