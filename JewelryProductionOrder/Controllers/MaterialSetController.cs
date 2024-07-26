@@ -28,6 +28,16 @@ namespace SWP391.Controllers
 			get => HttpContext.Session.Get<List<Gemstone>>(SessionConst.GEMSTONE_LIST_KEY) ?? new List<Gemstone>();
 		}
 
+		// The purpose of the deleted set is solely for the updating gemstones case.
+		// In this case, when the gemstone is removed from the current set
+		// and added to the deleted set.
+		// This allows users to see and add back the gemstone from the available gemstones table,
+		// although its status is still unavailable.
+		public List<Gemstone> DeletedGemstoneListSession
+		{
+			get => HttpContext.Session.Get<List<Gemstone>>(SessionConst.DELETED_GEMSTONE_LIST_KEY) ?? new List<Gemstone>();
+		}
+
 		public MaterialSetController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
@@ -283,13 +293,13 @@ namespace SWP391.Controllers
 		/// <summary>
 		/// Handles the GET request for creating or updating a material set.
 		/// </summary>
-		/// <param name="id">The ID of the material set.</param>
+		/// <param name="mId">The ID of the material set.</param>
 		/// <param name="jId">The ID of the jewelry.</param>
 		/// <returns>The view for creating or updating a material set.</returns>
-		public IActionResult Upsert(int id, int jId, int redirectRequest)
+		public IActionResult Upsert(int mId, int jId, int redirectRequest)
 		{
 			// Create case
-			if (id != 0)
+			if (mId != 0)
 			{
 				// If a jewelry has its quotation approved by a customer, its material set can not be modified
 
@@ -304,7 +314,7 @@ namespace SWP391.Controllers
 				}
 
 				// Load the material set materials (join entity) to fill up the session list
-				var materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(msm => msm.MaterialSetId == id,includeProperties: "Material").ToList();
+				var materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(msm => msm.MaterialSetId == mId, includeProperties: "Material").ToList();
 
 				if (materialSetMaterials == null)
 				{
@@ -320,7 +330,7 @@ namespace SWP391.Controllers
 				}).ToList();
 				HttpContext.Session.Set(SessionConst.MATERIAL_LIST_KEY, materialList);
 
-				var gemstoneList = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
+				var gemstoneList = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == mId).ToList();
 				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstoneList);
 
 			}
@@ -335,17 +345,15 @@ namespace SWP391.Controllers
 
 		[HttpPost]
 		[ActionName("Upsert")]
-		public IActionResult UpsertPOST(int id, int jId)
+		public IActionResult UpsertPOST(int mId, int jId)
 		{
 
 			var materials = MaterialListSession;
-			// Retrieve all available gemstones
-			// Check again to make sure that all gemstones are available in the process of adding 
-			// (no one else added it to a set while the user was selecting and adding)
+			var gemstones = GemstoneListSession;
 			var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
-			var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusAvailable && !sessionGemstoneIds.Contains(g.Id)).ToList();
 
-			// Check if there aren't anything in the set
+
+			// Fail if there aren't anything in the set
 			if (materials.Count == 0 && gemstones.Count == 0)
 			{
 				return Json(new { success = false, message = "The Material Set could not be empty!" });
@@ -359,8 +367,18 @@ namespace SWP391.Controllers
 			}
 
 			// Case Insert
-			if (id == 0)
+			if (mId == 0)
 			{
+				// Check again to make sure that all gemstones are available in the process of adding 
+				// (no one else added it to a set while the user was selecting and adding)
+				// Must get back from db to get latest status
+				var dbGemstones = _unitOfWork.Gemstone.GetAll(g => sessionGemstoneIds.Contains(g.Id)).ToList();
+				if (dbGemstones.Any(g => g.Status == SD.StatusUnavailable))
+				{
+					ClearSession();
+					return Json(new { success = false, message = "Some gemstones are not available. Please try again" });
+				}
+
 				MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = jId, TotalPrice = GetSetTotal() };
 				_unitOfWork.MaterialSet.Add(materialSet);
 				_unitOfWork.Save();
@@ -382,7 +400,7 @@ namespace SWP391.Controllers
 				}
 
 				// Add each gemstone to the material set
-				foreach (var gemstone in gemstones)
+				foreach (var gemstone in dbGemstones)
 				{
 					gemstone.MaterialSetId = materialSet.Id;
 					gemstone.Status = SD.StatusUnavailable;
@@ -395,25 +413,29 @@ namespace SWP391.Controllers
 			// Case Update
 			else
 			{
-				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == id, tracked: true);
+
+				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == mId, tracked: true);
 				if (materialSet == null)
 				{
 					return Json(new { success = false, message = "Material Set not found!" });
 				}
 
 				// Remove existing materials and gemstones
-				var existingMaterials = _unitOfWork.MaterialSetMaterial.GetAll(m => m.MaterialSetId == id).ToList();
-				var existingGemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == id).ToList();
+				var existingMaterials = _unitOfWork.MaterialSetMaterial.GetAll(m => m.MaterialSetId == mId).ToList();
+				var existingGemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == mId).ToList();
 
-				_unitOfWork.MaterialSetMaterial.RemoveRange(existingMaterials);
+				// Fail if there is a gem that is unavailable and not already in the set
+				// To clarify, this ensures that the newly added gemstone in session is still available. The only unvaiable gems of the list is already in the set (unvailable because it is already in this particular set)
+				var existingGemstoneIds = existingGemstones.Select(m => m.Id).ToList();
 
-				foreach (var existingGemstone in existingGemstones)
+				if (gemstones.Any(g => g.Status == SD.StatusUnavailable && !existingGemstoneIds.Contains(mId)))
 				{
-					existingGemstone.MaterialSetId = null;
-					existingGemstone.Status = SD.StatusAvailable;
-					_unitOfWork.Gemstone.Update(existingGemstone);
+					ClearSession();
+					return Json(new { success = false, message = "Some newly added gemstones are not available. Please try again!" });
 				}
 
+				// Remove currently existing materials in the set
+				_unitOfWork.MaterialSetMaterial.RemoveRange(existingMaterials);
 				// Add materials to the set
 				foreach (var material in materials)
 				{
@@ -426,13 +448,32 @@ namespace SWP391.Controllers
 					_unitOfWork.MaterialSetMaterial.Add(join);
 				}
 
-				// Add gemstones to the material set
-				foreach (var gemstone in gemstones)
+				foreach (var existingGemstone in existingGemstones)
+				{
+					existingGemstone.MaterialSetId = null;
+					existingGemstone.Status = SD.StatusAvailable;
+					//_unitOfWork.Gemstone.Update(existingGemstone);
+				}
+
+				/* 
+				  Add gemstones to the material set
+				*/
+				// First part, add the gemstones that are being tracked
+				var gemstoneToBeAdded = existingGemstones.Where(g => sessionGemstoneIds.Contains(g.Id)).ToList();
+				foreach (var gemstone in gemstoneToBeAdded)
+				{
+					gemstone.MaterialSetId = materialSet.Id;
+					gemstone.Status = SD.StatusUnavailable;
+				}
+				// Second part, add those that aren't being tracked
+				var gemstoneToBeAddedNoTracking = gemstones.Where(g => !existingGemstoneIds.Contains(g.Id)).ToList();
+				foreach (var gemstone in gemstoneToBeAddedNoTracking)
 				{
 					gemstone.MaterialSetId = materialSet.Id;
 					gemstone.Status = SD.StatusUnavailable;
 					_unitOfWork.Gemstone.Update(gemstone);
 				}
+
 
 				_unitOfWork.Save();
 				ClearSession();
@@ -452,7 +493,13 @@ namespace SWP391.Controllers
 		public IActionResult GetGemstones()
 		{
 			var sessionGemstoneIds = GemstoneListSession.Select(g => g.Id).ToList();
-			var gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status != SD.StatusUnavailable && !sessionGemstoneIds.Contains(g.Id));
+			var sessionDeletedGemstoneIds = DeletedGemstoneListSession.Select(g => g.Id).ToList();
+
+			// Retrieve the gemstone if
+			// (it is available OR in deleted set) AND not in the currently selected gemstone
+			var gemstones = _unitOfWork.Gemstone.GetAll(g => (g.Status != SD.StatusUnavailable || sessionDeletedGemstoneIds.Contains(g.Id)) && !sessionGemstoneIds.Contains(g.Id))
+				.ToList();
+
 			return Json(new { data = gemstones });
 		}
 
@@ -484,6 +531,7 @@ namespace SWP391.Controllers
 			{
 				return Json(new { success = false, message = "Material not found" });
 			}
+
 			var materialVM = new MaterialVM { Material = material, Weight = 1, Price = material.Price };
 			var list = MaterialListSession;
 			list.Add(materialVM);
@@ -500,12 +548,26 @@ namespace SWP391.Controllers
 				return Json(new { success = false, message = "Gemstone already exists in the set" });
 			}
 
-			// Otherwise, add that to session if gemstone exists and available
-			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == id && g.Status == SD.StatusAvailable);
+			// Fail if gemstone doesn't exist OR (unavailable AND not in the deleted set).
+			// In other words, success only if gemstone exists AND (availabe OR in the deleted set)
+			var sessionDeletedGemstoneIds = DeletedGemstoneListSession.Select(g => g.Id).ToList();
+			bool inDeletedSet = sessionDeletedGemstoneIds.Contains(id);
+			Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == id && (g.Status == SD.StatusAvailable || inDeletedSet));
 			if (gemstone is null)
 			{
 				return Json(new { success = false, message = "Gemstone not found or unavailable" });
 			}
+
+			// If it's in the deleted set, remove it from there
+			var deletedGemstoneList = DeletedGemstoneListSession;
+			var inDeletedGemstone = deletedGemstoneList.FirstOrDefault(g => g.Id == id);
+			if (inDeletedGemstone is not null)
+			{
+				deletedGemstoneList.Remove(inDeletedGemstone);
+				HttpContext.Session.Set(SessionConst.DELETED_GEMSTONE_LIST_KEY, deletedGemstoneList);
+			}
+
+
 
 			var gemstoneList = GemstoneListSession;
 			gemstoneList.Add(gemstone);
@@ -567,8 +629,21 @@ namespace SWP391.Controllers
 				// Remove the gemstone from the session list
 				gemstones.Remove(gemstone);
 				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstones);
+
+				// If it's not in the deleted set, add it to there
+				var deletedGemstoneList = DeletedGemstoneListSession;
+				var deletedGemstoneListIds = deletedGemstoneList.Select(g => g.Id).ToList();
+				if (!deletedGemstoneListIds.Contains(id))
+				{
+					deletedGemstoneList.Add(gemstone);
+					HttpContext.Session.Set(SessionConst.DELETED_GEMSTONE_LIST_KEY, deletedGemstoneList);
+
+				}
 				return Json(new { success = true, message = "Gemstone deleted successfully" });
 			}
+
+
+
 			return Json(new { success = false, message = "Gemstone not found" });
 		}
 

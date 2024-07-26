@@ -93,6 +93,8 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult RequestIndex(int reqId)
 		{
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest,WarrantyCard").ToList();
+			HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
 			return View(jewelries);
 		}
 

@@ -22,10 +22,10 @@ document.getElementById('saveButton').onclick = () => {
     // Get the jId and id query parameters from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const jId = urlParams.get('jId');
-    const id = urlParams.get('id') || 0; // Default to 0 if id is not present
+    const mId = urlParams.get('mId') || 0; // Default to 0 if id is not present
 
     const data = {
-        id: id,
+        mId: mId,
         jId: jId
     };
 

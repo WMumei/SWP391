@@ -153,7 +153,6 @@ namespace JewelryProductionOrder.Data
 				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type = "Company" }
 				);
 
-
 			modelBuilder.Entity<Material>().HasData(
 				new Material { Id = 1, Name = "White Gold", Price = 100 },
 				new Material { Id = 2, Name = "Rose Gold", Price = 50 },
