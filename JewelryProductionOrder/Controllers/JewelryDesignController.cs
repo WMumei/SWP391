@@ -128,17 +128,17 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
 		public IActionResult ViewAll(int jId)
 		{
-			var jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			var jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId).ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (User.IsInRole(SD.Role_Customer))
-			{
-				jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
-			}
-			/*else if(User.IsInRole(SD.Role_Sales))
-			{
-				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
-			}*/
+			//if (User.IsInRole(SD.Role_Customer))
+			//{
+			//	jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
+			//	if (jewelryDesign.Count == 0)
+			//	{
+			//		jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId).ToList();
+			//	}
+			//}
 
 			return View(jewelryDesign);
 		}
