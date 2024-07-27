@@ -41,12 +41,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">View Post</a>
+                        </li>
                         @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
                         {
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
                         {
@@ -60,9 +63,9 @@
                             </li>
                         }
                     </ul>
-@*                     <form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search" wfd-id="id0">
-                        <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+                    @*                     <form class="d-flex">
+                    <input class="form-control me-sm-2" type="search" placeholder="Search" wfd-id="id0">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
                     </form> *@
                     <partial name="_LoginPartial" />
                 </div>
@@ -139,7 +142,7 @@
     <div class="overlay" id="overlay"></div>
     <div class="container">
         <main role="main" class="pb-3">
-            <partial name = "_Notification" />
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>

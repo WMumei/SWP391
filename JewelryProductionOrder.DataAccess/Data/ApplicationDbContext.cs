@@ -19,6 +19,7 @@ namespace JewelryProductionOrder.Data
 		public DbSet<MaterialSet> MaterialSets { get; set; }
 		public DbSet<MaterialSetMaterial> MaterialSetsMaterials { get; set; }
 		public DbSet<Post> Posts { get; set; }
+		public DbSet<Comment> Comments { get; set; }
 		//public DbSet<Role> Roles { get; set; }
 		public DbSet<Delivery> Deliveries { get; set; }
 		public DbSet<User> Users { get; set; }
@@ -142,6 +143,11 @@ namespace JewelryProductionOrder.Data
 				.HasOne(t => t.ProductionStaff)
 				.WithMany()
 				.HasForeignKey(t => t.ProductionStaffId)
+				.OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<Comment>()
+				.HasOne(t => t.Owner)
+				.WithMany()
+				.HasForeignKey(t => t.OwnerId)
 				.OnDelete(DeleteBehavior.Restrict);
 			#endregion
 
