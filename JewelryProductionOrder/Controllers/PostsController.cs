@@ -44,24 +44,34 @@ namespace JewelryProductionOrder.Controllers
 
             if (post.Content == null)
             {
-                return NotFound();
-            }    
+                TempData["error"] = "The post's content is empty";
+                return RedirectToAction("Index");
+            }
 
-
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            if (ImagePath != null)
+            if (ImagePath == null)
             {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
-                string filePath = Path.Combine(wwwRootPath, @"Images");
-                using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                TempData["error"] = "Image upload failed. Please select an image.";
+                return RedirectToAction("Index");
+            }
+
+            if (ModelState.IsValid)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (ImagePath != null)
                 {
-                    ImagePath.CopyTo(fileStream);
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                    string filePath = Path.Combine(wwwRootPath, @"Images");
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                    {
+                        ImagePath.CopyTo(fileStream);
+                    }
+                    post.Image = @"Images/" + fileName;
                 }
-                post.Image = @"Images/" + fileName;
             }
             else
             {
-                return NotFound();
+                TempData["error"] = "Model is invalid.";
+                return RedirectToAction("Index");
             }
 
             post.Content = post.Content.Replace("../Images/", "/Images/");
@@ -80,7 +90,7 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult Details(int id)
 		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner");
+			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner,Comments.Replies,Comments.Replies.Owner");
 			if (post == null)
 			{
 				return NotFound();
@@ -112,7 +122,19 @@ namespace JewelryProductionOrder.Controllers
             {
                 return NotFound();
             }
-            
+
+            if (content == null)
+            {
+                TempData["error"] = "The post's content is empty";
+                return RedirectToAction("Index");
+            }
+
+            if (ImagePath == null)
+            {
+                TempData["error"] = "Image upload failed. Please select an image.";
+                return RedirectToAction("Index");
+            }
+
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -131,10 +153,6 @@ namespace JewelryProductionOrder.Controllers
                     }
                     post.Image = @"Images/" + fileName;
                 }
-                else
-                {
-                    return NotFound();
-                }
 
                 post.Title = title;
                 post.Content = content;
@@ -146,7 +164,11 @@ namespace JewelryProductionOrder.Controllers
                 return RedirectToAction("Index");
                 
             }
-            return View(post);
+            else
+            {
+                TempData["error"] = "Model is invalid.";
+                return RedirectToAction("Index");
+            }
         }
 
 		public IActionResult Delete(int id)
@@ -235,7 +257,7 @@ namespace JewelryProductionOrder.Controllers
         [Authorize]
         public IActionResult DeleteComment(int CommentId, int PostId)
         {
-            var comment = _unitOfWork.Comment.Get(c => c.Id == CommentId);
+            var comment = _unitOfWork.Comment.Get(c => c.Id == CommentId, includeProperties: "Replies");
             if (comment == null)
             {
                 return NotFound();
@@ -249,12 +271,50 @@ namespace JewelryProductionOrder.Controllers
                 return Forbid();
             }
 
-            _unitOfWork.Comment.Remove(comment);
+            DeleteCommentAndReplies(comment);
+
             _unitOfWork.Save();
 
             return RedirectToAction("Details", new { id = PostId });
         }
 
+        private void DeleteCommentAndReplies(Comment comment)
+        {
+            foreach (var reply in comment.Replies.ToList())
+            {
+                DeleteCommentAndReplies(reply);
+            }
+            _unitOfWork.Comment.Remove(comment);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddReply(int PostId, int CommentId, string Content)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _unitOfWork.User.Get(u => u.Id == userId);
+
+            var reply = new Comment
+            {
+                Content = "Reply to " + user.Name + ":<br />" +  Content,
+                CreatedAt = DateTime.Now,
+                OwnerId = userId,
+                PostId = PostId,
+            };
+
+            var parentComment = _unitOfWork.Comment.Get(c => c.Id == CommentId);
+
+            if (parentComment != null)
+            {
+                parentComment.Replies.Add(reply);
+                _unitOfWork.Comment.Update(parentComment);
+            }
+
+            _unitOfWork.Comment.Add(reply);
+            _unitOfWork.Save();
+            return RedirectToAction("Details", new { id = PostId });
+        }
     }
 
 }
