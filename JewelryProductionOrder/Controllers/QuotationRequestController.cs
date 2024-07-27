@@ -48,7 +48,7 @@ namespace SWP391.Controllers
 		public IActionResult Details(int id)
 		{
 			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
-			if (request is null) return NotFound();
+			if (request is null || request.Status == SD.StatusDiscontinued) return NotFound();
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
@@ -60,10 +60,15 @@ namespace SWP391.Controllers
 
 		}
 
-		public IActionResult Create(int jId)
+		public IActionResult Create(int jId, int redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
+			if (jewelry.MaterialSet is null)
+			{
+				TempData["error"] = "Material Set is not ready!";
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest});
+			}
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSet.Id, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
 				Jewelry = jewelry,
@@ -79,6 +84,14 @@ namespace SWP391.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest,MaterialSet");
+			if (jewelry.MaterialSet is null)
+			{
+				TempData["error"] = "Material Set is not ready!";
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+			}
+
 			vm.QuotationRequest.SalesStaffId = userId;
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
 			vm.QuotationRequest.Status = SD.StatusPending;
@@ -92,7 +105,6 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest");
 			jewelry.ProductionRequest.Status = SD.StatusQuotationing;
 			_unitOfWork.ProductionRequest.Update(jewelry.ProductionRequest);
 			_unitOfWork.Save();
@@ -209,8 +221,8 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerDisapproved;
 			}
-            _unitOfWork.QuotationRequest.Update(req);
-            _unitOfWork.Save();
+			_unitOfWork.QuotationRequest.Update(req);
+			_unitOfWork.Save();
 			TempData["success"] = "Disapproved!";
 			return RedirectToAction("Details", new { id = req.Id });
 

@@ -32,11 +32,10 @@ namespace JewelryProductionOrder.Repositories
 		public void UpdateStatus(int id, string requestStatus, string? paymentStatus = null)
 		{
 			var requestFromDb = dbSet.Include("Jewelries").FirstOrDefault(m => m.Id == id);
-			
 			if (requestFromDb != null)
 			{
 				requestFromDb.Status = requestStatus;
-				if (!string.IsNullOrEmpty(requestStatus))
+				if (!string.IsNullOrEmpty(paymentStatus))
 				{
 					requestFromDb.Status = paymentStatus;
 				}

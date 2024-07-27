@@ -9,7 +9,7 @@ using System.Collections;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace JewelryProductionOrder.Areas.Staff.Controllers
+namespace JewelryProductionOrder.Controllers
 {
 	public class DashboardController : Controller
 	{

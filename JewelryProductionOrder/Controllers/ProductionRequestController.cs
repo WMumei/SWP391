@@ -55,19 +55,19 @@ namespace SWP391.Controllers
         }*/
 
 		//[HttpPost]
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult TakeRequest(int id)
-		{
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(req => req.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
-			{
-				req.SalesStaffId = userId;
-			}
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+		//[Authorize(Roles = SD.Role_Sales)]
+		//public IActionResult TakeRequest(int id)
+		//{
+		//	ProductionRequest req = _unitOfWork.ProductionRequest.Get(req => req.Id == id);
+		//	var claimsIdentity = (ClaimsIdentity)User.Identity;
+		//	var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+		//	if (req is not null)
+		//	{
+		//		req.SalesStaffId = userId;
+		//	}
+		//	_unitOfWork.Save();
+		//	return RedirectToAction("Index");
+		//}
 		//[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Deliver(int id)
 		{
@@ -80,7 +80,7 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return View("Deliver", productionRequest);
 		}
-		//[Authorize(SD.Role_Sales)]
+		
 		public IActionResult Delivered(int id)
 		{
 
@@ -161,15 +161,46 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return RedirectToAction("CustomerView");
 		}
+        public IActionResult CancelRequest(int id)
+        {
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+            if (req is not null)
+            {
+                req.Status = SD.StatusCancelled;
+                _unitOfWork.Save();
+            }
 
-		public IActionResult CancelRequest(int id)
-		{
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
-			if (req is not null)
-			{
-				req.Status = SD.StatusCancelled;
-				_unitOfWork.Save();
-			}
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+            if (jewelries.Count > 0)
+            {
+                foreach (Jewelry jewelry in jewelries)
+                {
+                    jewelry.Status = SD.StatusCancelled;
+                    QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+                    if (QuoReq != null)
+                    {
+                        QuoReq.Status = SD.StatusCancelled;
+                    }
+                    List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
+                    if (jewelryDesigns.Count > 0)
+                    {
+                        foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+                        {
+                            JewelryDesign.Status = SD.StatusCancelled;
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Index");
+        }
+  //      public IActionResult CancelRequest(int id)
+		//{
+		//	ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+		//	if (req is not null)
+		//	{
+		//		req.Status = SD.StatusCancelled;
+		//		_unitOfWork.Save();
+		//	}
 
 			//List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
 			//if (jewelries.Count > 0)
@@ -192,8 +223,8 @@ namespace SWP391.Controllers
 			//        }
 			//    }
 			//}
-			return RedirectToAction("Index");
-		}
+		//	return RedirectToAction("Index");
+		//}
 
 		//public bool checkPayment(int pId)
 		//{
@@ -283,53 +314,11 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusRequestDelayedPayment, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPaid, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");
 		}
-			//public IActionResult Create()
-			//{
-			//    return View();
-			//}
 
-			//[HttpPost]
-			//public IActionResult Create(ProductionRequest obj)
-			//{
-			//    obj.CreatedAt = DateTime.Now;
-
-			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-			//    {
-			//        ProductionRequest = obj,
-			//        Customer = new User()
-			//    };
-			//    return View("Checkout", ShoppingCartVM);
-			//}
-			//public IActionResult Checkout()
-			//{
-			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
-			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//    ShoppingCartVM ShoppingCartVM = new ShoppingCartVM
-			//    {
-			//        ProductionRequest = new ProductionRequest { 
-			//            //Quantity = 1 
-			//        },
-			//        Customer = _unitOfWork.User.Get(User => User.Id == userId)
-			//    };
-			//    return View(ShoppingCartVM);
-			//}
-
-			//[HttpPost]
-			//public IActionResult Checkout(ShoppingCartVM ShoppingCartVM)
-			//{
-			//    var claimsIdentity = (ClaimsIdentity)User.Identity;
-			//    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//    ShoppingCartVM.ProductionRequest.CustomerId = userId;
-			//    ShoppingCartVM.ProductionRequest.Address = ShoppingCartVM.Customer.Address;
-			//    ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-			//    _unitOfWork.ProductionRequest.Add(ShoppingCartVM.ProductionRequest);
-			//    _unitOfWork.Save();
-			//    return RedirectToAction("CustomerView");
-			//}
 		}
 }

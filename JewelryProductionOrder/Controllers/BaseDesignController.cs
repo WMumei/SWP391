@@ -47,29 +47,113 @@ namespace JewelryProductionOrder.Controllers
 				obj.Image = Path.Combine("\\files", fileName);
 			}
 
-			if (User.IsInRole("Customer")) obj.Type = "Customer";
+			if (User.IsInRole(SD.Role_Customer)) obj.Type = "Customer";
 			else obj.Type = "Company";
 
 			_unitOfWork.BaseDesign.Add(obj);
 			_unitOfWork.Save();
-
-			ShoppingCart shoppingCart = new ShoppingCart
+			if (User.IsInRole(SD.Role_Customer))
 			{
-				BaseDesignId = obj.Id,
-				Quantity = 1,
-				UserId = userId
-			};
-			_unitOfWork.ShoppingCart.Add(shoppingCart);
-			_unitOfWork.Save();
+				ShoppingCart shoppingCart = new ShoppingCart
+				{
+					BaseDesignId = obj.Id,
+					Quantity = 1,
+					UserId = userId
+				};
+				_unitOfWork.ShoppingCart.Add(shoppingCart);
+				_unitOfWork.Save();
+			}
 
 			TempData["success"] = "Create successfully";
-
-			return RedirectToAction("Index", "Home");
+			if (User.IsInRole("Customer"))
+			{
+				return RedirectToAction("RequestIndex", "Jewelry");
+			}
+			return RedirectToAction("Index");
 		}
-		public IActionResult Index(int id)
+
+		[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Design}")]
+		public IActionResult Index()
 		{
-			BaseDesign design = _unitOfWork.BaseDesign.Get(d => d.Id == id);
+			List<BaseDesign> designList = _unitOfWork.BaseDesign.GetAll().ToList();
+			return View(designList);
+		}
+
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager}")]
+		public IActionResult ViewAll(int bId)
+		{
+			var baseDesign = _unitOfWork.BaseDesign.GetAll(jD => jD.Id == bId).ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			return View(baseDesign);
+		}
+
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager}")]
+		public IActionResult Details(int bId)
+		{
+			BaseDesign design = _unitOfWork.BaseDesign.Get(design => design.Id == bId);
 			return View(design);
+		}
+
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		public IActionResult Edit(int bId)
+		{
+			var baseDesign = _unitOfWork.BaseDesign.Get(m => m.Id == bId);
+			if (baseDesign == null)
+			{
+				return NotFound();
+			}
+			return View(baseDesign);
+		}
+
+		[HttpPost]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		public IActionResult Edit(BaseDesign baseDesign, IFormFile? file)
+		{
+			var existingDesign = _unitOfWork.BaseDesign.Get(d => d.Id == baseDesign.Id);
+			if (existingDesign == null)
+			{
+				return NotFound();
+			}
+
+			existingDesign.Name = baseDesign.Name;
+			existingDesign.Description = baseDesign.Description;
+
+			
+			if (file is not null)
+			{
+				string wwwRootPath = _webHostEnvironment.WebRootPath;
+				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+				string filePath = Path.Combine(wwwRootPath, @"files");
+				using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+				{
+					file.CopyTo(fileStream);
+				}
+				existingDesign.Image = Path.Combine("\\files", fileName);
+			}
+
+			_unitOfWork.BaseDesign.Update(existingDesign);
+			_unitOfWork.Save();
+
+			if (User.IsInRole("Customer"))
+			{
+				return RedirectToAction("RequestIndex", "Jewelry");
+			}
+			return RedirectToAction("Index");
+		}
+
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		public IActionResult Delete(int bId)
+		{
+			BaseDesign baseDesign = _unitOfWork.BaseDesign.Get(bD => bD.Id == bId);
+			if (baseDesign == null)
+			{
+				return NotFound();
+			}
+			_unitOfWork.BaseDesign.Remove(baseDesign);
+			_unitOfWork.Save();
+			return RedirectToAction("Index");
 		}
 	}
 }

@@ -39,9 +39,9 @@
 						@* <td>@obj.Status</td> *@
 						@* <td>@obj?.Customer?.Name</td> *@
 
-						@if (obj.MaterialSetId is not null)
+						@if (obj.MaterialSet is not null)
 						{
-							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSetId" class="btn btn-primary btn-sm">View</a></td>
+							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
 						} 
                         else if (User.IsInRole(SD.Role_Sales)
 						@* && Model.checkStatus is false *@

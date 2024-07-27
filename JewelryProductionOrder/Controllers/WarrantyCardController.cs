@@ -29,9 +29,18 @@ namespace JewelryProductionOrder.Controllers
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 			jewelry.CustomerId = customer.Id;
-			
+            //if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
+            //{
+            //	TempData["Error"] = "Please create Material Set and Quotation Request!"; 
+            //	if (redirectRequest is not null)
+            //		return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+            //	return RedirectToAction("Index", "Home");
+            //}
+            //else
+            //{
 
-			WarrantyCardVM vm = new WarrantyCardVM
+
+            WarrantyCardVM vm = new WarrantyCardVM
 			{
 				Jewelry = jewelry,
 				WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },

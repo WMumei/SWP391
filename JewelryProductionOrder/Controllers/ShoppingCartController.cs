@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-	[Authorize]
+	[Authorize(Roles = SD.Role_Customer)]
 	public class ShoppingCartController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

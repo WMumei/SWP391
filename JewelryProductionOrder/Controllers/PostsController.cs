@@ -1,39 +1,75 @@
-﻿using JewelryProductionOrder.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using JewelryProductionOrder.Data;
+using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
-using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-	public class PostsController : Controller
-	{
-		private readonly IUnitOfWork _unitOfWork;
-		public PostsController(IUnitOfWork unitOfWork)
-		{
-			_unitOfWork = unitOfWork;
-		}
+    public class PostsController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public PostsController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
+        {
+            _unitOfWork = unitOfWork;
+            _webHostEnvironment = hostEnvironment;
+        }
 
-		public IActionResult Create()
-		{
-			return View();
-		}
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-		[HttpPost]
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult Create(Post post)
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Sales)]
+        public async Task<IActionResult> Create(Post post, IFormFile ImagePath)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
 			post.CreatedAt = DateTime.Now;
 			post.SalesStaffId = userId;
 
-			_unitOfWork.Post.Add(post);
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+            if (post.Content == null)
+            {
+                return NotFound();
+            }    
+
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if (ImagePath != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                string filePath = Path.Combine(wwwRootPath, @"Images");
+                using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                {
+                    ImagePath.CopyTo(fileStream);
+                }
+                post.Image = @"Images/" + fileName;
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            post.Content = post.Content.Replace("../Images/", "/Images/");
+            _unitOfWork.Post.Add(post);
+            _unitOfWork.Save();
+            TempData["success"] = "Post created successfully";
+            return RedirectToAction("Index");
+        }
 
 		[Authorize]
 		public IActionResult Index()
@@ -44,37 +80,74 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult Details(int id)
 		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner");
 			if (post == null)
 			{
 				return NotFound();
 			}
-			return View(post);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ViewData["CurrentUserId"] = userId;
+
+            return View(post);
 		}
 
-		public IActionResult Edit(int id)
-		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id);
-			if (post == null)
-			{
-				return NotFound();
-			}
-			return View(post);
-		}
+        public IActionResult Edit(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult Edit(Post post)
-		{
-			if (ModelState.IsValid)
-			{
-				_unitOfWork.Post.Update(post);
-				_unitOfWork.Save();
-				return RedirectToAction("Index");
-			}
-			return View(post);
-		}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult Edit(int id, string title, string content, string description, IFormFile ImagePath)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+            if (post == null)
+            {
+                return NotFound();
+            }
+            
+            if (ModelState.IsValid)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (ImagePath != null)
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, post.Image.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                    string filePath = Path.Combine(wwwRootPath, @"Images");
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                    {
+                        ImagePath.CopyTo(fileStream);
+                    }
+                    post.Image = @"Images/" + fileName;
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+                post.Title = title;
+                post.Content = content;
+                post.Description = description;
+
+                _unitOfWork.Post.Update(post);
+                _unitOfWork.Save();
+                TempData["success"] = "Post updated successfully";
+                return RedirectToAction("Index");
+                
+            }
+            return View(post);
+        }
 
 		public IActionResult Delete(int id)
 		{
@@ -86,19 +159,102 @@ namespace JewelryProductionOrder.Controllers
 			return View(post);
 		}
 
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult DeleteConfirmed(int id)
-		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id);
-			if (post == null)
-			{
-				return NotFound();
-			}
-			_unitOfWork.Post.Remove(post);
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
-	}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.Role_Sales)]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var comment in post.Comments)
+            {
+                _unitOfWork.Comment.Remove(comment);
+            }
+
+            if (!string.IsNullOrEmpty(post.Image))
+            {
+                var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, post.Image.TrimStart('\\'));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
+            _unitOfWork.Post.Remove(post);
+            _unitOfWork.Save();
+            TempData["success"] = "Post deleted successfully";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return Json(new { location = "" });
+            }
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string filePath = Path.Combine(wwwRootPath, "Images", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            string fileUrl = Url.Content($"~/Images/{fileName}");
+            return Json(new { location = fileUrl });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddComment(int PostId, string Content)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var comment = new Comment
+            {
+                Content = Content,
+                CreatedAt = DateTime.Now,
+                OwnerId = userId,
+                PostId = PostId
+            };
+
+            _unitOfWork.Comment.Add(comment);
+            _unitOfWork.Save();
+            return RedirectToAction("Details", new { id = PostId });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteComment(int CommentId, int PostId)
+        {
+            var comment = _unitOfWork.Comment.Get(c => c.Id == CommentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (comment.OwnerId != userId)
+            {
+                return Forbid();
+            }
+
+            _unitOfWork.Comment.Remove(comment);
+            _unitOfWork.Save();
+
+            return RedirectToAction("Details", new { id = PostId });
+        }
+
+    }
+
 }

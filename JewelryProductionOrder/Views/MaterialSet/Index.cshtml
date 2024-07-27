@@ -28,7 +28,7 @@
                     {
                         <tr>
                             <td>@gemstone.Name</td>
-                            <td>@gemstone.Weight</td>
+                            <td>@gemstone.Carat</td>
                             <td>@gemstone.Price</td>
                         </tr>
                     }
@@ -51,7 +51,7 @@
                     {
                         var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
                         <tr>
-                            <td>@material?.Name</td>
+                            <td>@material?.Type</td>
                             <td>@join.Weight</td>
                             <td>@material?.Price</td>
                             <td>@(join.Weight * material?.Price)</td>

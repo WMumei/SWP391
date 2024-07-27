@@ -93,6 +93,8 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult RequestIndex(int reqId)
 		{
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest,WarrantyCard").ToList();
+			HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
 			return View(jewelries);
 		}
 
@@ -132,14 +134,15 @@ namespace JewelryProductionOrder.Controllers
 			{
 
 				Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId, tracked: true);
-				//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
-				//if (jewelry is not null)
-				//{
+				if (jewelry is null)
+				{
+					TempData["error"] = "Jewelry not found";
+					return RedirectToAction("Index", "Home");
+				}
 				var claimsIdentity = (ClaimsIdentity)User.Identity;
 				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 				jewelry.ProductionStaffId = userId;
-				//    jewelry.Status = $"Manufactured by {productionStaff.Name}";
-				//}
+
 				jewelry.Status = SD.StatusManufactured;
 				_unitOfWork.Jewelry.Update(jewelry);
 				_unitOfWork.Save();
@@ -161,7 +164,7 @@ namespace JewelryProductionOrder.Controllers
 				TempData["Success"] = "Jewelry Completed!";
 				if (redirectRequest is not null)
 					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-				return RedirectToAction("Index");
+				return RedirectToAction("Index", "Home");
 			}
 			catch (Exception e)
 			{
