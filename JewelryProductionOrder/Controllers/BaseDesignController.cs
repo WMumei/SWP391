@@ -77,7 +77,7 @@ namespace JewelryProductionOrder.Controllers
 			return View(designList);
 		}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager}")]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager},{SD.Role_Sales}")]
 		public IActionResult Details(int bId)
 		{
 			BaseDesign design = _unitOfWork.BaseDesign.Get(design => design.Id == bId);
