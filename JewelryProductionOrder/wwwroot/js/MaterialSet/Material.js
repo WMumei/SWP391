@@ -10,8 +10,10 @@ const loadMaterial = () => {
     dataTableMaterial = $("#materialTable").DataTable({
         "ajax": { url: '/materialset/getmaterials' },
         "columns": [
-            { data: 'name', "width": "50%" },
-            { data: 'price', "width": "40%" },
+            { data: 'type', "width": "20%" },
+            { data: 'purity', "width": "20%" }, 
+            { data: 'color', "width": "20%" }, 
+            { data: 'price', "width": "20%" }, 
             {
                 data: 'id',
                 "render": (data) => {
@@ -19,7 +21,7 @@ const loadMaterial = () => {
                         <button class="btn btn-outline-primary px-2" onclick="addMaterial(${data})"><i class="bi bi-plus-lg"></i></button>
                     </div>`;
                 },
-                "width": "10%"
+                "width": "20%"
             }
         ]
     });
@@ -29,8 +31,10 @@ const loadCurrentMaterial = () => {
     dataTableCurrentMaterial = $("#currentMaterialTable").DataTable({
         "ajax": { url: '/materialset/GetSessionMaterials' },
         "columns": [
-            { data: 'material.name', "width": "30%" },
-            { data: 'material.price', "width": "18%" },
+            { data: 'material.type', "width": "15%" },
+            { data: 'material.purity', "width": "15%" }, 
+            { data: 'material.color', "width": "15%" }, 
+            { data: 'material.price', "width": "15%" }, 
             {
                 data: null,
                 "render": (data) => {
@@ -41,9 +45,9 @@ const loadCurrentMaterial = () => {
                         </button>
                     </div>`;
                 },
-                "width": "13%"
+                "width": "15%" 
             },
-            { data: 'price', "width": "18%" },
+            { data: 'price', "width": "15%" }, 
             {
                 data: 'material.id',
                 "render": (data) => {
@@ -51,7 +55,7 @@ const loadCurrentMaterial = () => {
                         <button class="btn btn-outline-danger px-2" onclick="deleteMaterial(${data})"><i class="bi bi-trash-fill"></i></button>
                     </div>`;
                 },
-                "width": "8%"
+                "width": "10%" 
             }
         ]
     });
