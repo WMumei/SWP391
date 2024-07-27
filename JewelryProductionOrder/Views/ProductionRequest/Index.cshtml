@@ -82,41 +82,61 @@
 					{
 						<td></td>
 					}
-					@if (User.IsInRole(SD.Role_Customer))
+				@if (User.IsInRole(SD.Role_Customer))
 					{
 						if (obj.Status == SD.StatusPaid)
 						{
-							<td>Paid!</td>
-						}
-						else if (obj.Status == SD.StatusAllQuotationApproved)
-						{
-							<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
-						}
+								<td>Paid!</td>
+							}
+							else if (obj.Status == SD.StatusAllQuotationApproved)
+							{
+
+								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+							}
+							else
+							{
+								<td></td>
+							}
 					}
 					else
 					{
 						<td></td>
 					}
                 
-					 @if (obj.Status == SD.StatusAllManufactured)
-					{ 
+					 @if (obj.Status == SD.StatusAllManufactured) 
+					 { 
 						@if (!User.IsInRole(SD.Role_Customer))
 						{
 							<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
 
 
-						else if (User.IsInRole(SD.Role_Customer))
+						else if (User.IsInRole(SD.Role_Customer) )
 						{
 
 
 							<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-					 } 
-					else
+					 }
+						else if (obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 					{
-						<td></td>
-					}
+							@if (!User.IsInRole(SD.Role_Customer))
+							{
+								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+							}
+
+
+							else if (User.IsInRole(SD.Role_Customer))
+							{
+
+
+								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+							}
+						}
+						else
+						{
+							<td></td>
+						}
 					
                     
 

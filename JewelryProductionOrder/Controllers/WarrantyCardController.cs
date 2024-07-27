@@ -4,6 +4,8 @@ using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -27,26 +29,26 @@ namespace JewelryProductionOrder.Controllers
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 			jewelry.CustomerId = customer.Id;
-			if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
+			//if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
+			//{
+			//	TempData["Error"] = "Please create Material Set and Quotation Request!"; 
+			//	if (redirectRequest is not null)
+			//		return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+			//	return RedirectToAction("Index", "Home");
+			//}
+			//else
+			//{
+
+			WarrantyCardVM vm = new WarrantyCardVM
 			{
-				TempData["Error"] = "Please create Material Set and Quotation Request!";
-				if (redirectRequest is not null)
-					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-				return RedirectToAction("Index", "Home");
-			}
-			else
-			{
+				Jewelry = jewelry,
+				WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now.AddDays(1), ExpiredAt = DateTime.Now.AddYears(2) },
 
-				WarrantyCardVM vm = new WarrantyCardVM
-				{
-					Jewelry = jewelry,
-					WarrantyCard = new WarrantyCard { CreatedAt = DateTime.Now, ExpiredAt = DateTime.Now.AddYears(2) },
+				Customer = customer
 
-					Customer = customer
-
-				};
-				return View(vm);
-			}
+			};
+			return View(vm);
+			//}
 		}
 
 
@@ -61,12 +63,13 @@ namespace JewelryProductionOrder.Controllers
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
+
 			vm.WarrantyCard.SalesStaffId = userId;
 			vm.WarrantyCard.JewelryId = vm.Jewelry.Id;
 			vm.WarrantyCard.CustomerId = customer.Id;
 			vm.Customer = customer;
 			vm.Jewelry = jewelry;
-			if (vm.WarrantyCard.CreatedAt < DateTime.Now)
+			if (vm.WarrantyCard.CreatedAt.Date < DateTime.Now)
 			{
 				ModelState.AddModelError("WarrantyCard.CreatedAt", "Issued Date is not valid.");
 			}
@@ -80,7 +83,7 @@ namespace JewelryProductionOrder.Controllers
 				_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
 				_unitOfWork.Save();
 				TempData["success"] = "Warranty Card is created successfully!";
-				return RedirectToAction("Index", "Jewelry");
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = productionRequest.Id });
 			}
 
 			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = productionRequest.Id });
@@ -102,19 +105,19 @@ namespace JewelryProductionOrder.Controllers
 		//[HttpPost, ActionName("Delete")]
 		//[HttpDelete]
 
-		//public IActionResult DeletePost(int? id)
-		//{
+		public IActionResult deletepost(int? id)
+		{
 
-		//	WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(u => u.Id == id);
-		//	if (warrantyCard == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	_unitOfWork.WarrantyCard.Remove(warrantyCard);
-		//	_unitOfWork.Save();
-		//	TempData["success"] = "Warranty Card is deleted successfully!";
-		//	return RedirectToAction("Index");
-		//}
+			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == id);
+			if (warrantyCard == null)
+			{
+				return NotFound();
+			}
+			_unitOfWork.WarrantyCard.Remove(warrantyCard);
+			_unitOfWork.Save();
+			TempData["success"] = "Warranty card is deleted successfully!";
+			return RedirectToAction("Index");
+		}
 
 		public IActionResult Edit(int id)
 		{

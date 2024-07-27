@@ -105,7 +105,7 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest");
 			jewelry.ProductionRequest.Status = SD.StatusQuotationing;
 			_unitOfWork.ProductionRequest.Update(jewelry.ProductionRequest);
 			_unitOfWork.Save();

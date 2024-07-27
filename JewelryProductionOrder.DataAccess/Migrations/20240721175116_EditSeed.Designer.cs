@@ -4,6 +4,7 @@ using JewelryProductionOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240721175116_EditSeed")]
+    partial class EditSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,19 +115,12 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<int>("WarrantyCardId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeliveredAt")
+                    b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("JewelryId1")
-                        .HasColumnType("int");
 
                     b.HasKey("CustomerId", "SalesStaffId", "JewelryId", "WarrantyCardId");
 
                     b.HasIndex("JewelryId");
-
-                    b.HasIndex("JewelryId1")
-                        .IsUnique()
-                        .HasFilter("[JewelryId1] IS NOT NULL");
 
                     b.HasIndex("SalesStaffId");
 
@@ -161,7 +157,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 1,
                             Name = "3 carat Diamond",
                             Price = 2000m,
-                            Weight = 3m
+                            Weight = 2m
                         },
                         new
                         {
@@ -176,20 +172,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Name = "Sapphire",
                             Price = 1800m,
                             Weight = 1.8m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "2 carat Diamond",
-                            Price = 1800m,
-                            Weight = 2m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "1 carat Diamond",
-                            Price = 1000m,
-                            Weight = 1m
                         });
                 });
 
@@ -901,10 +883,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("JewelryProductionOrder.Models.Jewelry", null)
-                        .WithOne("Delivery")
-                        .HasForeignKey("JewelryProductionOrder.Models.Delivery", "JewelryId1");
-
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
@@ -1220,9 +1198,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
-                    b.Navigation("Delivery")
-                        .IsRequired();
-
                     b.Navigation("JewelryDesigns");
 
                     b.Navigation("QuotationRequests");

@@ -1,0 +1,73 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    height: 100%;
+}
+.dashboard-box {
+    padding: 20px;
+    border: 2px solid #c7f1ec;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/*header {
+    background: #333;
+    color: #fff;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #77d42a 3px solid;
+    text-align: center;
+}*/
+
+    header h1 {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 46px;
+    }
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 10px 0 0 ;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border: #ccc 1px solid;
+    width: 90%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+select {
+    margin: 0 0 10px;
+}
+input {
+    margin: 0 0 10px;
+}
+    .card h2 {
+        margin: 0 0 10px;
+        text-align: center;
+    }
+    .card select{
+        width: 50%;
+    }
+#total {
+    font-size: 20px;
+}
+#revenue {
+    font-size: 24px;
+    color: #77d42a;
+}
+/*.yearmonth {
+    text-align: right;
+}*/

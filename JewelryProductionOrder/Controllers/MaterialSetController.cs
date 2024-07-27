@@ -668,6 +668,7 @@ namespace SWP391.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
+		//[HttpPost]
 
 		private decimal GetMaterialTotal()
 		{

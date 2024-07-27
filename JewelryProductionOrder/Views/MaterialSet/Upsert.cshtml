@@ -16,8 +16,10 @@
 					<div class="col-12 text-center">
 						<h4 class=" fw-normal text-white m-0">Current Materials</h4>
 					</div>
-				</div>
-			</div>
+					</div>
+					<div class="col-2 my-2">
+						<button type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
+					</div>
 			<div class="card-body d-flex flex-column justify-content-between">
 				<table id="currentMaterialTable" class="">
 					<thead>
@@ -35,7 +37,8 @@
 				</table>
 				<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" style="" id="">Material Total: $<span id="materialTotal">0</span></div>
 
-			</div>
+				</div>
+				<div class="row">
 
 		</div>
 		<div class=" card shadow border-0 m-1" style="flex: 0 0 42%;">
@@ -46,7 +49,7 @@
 						<h4 class=" fw-normal text-white m-0">Available Materials</h4>
 					</div>
 				</div>
-			</div>
+					</div>
 			<div class="card-body">
 				<table id="materialTable">
 					<thead>
@@ -59,10 +62,12 @@
 						</tr>
 					</thead>
 				</table>
+					</div>
+					<div class="col-2 my-2">
+						<button type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Add Material</button>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</div>
 <hr />
 <div id="gemstone-card-group" class="card-group my-2" style="min-height:600px;">
 
@@ -72,8 +77,8 @@
 			<div class="row">
 				<div class="col-12 text-center">
 					<h4 class=" fw-normal text-white m-0">Current Gemstones</h4>
-				</div>
-			</div>
+		</div>
+	</div>
 		</div>
 
 		<div class="card-body d-flex flex-column justify-content-between">
@@ -91,7 +96,20 @@
 					</tr>
 
 				</thead>
+				<tbody>
+					@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+					{
+						<tr>
+							<td>@gemstone.Name</td>
+							<td>@gemstone.Weight</td>
+							<td>@gemstone.Price</td>
+							<td>
+								<button onclick="@($"deleteGemstone({gemstone.Id},{Model.MaterialSet.Id})")"  type="button" class="btn btn-danger form-control">Delete</button>
 
+							</td>
+						</tr>
+					}
+				</tbody>
 			</table>
 			<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" id="">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
 
@@ -122,9 +140,34 @@
 					</tr>
 
 				</thead>
+				<tbody>
+					@foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
+					{
+						var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
+						<tr>
+							<td>@material?.Name</td>
+							<td><input id="@($"join-{join.MaterialId}-{join.MaterialSetId}")" name="weight" value="@join.Weight" /></td>
+							<td>@material?.Price</td>
+							<td>@(join.Weight * material?.Price)</td>
+							<td class="d-flex gap-2">
+								@* <form asp-controller="MaterialSet" asp-action="EditMaterial" method="post">
+									<input type="hidden" name="materialSetId" value="@Model.MaterialSet.Id" />
+									 <input type="hidden" name="weight" value="@join.Weight" /> 
+									<input type="hidden" name="jewelryId" value="@Model.Jewelry.Id" />
+									<input type="hidden" name="materialEditId" value="@join.MaterialId" />
+								</form> *@
+								<button type="submit" onclick="@($"callEditMaterial({join.MaterialId},{Model.MaterialSet.Id},{Model.Jewelry.Id})")" class="btn btn-secondary form-control btn-sm">Save</button>
+								<button type="button" onclick="@($"callDeleteMaterial({join.MaterialId},{Model.MaterialSet.Id})")" class="btn btn-danger form-control btn-sm">Delete</button>
 
+							</td>
+						</tr>
+					}
+				</tbody>
 			</table>
 		</div>
+	}
+	<div class="col-md-3">
+		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
 	@* </div> *@
 
@@ -144,6 +187,64 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script>
+		let form = document.getElementById('materialForm');
+		document.getElementById('submitAddGemstone').addEventListener('click', function () {
+			form.action = '@Url.Action("AddGemstone", "MaterialSet")';
+			form.submit();
+		});
+		document.getElementById('submitAddMaterial').addEventListener('click', function () {
+
+			form.action = '@Url.Action("AddMaterial", "MaterialSet")';
+			form.submit();
+		});
+		// document.getElementById('submitDeleteGemstone').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("DeleteGemstone", "MaterialSet")';
+		// 	form.submit();
+		// });
+		// document.getElementById('submitDeleteMaterial').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("DeleteMaterial", "MaterialSet")';
+		// 	form.submit();
+		// });
+		// document.getElementById('submitEditMaterial').addEventListener('click', function () {
+
+		// 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
+		// 	form.submit();
+		// });
+		// const reloadWithDelay = () => {
+		// 	setTimeout(() => {
+		// 		location.reload();
+		// 	}, 500); // Delay in milliseconds
+		// };
+
+		const callEditMaterial = (materialId, materialSetId, jewelryId) => {
+			const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
+			const weight = weightInput.value;
+			fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
+				then(data => data.json()).
+				then(e => {
+					if (e.message == "Edited") {
+						toastr.success("Material edited successfully");
+					}
+					else {
+						toastr.error(e.message);
+					}
+					// reloadWithDelay();
+					location.reload();
+				})
+		};
+		const deleteGemstone = (gemstoneId, materialSetId) => {
+			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId${materialSetId}`).
+			then(data => data.json()).
+			then(e => {
+				toastr.success(e.message);
+					// reloadWithDelay();
+					location.reload();
+			});
+
+		}
 
 	<script src="~/js/MaterialSet/Upsert.js"></script>
 	<script src="~/js/MaterialSet/Material.js"></script>

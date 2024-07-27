@@ -3,6 +3,7 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Models.Repository;
+using System.Security.Cryptography.X509Certificates;
 
 namespace JewelryProductionOrder.Repositories
 {
@@ -41,8 +42,13 @@ namespace JewelryProductionOrder.Repositories
 				foreach (Jewelry jewelry in requestFromDb.Jewelries)
 				{
 					jewelry.Status = paymentStatus;
-					// Remember to check quotation is lastest and status == SD.CustomerApproved
-					// Then change status of that quotation to paymentStatus
+					var quotations = _db.QuotationRequests.Where(x => x.JewelryId == jewelry.Id);
+					QuotationRequest quote = quotations
+											   .OrderByDescending(q => q.CreatedAt) // Assuming you have a Date property in Quotation
+											   .FirstOrDefault();
+					//status of quotation = customerApproved in CustomerApprove() QuotationController
+					quote.Status = paymentStatus; 
+					
 				}
 			}
 		}

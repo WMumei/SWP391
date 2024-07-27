@@ -55,19 +55,19 @@ namespace SWP391.Controllers
         }*/
 
 		//[HttpPost]
-		[Authorize(Roles = SD.Role_Sales)]
-		public IActionResult TakeRequest(int id)
-		{
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(req => req.Id == id);
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (req is not null)
-			{
-				req.SalesStaffId = userId;
-			}
-			_unitOfWork.Save();
-			return RedirectToAction("Index");
-		}
+		//[Authorize(Roles = SD.Role_Sales)]
+		//public IActionResult TakeRequest(int id)
+		//{
+		//	ProductionRequest req = _unitOfWork.ProductionRequest.Get(req => req.Id == id);
+		//	var claimsIdentity = (ClaimsIdentity)User.Identity;
+		//	var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+		//	if (req is not null)
+		//	{
+		//		req.SalesStaffId = userId;
+		//	}
+		//	_unitOfWork.Save();
+		//	return RedirectToAction("Index");
+		//}
 		//[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Deliver(int id)
 		{
@@ -76,8 +76,6 @@ namespace SWP391.Controllers
 			// User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 
 
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
 
 
@@ -97,22 +95,30 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			foreach (var jewelry in jewelries)
 			{
-				//jewelry.SalesStaffId = userId;
-				jewelry.Status = SD.StatusDelivered;
-				Delivery delivery = new Delivery()
-				{
-					//SalesStaffId = userId,
-					CustomerId = customer.Id,
-					JewelryId = jewelry.Id,
-					WarrantyCardId = jewelry.WarrantyCard.Id,
-					DeliveredAt = DateTime.Now,
-					SalesStaffId = userId
-				};
 
-				_unitOfWork.Jewelry.Update(jewelry);
-				_unitOfWork.Delivery.Add(delivery);
-				TempData["success"] = "Order is delivered successfully";
-				_unitOfWork.Save();
+				if(jewelry.WarrantyCard == null)
+				{
+					TempData["error"] = "Warranty Card is not available";
+				}
+				else
+				{
+					Delivery delivery = new Delivery()
+					{
+						//SalesStaffId = userId,
+						CustomerId = customer.Id,
+						JewelryId = jewelry.Id,
+						WarrantyCardId = jewelry.WarrantyCard.Id,
+						DeliveredAt = DateTime.Now,
+						SalesStaffId = userId
+					};
+                    productionRequest.Status = SD.StatusRequestDone;
+                    jewelry.Status = SD.StatusDelivered;
+                    _unitOfWork.Jewelry.Update(jewelry);
+					_unitOfWork.Delivery.Add(delivery);
+					TempData["success"] = "Order is delivered successfully";
+					_unitOfWork.Save();
+				}
+				
 			}
 
 			return RedirectToAction("Index");
@@ -121,8 +127,12 @@ namespace SWP391.Controllers
 		public IActionResult CustomerViewDelivery(int id)
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+            
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
-
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			//var saleStaff=_unitOfWork.User.Get(u=>u.Id==userId);
+               
 
 
 			return View("CustomerViewDelivery", jewelries);
@@ -208,7 +218,7 @@ namespace SWP391.Controllers
 		{
 			//var domain = "https://localhost:7133/";
 			var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-			//var domain = "https://jpo.somee.com/";
+			
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId);
 			if (productionRequest.PaymentIntentId is null)
 			{

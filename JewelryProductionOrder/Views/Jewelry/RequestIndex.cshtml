@@ -41,7 +41,11 @@
 					<td>@obj.Description</td>
 					<td>@obj.Status</td>
 					<td>
-						<a asp-controller="BaseDesign" asp-action="ViewAll" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+						<a asp-controller="BaseDesign" asp-action="Details" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+					</td>
+					<td>@obj.Status</td>
+					<td>
+						<a asp-controller="BaseDesign" asp-action="Index" asp-route-id="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
 					</td>
 					@* <td>@obj.Status</td> *@
 					@* <td>@obj?.Customer?.Name</td> *@
@@ -114,7 +118,7 @@
 					{
 						<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">View</a></td>
 					}
-					else if (User.IsInRole(SD.Role_Sales))
+					else if (User.IsInRole(SD.Role_Sales) )
 					{
 						<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
 					}

@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="DB Static\" />
-    <Folder Include="Views\Dashboard\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
