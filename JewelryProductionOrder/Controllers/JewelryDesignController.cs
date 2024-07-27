@@ -128,7 +128,7 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
 		public IActionResult ViewAll(int jId)
 		{
-			var jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId).ToList();
+			var jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			//if (User.IsInRole(SD.Role_Customer))
