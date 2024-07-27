@@ -162,7 +162,16 @@
                         </div>
                         <canvas id="jewelrychart"></canvas>
                     </div>
-                    
+                    <!------------------------------------------------------------------------------------->
+                    </section>
+                    <section class="stats2">
+                    <div class="card">
+                        <h2>Gemstone employed</h2>
+                        <div id="total">
+                            <label>Total: <span id="totalGem"></span>  Gemstones</label>
+                        </div>
+                        <canvas id="gemstoneChart"></canvas>
+                    </div>
                 </section>
                 
             </div>
@@ -172,6 +181,7 @@
     <script>
         var myChart = null;
         var myChart1 = null;
+        var myPieChart = null;
         var monthValue = 0;
         var monthValue1 = 0;
         var x = null;
@@ -772,7 +782,85 @@
                     }
                 }
             });
+            $.ajax({
+                url: '/Dashboard/GetGemstone',
+                type: 'GET',
+                data: {},
+                success: function (data) {
+                    if (myPieChart) {
+                        myPieChart.clear();
+                        myPieChart.destroy();
+                    }
+
+
+
+                    const ctxDaily = document.getElementById('gemstoneChart').getContext('2d');
+                    myPieChart = new Chart(ctxDaily, {
+                        type: 'pie',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: data.labels,
+                                data: data.quantity,
+                                backgroundColor: getRandomColorArray(data.labels.length),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            layout: {
+                                padding: {
+                                    top: 20,
+                                    bottom: 20,
+                                    left: 20,
+                                    right: 20
+                                }
+                            },
+                            responsive: true,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (tooltipItem) {
+                                            const dataset = tooltipItem.dataset;
+                                            const total = dataset.data.reduce((acc, currentValue) => acc + currentValue);
+                                            $("#totalGem").text(total);
+                                            const currentValue = dataset.data[tooltipItem.dataIndex];
+                                           
+                                            const percentage = Math.round((currentValue / total) * 100);
+                                            return `${dataset.label[tooltipItem.dataIndex]}: ${percentage}%`;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                }
+                                        
+                            }
+                                    
+                        
+                        }
+                    });
+                    //
+                },
+                error: function () {
+                    $('#output').text('An error occurred');
+                }
+            });
         });
+
+        function getRandomColor() {
+            // Generate a random number between 0 and 16777215 (0xFFFFFF)
+            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            // Ensure the string is 6 characters long by padding with leading zeros if necessary
+            return `#${randomColor.padStart(6, '0')}`;
+        }
+
+        function getRandomColorArray(size) {
+            let colorArray = [];
+            for (let i = 0; i < size; i++) {
+                colorArray.push(getRandomColor());
+            }
+            return colorArray;
+        }
     </script>
 </body>
 </html>

@@ -297,5 +297,31 @@ namespace JewelryProductionOrder.Controllers
 
             return Json(soldData);
 		}
+		[HttpGet]
+		public IActionResult GetGemstone(int month, int year)
+		{
+			List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable).ToList();
+            
+			int gemstoneCount = gemstones.Count;
+            var type = gemstones
+                .Select(q => q.Name)
+                .Distinct();
+            int typeCount = type.Count();
+			double rate = typeCount / gemstoneCount;
+			int[] soldData = new int[typeCount];
+			String[] label = type.ToArray();
+            for(int i = 0; i < typeCount; i++)
+			{
+				soldData[i] = gemstones.Count(q => q.Name == label[i]);
+
+            }
+
+            var result = new
+            {
+                quantity = soldData,
+                labels = label
+            };
+            return Json(result);
+		}
 	}
 }

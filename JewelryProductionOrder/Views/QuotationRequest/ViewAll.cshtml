@@ -6,13 +6,16 @@
 
 		<div class="caption-top row d-flex justify-content-between">
 			<h2 class="col-10">View Quotation Request of Jewelry: @Model.FirstOrDefault()?.Jewelry?.Name</h2>
-			@if (User.IsInRole(SD.Role_Sales))
-			{
-				<div class="col-2 d-flex justify-content-end">
-					<a class="btn btn-primary btn-lg px-4" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault()?.Jewelry?.Id">Create</a>
-				</div>
+			
+				@if ( Model.Any(obj => obj.Status == SD.StatusPaid))
+				{
+				}else if(User.IsInRole(SD.Role_Sales)){
+					<div class="col-2 d-flex justify-content-end">
+						<a class="btn btn-primary btn-lg px-4" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault()?.Jewelry?.Id">Create</a>
+					</div>
 
-			}
+				}
+			
 	</div>
 	<table class="table table-bordered table-striped fs-6 fw-normal">
 		<thead>
@@ -30,11 +33,27 @@
 					<td>@obj.Id</td>
 					<td>@obj.CreatedAt</td>
 					<td>@obj.Status</td>
-						@if (obj.Status == SD.StatusPending || obj.Status == SD.ManagerApproved)
+						@if(User.IsInRole(SD.Role_Customer))
 						{
-							
+							if(obj.Status == SD.ManagerApproved)
+							{
+
+								<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+							}
+							else
+							{
+								<td></td>
+							}
+						}
+						else if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Manager))
+						{
 							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
 						}
+						else
+						{
+							<td></td>
+						}
+
 
 				</tr>
 			}

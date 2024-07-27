@@ -9,7 +9,8 @@
     width: 100%;
     margin: auto;
     overflow: hidden;
-    height: 100%;
+    height: auto;
+
 }
 .dashboard-box {
     padding: 20px;
@@ -34,19 +35,35 @@
     }
 
 .stats {
-    display: flex-direction;
-    justify-content: space-around;
-    margin: 30px 10px 0 0 ;
+    margin: 30px 10px 0 0;
+    display: flex;
+    justify-content: center;
+    
+    flex-wrap: wrap;
+}
+.stats2 {
+    margin: 30px 10px 0 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .card {
     background: #fff;
     padding: 20px;
     border: #ccc 1px solid;
-    width: 100%;
+    width: 60%;
+   
     margin: 0 0 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
+}
+.card1 {
+    background: #fff;
+    padding: 20px;
+    border: #ccc 1px solid;
+    width: 60%;
+    margin: 0 0 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 select {
@@ -72,3 +89,4 @@ input {
 /*.yearmonth {
     text-align: right;
 }*/
+

@@ -39,29 +39,6 @@
         </div>
 
 
-        <button asp-action="Create"> Create </button> 
-        @* <button asp-controller="Jewelry" asp-action="RequestIndex">Cancel</button> *@
-
-       @*  <script>
-            const searchText = document.getElementById("searchText");
-            const searchResults = document.getElementById("searchResults");
-            const allOptions = ["Option 1", "Another Option", "Matching Text", "Yet Another Option", "More Matching Text"];
-
-            function filterResults() {
-                const userInput = searchText.value.toLowerCase();
-                searchResults.innerHTML = "";
-
-                allOptions.forEach(option => {
-                    const lowerOption = option.toLowerCase();
-                    if (lowerOption.includes(userInput)) {
-                        const optionElement = document.createElement("option");
-                        optionElement.text = option;
-                        optionElement.value = option;
-                        searchResults.appendChild(optionElement);
-                    }
-                });
-            }
-
-            searchText.addEventListener("keyup", filterResults);
-        </script> *@
+        <button asp-action="Create" class="btn btn-primary"> Create </button>
+        <button asp-controller="Jewelry" asp-action="RequestIndex" class="btn btn-primary" asp-route-reqId="@Model.Jewelry.ProductionRequestId">Cancel</button>
 </form>
