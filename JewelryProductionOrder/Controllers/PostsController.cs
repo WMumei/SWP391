@@ -54,24 +54,17 @@ namespace JewelryProductionOrder.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (ModelState.IsValid)
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if (ImagePath != null)
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
-                if (ImagePath != null)
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
+                string filePath = Path.Combine(wwwRootPath, @"Images");
+                using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagePath.FileName);
-                    string filePath = Path.Combine(wwwRootPath, @"Images");
-                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
-                    {
-                        ImagePath.CopyTo(fileStream);
-                    }
-                    post.Image = @"Images/" + fileName;
+                    ImagePath.CopyTo(fileStream);
                 }
-            }
-            else
-            {
-                TempData["error"] = "Model is invalid.";
-                return RedirectToAction("Index");
+                post.Image = @"Images/" + fileName;
             }
 
             post.Content = post.Content.Replace("../Images/", "/Images/");
