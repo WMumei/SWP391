@@ -34,7 +34,7 @@ namespace JewelryProductionOrder.Repositories
 			if (requestFromDb != null)
 			{
 				requestFromDb.Status = requestStatus;
-				if (!string.IsNullOrEmpty(requestStatus))
+				if (!string.IsNullOrEmpty(paymentStatus))
 				{
 					requestFromDb.Status = paymentStatus;
 				}

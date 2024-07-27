@@ -1,0 +1,51 @@
+﻿@model UserVM
+
+<div class="card-block shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Manage User</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <input asp-for="Id" hidden />
+            <div class="border p-3">
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Name" readonly class="form-control border-0 shadow" />
+                    <label asp-for="Name" class="ms-2"></label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="UserName" readonly class="form-control border-0 shadow" />
+                    <label asp-for="UserName" class="ms-2"></label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Email" readonly class="form-control border-0 shadow" />
+                    <label asp-for="Email" class="ms-2"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="LockoutEnd" hidden class="form-control border-0 shadow" readonly />
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="Role" asp-items="@Model.RoleSelectList" class="form-select"></select>
+                    <label asp-for="Role" class="ms-2"></label>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Update</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="User" asp-action="Index" class="btn btn-outline-primaty">
+                            Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -9,11 +9,9 @@ namespace JewelryProductionOrder.Models
 			public string Name { get; set; }
 			[Range(0.01, 100000000)]
 			public decimal Price { get; set; }
-
-			// TODO : DELETE Weight, there is a carat field already
-			[Range(0.01, 100000000)]
-			public decimal Weight { get; set; }
-	        [Range(0.000001, 100000000)]
+			//[Range(0.01, 100000000)]
+			//public decimal Weight { get; set; }
+	        [Range(0.01, 100000000)]
 		    public decimal Carat { get; set; }
 			public string Color { get; set; }
 			public string Clarity { get; set; }

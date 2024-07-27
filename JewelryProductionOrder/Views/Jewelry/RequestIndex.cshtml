@@ -41,7 +41,7 @@
 					<td>@obj.Description</td>
 					<td>@obj.Status</td>
 					<td>
-						<a asp-controller="BaseDesign" asp-action="Index" asp-route-id="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+						<a asp-controller="BaseDesign" asp-action="ViewAll" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
 					</td>
 					@* <td>@obj.Status</td> *@
 					@* <td>@obj?.Customer?.Name</td> *@
@@ -75,7 +75,7 @@
 
 					@if (@obj.JewelryDesigns.Count != 0)
 					{
-						<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						<td><a asp-controller="JewelryDesign" asp-action="ViewAll" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 					}
 					else if (User.IsInRole(SD.Role_Design) && obj.Status == SD.StatusPaid)
 					{

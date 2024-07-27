@@ -7,8 +7,13 @@ namespace JewelryProductionOrder.Models
 	{
 		public int Id { get; set; }
 		[StringLength(100)]
-		public string Name { get; set; }
-		[Range(0, double.MaxValue)]
+		// Gold, Silver, Plat
+		public string Type { get; set; }
+		// 24K, 18K for Gold; 925 for Silver
+		public string Purity { get; set; }
+		// Rose Gold, White Gold, Yellow Gold
+		public string Color { get; set; }
+		[Range(0.01, double.MaxValue)]
 		public decimal Price { get; set; }
 		[JsonIgnore]
 		public List<MaterialSet> MaterialSets { get; } = [];
