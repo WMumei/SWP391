@@ -84,14 +84,17 @@
 					}
 				@if (User.IsInRole(SD.Role_Customer))
 					{
-						if (obj.Status == SD.StatusPaid)
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
+							|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing ||
+							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 						{
+							
 								<td>Paid!</td>
 							}
 							else if (obj.Status == SD.StatusAllQuotationApproved)
 							{
 
-								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-success btn-sm">View</a></td>
 							}
 							else
 							{
@@ -103,6 +106,7 @@
 						<td></td>
 					}
                 
+					 
 					 @if (obj.Status == SD.StatusAllManufactured) 
 					 { 
 						@if (!User.IsInRole(SD.Role_Customer))
@@ -130,34 +134,43 @@
 							{
 
 
-								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-							}
+							<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-						else
-						{
-							<td></td>
-						}
-					
-                    
-
-
-   
-					@* 					@if (User.IsInRole(SD.Role_Sales))
-				{
-				<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-				} *@
-					
-					
-					<td>@obj.Note</td>
-					
-					@if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Admin))
-					{
-						<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
-					}
-					else if (!User.IsInRole(SD.Role_Customer))
+					 } 
+					else
 					{
 						<td></td>
 					}
+								
+                    
+
+   
+						@* 					@if (User.IsInRole(SD.Role_Sales))
+					{
+					<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+					} *@
+						@* <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
+						@* @if (User.IsInRole(SD.Role_Customer))
+						{
+							if(obj.Status == SD.StatusPaid)
+							{
+								<td>Paid!</td>
+							}
+							else
+							{
+								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
+							}
+						} *@
+						<td>@obj.Note</td>
+					
+						@if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Admin))
+						{
+							<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
+						}
+						else if (!User.IsInRole(SD.Role_Customer))
+						{
+							<td></td>
+						}
 
 				</tr>
 				}

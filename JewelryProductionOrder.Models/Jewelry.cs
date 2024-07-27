@@ -36,7 +36,7 @@ namespace JewelryProductionOrder.Models
 
 		public int? BaseDesignId { get; set; }
 		public BaseDesign BaseDesign { get; set; }
-		public Delivery Delivery { get; set; }
+
 		public List<JewelryDesign> JewelryDesigns { get; } = [];
 	}
 }

@@ -136,8 +136,6 @@ namespace SWP391.Controllers
 			var ids = materialSet.Materials.Select(m => m.Id).ToList();
 			if (!ids.Contains(material.Id))
 			{
-				materialSet.Materials.Add(material);
-				_unitOfWork.Save();
 
 				//_unitOfWork.MaterialSet.Update(materialSet);
 				var weight = Convert.ToDecimal(vm.Weight);
@@ -147,6 +145,8 @@ namespace SWP391.Controllers
 					return RedirectToAction(nameof(Upsert), new { jId = vm.Jewelry.Id });
 
 				}
+				materialSet.Materials.Add(material);
+				_unitOfWork.Save();
 				materialSet.MaterialSetMaterials.Where(s => s.MaterialId == material.Id).FirstOrDefault().Weight = weight;
 				TempData["success"] = "Added";
 				_unitOfWork.MaterialSet.Update(materialSet);
@@ -164,14 +164,14 @@ namespace SWP391.Controllers
 			return RedirectToAction(nameof(Upsert), new { jId = vm.Jewelry.Id });
 		}
 
-		public IActionResult DeleteGemstone(int gemDeleteId, int materialSetId)
+		public IActionResult DeleteGemstone(int gemstoneId, int materialSetId)
 		{
-			if (gemDeleteId != 0 && materialSetId != 0)
+			if (gemstoneId != 0 && materialSetId != 0)
 			{
 				try
 				{
-					MaterialSet materialSet = _unitOfWork.MaterialSet.Get(s => s.Id == materialSetId, includeProperties: "Gemstones");
-					Gemstone gemstone = _unitOfWork.Gemstone.Get(g => g.Id == gemDeleteId);
+					MaterialSet materialSet = _unitOfWork.MaterialSet.Get(s => s.Id == materialSetId, includeProperties: "Gemstones", tracked: true);
+					Gemstone gemstone = materialSet.Gemstones.Where(g => g.Id == gemstoneId).FirstOrDefault();
 					materialSet.Gemstones.Remove(gemstone);
 					_unitOfWork.MaterialSet.Update(materialSet);
 					_unitOfWork.Save();
@@ -227,6 +227,8 @@ namespace SWP391.Controllers
 
 				if (decimal.TryParse(weight, out decimal result))
 				{
+					if (result <= 0) return Json(new { message = "Please enter a valid weight." });
+
 					MaterialSetMaterial join = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSetId && m.MaterialId == materialId);
 					join.Weight = result;
 

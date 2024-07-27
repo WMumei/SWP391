@@ -8,12 +8,8 @@
     <title>Jewelry Dashboard</title>
     <link rel="stylesheet" href="~/css/Dashboard1.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style >
-       #validation{
-           display:none;
-        color:red;
-       }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
 <body>
     <div class="container">
@@ -28,34 +24,33 @@
                     <br />
                     <div class="card">
                         <h2>Revenue</h2>
-                    
-                        <select id="select" onchange="myFunction()">
-                            <option disabled selected>--Select type--</option>
+                    <h3>Select type for diagram:</h3>
+                        <select id="select" class="form-select border-2 shadow" onchange="myFunction()">
+                            
+                            
+                            <option value="alltime" >All Time</option>
                             <option value="m">Monthly</option>
                             <option value="y">Yearly</option>
-                            <option value="option">Optional</option>
-                            <option value="alltime">All Time</option>
+                            <option value="option">Date Range</option>
+                            
                         </select>
-                        <div id="validation">
-                        <span >Please select type for diagram.</span>
-                        </div>
+                        
                         <div id="date" style="display:none">
                             <label for="year" >Year: </label>
 
-                            <select id="year" class="dropdown">
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
- 
-                        </select>
+                            <select id="year" class="form-select border-1 shadow">
+
+                                @for (int i = DateTime.Now.Year; i >= 2020; i--)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
                            
                         </div>
                     
                         <div id="monthdiv" style="display:none">
                             <label for="month">Month:</label>
-                            <select id="month" class="dropdown">
+                            <select id="month" class="form-select border-1 shadow">
                             <option value="01">Jan</option>
                             <option value="02">Feb</option>
                             <option value="03">Mar</option>
@@ -72,7 +67,7 @@
                             
                         </div>
                         <div id="optiondate" style="display:none">
-                            <span id="validationBefore">Start date and end start date should be at most 40 days apart!</span>
+                            <span id="validationBefore"><strong>Start date and end start date should be at most 40 days apart!</strong></span>
                             <br/>
                             <label for="startDate">Start Date:</label>
                             <input type="date" id="startDate" name="startDate" />
@@ -99,12 +94,14 @@
                     <!------------------------------------------------------->
                     <div class="card">
                         <h2>Jewelry Sold </h2>
-                        <select id="selectJe" onchange="myFunctionJewelry()">
-                            <option disabled selected>--Select type--</option>
+                        <h3>Select type for diagram:</h3>
+                        <select id="selectJe" class="form-select border-1 shadow" onchange="myFunctionJewelry()">
+                            
+                            <option value="alltimeJe">All Time</option>
                             <option value="mJe"> Monthly</option>
                             <option value="yJe"> Yearly</option>
-                            <option value="optionJe">Optional</option>
-                            <option value="alltimeJe">All Time</option>
+                            <option value="optionJe">Date Range</option>
+                            
                         </select>
                         <div>
                             <span id="validationJe" style="display:none; color:red">Please select type for diagram.</span>
@@ -112,19 +109,18 @@
                         <div class="yearmonth">
                             <div id="dateJe" style="display:none">
                                 <label for="yearJe">Year:</label>
-                                <select id="yearJe" class="dropdown">
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2022">2022</option>
-                                    <option value="2021">2021</option>
-                                    <option value="2020">2020</option>
+                                <select id="yearJe" class="form-select border-1 shadow" >
+                                    @for (int i = DateTime.Now.Year; i >= 2020; i--)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
 
                                 </select>
                                 
                             </div>
                             <div id="monthdivJe" style="display:none">
                                 <label for="monthJe">Month:</label>
-                                <select id="monthJe" class="dropdown">
+                                <select id="monthJe" class="form-select border-1 shadow" >
                                     <option value="01">Jan</option>
                                     <option value="02">Feb</option>
                                     <option value="03">Mar</option>
@@ -141,7 +137,7 @@
                                 
                             </div>
                             <div id="optiondateJe" style="display:none">
-                                <span id="validationBeforeJe">Start date and end start date should be at most 40 days apart!</span>
+                                <span id="validationBeforeJe"><strong>Start date and end start date should be at most 40 days apart!</strong></span>
                                 <br />
                                 <label for="startDateJe">Start Date:</label>
                                 <input type="date" id="startDateJe" name="startDate"  />
@@ -151,6 +147,9 @@
                                 <br/>
                                 <span id="validation1Je" style="display:none; color:red">Please enter start date and end date.</span>
                                 <span id="validationStartEndDateJe" style="display:none; color:red">End date is invalid.</span>
+                                <div>
+                                    <span id="validationJe" class="text-center" style="display:none; color:red">Please select YEARLY type!</span>
+                                </div>
 
                             </div>
                         </div>
@@ -179,9 +178,10 @@
         var x1 = null;
         var startDate = null;
         var endDate = null;
-  
+        const monthsWith31Days = ['01', '03', '05', '07', '08', '10', '12'];
         var yearLabelChart = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         //TODO:Check so ngay trong thang
+        
         var monthLabelChart = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         var labelChart = yearLabelChart;
         
@@ -193,15 +193,16 @@
         var monthLabelChart1 = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         var labelChart1 = yearLabelChart1;
       
-
+        
         function myFunction() {
             x = document.getElementById("select").value;
+            
             $("#optiondate,#monthdiv,#date,#validation,#validation1").hide();
             if (x == 'm') {
 
                 $("#monthdiv").show();
                 $("#date").show();
-                labelChart = monthLabelChart;
+                // labelChart = monthLabelChart;
             }
             else if (x == 'y') {
 
@@ -263,9 +264,54 @@
 
                     // Get the value from the input field
                     
-                if (x == null) {
-                    
-                    $("#validation").show();
+                if (x == null || x == "alltime") {
+                    $.ajax({
+                        url: '/Dashboard/GetRevenueByAll',
+                        type: 'GET',
+                        data: {},
+                        success: function (rd) {
+                            if (myChart) {
+                                myChart.clear();
+                                myChart.destroy();
+                            }
+                            console.log(rd);
+                            console.log(rd.value1);
+                            //calculate total revenue
+
+                            const sum = rd.value1.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                            $("#totalvalue").text(sum);
+
+
+                            // Revenue Chart
+                            const ctxDaily = document.getElementById('revenueChart').getContext('2d');
+                            myChart = new Chart(ctxDaily, {
+                                type: 'line',
+                                data: {
+                                    labels: rd.value2,
+                                    datasets: [{
+                                        label: '$',
+                                        data: rd.value1,
+                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                        borderColor: 'rgba(119, 212, 42, 1)',
+                                        borderWidth: 1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            //
+                        },
+                        error: function () {
+                            $('#output').text('An error occurred');
+                        }
+                    });
+                   
                 } else if(x == "option"){
                     $("#validation1,#validationStartEndDate").hide();
                     var startDate = $('#startDate').val();
@@ -341,7 +387,11 @@
 
                             } else {
                                 //Trường hợp lớn hơn 30
-                                alert('Please select yearly type.');
+                                Swal.fire({
+                                    title: "Date Range is greater than 40!",
+                                    text: "Please select Yearly type",
+                                    icon: "warning"
+                                });
                             }
                         }
 
@@ -353,66 +403,7 @@
                         //trường hợp startDate và endDate null
                         
                     }
-                } else if (x == "alltime") {
-                    
-                    $.ajax({
-                        url: '/Dashboard/GetRevenueByAll',
-                        type: 'GET',
-                        data: { },
-                        success: function (data) {
-                            if (myChart) {
-                                myChart.clear();
-                                myChart.destroy();
-                            }
-                           
-                            labelChart = data.Value2;
-                            price = data.Value1;
-                            //sort years in order
-                            // labelChart.sort(function (a, b) {
-                            //     return a - b;
-                            // });
-                            console.log(data);
-                            //calculate total revenue
-                            const combined = labelChart.map((label, index) => ({ label, value: price[index] }));
-                            combined.sort((a, b) => a.label - b.label);
-
-                            labelChart = combined.map(item => item.label);
-                            price = combined.map(item => item.value);
-
-                            const sum = price.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                            $("#totalvalue").text(sum);
- 
-
-                            // Revenue Chart
-                            const ctxDaily = document.getElementById('revenueChart').getContext('2d');
-                            myChart = new Chart(ctxDaily, {
-                                type: 'line',
-                                data: {
-                                    labels: labelChart,
-                                    datasets: [{
-                                        label: '$',
-                                        data: price,
-                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
-                                        borderColor: 'rgba(119, 212, 42, 1)',
-                                        borderWidth: 1,
-                                        fill: true
-                                    }]
-                                },
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
-                                        }
-                                    }
-                                }
-                            });
-                            //
-                        },
-                        error: function () {
-                            $('#output').text('An error occurred');
-                        }
-                    });
-                }
+                } 
                 //trường hợp yearly và monthly
                 else {
                     
@@ -420,7 +411,13 @@
                     
                     if (x == "m") {
                         monthValue = $('#month').val();
-                        
+                        if (monthsWith31Days.includes(monthValue)) {
+                            labelChart = monthLabelChart;
+                        } else if (monthValue == 2) {
+                            labelChart = Array.from({ length: 28 }, (_, i) => (i + 1).toString());
+                        } else {
+                            labelChart = Array.from({ length: 30 }, (_, i) => (i + 1).toString());
+                        }
                     }
                     $.ajax({
                         url: '/Dashboard/GetRevenueByYear',
@@ -468,15 +465,55 @@
                     });
                 }
 
-                console.log(year);
+                
                     // Trigger the AJAX call
                     
             });
             // Jewelry Chart
             $('#clickJe').click(function () {
-                if (x1 == null) {
+                if (x1 == null || x1 == "alltimeJe") {
 
-                    $("#validationJe").show();
+                    
+                    $.ajax({
+                        url: '/Dashboard/GetJewelryByAll',
+                        type: 'GET',
+                        data: {},
+                        success: function (data) {
+                            if (myChart1) {
+                                myChart1.clear();
+                                myChart1.destroy();
+                            }
+
+
+
+                            const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
+                            myChart = new Chart(ctxDaily, {
+                                type: 'line',
+                                data: {
+                                    labels: data.value2,
+                                    datasets: [{
+                                        label: 'Jewelries',
+                                        data: data.value1,
+                                        backgroundColor: 'rgba(119, 212, 42, 0.2)',
+                                        borderColor: 'rgba(119, 212, 42, 1)',
+                                        borderWidth: 1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            //
+                        },
+                        error: function () {
+                            $('#output').text('An error occurred');
+                        }
+                    });
                 } else if (x1 == "optionJe") {
                     $("#validation1Je,#validationStartEndDateJe").hide();
                     var startDate = $('#startDateJe').val();
@@ -546,8 +583,12 @@
                                 });
 
                             } else {
-                                //Trường hợp lớn hơn 30
-                                alert('Please select yearly type.');
+                                //Trường hợp lớn hơn 40
+                                Swal.fire({
+                                    title: "Date Range is greater than 40!",
+                                    text: "Please select Yearly type",
+                                    icon: "warning"
+                                });
                             }
                         }
 
@@ -571,28 +612,16 @@
                                 myChart1.destroy();
                             }
 
-                            labelChart = data.Value2;
-                            price = data.Value1;
-                            //sort years in order
-                            // labelChart.sort(function (a, b) {
-                            //     return a - b;
-                            // });
-                            console.log(data);
-                            //calculate total revenue
-
-                            // const sum = data.Value1.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                            // $("#totalvalue").text(sum);
-
-
-                            // Revenue Chart
+                            
+                            
                             const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
                             myChart = new Chart(ctxDaily, {
                                 type: 'line',
                                 data: {
-                                    labels: labelChart,
+                                    labels: data.value2,
                                     datasets: [{
                                         label: 'Jewelries',
-                                        data: price,
+                                        data: data.value1,
                                         backgroundColor: 'rgba(119, 212, 42, 0.2)',
                                         borderColor: 'rgba(119, 212, 42, 1)',
                                         borderWidth: 1,
@@ -620,11 +649,17 @@
 
                     if (x1 == "mJe") {
                         monthValue1 = $('#monthJe').val();
-
+                        if (monthsWith31Days.includes(monthValue1)) {
+                            labelChart1 = monthLabelChart1;
+                        } else if (monthValue1 == 2) {
+                            labelChart1 = Array.from({ length: 28 }, (_, i) => (i + 1).toString());
+                        } else {
+                            labelChart1 = Array.from({ length: 30 }, (_, i) => (i + 1).toString());
+                        }
                     }
                 }
 
-                console.log("aaaa");
+       
                 // Trigger the AJAX call
                 $.ajax({
                     url: '/Dashboard/GetJewelrySold',
