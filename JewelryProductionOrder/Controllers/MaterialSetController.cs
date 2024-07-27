@@ -43,7 +43,7 @@ namespace SWP391.Controllers
 			_unitOfWork = unitOfWork;
 		}
 
-		#region Views
+		#region Views(Old)
 		//[Authorize(Roles = SD.Role_Sales)]
 		//public IActionResult Upsert(int jId)
 		//{
@@ -287,7 +287,21 @@ namespace SWP391.Controllers
 		//{
 		//	return _unitOfWork.MaterialSet.GetTotalPrice(materialSetId);
 		//}
+
 		#endregion
+		public IActionResult Details(int mId, int jId)
+		{
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == mId, includeProperties: "MaterialSetMaterials,Gemstones,Materials");
+
+			MaterialSetVM materialSetVM = new MaterialSetVM
+			{
+				Jewelry = jewelry,
+				MaterialSet = materialSet,
+			};
+			ClearSession();
+			return View(materialSetVM);
+		}
 
 		#region API
 		/// <summary>
@@ -296,21 +310,19 @@ namespace SWP391.Controllers
 		/// <param name="mId">The ID of the material set.</param>
 		/// <param name="jId">The ID of the jewelry.</param>
 		/// <returns>The view for creating or updating a material set.</returns>
-		public IActionResult Upsert(int mId, int jId, int redirectRequest)
+		public IActionResult Upsert(int mId, int jId)
 		{
 			// Create case
 			if (mId != 0)
 			{
 				// If a jewelry has its quotation approved by a customer, its material set can not be modified
-
-				// This prevents changing the set after the quotation has been paid
-				// and makes the set consistent throughtout the manufacturing process
+				// This prevents changing the set after the quotation has been paid and makes the set consistent throughtout the manufacturing process
 				Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId && j.Status == SD.StatusQuotationApproved);
 				if (jewelry is not null)
 				{
 					TempData["error"] = "The Material Set can not be modified after the quotation of its jewelry has been approved!";
-					// Return to the jewelries in a production request page
-					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+					// Return to material set details page
+					return RedirectToAction("Details", new { mId, jId });
 				}
 
 				// Load the material set materials (join entity) to fill up the session list
@@ -408,7 +420,7 @@ namespace SWP391.Controllers
 				}
 				_unitOfWork.Save();
 				ClearSession();
-				return Json(new { success = true, message = "Material Set created!" });
+				return Json(new { success = true, message = "Material Set created!", redirectId = materialSet.Id });
 			}
 			// Case Update
 			else
@@ -428,7 +440,7 @@ namespace SWP391.Controllers
 				// To clarify, this ensures that the newly added gemstone in session is still available. The only unvaiable gems of the list is already in the set (unvailable because it is already in this particular set)
 				var existingGemstoneIds = existingGemstones.Select(m => m.Id).ToList();
 
-				if (gemstones.Any(g => g.Status == SD.StatusUnavailable && !existingGemstoneIds.Contains(mId)))
+				if (gemstones.Any(g => g.Status == SD.StatusUnavailable && !existingGemstoneIds.Contains(g.Id)))
 				{
 					ClearSession();
 					return Json(new { success = false, message = "Some newly added gemstones are not available. Please try again!" });
@@ -642,23 +654,45 @@ namespace SWP391.Controllers
 				return Json(new { success = true, message = "Gemstone deleted successfully" });
 			}
 
-
-
 			return Json(new { success = false, message = "Gemstone not found" });
 		}
 
 
 		[HttpGet]
-		public IActionResult GetPrice()
+		public IActionResult GetPrice(int mId)
 		{
 			decimal materialTotal = GetMaterialTotal();
 			decimal gemstoneTotal = GetGemstoneTotal();
 			return Json(new { materialTotal, gemstoneTotal, setTotal = materialTotal + gemstoneTotal });
 		}
 
-		#endregion
 
-		private decimal GetSetTotal()
+        [HttpGet]
+        public IActionResult GetCurrentPrice(int mId)
+        {
+            // Retrieve the MaterialSet from the database
+            var materialSet = _unitOfWork.MaterialSet.Get(
+                m => m.Id == mId,
+                includeProperties: "MaterialSetMaterials,MaterialSetMaterials.Material,Gemstones"
+            );
+
+            if (materialSet == null)
+            {
+				return Json(new { success = false });
+            }
+
+			// Calculate the total price
+            decimal materialTotal = materialSet.MaterialSetMaterials.Sum(msm => msm.Weight * msm.Material.Price);
+            decimal gemstoneTotal = materialSet.Gemstones.Sum(g => g.Price);
+            decimal setTotal = materialTotal + gemstoneTotal;
+
+            return Json(new { success = true, materialTotal, gemstoneTotal, setTotal });
+        }
+
+
+        #endregion
+
+        private decimal GetSetTotal()
 		{
 			return GetMaterialTotal() + GetGemstoneTotal();
 		}
@@ -693,6 +727,7 @@ namespace SWP391.Controllers
 		private void ClearSession()
 		{
 			HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.DELETED_GEMSTONE_LIST_KEY);
 			HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
 		}
 	}

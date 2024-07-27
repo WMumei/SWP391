@@ -12,7 +12,6 @@ const loadGemstone = () => {
         "columns": [
             { data: 'name', "width": "26%" },
             { data: 'price', "width": "10%" },
-            { data: 'weight', "width": "5%" },
             { data: 'carat', "width": "5%" },
             { data: 'color', "width": "10%" },
             { data: 'clarity', "width": "10%" },
@@ -36,7 +35,6 @@ const loadCurrentGemstone = () => {
         "columns": [
             { data: 'name', "width": "26%" },
             { data: 'price', "width": "10%" },
-            { data: 'weight', "width": "5%" },
             { data: 'carat', "width": "5%" },
             { data: 'color', "width": "10%" },
             { data: 'clarity', "width": "10%" },

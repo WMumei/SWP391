@@ -1,118 +1,140 @@
 ﻿@model QuotationRequestVM
 
 <form method="post" class="container">
-	<div class="caption-top row">
-		<h2>Quotation request for Jewelry: @Model.Jewelry.Name</h2>
-	</div>
-	<div class="form-group">
-		<div class="row">
-			<div class="col-10">
-				<input asp-for="@Model.Jewelry.Id" hidden />
-				<input asp-for="@Model.MaterialSet.Id" hidden />
-				<div class="col-12 py-2 form-floating">
-					<input disabled asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
-					<label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<input disabled asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
-					<label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<h2>Gemstones</h2>
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Weight (carat)</th>
-								<th>Price</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
-							{
-								<tr>
-									<td>@gemstone.Name</td>
-									<td>@gemstone.Carat</td>
-									<td>@gemstone.Price</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<h2>Materials</h2>
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Weight (g)</th>
-								<th>Unit Price</th>
-								<th>Total Price</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (Material material in @Model.MaterialSet.Materials)
-							{
-								var weight = @Model.MaterialSet.MaterialSetMaterials.FirstOrDefault(
-								s => s.MaterialId == material.Id)?.Weight;
-								<tr>
-									<td>@material.Type</td>
-									<td>@weight</td>
-									<td>@material.Price</td>
-									<td>@(weight * material.Price)</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-
-				</div>
-
-
-
-			</div>
-		</div>
-	</div>
-	<div>
-		<h2>Total Price: @Model.QuotationRequest.TotalPrice</h2>
-	</div>
+    <div class="caption-top row my-4">
+        <h2>Quotation request for Jewelry: @Model.Jewelry.Name</h2>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-10">
+                <input asp-for="@Model.Jewelry.Id" hidden />
+                <input asp-for="@Model.MaterialSet.Id" hidden />
+                <div class="col-12 py-2 form-floating">
+                    <input disabled asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
+                    <label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
+                </div>
+                <div class="col-12 py-2 form-floating">
+                    <input disabled asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
+                    <label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
+                </div>
+                <hr />
+                <div class="col-12 py-2">
+                    <h3 class="fw-normal">Gemstones</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Carat</th>
+                                <th>Color</th>
+                                <th>Clarity</th>
+                                <th>Cut</th>
+                                <th>Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+                            {
+                                <tr>
+                                    <td>@gemstone.Name</td>
+                                    <td>@gemstone.Carat</td>
+                                    <td>@gemstone.Color</td>
+                                    <td>@gemstone.Clarity</td>
+                                    <td>@gemstone.Cut</td>
+                                    <td>@gemstone.Price</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
+                </div>
+                <div class="col-12 py-2">
+                    <h3 class="fw-normal">Materials</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Color</th>
+                                <th>Purity</th>
+                                <th>Unit Price ($)</th>
+                                <th>Weight (g)</th>
+                                <th>Total Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
+                            {
+                                var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
+                                <tr>
+                                    <td>@material?.Type</td>
+                                    <td>@material?.Color</td>
+                                    <td>@material?.Purity</td>
+                                    <td>@material?.Price</td>
+                                    <td>@join.Weight</td>
+                                    <td>@((join.Weight * material?.Price)?.ToString("F2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Material Total: $<span id="materialTotal">0</span></div>
+                </div>
+                <hr />
+                <h3 class="fw-normal">Set Total Price: $<span id="totalPrice"></span></h3>
+            </div>
+        </div>
+    </div>
 </form>
-	<div class="row">
-		@if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
-		{
-			<div class="col text-center">
-				<a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
-            </div>
-            <div class="col">
-                <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
-            </div>
-            
-		}
-		@if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
-		{
-			<div class="col text-center">
-				<a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
-			</div>
-			<div class="col">
-				<a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
-			</div>
-		}
+<div class="row">
+    @if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
+    {
+        <div class="col text-center">
+            <a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+        </div>
+        <div class="col">
+            <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+        </div>
+    }
+    @if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
+    {
+        <div class="col text-center">
+            <a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
+        </div>
+        <div class="col">
+            <a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
+        </div>
+    }
+    @if (!User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
+    {
+        <h2 class="text-success">Approved by manager!</h2>
+    }
+    else if (Model.QuotationRequest.Status == SD.CustomerApproved)
+    {
+        <h2 class="text-success">Approved!</h2>
+    }
+    else if (Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.CustomerDisapproved)
+    {
+        <h2 class="text-danger">Disapproved!</h2>
+    }
+</div>
 
-	@if (!User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
-		{
-			<h2 class="text-success">Approved by manager!</h2>
-		}
-		else if (Model.QuotationRequest.Status == SD.CustomerApproved)
-		{
-			<h2 class="text-success">Approved!</h2>
-		}
-		else if (Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.CustomerDisapproved)
-		{
-			<h2 class="text-danger">Disapproved!</h2>
-		}
-	</div>
-
-
-
-
-
+@section Scripts {
+    <script type="text/javascript">
+        const reloadPrice = () => {
+            const mId = '@Model.MaterialSet.Id';
+            $.ajax({
+                url: `/materialset/getCurrentPrice?mId=${mId}`,
+                type: 'GET',
+                success: (data) => {
+                    $("#materialTotal").text(data.materialTotal.toFixed(2));
+                    $("#gemstoneTotal").text(data.gemstoneTotal.toFixed(2));
+                    $("#totalPrice").text(data.setTotal.toFixed(2));
+                },
+                error: () => {
+                    toastr.error("Updating price failed.");
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            reloadPrice();
+        });
+    </script>
+}
