@@ -131,14 +131,14 @@ namespace JewelryProductionOrder.Controllers
 			var jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//if (User.IsInRole(SD.Role_Customer))
-			//{
-			//	jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
-			//	if (jewelryDesign.Count == 0)
-			//	{
-			//		jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId).ToList();
-			//	}
-			//}
+			if (User.IsInRole(SD.Role_Customer))
+			{
+				jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
+				if (jewelryDesign.Count == 0)
+				{
+					jewelryDesign = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
+				}
+			}
 
 			return View(jewelryDesign);
 		}
