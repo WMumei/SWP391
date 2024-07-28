@@ -34,10 +34,10 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
-			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusRequestDelayedPayment);
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusPending);
 			if (request != null)
 			{
-				OrderConfirmation(request.Id);
+				Payment(request.Id);
 			}
             return View("Index", obj);
         }
@@ -253,7 +253,6 @@ namespace SWP391.Controllers
 				var service = new SessionService();
 				Session session = service.Create(options);
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusRequestDelayedPayment);
 				_unitOfWork.Save();
 				Response.Headers.Add("Location", session.Url);
 				return new StatusCodeResult(303);
@@ -272,7 +271,7 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusRequestDelayedPayment, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPending, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");
