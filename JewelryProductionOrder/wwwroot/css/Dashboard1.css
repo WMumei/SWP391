@@ -13,7 +13,7 @@
 
 }
 .dashboard-box {
-    padding: 20px;
+    padding: 40px;
     border: 2px solid #c7f1ec;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -44,8 +44,9 @@
 .stats2 {
     margin: 30px 10px 0 0;
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: right;
+    flex-wrap: nowrap;
+    overflow-y:auto;
 }
 
 .card {
@@ -61,8 +62,8 @@
     background: #fff;
     padding: 20px;
     border: #ccc 1px solid;
-    width: 60%;
-    margin: 0 0 0;
+    width: 40%;
+    margin: 0 0 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -76,6 +77,10 @@ input {
         margin: 0 0 10px;
         text-align: center;
     }
+.card1 h2 {
+    margin: 0 0 10px;
+    text-align: center;
+}
     .card select{
         width: 50%;
     }

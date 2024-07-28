@@ -165,23 +165,63 @@
                     <!------------------------------------------------------------------------------------->
                     </section>
                     <section class="stats2">
-                    <div class="card">
+                    <div class="card1">
                         <h2>Gemstone employed</h2>
                         <div id="total">
                             <label>Total: <span id="totalGem"></span>  Gemstones</label>
                         </div>
                         <canvas id="gemstoneChart"></canvas>
+
+                    </div>
+                    <div class="card1">
+                        <h2>Material</h2>
+                        <div id="total">
+                            <label>Total: <span id="totalMaterial"></span>  materials</label>
+                        </div>
+                        <canvas id="materialChart"></canvas>
                     </div>
                 </section>
+                <!-------------------------------------------------------------------------------------------------->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-white bg-primary">
+                            <div class="card-header">Revenue Total</div>
+                            <div class="card-body">
+                                <p class="card-text">$<span id="totalRevenue"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-success">
+                            <div class="card-header">Orders Completed</div>
+                            <div class="card-body">
+                                <p class="card-text">123</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-danger">
+                            <div class="card-header">Orders Canceled</div>
+                            <div class="card-body">
+                                <p class="card-text">45</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
             </div>
+            
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        const total = 0;
+        const orderComplete = 0;
+        const orderCancel = 0;
         var myChart = null;
         var myChart1 = null;
         var myPieChart = null;
+        var myPieChart1 = null;
         var monthValue = 0;
         var monthValue1 = 0;
         var x = null;
@@ -287,9 +327,11 @@
                             console.log(rd);
                             console.log(rd.value1);
                             //calculate total revenue
-
+                            
                             const sum = rd.value1.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
                             $("#totalvalue").text(sum);
+                             
+
 
 
                             // Revenue Chart
@@ -837,6 +879,69 @@
                             }
                                     
                         
+                        }
+                    });
+                    //
+                },
+                error: function () {
+                    $('#output').text('An error occurred');
+                }
+            });
+            $.ajax({
+                url: '/Dashboard/GetMaterial',
+                type: 'GET',
+                data: {},
+                success: function (data) {
+                    if (myPieChart1) {
+                        myPieChart1.clear();
+                        myPieChart1.destroy();
+                    }
+
+
+
+                    const ctxDaily = document.getElementById('materialChart').getContext('2d');
+                    myPieChart1 = new Chart(ctxDaily, {
+                        type: 'pie',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: data.labels,
+                                data: data.quantity,
+                                backgroundColor: getRandomColorArray(data.labels.length),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            layout: {
+                                padding: {
+                                    top: 20,
+                                    bottom: 20,
+                                    left: 20,
+                                    right: 20
+                                }
+                            },
+                            responsive: true,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (tooltipItem) {
+                                            const dataset = tooltipItem.dataset;
+                                            const total = dataset.data.reduce((acc, currentValue) => acc + currentValue);
+                                            $("#totalGem").text(total);
+                                            const currentValue = dataset.data[tooltipItem.dataIndex];
+
+                                            const percentage = Math.round((currentValue / total) * 100);
+                                            return `${dataset.label[tooltipItem.dataIndex]}: ${percentage}%`;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                }
+
+                            }
+
+
                         }
                     });
                     //

@@ -131,7 +131,7 @@ namespace SWP391.Controllers
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//var saleStaff=_unitOfWork.User.Get(u=>u.Id==userId);
+			
                
 
 

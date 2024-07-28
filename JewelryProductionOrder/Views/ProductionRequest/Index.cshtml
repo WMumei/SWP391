@@ -125,7 +125,7 @@
 						}
 					 }
 						else if (obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
-					{
+					    {
 							@if (!User.IsInRole(SD.Role_Customer))
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
