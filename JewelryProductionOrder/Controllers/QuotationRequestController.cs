@@ -62,7 +62,7 @@ namespace SWP391.Controllers
 
 		public IActionResult Create(int jId, int redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet");
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet,QuotationRequests");
 			if (jewelry.MaterialSet is null)
 			{
 				TempData["error"] = "Material Set is not ready!";
@@ -84,6 +84,13 @@ namespace SWP391.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (vm.QuotationRequest.LaborPrice <= 0)
+			{
+                TempData["error"] = "Labor Price must be > 0";
+                if (redirectRequest is not null)
+                    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+            }
+
 
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest,MaterialSet");
 			if (jewelry.MaterialSet is null)
@@ -111,17 +118,17 @@ namespace SWP391.Controllers
 
 			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
 			var oldRequests = _unitOfWork.QuotationRequest
-				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
-				.OrderByDescending(r => r.CreatedAt);
+				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt);
+				//.OrderByDescending(r => r.CreatedAt);
 			foreach (var oldRequest in oldRequests)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
 			TempData["success"] = "Created";
-			if (redirectRequest is not null)
-				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			return RedirectToAction(nameof(ViewAll), new { jId = vm.Jewelry.Id });
+			//if (redirectRequest is not null)
+			//	return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+			return RedirectToAction(nameof(Details), new { id = vm.QuotationRequest.Id });
 		}
 
 		[Authorize(Roles = SD.Role_Manager)]
@@ -260,7 +267,7 @@ namespace SWP391.Controllers
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))
 			{
-				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved).ToList();
+				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
 			}
 			/*else if(User.IsInRole(SD.Role_Sales))
 			{

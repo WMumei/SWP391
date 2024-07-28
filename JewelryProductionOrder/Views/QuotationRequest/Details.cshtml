@@ -1,8 +1,8 @@
 ﻿@model QuotationRequestVM
 
 <form method="post" class="container">
-    <div class="caption-top row my-4">
-        <h2>Quotation request for Jewelry: @Model.Jewelry.Name</h2>
+    <div class="caption-top row mt-4">
+        <h2>Quotation @Model.QuotationRequest.Name for Jewelry @Model.Jewelry.Name</h2>
     </div>
     <div class="form-group">
         <div class="row">
@@ -18,7 +18,7 @@
                     <label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
                 </div>
                 <hr />
-                <div class="col-12 py-2">
+                <div class="col-12 ">
                     <h3 class="fw-normal">Gemstones</h3>
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -47,7 +47,7 @@
                     </table>
                     <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
                 </div>
-                <div class="col-12 py-2">
+                <div class="col-12 ">
                     <h3 class="fw-normal">Materials</h3>
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -77,44 +77,47 @@
                     </table>
                     <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Material Total: $<span id="materialTotal">0</span></div>
                 </div>
-                <hr />
+                <hr class="my-3" />
                 <h3 class="fw-normal">Set Total Price: $<span id="totalPrice"></span></h3>
             </div>
         </div>
     </div>
 </form>
-<div class="row">
+<div class="d-flex justify-content-start align-items-center mt-1">
     @if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
     {
-        <div class="col text-center">
-            <a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
-        </div>
-        <div class="col">
-            <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
-        </div>
+        <a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg mx-1 my-1">Approve</a>
+        <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg mx-1 my-1">Disapprove</a>
     }
     @if (User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
     {
-        <div class="col text-center">
-            <a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg">Approve</a>
-        </div>
-        <div class="col">
-            <a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg">Disapprove</a>
-        </div>
+        <a asp-controller="QuotationRequest" asp-action="CustomerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg mx-1 my-1">Approve</a>
+        <a asp-controller="QuotationRequest" asp-action="CustomerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg mx-1 my-1">Disapprove</a>
     }
     @if (!User.IsInRole(SD.Role_Customer) && Model.QuotationRequest.Status == SD.ManagerApproved)
     {
-        <h2 class="text-success">Approved by manager!</h2>
+        <div class="text-center">
+            <h3 class="text-success border border-secondary p-2">Approved by manager!</h3>
+        </div>
     }
     else if (Model.QuotationRequest.Status == SD.CustomerApproved)
     {
-        <h2 class="text-success">Approved!</h2>
+        <div class="text-center">
+            <h3 class="text-success border border-secondary p-2">Approved!</h3>
+        </div>
     }
     else if (Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.CustomerDisapproved)
     {
-        <h2 class="text-danger">Disapproved!</h2>
+        <div class="text-center">
+            <h3 class="text-danger border border-secondary p-2">Disapproved!</h3>
+        </div>
     }
 </div>
+
+<div class="d-flex gap-2 my-2">
+    <a class="btn btn-secondary" asp-action="Viewall" asp-controller="QuotationRequest" asp-route-jId="@Model.Jewelry.Id">Back</a>
+</div>
+
 
 @section Scripts {
     <script type="text/javascript">

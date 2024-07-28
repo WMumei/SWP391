@@ -10,10 +10,11 @@ namespace JewelryProductionOrder.Models
 		public int Id { get; set; }
 		public string? Status { get; set; }
 		[StringLength(100)]
+		[Required(ErrorMessage = "Name is required")]
 		public string Name { get; set; }
-		[Range(0, double.MaxValue)]
+		[Range(0.01, double.MaxValue)]
 		public decimal LaborPrice { get; set; }
-		[Range(0, double.MaxValue)]
+		[Range(0.01, double.MaxValue)]
 		public decimal? TotalPrice { get; set; }
 		public DateTime CreatedAt { get; set; }
 

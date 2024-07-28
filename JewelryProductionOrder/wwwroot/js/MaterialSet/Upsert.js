@@ -17,7 +17,7 @@ document.getElementById('cancelButton').onclick = () => {
     window.history.back();
 };
 
-// In miliseconds
+// In milliseconds
 const waitTime = 750;
 
 const redirect = (mId, jId, redirectId) => {
@@ -27,28 +27,14 @@ const redirect = (mId, jId, redirectId) => {
                 window.location.href = `/materialset/details?mId=${redirectId}&jId=${jId}`;
             }, waitTime);
         }
-    }
-    else {
+    } else {
         setTimeout(() => {
             window.location.href = `/materialset/details?mId=${mId}&jId=${jId}`;
         }, waitTime);
     }
 }
 
-
-document.getElementById('saveButton').onclick = () => {
-    // Get the jId and mId query parameters from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const mId = urlParams.get('mId') || 0; // Default to 0 if id is not present
-    const jId = urlParams.get('jId');
-    //const redirectRequest = urlParams.get('redirectRequest'); 
-
-    const data = {
-        mId: mId,
-        jId: jId
-    };
-
-    // Send POST request
+const sendPostRequest = (data, mId, jId) => {
     $.ajax({
         url: `/materialset/upsert`,
         type: 'POST',
@@ -61,13 +47,45 @@ document.getElementById('saveButton').onclick = () => {
             } else {
                 toastr.error(response.message);
             }
-
         },
         error: (response) => {
             toastr.error("An error occurred while saving the material set.");
         }
     });
+}
+
+document.getElementById('saveButton').onclick = () => {
+    // Get the jId and mId query parameters from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const mId = urlParams.get('mId'); 
+    const jId = urlParams.get('jId');
+    //const redirectRequest = urlParams.get('redirectRequest'); 
+
+    const data = {
+        mId: mId,
+        jId: jId
+    };
+
+    if (mId !== '0') {
+        // Show SweetAlert confirmation dialog
+        swal({
+            title: "Notes",
+            text: "Saving this set will set the status of any quotations using this set to 'Discontinued'. Do you want to continue?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willSave) => {
+            if (willSave) {
+                sendPostRequest(data, mId, jId);
+            } else {
+                toastr.info("Save operation was canceled.");
+            }
+        });
+    } else {
+        sendPostRequest(data, mId, jId);
+    }
 };
+
 document.addEventListener('DOMContentLoaded', () => {
     reloadPrice();
 });

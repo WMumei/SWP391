@@ -6,6 +6,9 @@
     const menuIcon2 = document.getElementById("menu-icon-2");
     let isOpen = false;
 
+    if (!menuIcon || !menu || !overlay || !menuHeader || !menuIcon2) {
+        return;
+    }
     menuIcon2.style.display = "none";
 
     function openMenu() {

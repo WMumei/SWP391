@@ -112,7 +112,7 @@ namespace JewelryProductionOrder.Controllers
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
 			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
 			ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-			ShoppingCartVM.ProductionRequest.Status = SD.StatusPending;
+			//ShoppingCartVM.ProductionRequest.Status = SD.StatusPending;
 			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
 
 			var salesStaffIds = await GetSalesStaffIdsAsync();
@@ -139,8 +139,8 @@ namespace JewelryProductionOrder.Controllers
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 						CreatedAt = DateTime.Now,
 						CustomerId = userId,
-						SalesStaffId = assignedStaffId
-
+						SalesStaffId = assignedStaffId,
+						Status = SD.StatusProcessing
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
 				}
