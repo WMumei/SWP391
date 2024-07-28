@@ -46,7 +46,7 @@ namespace JewelryProductionOrder.Controllers
                 var user = new User
                 {
                     Name = userVM.Name,
-                    UserName = userVM.UserName,
+                    UserName = userVM.Email,
                     Email = userVM.Email,
                     EmailConfirmed = true
                 };
@@ -65,14 +65,6 @@ namespace JewelryProductionOrder.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Debug.WriteLine(error.ErrorMessage);
-                }
-                // ...
             }
 
             var roles = await _roleManager.Roles.ToListAsync();
