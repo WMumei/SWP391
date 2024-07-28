@@ -103,6 +103,8 @@ namespace JewelryProductionOrder.Controllers
 				design.CustomerId = userId;
 				design.Status = SD.CustomerDisapproved;
 			}
+
+			_unitOfWork.JewelryDesign.Update(design);
 			_unitOfWork.Save();
 			TempData["Success"] = "Disapproved";
 
