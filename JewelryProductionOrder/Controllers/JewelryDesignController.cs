@@ -59,9 +59,9 @@ namespace JewelryProductionOrder.Controllers
 			return View(jewelries);
 		}
 
-		public IActionResult Details(int jId)
+		public IActionResult Details(int id)
 		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
+			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
 		}
 		[Authorize(Roles = SD.Role_Customer)]
