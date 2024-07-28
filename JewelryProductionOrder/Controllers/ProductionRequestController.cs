@@ -271,24 +271,31 @@ namespace SWP391.Controllers
 				{
 					//var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
 					var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
-
-					foreach (var quotation in quotations)
+					if (!quotations.Any())
 					{
-						var sessionLineItem = new SessionLineItemOptions
-						{
-							Quantity = 1,
-							PriceData = new SessionLineItemPriceDataOptions
-							{
-								UnitAmount = (long)(quotation.TotalPrice),
-								Currency = "USD",
-								ProductData = new SessionLineItemPriceDataProductDataOptions
-								{
-									Name = jewelry.Name
-								}
-							},
-						};
-						options.LineItems.Add(sessionLineItem);
+						return Json(new { success = false, message = "All quotations have not been approved" });
 					}
+					else
+					{
+                        foreach (var quotation in quotations)
+                        {
+                            var sessionLineItem = new SessionLineItemOptions
+                            {
+                                Quantity = 1,
+                                PriceData = new SessionLineItemPriceDataOptions
+                                {
+                                    UnitAmount = (long)(quotation.TotalPrice),
+                                    Currency = "USD",
+                                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                                    {
+                                        Name = jewelry.Name
+                                    }
+                                },
+                            };
+                            options.LineItems.Add(sessionLineItem);
+                        }
+                    }
+                    
 				}
 
 				var service = new SessionService();

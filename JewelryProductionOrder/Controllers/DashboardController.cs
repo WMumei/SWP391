@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using NuGet.Packaging;
 using System;
 using System.Collections;
+using System.Data;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -323,32 +325,46 @@ namespace JewelryProductionOrder.Controllers
 			};
 			return Json(result);
 		}
-		//[HttpGet]
-		//public IActionResult GetMaterial()
-		//{
-		//	List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
-		//	String[] label;
-		//	List<Material> typeMaterial;
-  //          int materialCount = materialSetMaterials.Count();
-		//	var materialId = materialSetMaterials
-		//		.Select(q => q.MaterialId)
-		//		.Distinct();
+		[HttpGet]
+		public IActionResult GetMaterial()
+		{
+			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+			
+			List<Material> typeMaterial;
+			int materialCount = materialSetMaterials.Count();
+			var materialTypes = materialSetMaterials
+				.Select(q => q.Material.Type)
+				.Distinct();
+            int typeCount = materialTypes.Count();
+            int[] soldData = new int[typeCount];
+            String[] label = materialTypes.ToArray();
+			for(int i=0;i < typeCount; i++)
+			{
+				soldData[i] =materialSetMaterials.Count(m=>m.Material.Type == label[i]);
+			}
+        
 
-		//	foreach (var id in materialId)
-		//	{
-		//		typeMaterial = _unitOfWork.Material.GetAll(m => m.Id == id).ToList();
+			var result = new
+			{
+				quantity = soldData,
+				labels = label
+			};
+			return Json(result);
+		}
+        [HttpGet]
+		public IActionResult GetRevenue()
+		{
+			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
+			
+			List<decimal?> decimalList = new List<decimal?>();
+            foreach (var q in requests)
+			{
+                decimalList.Add(q.TotalPrice.Value);
+				
+			}
+            var sum = decimalList.Sum();
 
-		//	}
-  //          var materialName = typeMaterial.Select(q => q.Type);
-  //          label = materialName.ToArray();
-
-  //          var result = new
-		//	{
-		//		quantity = soldData,
-		//		labels = label
-		//	};
-		//	return Json(result);
-		//}
-
-	}
+            return Json(sum);
+		}
+    }
 }

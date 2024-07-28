@@ -10,6 +10,7 @@
             <!-- <div asp-validation-summary="All"></div> -->
             <input asp-for="JewelryId" type="hidden" class="form-control" />
             <img src="@Model.DesignFile" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
+            
 
             <div>
                 <label asp-for="Name">Design name:</label>
@@ -22,6 +23,7 @@
             <div class="form-floating col-12">
                 <input type="file" name="file" class="form-control border-0 shadow" />
                 <label class="ms-2">Design File</label>
+                <span asp-validation-for="@Model.DesignFile" class="text-danger"></span>
             </div>
             <br />
             <div class="row">

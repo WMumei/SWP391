@@ -31,9 +31,18 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Design)]
 		public IActionResult Create(JewelryDesign obj, IFormFile? file, int? redirectRequest)
 		{
-			obj.CreatedAt = DateTime.Now;
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId, includeProperties: "Customer") ;
+            obj.CreatedAt = DateTime.Now;
+			obj.Jewelry = jewelry;
 			string wwwRootPath = _webHostEnvironment.WebRootPath;
-			if (file is not null)
+			if (file is null)
+			{
+				ModelState.AddModelError("DesignFile", "Design file is null.");
+				
+				
+			}
+			else
+			//if (file is not null)
 			{
 				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 				string filePath = Path.Combine(wwwRootPath, @"files");
@@ -42,16 +51,18 @@ namespace JewelryProductionOrder.Controllers
 					file.CopyTo(fileStream);
 				}
 				obj.DesignFile = Path.Combine("\\files", fileName);
-			}
-			obj.Status = SD.StatusPending;
-			//obj.JewelryId = obj.Jewelry.Id;
-			_unitOfWork.JewelryDesign.Add(obj);
-			_unitOfWork.Save();
-			if (redirectRequest is null)
-				return RedirectToAction("Index", "Jewelry");
-			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			//return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
-		}
+
+				obj.Status = SD.StatusPending;
+				//obj.JewelryId = obj.Jewelry.Id;
+				_unitOfWork.JewelryDesign.Add(obj);
+				_unitOfWork.Save();
+                if (redirectRequest is null)
+                    return RedirectToAction("Index", "Home");
+                return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+            }
+            return View(obj);
+            //return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
+        }
 
 		public IActionResult Index()
 		{
@@ -103,7 +114,8 @@ namespace JewelryProductionOrder.Controllers
 				design.CustomerId = userId;
 				design.Status = SD.CustomerDisapproved;
 			}
-			_unitOfWork.Save();
+            _unitOfWork.JewelryDesign.Update(design);
+            _unitOfWork.Save();
 			TempData["Success"] = "Disapproved";
 
 			if (redirectRequest is null)

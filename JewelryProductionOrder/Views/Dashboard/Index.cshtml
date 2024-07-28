@@ -438,7 +438,7 @@
                                 });
 
                             } else {
-                                //Trường hợp lớn hơn 30
+                                //Trường hợp lớn hơn 40
                                 Swal.fire({
                                     title: "Date Range is greater than 40!",
                                     text: "Please select Yearly type",
@@ -927,7 +927,7 @@
                                         label: function (tooltipItem) {
                                             const dataset = tooltipItem.dataset;
                                             const total = dataset.data.reduce((acc, currentValue) => acc + currentValue);
-                                            $("#totalGem").text(total);
+                                            $("#totalMaterial").text(total);
                                             const currentValue = dataset.data[tooltipItem.dataIndex];
 
                                             const percentage = Math.round((currentValue / total) * 100);
@@ -950,6 +950,18 @@
                     $('#output').text('An error occurred');
                 }
             });
+            // $.ajax({
+            //     url: '/Example/GetRevenue', // The URL of the controller action
+            //     type: 'POST',
+            //     data: { }, // Data to be sent to the controller
+            //     success: function (sum) {
+            //         // Handle the response from the controller
+            //         alert('Data received: ' + JSON.stringify(sum));
+            //     },
+            //     error: function () {
+            //         alert('An error occurred while making the request.');
+            //     }
+            // });
         });
 
         function getRandomColor() {
