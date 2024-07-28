@@ -14,7 +14,7 @@ namespace JewelryProductionOrder.Models.ViewModels
         public string Email { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
         public string Role { get; set; }
-        public SelectList RoleSelectList { get; set; }
+        public SelectList? RoleSelectList { get; set; }
     }
 
 }
