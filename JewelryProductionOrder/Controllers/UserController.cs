@@ -45,6 +45,7 @@ namespace JewelryProductionOrder.Controllers
             {
                 var user = new User
                 {
+                    Name = userVM.Name,
                     UserName = userVM.UserName,
                     Email = userVM.Email,
                     EmailConfirmed = true
