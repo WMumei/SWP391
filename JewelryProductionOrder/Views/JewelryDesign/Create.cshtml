@@ -15,6 +15,7 @@
             <div>
                 <label asp-for="Name">Design name:</label>
                 <input asp-for="Name" type="text" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
             </div>
 @*             <div class="form-floating col-12">
                 <input type="file" name="files" class="form-control border-0 shadow" />

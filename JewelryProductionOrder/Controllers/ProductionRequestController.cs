@@ -34,10 +34,10 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
-			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusRequestDelayedPayment);
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusPending);
 			if (request != null)
 			{
-				OrderConfirmation(request.Id);
+				Payment(request.Id);
 			}
             return View("Index", obj);
         }
@@ -270,15 +270,14 @@ namespace SWP391.Controllers
 				foreach (var jewelry in jewelries)
 				{
 					//var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
-					var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
-					if (!quotations.Any())
+					var quotation = _unitOfWork.QuotationRequest.Get(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved);
+					if (quotation is null)
 					{
-						return Json(new { success = false, message = "All quotations have not been approved" });
+						return Json(new { success = false, message = "Not found any quotation for this jewelry" });
 					}
 					else
 					{
-                        foreach (var quotation in quotations)
-                        {
+                        
                             var sessionLineItem = new SessionLineItemOptions
                             {
                                 Quantity = 1,
@@ -293,7 +292,7 @@ namespace SWP391.Controllers
                                 },
                             };
                             options.LineItems.Add(sessionLineItem);
-                        }
+                        
                     }
                     
 				}
@@ -302,7 +301,6 @@ namespace SWP391.Controllers
 				Session session = service.Create(options);
 				
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusRequestDelayedPayment);
 				_unitOfWork.Save();
 				Response.Headers.Add("Location", session.Url);
 				return new StatusCodeResult(303);
@@ -322,6 +320,7 @@ namespace SWP391.Controllers
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
 				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPaid, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPending, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using NuGet.Common;
 using NuGet.Packaging;
 using System;
 using System.Collections;
@@ -325,33 +326,41 @@ namespace JewelryProductionOrder.Controllers
 			};
 			return Json(result);
 		}
-		[HttpGet]
-		public IActionResult GetMaterial()
-		{
-			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
-			
-			List<Material> typeMaterial;
-			int materialCount = materialSetMaterials.Count();
-			var materialTypes = materialSetMaterials
-				.Select(q => q.Material.Type)
-				.Distinct();
-            int typeCount = materialTypes.Count();
-            int[] soldData = new int[typeCount];
-            String[] label = materialTypes.ToArray();
-			for(int i=0;i < typeCount; i++)
-			{
-				soldData[i] =materialSetMaterials.Count(m=>m.Material.Type == label[i]);
-			}
-        
+		//[HttpGet]
+		//public IActionResult GetMaterial()
+		//{
+		//	List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
 
-			var result = new
-			{
-				quantity = soldData,
-				labels = label
-			};
-			return Json(result);
-		}
-        [HttpGet]
+
+
+		//	var materialTypes = materialSetMaterials
+		//		.Select(q => q.Material.Type)
+		//		.Distinct();
+		//	int typeCount = materialTypes.Count();
+		//	decimal[] soldData = new decimal[typeCount];
+		//	//
+		//	String[] label = materialTypes.ToArray();
+		//	//
+		//	foreach (var materialset in materialSetMaterials)
+		//	{
+		//		var w = materialTypes.Select(q => q.Weight);
+
+		//	}
+		//	for (int i = 0; i < typeCount; i++)
+		//	{
+
+
+		//	}
+
+
+		//	var result = new
+		//	{
+		//		quantity = soldData,
+		//		labels = label
+		//	};
+		//	return Json(result);
+		//}
+		[HttpGet]
 		public IActionResult GetRevenue()
 		{
 			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
@@ -364,7 +373,7 @@ namespace JewelryProductionOrder.Controllers
 			}
             var sum = decimalList.Sum();
 
-            return Json(sum);
-		}
+            return Content(sum.ToString());
+        }
     }
 }

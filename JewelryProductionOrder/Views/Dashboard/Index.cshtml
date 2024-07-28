@@ -950,18 +950,18 @@
                     $('#output').text('An error occurred');
                 }
             });
-            // $.ajax({
-            //     url: '/Example/GetRevenue', // The URL of the controller action
-            //     type: 'POST',
-            //     data: { }, // Data to be sent to the controller
-            //     success: function (sum) {
-            //         // Handle the response from the controller
-            //         alert('Data received: ' + JSON.stringify(sum));
-            //     },
-            //     error: function () {
-            //         alert('An error occurred while making the request.');
-            //     }
-            // });
+            $.ajax({
+                url: '/Dashboard/GetRevenue', // The URL of the controller action
+                type: 'GET',
+                data: { }, // Data to be sent to the controller
+                success: function (sum) {
+                    // Handle the response from the controller
+                    $("#totalRevenue").text(sum);
+                },
+                error: function () {
+                    alert('An error occurred while making the request.');
+                }
+            });
         });
 
         function getRandomColor() {
