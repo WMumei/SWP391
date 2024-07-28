@@ -94,7 +94,7 @@
 							else if (obj.Status == SD.StatusAllQuotationApproved)
 							{
 
-								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-success btn-sm">View</a></td>
+								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
 							}
 							else
 							{
@@ -103,7 +103,17 @@
 					}
 					else
 					{
-						<td></td>
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
+							|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing ||
+							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
+							{
+
+								<td>Paid</td>
+							}else
+							{
+								<td></td>
+							}
+							
 					}
                 
 					 
@@ -169,7 +179,7 @@
 						{
 							<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
 						}
-						else if (!User.IsInRole(SD.Role_Customer))
+						else 
 						{
 							<td></td>
 						}
