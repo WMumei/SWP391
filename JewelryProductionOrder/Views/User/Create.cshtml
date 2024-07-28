@@ -27,7 +27,7 @@
 
             <div class="form-floating py-2 col-12">
                 <select asp-for="Role" asp-items="@Model.RoleSelectList" class="form-select"></select>
-                <label asp-for="Email">Select the role for this employee</label>
+                <label asp-for="Role">Select the role for this employee</label>
             </div>
             <br />
             <div class="row">
@@ -48,4 +48,5 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/addAccountValidation.js"></script>
 }

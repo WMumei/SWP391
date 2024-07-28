@@ -58,7 +58,7 @@ namespace JewelryProductionOrder.Controllers
                     {
                         await _userManager.AddToRoleAsync(user, userVM.Role);
                     }
-
+                    TempData["success"] = "Account created";
                     return RedirectToAction("Index");
                 }
                 foreach (var error in result.Errors)
@@ -66,7 +66,7 @@ namespace JewelryProductionOrder.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            TempData["error"] = "An account with this email has already existed";
             var roles = await _roleManager.Roles.ToListAsync();
             userVM.RoleSelectList = new SelectList(roles, "Name", "Name");
             return View(userVM);
