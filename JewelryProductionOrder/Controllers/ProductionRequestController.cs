@@ -35,11 +35,18 @@ namespace SWP391.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
 			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusAllQuotationApproved);
-            var service = new SessionService();
-            Session session = service.Get(request.SessionId);
-            if (session.PaymentStatus.ToLower() == "paid")
+			if (request is not null)
 			{
-				OrderConfirmation(request.Id);
+				var service = new SessionService();
+                if (request.SessionId is null)
+                {
+                    return View("Index", obj);
+                }
+                Session session = service.Get(request.SessionId);
+				if (session.PaymentStatus.ToLower() == "paid")
+				{
+					OrderConfirmation(request.Id);
+				}
 			}
             return View("Index", obj);
         }
