@@ -31,12 +31,12 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Design)]
 		public IActionResult Create(JewelryDesign obj, IFormFile? file, int? redirectRequest)
 		{
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			obj.DesignStaffId = userId;
-            Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId, includeProperties: "Customer") ;
-            obj.CreatedAt = DateTime.Now;
-			obj.Jewelry = jewelry;
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId);
+			obj.CreatedAt = DateTime.Now;
+			
 			string wwwRootPath = _webHostEnvironment.WebRootPath;
 			if (file is null)
 			{
@@ -65,8 +65,8 @@ namespace JewelryProductionOrder.Controllers
                     obj.DesignFile = Path.Combine("\\files", fileName);
 
                     obj.Status = SD.StatusPending;
-
-                    _unitOfWork.JewelryDesign.Add(obj);
+					obj.CustomerId = jewelry.CustomerId;
+					_unitOfWork.JewelryDesign.Add(obj);
                     _unitOfWork.Save();
                     DateTime vmCreatedAt = (DateTime)obj.CreatedAt;
                     var oldDesigns = _unitOfWork.JewelryDesign
@@ -94,9 +94,9 @@ namespace JewelryProductionOrder.Controllers
 			return View(jewelries);
 		}
 
-		public IActionResult Details(int jId)
+		public IActionResult Details(int id)
 		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
+			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
 		}
 		[Authorize(Roles = SD.Role_Customer)]

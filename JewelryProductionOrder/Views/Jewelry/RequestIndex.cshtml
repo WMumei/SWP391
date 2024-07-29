@@ -146,8 +146,15 @@
 			}
 		</tbody>
 	</table>
-
-	<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-primary " >Back</a>
+	@if (User.IsInRole(SD.Role_Customer))
+	{
+		<a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-primary ">Back</a>
+	}
+	else
+	{
+		<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-primary ">Back</a>
+	}
+	
 
 </div>
 <!-- <div asp-validation-summary="All"></div> -->

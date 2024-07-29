@@ -260,7 +260,8 @@ namespace SWP391.Controllers
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))
 			{
-				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved).ToList();
+				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved  || 
+				r.Status == SD.StatusPaid).ToList();
 			}
 			/*else if(User.IsInRole(SD.Role_Sales))
 			{

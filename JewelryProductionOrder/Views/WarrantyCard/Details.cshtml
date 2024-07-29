@@ -27,12 +27,23 @@
 			@if (User.IsInRole(SD.Role_Customer))
 			{
 				<div>
-					To ensure your jewelry remains in the best possible condition, please follow these care instructions:
-
-					Remove jewelry before swimming, showering, or engaging in physical activities.
-					Store jewelry in a clean, dry place, preferably in a jewelry box or pouch.
-					Avoid exposing jewelry to harsh chemicals, perfumes, and lotions.
-					Clean jewelry with a soft cloth and mild soap solution; avoid using abrasive materials.
+                    <h3>Warranty Details</h3>
+                    <strong>Warranty Period:</strong> 1-2 year from the date of purchase
+                    <br/>
+                    <strong>Coverage:</strong> This warranty covers manufacturing defects in materials and workmanship. It does not cover damage due to misuse, accidental damage, or normal wear and tear.
+                    <br />
+                    <strong>Terms and Conditions</strong>
+                    The warranty is valid only with the original purchase receipt.
+                    The jewelry must be inspected by an authorized jeweler to confirm the defect.
+                    Repairs or modifications made by unauthorized persons void this warranty.
+                    The warranty does not cover loss or theft of the jewelry.
+                    The customer is responsible for shipping and handling charges for warranty service.
+                    <br />
+                    <strong>Maintenance Tips</strong>
+                    Remove jewelry before swimming, showering, or engaging in physical activities.
+                    Store jewelry in a clean, dry place, preferably in a jewelry box or pouch.
+                    Avoid exposing jewelry to harsh chemicals, perfumes, and lotions.
+                    Clean jewelry with a soft cloth and mild soap solution; avoid using abrasive materials.
 				</div>
 			}
 			else if (User.IsInRole(SD.Role_Sales))

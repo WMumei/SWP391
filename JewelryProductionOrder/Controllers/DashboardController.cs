@@ -326,40 +326,35 @@ namespace JewelryProductionOrder.Controllers
 			};
 			return Json(result);
 		}
-		//[HttpGet]
-		//public IActionResult GetMaterial()
-		//{
-		//	List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+		[HttpGet]
+		public IActionResult GetMaterial()
+		{
+			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+			var materialTypes = materialSetMaterials
+				.Select(q => q.Material.Type)
+				.Distinct();
+			int typeCount = materialTypes.Count();
+			decimal[] soldData = new decimal[typeCount];
+			//
+			String[] label = materialTypes.ToArray();
+			//
+			for(int i =0;i<typeCount;i++)
+			{
+                string type = label[i];
+                decimal totalWeight = materialSetMaterials
+                    .Where(q => q.Material.Type == type)
+                    .Sum(q => q.Weight);
 
-
-
-		//	var materialTypes = materialSetMaterials
-		//		.Select(q => q.Material.Type)
-		//		.Distinct();
-		//	int typeCount = materialTypes.Count();
-		//	decimal[] soldData = new decimal[typeCount];
-		//	//
-		//	String[] label = materialTypes.ToArray();
-		//	//
-		//	foreach (var materialset in materialSetMaterials)
-		//	{
-		//		var w = materialTypes.Select(q => q.Weight);
-
-		//	}
-		//	for (int i = 0; i < typeCount; i++)
-		//	{
-
-
-		//	}
-
-
-		//	var result = new
-		//	{
-		//		quantity = soldData,
-		//		labels = label
-		//	};
-		//	return Json(result);
-		//}
+                soldData[i] = totalWeight;
+            }
+			
+			var result = new
+			{
+				quantity = soldData,
+				labels = label
+			};
+			return Json(result);
+		}
 		[HttpGet]
 		public IActionResult GetRevenue()
 		{
@@ -374,6 +369,26 @@ namespace JewelryProductionOrder.Controllers
             var sum = decimalList.Sum();
 
             return Content(sum.ToString());
+        }
+        [HttpGet]
+        public IActionResult GetOrder()
+        {
+            List<ProductionRequest> requestsComplete = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusRequestDone).ToList();
+            List<ProductionRequest> requestsCancel = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusCancelled).ToList();
+
+            
+			
+            
+			var	sum1 = requestsComplete.Count();
+              var  sum2 = requestsCancel.Count();
+            var result = new
+            {
+                sum1 = sum1,
+                sum2 = sum2
+            };
+
+
+            return Json(result);
         }
     }
 }

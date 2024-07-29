@@ -34,10 +34,19 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
-			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusPending);
-			if (request != null)
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusAllQuotationApproved);
+			if (request is not null)
 			{
-				Payment(request.Id);
+				var service = new SessionService();
+                if (request.SessionId is null)
+                {
+                    return View("Index", obj);
+                }
+                Session session = service.Get(request.SessionId);
+				if (session.PaymentStatus.ToLower() == "paid")
+				{
+					OrderConfirmation(request.Id);
+				}
 			}
             return View("Index", obj);
         }
@@ -251,21 +260,20 @@ namespace SWP391.Controllers
 			var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 			
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId);
-			if (productionRequest.PaymentIntentId is null)
-			{
-				var options = new SessionCreateOptions
-				{
-					SuccessUrl = domain,
-					CancelUrl = domain + "ProductionRequest/CustomerView",
-					LineItems = new List<SessionLineItemOptions>(),
-					Mode = "payment",
-				};
-				var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
 
-				if (!jewelries.Any())
-				{
-					return BadRequest("No jewelries found for the given production request.");
-				}
+			var options = new SessionCreateOptions
+			{
+				SuccessUrl = domain,
+				CancelUrl = domain + "ProductionRequest/CustomerView",
+				LineItems = new List<SessionLineItemOptions>(),
+				Mode = "payment",
+			};
+			var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+
+			if (!jewelries.Any())
+			{
+				return BadRequest("No jewelries found for the given production request.");
+			}
 
 				foreach (var jewelry in jewelries)
 				{
@@ -297,16 +305,12 @@ namespace SWP391.Controllers
                     
 				}
 
-				var service = new SessionService();
-				Session session = service.Create(options);
-				
-				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-				_unitOfWork.Save();
-				Response.Headers.Add("Location", session.Url);
-				return new StatusCodeResult(303);
-			}
-
-			return RedirectToAction(nameof(OrderConfirmation), new {id = pId });
+			var service = new SessionService();
+			Session session = service.Create(options);
+			_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+			_unitOfWork.Save();
+			Response.Headers.Add("Location", session.Url);
+			return new StatusCodeResult(303);
 
 			}
 		
@@ -319,8 +323,7 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPaid, SD.StatusPaid);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPending, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusAllQuotationApproved, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");

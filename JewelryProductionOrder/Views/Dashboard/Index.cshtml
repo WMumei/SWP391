@@ -18,7 +18,32 @@
         </header>
         <main>
             <div class="dashboard-box">
-   
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-white bg-primary">
+                            <div class="card-header">Revenue Total</div>
+                            <div class="card-body">
+                                <p class="card-text">$<span id="totalRevenue"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-success">
+                            <div class="card-header">Orders Completed</div>
+                            <div class="card-body">
+                                <p class="card-text"><span id="orderComplete"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-danger">
+                            <div class="card-header">Orders Canceled</div>
+                            <div class="card-body">
+                                <p class="card-text"><span id="orderCancel"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <section class="stats">
 
                     <br />
@@ -174,40 +199,15 @@
 
                     </div>
                     <div class="card1">
-                        <h2>Material</h2>
+                        <h2>Material's Weight Consumed</h2>
                         <div id="total">
-                            <label>Total: <span id="totalMaterial"></span>  materials</label>
+                            <label>Total: <span id="totalMaterial"></span>  gram</label>
                         </div>
                         <canvas id="materialChart"></canvas>
                     </div>
                 </section>
                 <!-------------------------------------------------------------------------------------------------->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card text-white bg-primary">
-                            <div class="card-header">Revenue Total</div>
-                            <div class="card-body">
-                                <p class="card-text">$<span id="totalRevenue"></span></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-white bg-success">
-                            <div class="card-header">Orders Completed</div>
-                            <div class="card-body">
-                                <p class="card-text">123</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-white bg-danger">
-                            <div class="card-header">Orders Canceled</div>
-                            <div class="card-body">
-                                <p class="card-text">45</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 
             </div>
             
@@ -957,6 +957,19 @@
                 success: function (sum) {
                     // Handle the response from the controller
                     $("#totalRevenue").text(sum);
+                },
+                error: function () {
+                    alert('An error occurred while making the request.');
+                }
+            });
+            $.ajax({
+                url: '/Dashboard/GetOrder', // The URL of the controller action
+                type: 'GET',
+                data: {}, // Data to be sent to the controller
+                success: function (result) {
+                    // Handle the response from the controller
+                    $("#orderComplete").text(result.sum1);
+                    $("#orderCancel").text(result.sum2);
                 },
                 error: function () {
                     alert('An error occurred while making the request.');

@@ -33,7 +33,7 @@
 
     @if (User.IsInRole(SD.Role_Customer) && Model.Status != SD.CustomerApproved )
     {
-        if (Model.Status != SD.CustomerDisapproved)
+        if (Model.Status != SD.CustomerDisapproved && Model.Status != SD.StatusDiscontinued)
         {
             <div class="col text-center">
                 <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm col-4 my-2" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
