@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class DB : Migration
+    public partial class databaseOfCRUDGemstoneAfterMergingWithMaterialSet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,7 +79,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Purity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Purity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -654,10 +654,10 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "Image", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, null, null, "\\Images\\Ring.webp", "Bezel Solitarie Engagement Ring", "Company" },
-                    { 2, null, null, "\\Images\\Pendant.jpg", "Diamond Reiki Symbol Pendant", "Company" },
-                    { 3, null, null, "\\Images\\Necklace.webp", "Smile Necklace", "Company" },
-                    { 4, null, null, "\\Images\\Band.webp", "Swirl Diamond Wedding Band", "Company" },
+                    { 1, null, "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Ring.webp", "Bezel Solitarie Engagement Ring", "Company" },
+                    { 2, null, "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Pendant.jpg", "Diamond Reiki Symbol Pendant", "Company" },
+                    { 3, null, "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Necklace.webp", "Smile Necklace", "Company" },
+                    { 4, null, "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Band.webp", "Swirl Diamond Wedding Band", "Company" },
                     { 5, null, "The perfect blend of classic and modern, this custom ring has a major wow factor: a 1.5ct oval pink diamond, surrounded by a classic halo of ideally cut Hearts and Arrows diamonds. Set in rose gold, this ring is feminine and romantic.", "\\Images\\7979-image-1612583658_1440x.jpg", "Pink Oval Diamond Halo Engagement Ring", "Company" },
                     { 6, null, "Our client wanted a symbolic heart necklace for his wife. We added two big diamonds, for the two of them, and seven accent diamonds to represent everyone in their family.", "\\Images\\87a248f457f2f0977135becb26dc43ce-img-1.webp", "Family Heart Pendant", "Company" },
                     { 7, null, "This custom engagement ring features a bi-colored blue and purple sapphire, and color enhanced purple diamonds, set into a five petal lotus design with black rhodium detailing. The shank is two intertwining stems, terminating in delicate leaves.", "\\Images\\0e225f328c462698e949123a76f73fd3-img-1_97a7a112-f7bf-4449-bfb5-4e1329e805dc.webp", "Lotus Purple Diamond & Sapphire Ring", "Company" },
@@ -744,7 +744,22 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     { 47, 1.6m, "VS2", "Blue", "Emerald", null, "Zircon", 700m, "Available" },
                     { 48, 1.7m, "VS1", "Purple", "Cushion", null, "Ametrine", 1000m, "Available" },
                     { 49, 1.8m, "VS2", "Blue", "Heart", null, "Benitoite", 3000m, "Available" },
-                    { 50, 1.2m, "VS1", "Blue", "Oval", null, "Chalcedony", 450m, "Available" }
+                    { 50, 1.2m, "VS1", "Blue", "Oval", null, "Chalcedony", 450m, "Available" },
+                    { 51, 2.5m, "VS1", "White", "Round", null, "Diamond", 2100m, "Available" },
+                    { 52, 3.2m, "VVS1", "White", "Oval", null, "Diamond", 2200m, "Available" },
+                    { 53, 2.8m, "VS2", "White", "Princess", null, "Diamond", 2300m, "Available" },
+                    { 54, 3.5m, "VS1", "White", "Emerald", null, "Diamond", 2400m, "Available" },
+                    { 55, 4m, "VVS2", "White", "Marquise", null, "Diamond", 2500m, "Available" },
+                    { 56, 3.1m, "VS1", "White", "Cushion", null, "Diamond", 2600m, "Available" },
+                    { 57, 2.9m, "VS2", "White", "Heart", null, "Diamond", 2700m, "Available" },
+                    { 58, 3.3m, "VS1", "White", "Oval", null, "Diamond", 2800m, "Available" },
+                    { 59, 3.7m, "VVS1", "White", "Round", null, "Diamond", 2900m, "Available" },
+                    { 60, 4.2m, "VS2", "White", "Princess", null, "Diamond", 3000m, "Available" },
+                    { 61, 3.4m, "VS1", "White", "Emerald", null, "Diamond", 3100m, "Available" },
+                    { 62, 3.6m, "VVS2", "White", "Marquise", null, "Diamond", 3200m, "Available" },
+                    { 63, 3.8m, "VS1", "White", "Cushion", null, "Diamond", 3300m, "Available" },
+                    { 64, 4.1m, "VS2", "White", "Heart", null, "Diamond", 3400m, "Available" },
+                    { 65, 4.3m, "VS1", "White", "Oval", null, "Diamond", 3500m, "Available" }
                 });
 
             migrationBuilder.InsertData(
@@ -752,21 +767,21 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 columns: new[] { "Id", "Color", "Price", "Purity", "Type" },
                 values: new object[,]
                 {
-                    { 1, "White", 100m, "14K", "Gold" },
-                    { 2, "Rose", 50m, "10K", "Gold" },
-                    { 3, "Yellow", 80m, "18K", "Gold" },
-                    { 4, "Green", 90m, "14K", "Gold" },
-                    { 5, "Silver", 60m, "925", "Silver" },
-                    { 6, "Silver", 70m, "999", "Silver" },
-                    { 7, "White", 120m, "950", "Platinum" },
-                    { 8, "Red", 30m, "99.9%", "Copper" },
-                    { 9, "Golden", 40m, "60%", "Brass" },
-                    { 10, "Grey", 50m, "99.9%", "Titanium" },
-                    { 11, "Silver", 45m, "304", "Steel" },
-                    { 12, "Grey", 20m, "99.9%", "Zinc" },
-                    { 13, "White", 150m, "99.9%", "Rhodium" },
-                    { 14, "White", 100m, "95%", "Palladium" },
-                    { 15, "Grey", 180m, "99.9%", "Iridium" }
+                    { 1, "White", 100m, 58.5m, "Gold" },
+                    { 2, "Rose", 50m, 41.7m, "Gold" },
+                    { 3, "Yellow", 80m, 75.0m, "Gold" },
+                    { 4, "Green", 90m, 58.5m, "Gold" },
+                    { 5, "Silver", 60m, 92.5m, "Silver" },
+                    { 6, "Silver", 70m, 99.9m, "Silver" },
+                    { 7, "White", 120m, 95.0m, "Platinum" },
+                    { 8, "Red", 30m, 99.9m, "Copper" },
+                    { 9, "Golden", 40m, 60.0m, "Brass" },
+                    { 10, "Grey", 50m, 99.9m, "Titanium" },
+                    { 11, "Silver", 45m, 30.0m, "Steel" },
+                    { 12, "Grey", 20m, 69.0m, "Zinc" },
+                    { 13, "White", 150m, 42.0m, "Rhodium" },
+                    { 14, "White", 100m, 0.95m, "Palladium" },
+                    { 15, "Grey", 180m, 0.01m, "Iridium" }
                 });
 
             migrationBuilder.CreateIndex(

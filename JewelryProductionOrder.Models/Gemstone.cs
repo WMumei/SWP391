@@ -18,6 +18,6 @@ namespace JewelryProductionOrder.Models
 			public string Cut { get; set; }
 			public string Status { get; set; }
 			public int? MaterialSetId { get; set; }
-			public MaterialSet MaterialSet { get; set; } = null!;
+			public MaterialSet? MaterialSet { get; set; } = null!;
     }
 	}
