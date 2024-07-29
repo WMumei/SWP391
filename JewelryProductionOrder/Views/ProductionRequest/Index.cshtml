@@ -87,12 +87,12 @@
 					}
 				@if (User.IsInRole(SD.Role_Customer))
 					{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignedApproved || obj.Status == SD.StatusDesigning
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
 							 || obj.Status == SD.StatusAllManufactured  ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 						{
 							
-								<td>Paid!</td>
+								<td>Paid</td>
 							}
 							else if (obj.Status == SD.StatusAllQuotationApproved)
 							{
@@ -106,7 +106,7 @@
 					}
 					else
 					{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignedApproved || obj.Status == SD.StatusDesigning
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
 							 || obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 							{

@@ -1,0 +1,92 @@
+﻿@model MaterialSetVM
+
+<div class="container" id="materialView">
+	<div class="caption-top d-flex justify-content-between align-items-center my-4">
+		<h2 class="d-inline-block mb-0">Material Set for Jewelry: @Model?.Jewelry.Name</h2>
+		<div class=" d-flex justify-content-end gap-2">
+			<a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.Jewelry.ProductionRequestId">Back</a>
+			@if (User.IsInRole(SD.Role_Sales))
+			{
+				<a class="btn btn-primary" asp-controller="MaterialSet" asp-action="Upsert" asp-route-reqId="@Model.Jewelry.ProductionRequestId" asp-route-mId="@Model?.MaterialSet.Id" asp-route-jId="@Model?.Jewelry.Id">Edit</a>
+			}
+		</div>
+	</div>
+	<hr />
+	@if (Model.MaterialSet is not null)
+	{
+		<div class="col-12 py-2">
+			<h3 class=" fw-normal">Gemstones</h3>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Carat</th>
+						<th>Color</th>
+						<th>Clarity</th>
+						<th>Cut</th>
+						<th>Price ($)</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
+					{
+						<tr>
+							<td>@gemstone.Name</td>
+							<td>@gemstone.Carat</td>
+							<td>@gemstone.Color</td>
+							<td>@gemstone.Clarity</td>
+							<td>@gemstone.Cut</td>
+							<td>@gemstone.Price</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" id="">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
+
+		</div>
+		<div class="col-12 py-2">
+			<h3 class=" fw-normal">Materials</h3>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Color</th>
+						<th>Purity</th>
+						<th>Unit Price ($)</th>
+						<th>Weight (g)</th>
+						<th>Total Price ($)</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
+					{
+						var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
+						<tr>
+							<td>@material?.Type</td>
+							<td>@material?.Color</td>
+							<td>@material?.Purity</td>
+							<td>@material?.Price</td>
+							<td>@join.Weight</td>
+							<td>@((join.Weight * material?.Price)?.ToString("F2"))</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" style="" id="">Material Total: $<span id="materialTotal">0</span></div>
+
+		</div>
+		<hr></hr>
+		<h3 class=" fw-normal">Set Total Price: $<span class="" id="totalPrice"></span></h3>
+
+
+	}
+	else
+	{
+		<p>No materials or gemstones have been added to this set.</p>
+	}
+</div>
+
+@section Scripts {
+	<script src="~/js/MaterialSet/GetCurrentPrice.js"></script>
+
+}

@@ -11,10 +11,11 @@ const loadMaterial = () => {
         "ajax": { url: '/materialset/getmaterials' },
         "columns": [
             { data: 'type', "width": "20%" },
-            { data: 'purity', "width": "20%" }, 
             { data: 'color', "width": "20%" }, 
+            { data: 'purity', "width": "20%" }, 
             { data: 'price', "width": "20%" }, 
             {
+                
                 data: 'id',
                 "render": (data) => {
                     return `<div role="group">
@@ -32,8 +33,8 @@ const loadCurrentMaterial = () => {
         "ajax": { url: '/materialset/GetSessionMaterials' },
         "columns": [
             { data: 'material.type', "width": "15%" },
-            { data: 'material.purity', "width": "15%" }, 
             { data: 'material.color', "width": "15%" }, 
+            { data: 'material.purity', "width": "15%" }, 
             { data: 'material.price', "width": "15%" }, 
             {
                 data: null,

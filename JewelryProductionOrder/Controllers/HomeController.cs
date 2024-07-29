@@ -57,27 +57,34 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult Details(ShoppingCart shoppingCart)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			shoppingCart.UserId = userId;
-
-			ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.UserId == userId &&
-			u.BaseDesignId == shoppingCart.BaseDesignId);
-
-			if (cartFromDb != null)
+			if (shoppingCart.Quantity >= 1)
 			{
-				//shopping cart exists
-				cartFromDb.Quantity += shoppingCart.Quantity;
-				_unitOfWork.ShoppingCart.Update(cartFromDb);
-				_unitOfWork.Save();
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				shoppingCart.UserId = userId;
+
+				ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.UserId == userId &&
+				u.BaseDesignId == shoppingCart.BaseDesignId);
+
+				if (cartFromDb != null)
+				{
+					//shopping cart exists
+					cartFromDb.Quantity += shoppingCart.Quantity;
+					_unitOfWork.ShoppingCart.Update(cartFromDb);
+					_unitOfWork.Save();
+				}
+				else
+				{
+					//add cart record
+					_unitOfWork.ShoppingCart.Add(shoppingCart);
+					_unitOfWork.Save();
+				}
+				TempData["success"] = "Cart updated successfully";
 			}
 			else
 			{
-				//add cart record
-				_unitOfWork.ShoppingCart.Add(shoppingCart);
-				_unitOfWork.Save();
+				TempData["error"] = "Please enter a valid quantity";
 			}
-			TempData["success"] = "Cart updated successfully";
 
 			return RedirectToAction(nameof(Index));
 		}
