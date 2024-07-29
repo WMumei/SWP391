@@ -172,7 +172,7 @@ namespace SWP391.Controllers
 		}
         public IActionResult CancelRequest(int id)
         {
-            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id,tracked:true);
             if (req is not null)
             {
                 req.Status = SD.StatusCancelled;
@@ -185,18 +185,35 @@ namespace SWP391.Controllers
                 foreach (Jewelry jewelry in jewelries)
                 {
                     jewelry.Status = SD.StatusCancelled;
-                    QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+					_unitOfWork.Jewelry.Update(jewelry);
+					_unitOfWork.Save();
+					MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
+					if (materialSet != null) 
+					{
+						List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
+						foreach(var gem in gemstones)
+						{
+							gem.Status = SD.StatusAvailable;
+							_unitOfWork.Gemstone.Update(gem);
+							_unitOfWork.Save();
+						}
+					}
+					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
                     if (QuoReq != null)
                     {
                         QuoReq.Status = SD.StatusCancelled;
-                    }
+						_unitOfWork.QuotationRequest.Update(QuoReq);
+						_unitOfWork.Save();
+					}
                     List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
                     if (jewelryDesigns.Count > 0)
                     {
                         foreach (JewelryDesign JewelryDesign in jewelryDesigns)
                         {
                             JewelryDesign.Status = SD.StatusCancelled;
-                        }
+							_unitOfWork.JewelryDesign.Update(JewelryDesign);
+							_unitOfWork.Save();
+						}
                     }
                 }
             }

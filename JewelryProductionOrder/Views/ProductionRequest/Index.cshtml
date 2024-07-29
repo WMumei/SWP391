@@ -179,7 +179,13 @@
 						{
 							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone)
 							{
-								<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
+								@* <td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td> *@
+								<td>
+									<form asp-action="CancelRequest" asp-route-id="@obj.Id" method="post" onsubmit="return confirmCancel()">
+										<input type="hidden" name="reqId" value="@obj.Id" />
+										<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+									</form>
+								</td>
 							}
 							}
 							
@@ -195,4 +201,9 @@
 		</tbody>
 	</table>
 </div>
+<script>
+	function confirmCancel() {
+		return confirm('Are you sure you want to cancel this request?');
+	}
+</script>
 <!-- <div asp-validation-summary="All"></div> -->
