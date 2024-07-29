@@ -37,10 +37,11 @@
     </div>
 </div>
 <br />
-@if (User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Customer))
+
+@if (User.Identity.IsAuthenticated && (User.IsInRole(SD.Role_Customer) || User.IsInRole(SD.Role_Sales)))
 {
     <div>
-        <h3>Leave a Comment</h3>
+        <h3>Comments</h3>
         <form asp-action="AddComment" method="post">
             <input type="hidden" name="PostId" value="@Model.Id" />
             <div class="form-group">
@@ -55,8 +56,7 @@
 <br />
 
 <div>
-    <h3>Comments</h3>
-    @foreach (var comment in Model.Comments)
+    @foreach (var comment in Model.Comments.Where(c => !c.Content.StartsWith("Reply to")))
     {
         <div class="comment">
             <p><strong>@comment.Owner.Name</strong> @comment.CreatedAt.ToString("g")</p>
@@ -73,6 +73,44 @@
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
             }
+
+            @if (User.Identity.IsAuthenticated && (User.IsInRole(SD.Role_Customer) || User.IsInRole(SD.Role_Sales)))
+            {
+                <button class="btn btn-secondary btn-sm" onclick="toggleReplyForm(@comment.Id)">Reply</button>
+                <div id="replyForm-@comment.Id" style="display:none;">
+                    <form asp-action="AddReply" method="post">
+                        <input type="hidden" name="PostId" value="@Model.Id" />
+                        <input type="hidden" name="CommentId" value="@comment.Id" />
+                        <div class="form-group">
+                            <textarea name="Content" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                    </form>
+                </div>
+            }
+
+            @foreach (var reply in comment.Replies)
+            {
+                
+                <div class="reply" style="margin-left: 30px;">
+
+                    <hr />
+                    <p><strong>@reply.Owner.Name</strong> @reply.CreatedAt.ToString("g")</p>
+                    @Html.Raw(reply.Content.Replace("\n", "<br />").Replace("\r", ""))
+
+                    <br />
+                    <br />
+
+                    @if (User.Identity.IsAuthenticated && reply.Owner.Email == User.Identity.Name)
+                    {
+                        <form asp-action="DeleteComment" method="post" style="display:inline;">
+                            <input type="hidden" name="CommentId" value="@reply.Id" />
+                            <input type="hidden" name="PostId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    }
+                </div>
+            }
         </div>
         <hr />
     }
@@ -83,4 +121,21 @@
 <div>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function toggleReplyForm(commentId)
+        {
+            var replyForm = document.getElementById("replyForm-" + commentId);
+            if (replyForm.style.display === "none")
+            {
+                replyForm.style.display = "block";
+            }
+            else
+            {
+                replyForm.style.display = "none";
+            }
+        }
+    </script>
+}
 

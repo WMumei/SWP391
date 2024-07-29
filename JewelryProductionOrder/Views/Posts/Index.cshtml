@@ -26,7 +26,16 @@
                     }
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
-                        <p class="card-text">@item.Description</p>
+                        <p class="card-text">
+                            @{
+                                var description = item.Description;
+                                if (description.Length > 100)
+                                {
+                                    description = description.Substring(0, 100) + "...";
+                                }
+                                @description
+                            }
+                        </p>
                         @if (User.IsInRole(SD.Role_Sales))
                         {
                             <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
@@ -48,6 +57,13 @@
 </div>
 
 <style>
+    .card-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .card-footer {
         font-size: 15px;
         padding: 5px;
