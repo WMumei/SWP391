@@ -1,13 +1,16 @@
 ﻿@model WarrantyCard
 <head>
     <link rel="stylesheet" href="~/css/CreateWarrantyCard.css" />
+   
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
+<body>
 <form asp-action="Edit">
     <div>
         <div>
             <input asp-for="Jewelry.Id" hidden />
-            @*<input asp-for="@Model.CustomerId" hidden />*@
-            <!--<input asp-for="Jewelry.CustomerId" hidden/>-->
+            
             <h1>Edit Warranty Card for Jewelry: @Model.Jewelry.Name</h1>
             <hr />
         </div>
@@ -40,6 +43,8 @@
         </div>
 
 
-        <button asp-asp-controller="WarrantyCard" asp-action="Edit"> Save </button> <button asp-controller="WarrantyCard" asp-action="Index">Cancel</button>
+            <button asp-asp-controller="WarrantyCard" asp-action="Edit" class="btn btn-primary"> Save </button> <button asp-controller="Jewelry" asp-action="RequestIndex" class="btn btn-primary" asp-route-reqId="@Model.Jewelry.ProductionRequestId">Cancel</button>
 
 </form>
+
+</body>

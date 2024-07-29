@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace JewelryProductionOrder.Models
 {
@@ -14,7 +15,9 @@ namespace JewelryProductionOrder.Models
 		public string Color { get; set; }
 		[Range(0.01, double.MaxValue)]
 		public decimal Price { get; set; }
+		[JsonIgnore]
 		public List<MaterialSet> MaterialSets { get; } = [];
+		[JsonIgnore]
 		public List<MaterialSetMaterial> MaterialSetMaterials { get; } = [];
 	}
 }

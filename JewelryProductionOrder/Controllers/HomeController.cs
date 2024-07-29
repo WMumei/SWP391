@@ -1,4 +1,5 @@
 using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -41,7 +42,6 @@ namespace JewelryProductionOrder.Controllers
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
 
-
 		public IActionResult Details(int baseDesignId)
 		{
 			ShoppingCart cart = new ShoppingCart()
@@ -54,30 +54,38 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
-		[Authorize]
+		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult Details(ShoppingCart shoppingCart)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			shoppingCart.UserId = userId;
-
-			ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.UserId == userId &&
-			u.BaseDesignId == shoppingCart.BaseDesignId);
-
-			if (cartFromDb != null)
+			if (shoppingCart.Quantity >= 1)
 			{
-				//shopping cart exists
-				cartFromDb.Quantity += shoppingCart.Quantity;
-				_unitOfWork.ShoppingCart.Update(cartFromDb);
-				_unitOfWork.Save();
+				var claimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				shoppingCart.UserId = userId;
+
+				ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.UserId == userId &&
+				u.BaseDesignId == shoppingCart.BaseDesignId);
+
+				if (cartFromDb != null)
+				{
+					//shopping cart exists
+					cartFromDb.Quantity += shoppingCart.Quantity;
+					_unitOfWork.ShoppingCart.Update(cartFromDb);
+					_unitOfWork.Save();
+				}
+				else
+				{
+					//add cart record
+					_unitOfWork.ShoppingCart.Add(shoppingCart);
+					_unitOfWork.Save();
+				}
+				TempData["success"] = "Cart updated successfully";
 			}
 			else
 			{
-				//add cart record
-				_unitOfWork.ShoppingCart.Add(shoppingCart);
-				_unitOfWork.Save();
+				TempData["error"] = "Please enter a valid quantity";
+				return RedirectToAction(nameof(Details), new { baseDesignId = shoppingCart.BaseDesignId });
 			}
-			TempData["success"] = "Cart updated successfully";
 
 			return RedirectToAction(nameof(Index));
 		}

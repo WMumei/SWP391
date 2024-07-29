@@ -13,17 +13,17 @@
 				<th>Description</th>
 				<th>Status</th>
 				<th>Base Design</th>
-				@* <th>Status</th> *@
 				<th>Materials</th>
 				<th>Quotation</th>
 				<th>Design</th>
 				<th>Manufacture</th>
 				@* <th>Deliver</th> *@
+				
+				<th>Warranty Card</th>
 				@if (User.IsInRole(SD.Role_Sales))
 				{
 					<th>Edit</th>
 				}
-				<th>Warranty Card</th>
 				@* <th width="13%">Image</th>
 				<th>Customer</th>
 				<th>Staffs</th>
@@ -41,29 +41,31 @@
 					<td>@obj.Description</td>
 					<td>@obj.Status</td>
 					<td>
-						<a asp-controller="BaseDesign" asp-action="ViewAll" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+						<a asp-controller="BaseDesign" asp-action="Details" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
 					</td>
 					@* <td>@obj.Status</td> *@
 					@* <td>@obj?.Customer?.Name</td> *@
 
-					@if (obj.MaterialSet is not null)
+					@if (obj.MaterialSet is not null && User.IsInRole(SD.Role_Sales))
 					{
-						<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-jId="@obj.Id" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
+						<td><a asp-controller="MaterialSet" asp-action="Details" asp-route-jId="@obj.Id" asp-route-mId="@obj.MaterialSet.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">View</a></td>
 					}
 					else if (User.IsInRole(SD.Role_Sales))
 					{
-						<td><a asp-controller="MaterialSet" asp-action="Upsert" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+						<td><a asp-controller="MaterialSet" asp-action="Upsert" asp-route-jId="@obj.Id" asp-route-mId="0" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
 					}
 					else
 					{
 						<td></td>
 					}
 
-					@if (@obj.QuotationRequests.Count != 0)
+
+					@if (@obj.QuotationRequests.Count != 0 &&
+							(User.IsInRole(SD.Role_Manager) || User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Customer)))
 					{
 						<td><a asp-controller="QuotationRequest" asp-action="ViewAll" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 					}
-					else if (User.IsInRole(SD.Role_Sales) && obj.MaterialSetId is not null)
+					else if (User.IsInRole(SD.Role_Sales) && obj.MaterialSet is not null)
 					{
 						<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
 					}
@@ -74,14 +76,22 @@
 
 					@if (@obj.JewelryDesigns.Count != 0)
 					{
-						<td><a asp-controller="JewelryDesign" asp-action="ViewAll" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						if (User.IsInRole(SD.Role_Design) || User.IsInRole(SD.Role_Customer))
+						{
+							<td><a asp-controller = "JewelryDesign" asp-action = "ViewAll" asp-route-jId = "@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+						}
+						else
+						{
+							<td></td>
+						}
+
 					}
 					else if (User.IsInRole(SD.Role_Design) && obj.Status == SD.StatusPaid)
 					{
 						<td>
 							<a asp-controller="JewelryDesign" asp-action="Create" asp-route-jId="@obj.Id"
 							   asp-route-redirectRequest="@obj.ProductionRequestId"
-							   class="btn btn-primary btn-sm">Create</a>
+							   class="btn btn-pStatusDesignApproved">Create</a>
 						</td>
 					}
 					else
@@ -89,7 +99,8 @@
 						<td></td>
 					}
 
-					@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.DesignApproved)
+
+					@if (User.IsInRole(SD.Role_Production) && obj.Status == SD.StatusDesignApproved)
 					{
 						<td><a asp-controller="Jewelry" asp-action="Manufacture" asp-route-jId="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Manufacture</a></td>
 					}
@@ -102,12 +113,7 @@
 						<td></td>
 					}
 
-					@if (User.IsInRole(SD.Role_Sales))
-					{
-						<td>
-							<a asp-controller="Jewelry" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Edit</a>
-						</td>
-					}
+					
 
 					@if (@obj.WarrantyCard is not null)
 					{
@@ -115,24 +121,41 @@
 					}
 					else if (User.IsInRole(SD.Role_Sales))
 					{
-						<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+						if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
+						|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing)
+						{
+							<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+						}
+						else
+						{
+							<td></td>
+						}
+						
 					}
 					else
 					{
 						<td></td>
 					}
+
+					@if (User.IsInRole(SD.Role_Sales))
+					{
+						<td>
+							<a asp-controller="Jewelry" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Edit</a>
+						</td>
+					}
 				</tr>
 			}
 		</tbody>
 	</table>
-
-	@* 		@if (Model.Count < Model.ElementAt(0).ProductionRequest.Quantity)
+	@if (User.IsInRole(SD.Role_Customer))
 	{
-	<div>
-
-	<a asp-controller="Jewelry" asp-action="Create" asp-route-reqId="@Model.ElementAt(0).ProductionRequest.Id" class="btn btn-outline-primary form-control">Create next Jewelry</a>
-	</div>
-	} *@
+		<a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-primary ">Back</a>
+	}
+	else
+	{
+		<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-primary ">Back</a>
+	}
+	
 
 </div>
 <!-- <div asp-validation-summary="All"></div> -->

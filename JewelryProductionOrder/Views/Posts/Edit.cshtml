@@ -9,9 +9,8 @@
 <h4>Post</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-8">
+        <form method="post" enctype="multipart/form-data" asp-action="Edit">
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -20,15 +19,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
+                <div>
+                    <img name="oldImage" src="~/@Model.Image" alt="Current Image" class="img-thumbnail" width="200" />
+                </div>
+                <input type="file" name="ImagePath" class="form-control border-0 shadow mt-2" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control tinymce-editor" rows="20"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-primary">Back to List</a>
@@ -36,3 +42,43 @@
         </form>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="https://cdn.tiny.cloud/1/1jv6xprgvjvf95awdzo3zuos9z8iqefaragfwc0o1ycao03d/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea.tinymce-editor',
+            plugins: 'advlist autolink lists link image charmap print preview hr pagebreak image',
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            images_upload_url: '/Posts/UploadImage',
+            automatic_uploads: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                var xhr, formData;
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/Posts/UploadImage');
+                xhr.onload = function () {
+                    var json;
+                    if (xhr.status != 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    json = JSON.parse(xhr.responseText);
+                    if (!json || typeof json.location != 'string') {
+                        failure('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+                    success(json.location);
+                };
+                formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            },
+            toolbar_mode: 'floating',
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

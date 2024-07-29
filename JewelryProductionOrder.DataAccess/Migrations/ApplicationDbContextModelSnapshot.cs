@@ -22,21 +22,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
-                {
-                    b.Property<int>("GemstonesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaterialSetsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GemstonesId", "MaterialSetsId");
-
-                    b.HasIndex("MaterialSetsId");
-
-                    b.ToTable("GemstoneMaterialSet");
-                });
-
             modelBuilder.Entity("JewelryProductionOrder.Models.BaseDesign", b =>
                 {
                     b.Property<int>("Id")
@@ -71,6 +56,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Ring.webp",
                             Name = "Bezel Solitarie Engagement Ring",
                             Type = "Company"
@@ -78,6 +64,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 2,
+                            Description = "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Pendant.jpg",
                             Name = "Diamond Reiki Symbol Pendant",
                             Type = "Company"
@@ -85,6 +72,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 3,
+                            Description = "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Necklace.webp",
                             Name = "Smile Necklace",
                             Type = "Company"
@@ -92,6 +80,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 4,
+                            Description = "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Band.webp",
                             Name = "Swirl Diamond Wedding Band",
                             Type = "Company"
@@ -338,6 +327,43 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
                 {
                     b.Property<string>("CustomerId")
@@ -352,7 +378,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<int>("WarrantyCardId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeliveredAt")
+                    b.Property<DateTime>("DeliveredAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("CustomerId", "SalesStaffId", "JewelryId", "WarrantyCardId");
@@ -389,6 +415,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MaterialSetId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -401,6 +430,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialSetId");
 
                     b.ToTable("Gemstones");
 
@@ -954,6 +985,171 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Name = "Chalcedony",
                             Price = 450m,
                             Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Carat = 2.5m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Round",
+                            Name = "Diamond",
+                            Price = 2100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Carat = 3.2m,
+                            Clarity = "VVS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 2200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Carat = 2.8m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Princess",
+                            Name = "Diamond",
+                            Price = 2300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Carat = 3.5m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Emerald",
+                            Name = "Diamond",
+                            Price = 2400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Carat = 4m,
+                            Clarity = "VVS2",
+                            Color = "White",
+                            Cut = "Marquise",
+                            Name = "Diamond",
+                            Price = 2500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Carat = 3.1m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Cushion",
+                            Name = "Diamond",
+                            Price = 2600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Carat = 2.9m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Heart",
+                            Name = "Diamond",
+                            Price = 2700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Carat = 3.3m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 2800m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Carat = 3.7m,
+                            Clarity = "VVS1",
+                            Color = "White",
+                            Cut = "Round",
+                            Name = "Diamond",
+                            Price = 2900m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Carat = 4.2m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Princess",
+                            Name = "Diamond",
+                            Price = 3000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Carat = 3.4m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Emerald",
+                            Name = "Diamond",
+                            Price = 3100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Carat = 3.6m,
+                            Clarity = "VVS2",
+                            Color = "White",
+                            Cut = "Marquise",
+                            Name = "Diamond",
+                            Price = 3200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Carat = 3.8m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Cushion",
+                            Name = "Diamond",
+                            Price = 3300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Carat = 4.1m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Heart",
+                            Name = "Diamond",
+                            Price = 3400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Carat = 4.3m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 3500m,
+                            Status = "Available"
                         });
                 });
 
@@ -980,9 +1176,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaterialSetId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1005,8 +1198,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasIndex("BaseDesignId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("MaterialSetId");
 
                     b.HasIndex("ProductionRequestId");
 
@@ -1228,10 +1419,16 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JewelryId")
+                        .IsUnique();
 
                     b.ToTable("MaterialSets");
                 });
@@ -1244,7 +1441,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<int>("MaterialSetId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1273,6 +1470,10 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -1728,19 +1929,27 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("GemstoneMaterialSet", b =>
+            modelBuilder.Entity("JewelryProductionOrder.Models.Comment", b =>
                 {
-                    b.HasOne("JewelryProductionOrder.Models.Gemstone", null)
+                    b.HasOne("JewelryProductionOrder.Models.Comment", null)
+                        .WithMany("Replies")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("JewelryProductionOrder.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("GemstonesId")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JewelryProductionOrder.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialSetsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Owner");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Delivery", b =>
@@ -1778,6 +1987,15 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("WarrantyCard");
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Gemstone", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
+                        .WithMany("Gemstones")
+                        .HasForeignKey("MaterialSetId");
+
+                    b.Navigation("MaterialSet");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
                     b.HasOne("JewelryProductionOrder.Models.BaseDesign", "BaseDesign")
@@ -1788,10 +2006,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("JewelryProductionOrder.Models.MaterialSet", "MaterialSet")
-                        .WithMany("Jewelries")
-                        .HasForeignKey("MaterialSetId");
 
                     b.HasOne("JewelryProductionOrder.Models.ProductionRequest", "ProductionRequest")
                         .WithMany("Jewelries")
@@ -1812,8 +2026,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("BaseDesign");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("MaterialSet");
 
                     b.Navigation("ProductionRequest");
 
@@ -1852,6 +2064,17 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Navigation("Jewelry");
 
                     b.Navigation("ProductionStaff");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
+                {
+                    b.HasOne("JewelryProductionOrder.Models.Jewelry", "Jewelry")
+                        .WithOne("MaterialSet")
+                        .HasForeignKey("JewelryProductionOrder.Models.MaterialSet", "JewelryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jewelry");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSetMaterial", b =>
@@ -2070,9 +2293,16 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("JewelryProductionOrder.Models.Comment", b =>
+                {
+                    b.Navigation("Replies");
+                });
+
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
                     b.Navigation("JewelryDesigns");
+
+                    b.Navigation("MaterialSet");
 
                     b.Navigation("QuotationRequests");
 
@@ -2086,9 +2316,14 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.MaterialSet", b =>
                 {
-                    b.Navigation("Jewelries");
+                    b.Navigation("Gemstones");
 
                     b.Navigation("MaterialSetMaterials");
+                });
+
+            modelBuilder.Entity("JewelryProductionOrder.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("JewelryProductionOrder.Models.ProductionRequest", b =>

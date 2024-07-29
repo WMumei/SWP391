@@ -1,4 +1,6 @@
 ﻿using JewelryProductionOrder.Models;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
@@ -6,6 +8,7 @@ using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
+    [Authorize(Roles = SD.Role_Sales)]
     public class GemstoneController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

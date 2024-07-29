@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
@@ -48,7 +49,7 @@ namespace SWP391.Controllers
 		public IActionResult Details(int id)
 		{
 			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
-			if (request is null) return NotFound();
+			if (request is null || request.Status == SD.StatusDiscontinued) return NotFound();
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
@@ -60,10 +61,22 @@ namespace SWP391.Controllers
 
 		}
 
-		public IActionResult Create(int jId)
+		public IActionResult Create(int jId, int redirectRequest)
 		{
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId);
-			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == jId, includeProperties: "MaterialSet,QuotationRequests");
+			if (jewelry.MaterialSet is null)
+			{
+				TempData["error"] = "Material Set is not ready!";
+                    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+            }
+
+			if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved))
+			{
+				TempData["error"] = "There is an approved quotation request for this jewelry already!";
+                return RedirectToAction("ViewAll",  new { jId });
+            }
+
+			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSet.Id, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
 				Jewelry = jewelry,
@@ -79,7 +92,32 @@ namespace SWP391.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			vm.QuotationRequest.SalesStaffId = userId;
+			if (vm.QuotationRequest.LaborPrice < 0)
+			{
+                TempData["error"] = "Labor Price must be >= 0";
+                if (redirectRequest is not null)
+                    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				return RedirectToAction("Index", "Home");
+            }
+
+
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest,MaterialSet,QuotationRequests");
+			if (jewelry.MaterialSet is null)
+			{
+				TempData["error"] = "Material Set is not ready!";
+                if (redirectRequest is not null)
+					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				return RedirectToAction("Index", "Home");
+
+            }
+
+            if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved))
+            {
+                TempData["error"] = "There is an approved quotation request for this jewelry!";
+                return RedirectToAction("ViewAll", new { jId = jewelry.Id });
+            }
+
+            vm.QuotationRequest.SalesStaffId = userId;
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
 			vm.QuotationRequest.Status = SD.StatusPending;
 
@@ -92,24 +130,23 @@ namespace SWP391.Controllers
 			_unitOfWork.QuotationRequest.Add(vm.QuotationRequest);
 			_unitOfWork.Save();
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest");
 			jewelry.ProductionRequest.Status = SD.StatusQuotationing;
 			_unitOfWork.ProductionRequest.Update(jewelry.ProductionRequest);
 			_unitOfWork.Save();
 
 			DateTime vmCreatedAt = vm.QuotationRequest.CreatedAt;
 			var oldRequests = _unitOfWork.QuotationRequest
-				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt)
-				.OrderByDescending(r => r.CreatedAt);
+				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt);
+				//.OrderByDescending(r => r.CreatedAt);
 			foreach (var oldRequest in oldRequests)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;
 				_unitOfWork.Save();
 			}
 			TempData["success"] = "Created";
-			if (redirectRequest is not null)
-				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			return RedirectToAction(nameof(ViewAll), new { jId = vm.Jewelry.Id });
+			//if (redirectRequest is not null)
+			//	return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+			return RedirectToAction(nameof(Details), new { id = vm.QuotationRequest.Id });
 		}
 
 		[Authorize(Roles = SD.Role_Manager)]
@@ -156,6 +193,8 @@ namespace SWP391.Controllers
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id)
 		{
+			// TODO: Handle if there is already an approved quotationu
+
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			if (req.Status == SD.StatusDiscontinued) return NotFound();
 
@@ -209,6 +248,7 @@ namespace SWP391.Controllers
 				req.CustomerId = userId;
 				req.Status = SD.CustomerDisapproved;
 			}
+			_unitOfWork.QuotationRequest.Update(req);
 			_unitOfWork.Save();
 			TempData["success"] = "Disapproved!";
 			return RedirectToAction("Details", new { id = req.Id });
@@ -247,7 +287,7 @@ namespace SWP391.Controllers
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))
 			{
-				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved).ToList();
+				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
 			}
 			/*else if(User.IsInRole(SD.Role_Sales))
 			{

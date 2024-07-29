@@ -39,9 +39,9 @@
 						@* <td>@obj.Status</td> *@
 						@* <td>@obj?.Customer?.Name</td> *@
 
-						@if (obj.MaterialSetId is not null)
+						@if (obj.MaterialSet is not null)
 						{
-							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSetId" class="btn btn-primary btn-sm">View</a></td>
+							<td><a asp-controller="MaterialSet" asp-action="Index" asp-route-id="@obj.MaterialSet.Id" class="btn btn-primary btn-sm">View</a></td>
 						} 
                         else if (User.IsInRole(SD.Role_Sales)
 						@* && Model.checkStatus is false *@
@@ -124,13 +124,13 @@
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-						else if (User.IsInRole(SD.Role_Sales))
+						else if (User.IsInRole(SD.Role_Sales) && obj.Status ==SD.StatusManufactured)
 						{
 							<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
 						}
 						else
 						{
-							<td>Waiting for sale staff</td>
+							<td></td>
 						}
 						@*@if (User.IsInRole(SD.Role_Sales) && @obj.WarrantyCard is not null)
 					{

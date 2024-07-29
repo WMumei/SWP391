@@ -1,7 +1,5 @@
-﻿<div class="caption-top row d-flex align-items-center justify-content-center">
-    <h2 style="width: 700px; text-align: center;">@Model?.Name</h2>
-</div>
-<br />
+﻿@model BaseDesign
+
 <form method="post">
     @* <input hidden asp-for="BaseDesignId" /> *@
     <div class="form-group">
@@ -9,9 +7,9 @@
             <div class="col-6">
                 <img src="@Model.Image" width="100%" style="" />
                 <p style="text-align: center">@Model.Description</p>
-                <div class="text-center">
+@*                 <div class="text-center">
                     <a asp-action="Index" class="btn btn-primary">Back to List</a>
-                </div>
+                </div> *@
             </div>
         </div>
     </div>

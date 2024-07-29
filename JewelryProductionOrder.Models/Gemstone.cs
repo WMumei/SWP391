@@ -1,6 +1,7 @@
 ﻿	using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-	namespace JewelryProductionOrder.Models
+namespace JewelryProductionOrder.Models
 	{
 		public class Gemstone
 		{
@@ -16,7 +17,7 @@
 			public string Clarity { get; set; }
 			public string Cut { get; set; }
 			public string Status { get; set; }
-
-			public List<MaterialSet> MaterialSets { get; } = [];
-		}
+			public int? MaterialSetId { get; set; }
+			public MaterialSet MaterialSet { get; set; } = null!;
+    }
 	}

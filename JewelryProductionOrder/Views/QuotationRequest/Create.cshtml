@@ -1,87 +1,156 @@
 ﻿@model QuotationRequestVM
 
-<form method="post" class="container">
-	<div class="caption-top row">
-		<h2>Create a quotation request for Jewelry: @Model.Jewelry.Name</h2>
-	</div>
-	<div class="form-group">
-		<div class="row">
-			<div class="col-10">
-				<input asp-for="@Model.Jewelry.Id" hidden />
-				<input asp-for="@Model.MaterialSet.Id" hidden />
-				<div class="col-12 py-2 form-floating">
-					<input asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
-					<label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<input asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" />
-					<label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<h2>Gemstones</h2>
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Weight (carat)</th>
-								<th>Price</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
-							{
-								<tr>
-									<td>@gemstone.Name</td>
-									<td>@gemstone.Carat</td>
-									<td>@gemstone.Price</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-
-				</div>
-				<div class="col-12 py-2 form-floating">
-					<h2>Materials</h2>
-					<table class ="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Weight (g)</th>
-								<th>Unit Price</th>
-								<th>Total Price</th>
-							</tr>
-						</thead>
-						<tbody>
-								@foreach (Material material in @Model.MaterialSet.Materials)
-								{
-									var weight = @Model.MaterialSet.MaterialSetMaterials.FirstOrDefault(
-												s => s.MaterialId == material.Id).Weight;
-									<tr>
-										<td>@material.Type</td>
-										<td>@weight</td>
-										<td>@material.Price</td>
-										<td>@(weight * material.Price)</td>
-									</tr>
-								}
-						</tbody>
-					</table>
-					
-				</div>
-
-
-
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<button type="submit" class="btn btn-primary form-control col-2">Create</button>
-	</div>
-
-
+<form method="post" class="container" id="quotationForm">
+    <div class="caption-top row mt-5">
+        <h2>Create a quotation request for Jewelry: @Model.Jewelry.Name</h2>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-10">
+                <input asp-for="@Model.Jewelry.Id" hidden />
+                <input asp-for="@Model.MaterialSet.Id" hidden />
+                <div class="col-12 py-2 form-floating">
+                    <input asp-for="@Model.QuotationRequest.Name" class="form-control border-0 shadow" />
+                    <label asp-for="@Model.QuotationRequest.Name" class="ms-2"></label>
+                    <span asp-validation-for="@Model.QuotationRequest.Name" class="text-danger"></span>
+                </div>
+                <div class="col-12 py-2 form-floating">
+                    <input asp-for="@Model.QuotationRequest.LaborPrice" class="form-control border-0 shadow" id="laborPrice" />
+                    <label asp-for="@Model.QuotationRequest.LaborPrice" class="ms-2"></label>
+                    <span asp-validation-for="@Model.QuotationRequest.LaborPrice" class="text-danger"></span>
+                </div>
+                <hr class="my-2" />
+                <div class="col-12 py-2">
+                    <h3 class="fw-normal">Gemstones</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Carat</th>
+                                <th>Color</th>
+                                <th>Clarity</th>
+                                <th>Cut</th>
+                                <th>Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var gemstone in Model.MaterialSet.Gemstones)
+                            {
+                                <tr>
+                                    <td>@gemstone.Name</td>
+                                    <td>@gemstone.Carat</td>
+                                    <td>@gemstone.Color</td>
+                                    <td>@gemstone.Clarity</td>
+                                    <td>@gemstone.Cut</td>
+                                    <td>@gemstone.Price</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
+                </div>
+                <div class="col-12 py-2">
+                    <h3 class="fw-normal">Materials</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Color</th>
+                                <th>Purity</th>
+                                <th>Unit Price ($)</th>
+                                <th>Weight (g)</th>
+                                <th>Total Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var join in Model.MaterialSet.MaterialSetMaterials)
+                            {
+                                var material = Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
+                                <tr>
+                                    <td>@material?.Type</td>
+                                    <td>@material?.Color</td>
+                                    <td>@material?.Purity</td>
+                                    <td>@material?.Price</td>
+                                    <td>@join.Weight</td>
+                                    <td>@((join.Weight * material?.Price)?.ToString("F2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Material Total: $<span id="materialTotal">0</span></div>
+                </div>
+                <hr class="my-2" />
+                <h3 class="fw-normal">Set Total Price: $<span id="totalPrice"></span></h3>
+            </div>
+        </div>
+    </div>
+    <h3 class="fw-normal ">Quotation Total Price: $<span id="quotationPrice"></span></h3>
+    <div class="d-flex gap-2 my-4">
+        <button type="submit" class="btn btn-primary">Create</button>
+        @if (Model.Jewelry.QuotationRequests.Count() > 0)
+        {
+            <a class="btn btn-secondary" asp-action="Viewall" asp-controller="QuotationRequest" asp-route-jId="@Model.Jewelry.Id">Back</a>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.Jewelry.ProductionRequestId">Back</a>
+        }
+    </div>
 </form>
+
 @section Scripts
 {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        const reloadPrice = () => {
+            const mId = '@Model.MaterialSet.Id';
+            $.ajax({
+                url: `/materialset/getCurrentPrice?mId=${mId}`,
+                type: 'GET',
+                success: (data) => {
+                    $("#materialTotal").text(data.materialTotal.toFixed(2));
+                    $("#gemstoneTotal").text(data.gemstoneTotal.toFixed(2));
+                    $("#totalPrice").text(data.setTotal.toFixed(2));
+                    updateQuotationPrice();
+                },
+                error: () => {
+                    toastr.error("Updating price failed.");
+                }
+            });
+        }
+
+        const updateQuotationPrice = () => {
+            const laborPrice = parseFloat($("#laborPrice").val());
+            const totalPrice = parseFloat($("#totalPrice").text());
+            if (isNaN(laborPrice) || laborPrice < 0) {
+                $("#quotationPrice").text("Invalid Labor Price");
+                return;
+            }
+            const quotationPrice = totalPrice + laborPrice;
+            $("#quotationPrice").text(quotationPrice.toFixed(2));
+        }
+
+        const validateLaborPrice = () => {
+            const laborPrice = parseFloat($("#laborPrice").val());
+            if (isNaN(laborPrice) || laborPrice < 0) {
+                toastr.error("Labor Price must be greater than or equal to 0");
+                return false;
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            reloadPrice();
+            $("#laborPrice").on('input', updateQuotationPrice);
+
+            $("#quotationForm").on('submit', function (e) {
+                if (!validateLaborPrice()) {
+                    // Prevent form submission if validation fails
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 }
