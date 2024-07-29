@@ -26,7 +26,6 @@
 		public const string StatusAllManufactured = "All Jewelires Manufactured";
 
 		public const string StatusDesignApproved = "Design Approved";
-		//public const string DesignApproved = "Design Approved";
 
 		public const string StatusPending = "Pending";
 		public const string StatusDiscontinued = "Discontinued";

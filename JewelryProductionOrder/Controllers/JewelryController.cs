@@ -109,7 +109,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				return NotFound();
 			}
-			if (jewelry.Status != SD.DesignApproved)
+			if (jewelry.Status != SD.StatusDesignApproved)
 			{
 				TempData["Error"] = "Jewelry Design has not been approved";
 			}
