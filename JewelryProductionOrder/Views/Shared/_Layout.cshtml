@@ -46,7 +46,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">View Post</a>
                         </li>
-                        @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Manager))
                         {
 
                             <li class="nav-item">

@@ -262,6 +262,10 @@ namespace JewelryProductionOrder.Data
 
 			#endregion
 
+
+
+			
+
 			#region OneToOne
 			//modelBuilder.Entity<Jewelry>()
 			//        .HasOne(e => e.WarrantyCard)

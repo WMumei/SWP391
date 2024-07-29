@@ -1,42 +1,66 @@
 ﻿@model List<QuotationRequest>
 
 <div>
-    <div>
-        <div class="d-flex justify-content-between align-items-center my-4">
-            <h2>View Quotation Request of Jewelry: @Model.FirstOrDefault()?.Jewelry?.Name</h2>
-            <div class="d-flex gap-2">
-                <a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.FirstOrDefault()?.Jewelry?.ProductionRequestId">Back</a>
-                @if (User.IsInRole(SD.Role_Sales))
-                {
-                    <a class="btn btn-primary" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault()?.Jewelry?.Id">Create</a>
-                }
-            </div>
-        </div>
+	
+		
+		<div class="d-flex justify-content-between align-items-center my-4">
+    <h2>View Quotation Request of Jewelry: @Model.FirstOrDefault()?.Jewelry?.Name</h2>
+    <div class="d-flex gap-2">
+        <a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.FirstOrDefault()?.Jewelry?.ProductionRequestId">Back</a>
+        
+				@if ( Model.Any(obj => obj.Status == SD.StatusPaid))
+				{
+				}else if(User.IsInRole(SD.Role_Sales)){
+			<a class="btn btn-primary" asp-controller="QuotationRequest" asp-action="Create" asp-route-jId="@Model.FirstOrDefault()?.Jewelry?.Id">Create</a>
+
+				}
+		
     </div>
-    <table class="table table-bordered table-striped fs-6 fw-normal">
-        <thead>
-            <tr class="fw-normal">
-                <th>Id</th>
-                <th>Name</th>
-                <th>Created At</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
-            {
-                <tr>
-                    <td>@obj.Id</td>
+    </div>
+</div>
+	<table class="table table-bordered table-striped fs-6 fw-normal">
+		<thead>
+			<tr class="fw-normal">
+				<th>Id</th>
+				<th>Name</th>
+				<th>Created At</th>
+				<th>Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+			{
+				<tr>
+					<td>@obj.Id</td>
                     <td>@obj.Name</td>
-                    <td>@obj.CreatedAt.ToShortDateString()</td>
-                    <td>@obj.Status</td>
-                    @if (obj.Status == SD.StatusPending || obj.Status == SD.ManagerApproved || obj.Status == SD.StatusPaid)
-                    {
-                        <td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
+
+					<td>@obj.CreatedAt</td>
+					<td>@obj.Status</td>
+						@if(User.IsInRole(SD.Role_Customer))
+						{
+							if (obj.Status == SD.ManagerApproved || obj.Status == SD.StatusPaid)
+							{
+
+								<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+							}
+							else
+							{
+								<td></td>
+							}
+						}
+						else if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Manager))
+						{
+							<td><a asp-controller="QuotationRequest" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+						}
+						else
+						{
+							<td></td>
+						}
+
+
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>

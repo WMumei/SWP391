@@ -1,5 +1,8 @@
 @model List<ProductionRequest>
-
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 <div class="container">
 	<div class="row">
 		<div class="col-6">
@@ -38,7 +41,7 @@
 				{
 					<tr>
 
-						<td></td>
+						<td>@obj.Id</td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -84,14 +87,17 @@
 					}
 				@if (User.IsInRole(SD.Role_Customer))
 					{
-						if (obj.Status == SD.StatusPaid)
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
+							 || obj.Status == SD.StatusAllManufactured  ||
+							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 						{
+							
 								<td>Paid!</td>
 							}
 							else if (obj.Status == SD.StatusAllQuotationApproved)
 							{
 
-								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pid="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
 							}
 							else
 							{
@@ -100,11 +106,24 @@
 					}
 					else
 					{
-						<td></td>
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
+							 || obj.Status == SD.StatusAllManufactured ||
+							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
+							{
+
+								<td>Paid</td>
+							}else
+							{
+								<td></td>
+							}
+							
 					}
                 
+					 
+					 
 					 @if (obj.Status == SD.StatusAllManufactured) 
 					 { 
+
 						@if (!User.IsInRole(SD.Role_Customer))
 						{
 							<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
@@ -119,7 +138,7 @@
 						}
 					 }
 						else if (obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
-					{
+					    {
 							@if (!User.IsInRole(SD.Role_Customer))
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
@@ -130,14 +149,14 @@
 							{
 
 
-								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-							}
+							<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 						}
-						else
-						{
-							<td></td>
-						}
-					
+					 } 
+					else
+					{
+						<td></td>
+					}
+								
                     
 
    
@@ -145,8 +164,8 @@
 					{
 					<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 					} *@
-						<td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-						@if (User.IsInRole(SD.Role_Customer))
+						@* <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
+						@* @if (User.IsInRole(SD.Role_Customer))
 						{
 							if(obj.Status == SD.StatusPaid)
 							{
@@ -156,17 +175,32 @@
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
 							}
-						}
+						} *@
 						<td>@obj.Note</td>
 					
-						@if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Admin))
+						@if (User.IsInRole(SD.Role_Sales))
 						{
-							<td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td>
+							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured)
+							{
+								
+								<td>
+									<form id="cancelForm-@obj.Id" asp-action="CancelRequest" asp-route-id="@obj.Id" method="post">
+										<input type="hidden" name="reqId" value="@obj.Id" />
+										<button type="button" class="btn btn-danger btn-sm" onclick="confirmCancel('@obj.Id')">Cancel</button>
+									</form>
+								</td>
+							}
+							else
+							{
+								<td></td>
+							}
 						}
-						else if (!User.IsInRole(SD.Role_Customer))
+							
+						else 
 						{
 							<td></td>
 						}
+						
 
 				</tr>
 				}
@@ -174,4 +208,22 @@
 		</tbody>
 	</table>
 </div>
+<script>
+	
+	function confirmCancel(reqId) {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "Customers will not receive a refund!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, cancel it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				document.getElementById(`cancelForm-${reqId}`).submit();
+			}
+		});
+	}
+</script>
 <!-- <div asp-validation-summary="All"></div> -->

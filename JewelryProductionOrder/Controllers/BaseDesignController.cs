@@ -79,16 +79,6 @@ namespace JewelryProductionOrder.Controllers
 			return View(designList);
 		}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager}")]
-		public IActionResult ViewAll(int bId)
-		{
-			var baseDesign = _unitOfWork.BaseDesign.GetAll(jD => jD.Id == bId).ToList();
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-			return View(baseDesign);
-		}
-
 		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager},{SD.Role_Sales}")]
 		public IActionResult Details(int bId)
 		{
@@ -96,7 +86,7 @@ namespace JewelryProductionOrder.Controllers
 			return View(design);
 		}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Design}")]
 		public IActionResult Edit(int bId)
 		{
 			var baseDesign = _unitOfWork.BaseDesign.Get(m => m.Id == bId);
@@ -108,7 +98,7 @@ namespace JewelryProductionOrder.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Design}")]
 		public IActionResult Edit(BaseDesign baseDesign, IFormFile? file)
 		{
 			var existingDesign = _unitOfWork.BaseDesign.Get(d => d.Id == baseDesign.Id);
@@ -143,7 +133,7 @@ namespace JewelryProductionOrder.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Design}")]
 		public IActionResult Delete(int bId)
 		{
 			BaseDesign baseDesign = _unitOfWork.BaseDesign.Get(bD => bD.Id == bId);

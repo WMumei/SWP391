@@ -34,10 +34,19 @@ namespace SWP391.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
-			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusRequestDelayedPayment);
-			if (request != null)
+			ProductionRequest request = _unitOfWork.ProductionRequest.Get(req => req.CustomerId == userId && req.Status == SD.StatusAllQuotationApproved);
+			if (request is not null)
 			{
-				OrderConfirmation(request.Id);
+				var service = new SessionService();
+                if (request.SessionId is null)
+                {
+                    return View("Index", obj);
+                }
+                Session session = service.Get(request.SessionId);
+				if (session.PaymentStatus.ToLower() == "paid")
+				{
+					OrderConfirmation(request.Id);
+				}
 			}
             return View("Index", obj);
         }
@@ -73,22 +82,26 @@ namespace SWP391.Controllers
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries");
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
-			// User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
+
+
+
 
 			_unitOfWork.Save();
 			return View("Deliver", productionRequest);
 		}
-		[Authorize(SD.Role_Sales)]
+		
 		public IActionResult Delivered(int id)
 		{
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
+
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "SalesStaff,Jewelries", tracked: true);
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard,SalesStaff").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
-			productionRequest.Status = SD.StatusRequestDone;
-			_unitOfWork.ProductionRequest.Update(productionRequest);
-			_unitOfWork.Save();
+
+
+			
+		
 			foreach (var jewelry in jewelries)
 			{
 
@@ -127,7 +140,7 @@ namespace SWP391.Controllers
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			//var saleStaff=_unitOfWork.User.Get(u=>u.Id==userId);
+			
                
 
 
@@ -157,15 +170,71 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return RedirectToAction("CustomerView");
 		}
+        public IActionResult CancelRequest(int id)
+        {
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id,tracked:true);
+            if (req is not null)
+            {
+                req.Status = SD.StatusCancelled;
+                _unitOfWork.Save();
+            }
 
-		public IActionResult CancelRequest(int id)
-		{
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
-			if (req is not null)
-			{
-				req.Status = SD.StatusCancelled;
-				_unitOfWork.Save();
-			}
+            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+            if (jewelries.Count > 0)
+            {
+                foreach (Jewelry jewelry in jewelries)
+                {
+                    if(jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured)
+					{
+						MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
+						MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
+						if (materialSet != null)
+						{
+							List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
+							foreach (var gem in gemstones)
+							{
+								gem.Status = SD.StatusAvailable;
+								_unitOfWork.Gemstone.Update(gem);
+								_unitOfWork.Save();
+							}
+							_unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
+							_unitOfWork.Save();
+
+						}
+					}
+					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
+                    if (QuoReq != null)
+                    {
+                        QuoReq.Status = SD.StatusCancelled;
+						_unitOfWork.QuotationRequest.Update(QuoReq);
+						_unitOfWork.Save();
+					}
+                    List<JewelryDesign> jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(j => j.JewelryId == jewelry.Id).ToList();
+                    if (jewelryDesigns.Count > 0)
+                    {
+                        foreach (JewelryDesign JewelryDesign in jewelryDesigns)
+                        {
+                            JewelryDesign.Status = SD.StatusCancelled;
+							_unitOfWork.JewelryDesign.Update(JewelryDesign);
+							_unitOfWork.Save();
+						}
+                    }
+					
+					jewelry.Status = SD.StatusCancelled;
+					_unitOfWork.Jewelry.Update(jewelry);
+					_unitOfWork.Save();
+				}
+            }
+            return RedirectToAction("Index");
+        }
+  //      public IActionResult CancelRequest(int id)
+		//{
+		//	ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id);
+		//	if (req is not null)
+		//	{
+		//		req.Status = SD.StatusCancelled;
+		//		_unitOfWork.Save();
+		//	}
 
 			//List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
 			//if (jewelries.Count > 0)
@@ -188,8 +257,8 @@ namespace SWP391.Controllers
 			//        }
 			//    }
 			//}
-			return RedirectToAction("Index");
-		}
+		//	return RedirectToAction("Index");
+		//}
 
 		//public bool checkPayment(int pId)
 		//{
@@ -216,56 +285,57 @@ namespace SWP391.Controllers
 			var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 			
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == pId);
-			if (productionRequest.PaymentIntentId is null)
-			{
-				var options = new SessionCreateOptions
-				{
-					SuccessUrl = domain,
-					CancelUrl = domain + "ProductionRequest/CustomerView",
-					LineItems = new List<SessionLineItemOptions>(),
-					Mode = "payment",
-				};
-				var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
 
-				if (!jewelries.Any())
-				{
-					return BadRequest("No jewelries found for the given production request.");
-				}
+			var options = new SessionCreateOptions
+			{
+				SuccessUrl = domain,
+				CancelUrl = domain + "ProductionRequest/CustomerView",
+				LineItems = new List<SessionLineItemOptions>(),
+				Mode = "payment",
+			};
+			var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
+
+			if (!jewelries.Any())
+			{
+				return BadRequest("No jewelries found for the given production request.");
+			}
 
 				foreach (var jewelry in jewelries)
 				{
 					//var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved).ToList();
-					var quotations = _unitOfWork.QuotationRequest.GetAll(q => q.JewelryId == jewelry.Id).ToList();
-
-					foreach (var quotation in quotations)
+					var quotation = _unitOfWork.QuotationRequest.Get(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved);
+					if (quotation is null)
 					{
-						var sessionLineItem = new SessionLineItemOptions
-						{
-							Quantity = 1,
-							PriceData = new SessionLineItemPriceDataOptions
-							{
-								UnitAmount = (long)(quotation.TotalPrice),
-								Currency = "USD",
-								ProductData = new SessionLineItemPriceDataProductDataOptions
-								{
-									Name = jewelry.Name
-								}
-							},
-						};
-						options.LineItems.Add(sessionLineItem);
+						return Json(new { success = false, message = "Not found any quotation for this jewelry" });
 					}
+					else
+					{
+                        
+                            var sessionLineItem = new SessionLineItemOptions
+                            {
+                                Quantity = 1,
+                                PriceData = new SessionLineItemPriceDataOptions
+                                {
+                                    UnitAmount = (long)(quotation.TotalPrice),
+                                    Currency = "USD",
+                                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                                    {
+                                        Name = jewelry.Name
+                                    }
+                                },
+                            };
+                            options.LineItems.Add(sessionLineItem);
+                        
+                    }
+                    
 				}
 
-				var service = new SessionService();
-				Session session = service.Create(options);
-				_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(pId, SD.StatusPending, SD.StatusRequestDelayedPayment);
-				_unitOfWork.Save();
-				Response.Headers.Add("Location", session.Url);
-				return new StatusCodeResult(303);
-			}
-
-			return RedirectToAction(nameof(OrderConfirmation), new {id = pId });
+			var service = new SessionService();
+			Session session = service.Create(options);
+			_unitOfWork.ProductionRequest.UpdateStripePaymentId(pId, session.Id, session.PaymentIntentId);
+			_unitOfWork.Save();
+			Response.Headers.Add("Location", session.Url);
+			return new StatusCodeResult(303);
 
 			}
 		
@@ -278,7 +348,7 @@ namespace SWP391.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.ProductionRequest.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusPaid, SD.StatusPaid);
+				_unitOfWork.ProductionRequest.UpdateStatus(id, SD.StatusAllQuotationApproved, SD.StatusPaid);
 				_unitOfWork.Save();
 			}
 			return RedirectToAction("CustomerView");

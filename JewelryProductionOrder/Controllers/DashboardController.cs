@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using NuGet.Common;
+using NuGet.Packaging;
 using System;
 using System.Collections;
+using System.Data;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -130,7 +133,7 @@ namespace JewelryProductionOrder.Controllers
 		//{
 		//	return View();
 		//}
-		
+
 
 
 		[HttpGet]
@@ -141,19 +144,19 @@ namespace JewelryProductionOrder.Controllers
 			if (month != 0)
 			{
 				revenueData = Enumerable.Repeat((decimal?)0, 31).ToArray();
-				quotations = _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Year == year 
+				quotations = _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Year == year
 				&& q.CreatedAt.Month == month && q.Status == SD.StatusPaid).ToList();
 
 			} else
 			{
 				revenueData = Enumerable.Repeat((decimal?)0, 12).ToArray();
-				quotations = _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Year == year 
+				quotations = _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Year == year
 				&& q.Status == SD.StatusPaid).ToList();
 			}
 
 			foreach (var quotation in quotations)
 			{
-				if(month != 0)
+				if (month != 0)
 				{
 					revenueData[quotation.CreatedAt.Day - 1] += quotation.TotalPrice;
 				} else
@@ -164,111 +167,111 @@ namespace JewelryProductionOrder.Controllers
 
 			return Json(revenueData);
 		}
-        [HttpGet]
-        public IActionResult GetRevenueByDateRange(string startDate, string endDate, int diffInDays)
+		[HttpGet]
+		public IActionResult GetRevenueByDateRange(string startDate, string endDate, int diffInDays)
 		{
-            var startDateObj = DateTime.Parse(startDate);
-            var endDateObj = DateTime.Parse(endDate);
-            decimal?[] soldData = Enumerable.Repeat((decimal?)0, diffInDays).ToArray();
-            List<QuotationRequest> quotations= _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Date >= startDateObj.Date 
+			var startDateObj = DateTime.Parse(startDate);
+			var endDateObj = DateTime.Parse(endDate);
+			decimal?[] soldData = Enumerable.Repeat((decimal?)0, diffInDays).ToArray();
+			List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q => q.CreatedAt.Date >= startDateObj.Date
 			&& q.CreatedAt.Date <= endDateObj.Date && q.Status == SD.StatusPaid).ToList();
 			foreach (var quotation in quotations)
 			{
 				soldData[(quotation.CreatedAt - startDateObj).Days] += quotation.TotalPrice;
 			}
 			return Json(soldData);
-        }
-        
-        [HttpGet]
-        public IActionResult GetJewelryByDateRange(string startDate, string endDate, int diffInDays)
-        {
-            var startDateObj = DateTime.Parse(startDate);
-            var endDateObj = DateTime.Parse(endDate);
-            decimal?[] soldData = Enumerable.Repeat((decimal?)0, diffInDays).ToArray();
-            List<Delivery> deliveries = _unitOfWork.Delivery.GetAll(q => q.DeliveredAt.Date >= startDateObj.Date
-            && q.DeliveredAt.Date <= endDateObj.Date).ToList();
-            foreach (var delivery in deliveries)
-            {
-                soldData[(delivery.DeliveredAt - startDateObj).Days] += 1;
-            }
-            return Json(soldData);
-        }
+		}
 
-        [HttpGet]
-        public IActionResult GetRevenueByAll()
-        {
-            List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q=>q.Status == SD.StatusPaid).ToList();
-            // Get distinct years
-            var distinctYears = quotations
-                .Select(q => q.CreatedAt.Year)
-                .Distinct();
-            // Count distinct years
-            int distinctYearCount = distinctYears.Count();
-            // Find the minimum year
-            int minYear = distinctYears.Min();
-            decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
-            foreach (var quotation in quotations)
-            {
-                soldData[quotation.CreatedAt.Year - minYear] += quotation.TotalPrice;
-            }
+		[HttpGet]
+		public IActionResult GetJewelryByDateRange(string startDate, string endDate, int diffInDays)
+		{
+			var startDateObj = DateTime.Parse(startDate);
+			var endDateObj = DateTime.Parse(endDate);
+			decimal?[] soldData = Enumerable.Repeat((decimal?)0, diffInDays).ToArray();
+			List<Delivery> deliveries = _unitOfWork.Delivery.GetAll(q => q.DeliveredAt.Date >= startDateObj.Date
+			&& q.DeliveredAt.Date <= endDateObj.Date).ToList();
+			foreach (var delivery in deliveries)
+			{
+				soldData[(delivery.DeliveredAt - startDateObj).Days] += 1;
+			}
+			return Json(soldData);
+		}
+
+		[HttpGet]
+		public IActionResult GetRevenueByAll()
+		{
+			List<QuotationRequest> quotations = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
+			// Get distinct years
+			var distinctYears = quotations
+				.Select(q => q.CreatedAt.Year)
+				.Distinct();
+			// Count distinct years
+			int distinctYearCount = distinctYears.Count();
+			// Find the minimum year
+			int minYear = distinctYears.Min();
+			decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
+			foreach (var quotation in quotations)
+			{
+				soldData[quotation.CreatedAt.Year - minYear] += quotation.TotalPrice;
+			}
 			int[] years = distinctYears.ToArray();
 
-            Array.Sort(years);
-            var result = new
-            {
-                Value1 = soldData,
-                Value2 = years
-        };
-            return Json(result);
-        }
-        [HttpGet]
-        public IActionResult GetJewelryByAll()
-        {
-            List<Delivery> deliveries = _unitOfWork.Delivery.GetAll().ToList();
-            // Get distinct years
-            var distinctYears = deliveries
-                .Select(q => q.DeliveredAt.Year)
-                .Distinct();
-            // Count distinct years
-            int distinctYearCount = distinctYears.Count();
-            // Find the minimum year
-            int minYear = distinctYears.Min();
-            decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
-            foreach (var delivery in deliveries)
-            {
-                soldData[delivery.DeliveredAt.Year - minYear] += 1;
-            }
-            int[] years = distinctYears.ToArray();
+			Array.Sort(years);
+			var result = new
+			{
+				Value1 = soldData,
+				Value2 = years
+			};
+			return Json(result);
+		}
+		[HttpGet]
+		public IActionResult GetJewelryByAll()
+		{
+			List<Delivery> deliveries = _unitOfWork.Delivery.GetAll().ToList();
+			// Get distinct years
+			var distinctYears = deliveries
+				.Select(q => q.DeliveredAt.Year)
+				.Distinct();
+			// Count distinct years
+			int distinctYearCount = distinctYears.Count();
+			// Find the minimum year
+			int minYear = distinctYears.Min();
+			decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
+			foreach (var delivery in deliveries)
+			{
+				soldData[delivery.DeliveredAt.Year - minYear] += 1;
+			}
+			int[] years = distinctYears.ToArray();
 
-            Array.Sort(years);
-            var result = new
-            {
-                Value1 = soldData,
-                Value2 = years
-            };
-            return Json(result);
-        }
+			Array.Sort(years);
+			var result = new
+			{
+				Value1 = soldData,
+				Value2 = years
+			};
+			return Json(result);
+		}
 
-        [HttpGet]
+		[HttpGet]
 		public IActionResult GetJewelrySold(int year, int month)
 		{
 			decimal?[] soldData;
-			List<Delivery> deliveries; 
-		
+			List<Delivery> deliveries;
+
 			if (month != 0)
 			{
-				if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month ==10 ||month==12)
+				if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
 				{
 
-                    soldData = Enumerable.Repeat((decimal?)0, 31).ToArray();
-                }else if(month == 2)
+					soldData = Enumerable.Repeat((decimal?)0, 31).ToArray();
+				} else if (month == 2)
 				{
-                    soldData = Enumerable.Repeat((decimal?)0, 28).ToArray();
+					soldData = Enumerable.Repeat((decimal?)0, 28).ToArray();
 				}
 				else
 				{
-                    soldData = Enumerable.Repeat((decimal?)0, 30).ToArray();
-                }
+					soldData = Enumerable.Repeat((decimal?)0, 30).ToArray();
+				}
 
 				deliveries = _unitOfWork.Delivery.GetAll(q => q.DeliveredAt.Year == year
 				&& q.DeliveredAt.Month == month).ToList();
@@ -279,23 +282,113 @@ namespace JewelryProductionOrder.Controllers
 				deliveries = _unitOfWork.Delivery.GetAll(q => q.DeliveredAt.Year == year).ToList();
 			}
 
-			foreach(var delivery in deliveries) 
+			foreach (var delivery in deliveries)
 			{
-                if (month != 0)
-                {
+				if (month != 0)
+				{
 					//check jewelry nao co trong thang do
 					//lay ngay deliveredAt
 					soldData[delivery.DeliveredAt.Day - 1] += 1;
-                }
-                else
-                {
-                    soldData[delivery.DeliveredAt.Month - 1] += 1;
-                }
+				}
+				else
+				{
+					soldData[delivery.DeliveredAt.Month - 1] += 1;
+				}
 
-            }
+			}
 
 
-            return Json(soldData);
+			return Json(soldData);
 		}
-	}
+		[HttpGet]
+		public IActionResult GetGemstone()
+		{
+			List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable).ToList();
+
+			int gemstoneCount = gemstones.Count;
+			var type = gemstones
+				.Select(q => q.Name)
+				.Distinct();
+			int typeCount = type.Count();
+			//double rate = typeCount / gemstoneCount;
+			int[] soldData = new int[typeCount];
+			String[] label = type.ToArray();
+			for (int i = 0; i < typeCount; i++)
+			{
+				soldData[i] = gemstones.Count(q => q.Name == label[i]);
+
+			}
+
+			var result = new
+			{
+				quantity = soldData,
+				labels = label
+			};
+			return Json(result);
+		}
+		[HttpGet]
+		public IActionResult GetMaterial()
+		{
+			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+			var materialTypes = materialSetMaterials
+				.Select(q => q.Material.Type)
+				.Distinct();
+			int typeCount = materialTypes.Count();
+			decimal[] soldData = new decimal[typeCount];
+			//
+			String[] label = materialTypes.ToArray();
+			//
+			for(int i =0;i<typeCount;i++)
+			{
+                string type = label[i];
+                decimal totalWeight = materialSetMaterials
+                    .Where(q => q.Material.Type == type)
+                    .Sum(q => q.Weight);
+
+                soldData[i] = totalWeight;
+            }
+			
+			var result = new
+			{
+				quantity = soldData,
+				labels = label
+			};
+			return Json(result);
+		}
+		[HttpGet]
+		public IActionResult GetRevenue()
+		{
+			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
+			
+			List<decimal?> decimalList = new List<decimal?>();
+            foreach (var q in requests)
+			{
+                decimalList.Add(q.TotalPrice.Value);
+				
+			}
+            var sum = decimalList.Sum();
+
+            return Content(sum.ToString());
+        }
+        [HttpGet]
+        public IActionResult GetOrder()
+        {
+            List<ProductionRequest> requestsComplete = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusRequestDone).ToList();
+            List<ProductionRequest> requestsCancel = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusCancelled).ToList();
+
+            
+			
+            
+			var	sum1 = requestsComplete.Count();
+              var  sum2 = requestsCancel.Count();
+            var result = new
+            {
+                sum1 = sum1,
+                sum2 = sum2
+            };
+
+
+            return Json(result);
+        }
+    }
 }
