@@ -75,10 +75,6 @@ namespace SWP391.Controllers
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
 			// User customer = _unitOfWork.User.Get(u => u.Id == jewelry.CustomerId);
 
-
-
-
-
 			_unitOfWork.Save();
 			return View("Deliver", productionRequest);
 		}

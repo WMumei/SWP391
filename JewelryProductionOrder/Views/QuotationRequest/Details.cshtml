@@ -1,6 +1,5 @@
 ﻿@model QuotationRequestVM
 
-<form method="post" class="container">
     <div class="caption-top row mt-4">
         <h2>Quotation @Model.QuotationRequest.Name for Jewelry @Model.Jewelry.Name</h2>
     </div>
@@ -78,11 +77,11 @@
                     <div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text">Material Total: $<span id="materialTotal">0</span></div>
                 </div>
                 <hr class="my-3" />
-                <h3 class="fw-normal">Set Total Price: $<span id="totalPrice"></span></h3>
+                <h3 class="fw-normal">Set Total Price: $<span id="totalPrice">@Model.QuotationRequest.TotalPrice</span></h3>
             </div>
         </div>
     </div>
-</form>
+<h3 class="fw-normal">Quotation Total Price: $<span id="quotationPrice">@Model.QuotationRequest.TotalPrice</span></h3>
 <div class="d-flex justify-content-start align-items-center mt-1">
     @if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
     {
@@ -118,7 +117,6 @@
     <a class="btn btn-secondary" asp-action="Viewall" asp-controller="QuotationRequest" asp-route-jId="@Model.Jewelry.Id">Back</a>
 </div>
 
-
 @section Scripts {
     <script type="text/javascript">
         const reloadPrice = () => {
@@ -130,12 +128,25 @@
                     $("#materialTotal").text(data.materialTotal.toFixed(2));
                     $("#gemstoneTotal").text(data.gemstoneTotal.toFixed(2));
                     $("#totalPrice").text(data.setTotal.toFixed(2));
+                    updateQuotationPrice();
                 },
                 error: () => {
                     toastr.error("Updating price failed.");
                 }
             });
         }
+
+        // const updateQuotationPrice = () => {
+        //     const laborPrice = parseFloat($("#laborPrice").val());
+        //     const totalPrice = parseFloat($("#totalPrice").text());
+        //     if (isNaN(laborPrice) || laborPrice <= 0) {
+        //         $("#quotationPrice").text("Invalid Labor Price");
+        //         return;
+        //     }
+        //     const quotationPrice = totalPrice + laborPrice;
+        //     $("#quotationPrice").text(quotationPrice.toFixed(2));
+        // }
+
         document.addEventListener('DOMContentLoaded', () => {
             reloadPrice();
         });

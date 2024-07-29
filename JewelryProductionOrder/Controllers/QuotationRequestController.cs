@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace SWP391.Controllers
 {
@@ -66,8 +67,15 @@ namespace SWP391.Controllers
 			if (jewelry.MaterialSet is null)
 			{
 				TempData["error"] = "Material Set is not ready!";
-				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest});
-			}
+                    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+            }
+
+			if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved))
+			{
+				TempData["error"] = "There is an approved quotation request for this jewelry already!";
+                return RedirectToAction("ViewAll",  new { jId });
+            }
+
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == jewelry.MaterialSet.Id, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
@@ -89,17 +97,27 @@ namespace SWP391.Controllers
                 TempData["error"] = "Labor Price must be > 0";
                 if (redirectRequest is not null)
                     return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				return RedirectToAction("Index", "Home");
             }
 
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest,MaterialSet");
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "ProductionRequest,MaterialSet,QuotationRequests");
 			if (jewelry.MaterialSet is null)
 			{
 				TempData["error"] = "Material Set is not ready!";
-				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			}
+                if (redirectRequest is not null)
+					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+				return RedirectToAction("Index", "Home");
 
-			vm.QuotationRequest.SalesStaffId = userId;
+            }
+
+            if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved))
+            {
+                TempData["error"] = "There is an approved quotation request for this jewelry!";
+                return RedirectToAction("ViewAll", new { jId = jewelry.Id });
+            }
+
+            vm.QuotationRequest.SalesStaffId = userId;
 			vm.QuotationRequest.CreatedAt = DateTime.Now;
 			vm.QuotationRequest.Status = SD.StatusPending;
 
@@ -175,6 +193,8 @@ namespace SWP391.Controllers
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id)
 		{
+			// TODO: Handle if there is already an approved quotationu
+
 			QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
 			if (req.Status == SD.StatusDiscontinued) return NotFound();
 
