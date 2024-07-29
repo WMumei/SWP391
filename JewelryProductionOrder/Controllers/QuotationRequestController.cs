@@ -92,9 +92,9 @@ namespace SWP391.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (vm.QuotationRequest.LaborPrice <= 0)
+			if (vm.QuotationRequest.LaborPrice < 0)
 			{
-                TempData["error"] = "Labor Price must be > 0";
+                TempData["error"] = "Labor Price must be >= 0";
                 if (redirectRequest is not null)
                     return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 				return RedirectToAction("Index", "Home");

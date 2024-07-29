@@ -124,7 +124,7 @@
         const updateQuotationPrice = () => {
             const laborPrice = parseFloat($("#laborPrice").val());
             const totalPrice = parseFloat($("#totalPrice").text());
-            if (isNaN(laborPrice) || laborPrice <= 0) {
+            if (isNaN(laborPrice) || laborPrice < 0) {
                 $("#quotationPrice").text("Invalid Labor Price");
                 return;
             }
@@ -134,8 +134,8 @@
 
         const validateLaborPrice = () => {
             const laborPrice = parseFloat($("#laborPrice").val());
-            if (isNaN(laborPrice) || laborPrice <= 0) {
-                toastr.error("Labor Price must be greater than 0");
+            if (isNaN(laborPrice) || laborPrice < 0) {
+                toastr.error("Labor Price must be greater than or equal to 0");
                 return false;
             }
             return true;
