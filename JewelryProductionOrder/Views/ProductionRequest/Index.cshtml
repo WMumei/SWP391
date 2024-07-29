@@ -1,5 +1,8 @@
 @model List<ProductionRequest>
-
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 <div class="container">
 	<div class="row">
 		<div class="col-6">
@@ -38,7 +41,7 @@
 				{
 					<tr>
 
-						<td></td>
+						<td>@obj.Id</td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -85,7 +88,7 @@
 				@if (User.IsInRole(SD.Role_Customer))
 					{
 							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
-							|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing ||
+							 || obj.Status == SD.StatusAllManufactured  ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 						{
 							
@@ -104,7 +107,7 @@
 					else
 					{
 							if (obj.Status == SD.StatusPaid || obj.Status == SD.DesignApproved || obj.Status == SD.StatusDesigning
-							|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing ||
+							 || obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 							{
 
@@ -177,17 +180,21 @@
 					
 						@if (User.IsInRole(SD.Role_Sales))
 						{
-							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone)
+							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured)
 							{
-								@* <td><a asp-action="CancelRequest" asp-route-reqId="@obj.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this request?')">Cancel</a></td> *@
+								
 								<td>
-									<form asp-action="CancelRequest" asp-route-id="@obj.Id" method="post" onsubmit="return confirmCancel()">
+									<form id="cancelForm-@obj.Id" asp-action="CancelRequest" asp-route-id="@obj.Id" method="post">
 										<input type="hidden" name="reqId" value="@obj.Id" />
-										<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+										<button type="button" class="btn btn-danger btn-sm" onclick="confirmCancel('@obj.Id')">Cancel</button>
 									</form>
 								</td>
 							}
+							else
+							{
+								<td></td>
 							}
+						}
 							
 						else 
 						{
@@ -202,8 +209,21 @@
 	</table>
 </div>
 <script>
-	function confirmCancel() {
-		return confirm('Are you sure you want to cancel this request?');
+	
+	function confirmCancel(reqId) {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "Customers will not receive a refund!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, cancel it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				document.getElementById(`cancelForm-${reqId}`).submit();
+			}
+		});
 	}
 </script>
 <!-- <div asp-validation-summary="All"></div> -->

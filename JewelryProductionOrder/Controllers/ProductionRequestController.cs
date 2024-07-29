@@ -184,18 +184,23 @@ namespace SWP391.Controllers
             {
                 foreach (Jewelry jewelry in jewelries)
                 {
-                    jewelry.Status = SD.StatusCancelled;
-					_unitOfWork.Jewelry.Update(jewelry);
-					_unitOfWork.Save();
-					MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
-					if (materialSet != null) 
+                    if(jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured)
 					{
-						List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
-						foreach(var gem in gemstones)
+						MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
+						//MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
+						if (materialSet != null)
 						{
-							gem.Status = SD.StatusAvailable;
-							_unitOfWork.Gemstone.Update(gem);
-							_unitOfWork.Save();
+							List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
+							foreach (var gem in gemstones)
+							{
+								gem.Status = SD.StatusAvailable;
+								_unitOfWork.Gemstone.Update(gem);
+								_unitOfWork.Save();
+							}
+							//_unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
+							//_unitOfWork.Save();
+							//_unitOfWork.MaterialSet.Remove(materialSet);
+							//_unitOfWork.Save();
 						}
 					}
 					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
@@ -215,7 +220,11 @@ namespace SWP391.Controllers
 							_unitOfWork.Save();
 						}
                     }
-                }
+					
+					jewelry.Status = SD.StatusCancelled;
+					_unitOfWork.Jewelry.Update(jewelry);
+					_unitOfWork.Save();
+				}
             }
             return RedirectToAction("Index");
         }
