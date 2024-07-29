@@ -187,7 +187,7 @@ namespace SWP391.Controllers
                     if(jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured)
 					{
 						MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
-						//MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
+						MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
 						if (materialSet != null)
 						{
 							List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
@@ -197,10 +197,9 @@ namespace SWP391.Controllers
 								_unitOfWork.Gemstone.Update(gem);
 								_unitOfWork.Save();
 							}
-							//_unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
-							//_unitOfWork.Save();
-							//_unitOfWork.MaterialSet.Remove(materialSet);
-							//_unitOfWork.Save();
+							_unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
+							_unitOfWork.Save();
+
 						}
 					}
 					QuotationRequest QuoReq = _unitOfWork.QuotationRequest.Get(qr => qr.JewelryId == jewelry.Id);
