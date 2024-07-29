@@ -618,8 +618,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     SalesStaffId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     JewelryId = table.Column<int>(type: "int", nullable: false),
                     WarrantyCardId = table.Column<int>(type: "int", nullable: false),
-                    DeliveredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    JewelryId1 = table.Column<int>(type: "int", nullable: true)
+                    DeliveredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -642,11 +641,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         principalTable: "Jewelries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Deliveries_Jewelries_JewelryId1",
-                        column: x => x.JewelryId1,
-                        principalTable: "Jewelries",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Deliveries_WarrantyCards_WarrantyCardId",
                         column: x => x.WarrantyCardId,
@@ -833,13 +827,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 name: "IX_Deliveries_JewelryId",
                 table: "Deliveries",
                 column: "JewelryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Deliveries_JewelryId1",
-                table: "Deliveries",
-                column: "JewelryId1",
-                unique: true,
-                filter: "[JewelryId1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Deliveries_SalesStaffId",

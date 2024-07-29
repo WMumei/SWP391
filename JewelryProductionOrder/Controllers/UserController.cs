@@ -1,6 +1,8 @@
 ﻿using JewelryProductionOrder.Data;
 using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
+using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +13,7 @@ using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class UserController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

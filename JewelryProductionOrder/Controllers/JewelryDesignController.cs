@@ -88,11 +88,11 @@ namespace JewelryProductionOrder.Controllers
             
         }
 
-		public IActionResult Index()
-		{
-			List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
-			return View(jewelries);
-		}
+		//public IActionResult Index()
+		//{
+		//	List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
+		//	return View(jewelries);
+		//}
 
 		public IActionResult Details(int id)
 		{
@@ -114,11 +114,11 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == design.JewelryId);
-			jewelry.Status = SD.DesignApproved;
+			jewelry.Status = SD.StatusDesignApproved;
 			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
 			ProductionRequest req = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
-			req.Status = SD.DesignApproved;
+			req.Status = SD.StatusDesignApproved;
 			_unitOfWork.ProductionRequest.Update(req);
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved";

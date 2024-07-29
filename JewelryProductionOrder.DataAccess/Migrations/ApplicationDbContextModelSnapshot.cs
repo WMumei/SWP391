@@ -56,6 +56,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Ring.webp",
                             Name = "Bezel Solitarie Engagement Ring",
                             Type = "Company"
@@ -63,6 +64,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 2,
+                            Description = "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Pendant.jpg",
                             Name = "Diamond Reiki Symbol Pendant",
                             Type = "Company"
@@ -70,6 +72,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 3,
+                            Description = "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Necklace.webp",
                             Name = "Smile Necklace",
                             Type = "Company"
@@ -77,6 +80,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         new
                         {
                             Id = 4,
+                            Description = "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Band.webp",
                             Name = "Swirl Diamond Wedding Band",
                             Type = "Company"
@@ -377,16 +381,9 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<DateTime>("DeliveredAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("JewelryId1")
-                        .HasColumnType("int");
-
                     b.HasKey("CustomerId", "SalesStaffId", "JewelryId", "WarrantyCardId");
 
                     b.HasIndex("JewelryId");
-
-                    b.HasIndex("JewelryId1")
-                        .IsUnique()
-                        .HasFilter("[JewelryId1] IS NOT NULL");
 
                     b.HasIndex("SalesStaffId");
 
@@ -987,6 +984,171 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Cut = "Oval",
                             Name = "Chalcedony",
                             Price = 450m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Carat = 2.5m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Round",
+                            Name = "Diamond",
+                            Price = 2100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Carat = 3.2m,
+                            Clarity = "VVS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 2200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Carat = 2.8m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Princess",
+                            Name = "Diamond",
+                            Price = 2300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Carat = 3.5m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Emerald",
+                            Name = "Diamond",
+                            Price = 2400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Carat = 4m,
+                            Clarity = "VVS2",
+                            Color = "White",
+                            Cut = "Marquise",
+                            Name = "Diamond",
+                            Price = 2500m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Carat = 3.1m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Cushion",
+                            Name = "Diamond",
+                            Price = 2600m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Carat = 2.9m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Heart",
+                            Name = "Diamond",
+                            Price = 2700m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Carat = 3.3m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 2800m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Carat = 3.7m,
+                            Clarity = "VVS1",
+                            Color = "White",
+                            Cut = "Round",
+                            Name = "Diamond",
+                            Price = 2900m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Carat = 4.2m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Princess",
+                            Name = "Diamond",
+                            Price = 3000m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Carat = 3.4m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Emerald",
+                            Name = "Diamond",
+                            Price = 3100m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Carat = 3.6m,
+                            Clarity = "VVS2",
+                            Color = "White",
+                            Cut = "Marquise",
+                            Name = "Diamond",
+                            Price = 3200m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Carat = 3.8m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Cushion",
+                            Name = "Diamond",
+                            Price = 3300m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Carat = 4.1m,
+                            Clarity = "VS2",
+                            Color = "White",
+                            Cut = "Heart",
+                            Name = "Diamond",
+                            Price = 3400m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Carat = 4.3m,
+                            Clarity = "VS1",
+                            Color = "White",
+                            Cut = "Oval",
+                            Name = "Diamond",
+                            Price = 3500m,
                             Status = "Available"
                         });
                 });
@@ -1804,10 +1966,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("JewelryProductionOrder.Models.Jewelry", null)
-                        .WithOne("Delivery")
-                        .HasForeignKey("JewelryProductionOrder.Models.Delivery", "JewelryId1");
-
                     b.HasOne("JewelryProductionOrder.Models.User", "SalesStaff")
                         .WithMany()
                         .HasForeignKey("SalesStaffId")
@@ -2142,9 +2300,6 @@ namespace JewelryProductionOrder.DataAccess.Migrations
 
             modelBuilder.Entity("JewelryProductionOrder.Models.Jewelry", b =>
                 {
-                    b.Navigation("Delivery")
-                        .IsRequired();
-
                     b.Navigation("JewelryDesigns");
 
                     b.Navigation("MaterialSet");

@@ -153,10 +153,10 @@ namespace JewelryProductionOrder.Data
 
 			#region SeedDatabase
 			modelBuilder.Entity<BaseDesign>().HasData(
-				new BaseDesign { Id = 1, Image = @"\Images\Ring.webp", Name = "Bezel Solitarie Engagement Ring", Type = "Company" },
-				new BaseDesign { Id = 2, Image = @"\Images\Pendant.jpg", Name = "Diamond Reiki Symbol Pendant", Type = "Company" },
-				new BaseDesign { Id = 3, Image = @"\Images\Necklace.webp", Name = "Smile Necklace", Type = "Company" },
-				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type = "Company" },
+				new BaseDesign { Id = 1, Image = @"\Images\Ring.webp", Name = "Bezel Solitarie Engagement Ring", Type = "Company", Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
+				new BaseDesign { Id = 2, Image = @"\Images\Pendant.jpg", Name = "Diamond Reiki Symbol Pendant", Type = "Company", Description = "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
+				new BaseDesign { Id = 3, Image = @"\Images\Necklace.webp", Name = "Smile Necklace", Type = "Company", Description = "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
+				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type = "Company", Description = "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
 				new BaseDesign { Id = 5, Image = @"\Images\7979-image-1612583658_1440x.jpg", Name = "Pink Oval Diamond Halo Engagement Ring", Type = "Company", Description = "The perfect blend of classic and modern, this custom ring has a major wow factor: a 1.5ct oval pink diamond, surrounded by a classic halo of ideally cut Hearts and Arrows diamonds. Set in rose gold, this ring is feminine and romantic." },
 				new BaseDesign { Id = 6, Image = @"\Images\87a248f457f2f0977135becb26dc43ce-img-1.webp", Name = "Family Heart Pendant", Type = "Company", Description = "Our client wanted a symbolic heart necklace for his wife. We added two big diamonds, for the two of them, and seven accent diamonds to represent everyone in their family." },
 				new BaseDesign { Id = 7, Image = @"\Images\0e225f328c462698e949123a76f73fd3-img-1_97a7a112-f7bf-4449-bfb5-4e1329e805dc.webp", Name = "Lotus Purple Diamond & Sapphire Ring", Type = "Company", Description = "This custom engagement ring features a bi-colored blue and purple sapphire, and color enhanced purple diamonds, set into a five petal lotus design with black rhodium detailing. The shank is two intertwining stems, terminating in delicate leaves." },
@@ -257,14 +257,30 @@ namespace JewelryProductionOrder.Data
 				new Gemstone { Id = 47, Name = "Zircon", Price = 700, Carat = 1.6M, Color = "Blue", Clarity = "VS2", Cut = "Emerald", Status = "Available" },
 				new Gemstone { Id = 48, Name = "Ametrine", Price = 1000, Carat = 1.7M, Color = "Purple", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
 				new Gemstone { Id = 49, Name = "Benitoite", Price = 3000, Carat = 1.8M, Color = "Blue", Clarity = "VS2", Cut = "Heart", Status = "Available" },
-				new Gemstone { Id = 50, Name = "Chalcedony", Price = 450, Carat = 1.2M, Color = "Blue", Clarity = "VS1", Cut = "Oval", Status = "Available" }
+				new Gemstone { Id = 50, Name = "Chalcedony", Price = 450, Carat = 1.2M, Color = "Blue", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+				new Gemstone { Id = 51, Name = "Diamond", Price = 2100, Carat = 2.5M, Color = "White", Clarity = "VS1", Cut = "Round", Status = "Available" },
+				new Gemstone { Id = 52, Name = "Diamond", Price = 2200, Carat = 3.2M, Color = "White", Clarity = "VVS1", Cut = "Oval", Status = "Available" },
+				new Gemstone { Id = 53, Name = "Diamond", Price = 2300, Carat = 2.8M, Color = "White", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+				new Gemstone { Id = 54, Name = "Diamond", Price = 2400, Carat = 3.5M, Color = "White", Clarity = "VS1", Cut = "Emerald", Status = "Available" },
+				new Gemstone { Id = 55, Name = "Diamond", Price = 2500, Carat = 4M, Color = "White", Clarity = "VVS2", Cut = "Marquise", Status = "Available" },
+				new Gemstone { Id = 56, Name = "Diamond", Price = 2600, Carat = 3.1M, Color = "White", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+				new Gemstone { Id = 57, Name = "Diamond", Price = 2700, Carat = 2.9M, Color = "White", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+				new Gemstone { Id = 58, Name = "Diamond", Price = 2800, Carat = 3.3M, Color = "White", Clarity = "VS1", Cut = "Oval", Status = "Available" },
+				new Gemstone { Id = 59, Name = "Diamond", Price = 2900, Carat = 3.7M, Color = "White", Clarity = "VVS1", Cut = "Round", Status = "Available" },
+				new Gemstone { Id = 60, Name = "Diamond", Price = 3000, Carat = 4.2M, Color = "White", Clarity = "VS2", Cut = "Princess", Status = "Available" },
+				new Gemstone { Id = 61, Name = "Diamond", Price = 3100, Carat = 3.4M, Color = "White", Clarity = "VS1", Cut = "Emerald", Status = "Available" },
+				new Gemstone { Id = 62, Name = "Diamond", Price = 3200, Carat = 3.6M, Color = "White", Clarity = "VVS2", Cut = "Marquise", Status = "Available" },
+				new Gemstone { Id = 63, Name = "Diamond", Price = 3300, Carat = 3.8M, Color = "White", Clarity = "VS1", Cut = "Cushion", Status = "Available" },
+				new Gemstone { Id = 64, Name = "Diamond", Price = 3400, Carat = 4.1M, Color = "White", Clarity = "VS2", Cut = "Heart", Status = "Available" },
+				new Gemstone { Id = 65, Name = "Diamond", Price = 3500, Carat = 4.3M, Color = "White", Clarity = "VS1", Cut = "Oval", Status = "Available" }
+
 			);
 
 			#endregion
 
 
 
-			
+
 
 			#region OneToOne
 			//modelBuilder.Entity<Jewelry>()
