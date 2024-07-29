@@ -17,28 +17,38 @@ function loadUserTable() {
                 "render": function (data) {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
-
                     if (lockout > today) {
-                        return `
-                        <div class="text-center">
-                            <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
-                                Lock
-                            </a>    
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
-                                Permission
-                            </a>
-                        </div>`
+                        return `<div>Locked</div>`
+                    } else {
+                        return `<div>Not locked</div>`
                     }
-                    else {
+                }
+            },
+            {
+                data: { id: "id", lockoutEnd: "lockoutEnd", role: "role" },
+                "render": function (data) {
+                    var today = new Date().getTime();
+                    var lockout = new Date(data.lockoutEnd).getTime();
+                    
+                    if (lockout > today) {
                         return `
                         <div class="text-center">
                             <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer;width:100px;">
                                 Unlock
                             </a>
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer;width:150px;">
-                                Permission
-                            </a>
                         </div>`
+                    }
+                    else {
+                        if (data.role == "Admin") {
+                            return `<div></div>`
+                        } else {
+                            return `
+                                <div class="text-center">
+                                    <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer;width:100px;">
+                                        Lock
+                                    </a>    
+                                </div>`
+                        }
                     }
 
                 },

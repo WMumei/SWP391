@@ -62,7 +62,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				_unitOfWork.Material.Update(material);
 				_unitOfWork.Save();
-				TempData["success"] = "Gemstone updated";
+				TempData["success"] = "Material updated";
 				return RedirectToAction("Index");
 			}
 			if (!ModelState.IsValid)

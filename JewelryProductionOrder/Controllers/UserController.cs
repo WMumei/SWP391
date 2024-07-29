@@ -28,54 +28,98 @@ namespace JewelryProductionOrder.Controllers
             return View();
         }
 
-		public async Task<IActionResult> RoleManagement(string userId)
-		{
-			var user = _unitOfWork.User.Get(u => u.Id == userId);
-			var userRoles = await _userManager.GetRolesAsync(user);
-			var allRoles = await _roleManager.Roles.ToListAsync();
-			var userVM = new UserVM
-			{
-				Id = user.Id,
-				Name = user.Name,
-				UserName = user.UserName,
-				Email = user.Email,
-				LockoutEnd = user.LockoutEnd,
-				Role = string.Join(", ", userRoles),
-				RoleSelectList = new SelectList(allRoles, "Name", "Name")
-			};
-			return View(userVM);
-		}
+        public async Task<IActionResult> Create()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            var model = new UserVM
+            {
+                RoleSelectList = new SelectList(roles, "Name", "Name")
+            };
+            return View(model);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> RoleManagement(UserVM userVM)
+        public async Task<IActionResult> Create(UserVM userVM)
         {
             if (ModelState.IsValid)
             {
-                var user = _unitOfWork.User.Get(u => u.Id == userVM.Id);
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                // Remove old roles
-                foreach (var oldRole in userRoles)
+                var user = new User
                 {
-                    await _userManager.RemoveFromRoleAsync(user, oldRole);
-                }
+                    Name = userVM.Name,
+                    UserName = userVM.Email,
+                    Email = userVM.Email,
+                    EmailConfirmed = true
+                };
 
-                // Add new role
-                await _userManager.AddToRoleAsync(user, userVM.Role);
-
-                TempData["success"] = "Permission updated";
-                return RedirectToAction("Index");
-            }
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                var result = await _userManager.CreateAsync(user, userVM.Password);
+                if (result.Succeeded)
                 {
-                        Debug.WriteLine(error.ErrorMessage);
+                    if (!string.IsNullOrEmpty(userVM.Role))
+                    {
+                        await _userManager.AddToRoleAsync(user, userVM.Role);
+                    }
+                    TempData["success"] = "Account created";
+                    return RedirectToAction("Index");
                 }
-                // ...
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
-            return View();
+            TempData["error"] = "An account with this email has already existed";
+            var roles = await _roleManager.Roles.ToListAsync();
+            userVM.RoleSelectList = new SelectList(roles, "Name", "Name");
+            return View(userVM);
         }
+
+        //public async Task<IActionResult> RoleManagement(string userId)
+        //{
+        //	var user = _unitOfWork.User.Get(u => u.Id == userId);
+        //	var userRoles = await _userManager.GetRolesAsync(user);
+        //	var allRoles = await _roleManager.Roles.ToListAsync();
+        //	var userVM = new UserVM
+        //	{
+        //		Id = user.Id,
+        //		Name = user.Name,
+        //		UserName = user.UserName,
+        //		Email = user.Email,
+        //		LockoutEnd = user.LockoutEnd,
+        //		Role = string.Join(", ", userRoles),
+        //		RoleSelectList = new SelectList(allRoles, "Name", "Name")
+        //	};
+        //	return View(userVM);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> RoleManagement(UserVM userVM)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = _unitOfWork.User.Get(u => u.Id == userVM.Id);
+        //        var userRoles = await _userManager.GetRolesAsync(user);
+
+        //        // Remove old roles
+        //        foreach (var oldRole in userRoles)
+        //        {
+        //            await _userManager.RemoveFromRoleAsync(user, oldRole);
+        //        }
+
+        //        // Add new role
+        //        await _userManager.AddToRoleAsync(user, userVM.Role);
+
+        //        TempData["success"] = "Permission updated";
+        //        return RedirectToAction("Index");
+        //    }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+        //        {
+        //                Debug.WriteLine(error.ErrorMessage);
+        //        }
+        //        // ...
+        //    }
+        //    return View();
+        //}
 
         #region API CALLS
         [HttpGet]

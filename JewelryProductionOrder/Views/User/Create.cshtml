@@ -1,0 +1,52 @@
+﻿@model UserVM
+<div class="container">
+    <form asp-action="Create" method="post">
+        <div class="d-flex gap-2 flex-column">
+            <div>
+                <h2>Create Account</h2>
+                <hr />
+            </div>
+            <div>
+                <input asp-for="Id" value="1" hidden type="text" class="form-control" />
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Name" type="text" class="form-control" />
+                <label asp-for="Name">Type in Employee's Name:</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Email" type="text" class="form-control" />
+                <label asp-for="Email">Type in Employee's Email: (this will be used as username)</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Password" type="password" class="form-control" />
+                <label asp-for="Password">Type in Employee's Password:</label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating py-2 col-12">
+                <select asp-for="Role" asp-items="@Model.RoleSelectList" class="form-select"></select>
+                <label asp-for="Role">Select the role for this employee</label>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="User" asp-action="Index" class="btn btn-outline-primary form-control">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/addAccountValidation.js"></script>
+}
