@@ -25,13 +25,14 @@
 									<img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
 								}
 
-								<div class="card-body custom-card-body">
-									<p class="card-title text-dark opacity-75 text-center p-1 dec-none">@baseDesign.Name</p>
-									<btn class="custom-button">
+								<div class="card-body custom-card-body" style="">
+									<div class="pl-1">
+										<p class="card-title text-dark text-center p-1 dec-none">@baseDesign.Name</p>
+									</div>
+									<btn class="custom-button d-flex justify-content-center">
 										View Product
 									</btn>
 								</div>
-
 							</div>
 						</a>
 					</div>
@@ -40,8 +41,8 @@
 		}
 	</div>
 
-	<div class="col-4 col-md-3">
-		<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary form-control">
+	<div class=" my-5 d-flex align-items-center justify-content-center w-100">
+		<a asp-controller="Home" asp-action="Index" class="col-4 col-md-3 btn btn-outline-primary form-control">
 			Back to Home
 		</a>
 	</div>

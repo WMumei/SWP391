@@ -77,11 +77,17 @@ namespace JewelryProductionOrder.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var cartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId, includeProperties: "BaseDesign").ToList();
+
+			if (cartList.Count <= 0)
+			{
+				TempData["error"] = "Your shopping cart is empty. Please add one or more items first.";
+				return RedirectToAction(nameof(Index));
+			}
 
 			ShoppingCartVM = new()
 			{
-				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
-				includeProperties: "BaseDesign").ToList(),
+				ShoppingCartList = cartList,
 				ProductionRequest = new()
 				{
 					CreatedAt = DateTime.Now
@@ -90,11 +96,11 @@ namespace JewelryProductionOrder.Controllers
 
 			User customer = _unitOfWork.User.Get(u => u.Id == userId);
 			ShoppingCartVM.ProductionRequest.Customer = customer;
-			// Default values for shipping
-			ShoppingCartVM.ProductionRequest.ContactName = customer.Name;
-			ShoppingCartVM.ProductionRequest.PhoneNumber = customer.PhoneNumber;
-			ShoppingCartVM.ProductionRequest.Address = customer.Address;
-			ShoppingCartVM.ProductionRequest.Email = customer.Email;
+			// Default values are from the user's profile
+			ShoppingCartVM.ProductionRequest.ContactName = customer?.Name;
+			ShoppingCartVM.ProductionRequest.PhoneNumber = customer?.PhoneNumber;
+			ShoppingCartVM.ProductionRequest.Address = customer?.Address;
+			ShoppingCartVM.ProductionRequest.Email = customer?.Email;
 
 			return View(ShoppingCartVM);
 		}
@@ -108,6 +114,12 @@ namespace JewelryProductionOrder.Controllers
 
 			ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "BaseDesign").ToList();
+
+			if (ShoppingCartVM.ShoppingCartList.Count() <= 0)
+			{
+				TempData["error"] = "Your shopping cart is empty. Please add one or more items first.";
+				return RedirectToAction(nameof(Index));
+			}
 
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
 			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
@@ -157,6 +169,11 @@ namespace JewelryProductionOrder.Controllers
 		{
 
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+			if (productionRequest is null)
+			{
+				TempData["error"] = "Error while confirming order";
+				return RedirectToAction("Index", "Home");
+			}
 
 			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
 				.GetAll(u => u.UserId == productionRequest.CustomerId).ToList();

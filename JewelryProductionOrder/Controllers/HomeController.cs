@@ -84,6 +84,7 @@ namespace JewelryProductionOrder.Controllers
 			else
 			{
 				TempData["error"] = "Please enter a valid quantity";
+				return RedirectToAction(nameof(Details), new { baseDesignId = shoppingCart.BaseDesignId });
 			}
 
 			return RedirectToAction(nameof(Index));

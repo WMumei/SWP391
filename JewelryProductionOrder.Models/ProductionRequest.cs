@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelryProductionOrder.Models
 {
@@ -6,9 +7,13 @@ namespace JewelryProductionOrder.Models
 	{
 		public int Id { get; set; }
 		public DateTime CreatedAt { get; set; }
+		[Required]
 		public String Address { get; set; } = null!;
+		[Required]
 		public String PhoneNumber { get; set; } = null!;
+		[Required]
 		public String ContactName { get; set; } = null!;
+		[Required]
 		public String Email { get; set; } = null!;
 		public String? Note { get; set; }
 		public String? Status { get; set; }
