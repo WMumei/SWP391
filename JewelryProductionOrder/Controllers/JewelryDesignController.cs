@@ -80,11 +80,10 @@ namespace JewelryProductionOrder.Controllers
                    
                 }
                 TempData["success"] = "Created";
-                if (redirectRequest is null)
-                    return RedirectToAction("Index", "Home");
-                return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
+
+				return RedirectToAction(nameof(Details), new { id = obj.Id });
             }
-            return View(obj);
+            return RedirectToAction(nameof(Create), new { jId = obj.JewelryId });
             
         }
 
@@ -99,6 +98,7 @@ namespace JewelryProductionOrder.Controllers
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
 		}
+
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id, int? redirectRequest)
 		{
