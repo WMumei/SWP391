@@ -24,7 +24,7 @@ namespace SWP391.Controllers
 		}
 
 
-		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
+		[Authorize]
 		public IActionResult Index()
 		{
 			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
@@ -190,7 +190,7 @@ namespace SWP391.Controllers
 
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = domain + $"ProductionRequest/OrderConfirmation{productionRequest.Id}",
+				SuccessUrl = domain + $"ProductionRequest/OrderConfirmation/{productionRequest.Id}",
 				CancelUrl = domain + "ProductionRequest/Index",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment",
