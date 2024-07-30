@@ -42,8 +42,12 @@
                     <span asp-validation-for="Cut" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Status" value="Available" class="form-control border-0 shadow" style="display:none"/>
-                    <label asp-for="Status" class="ms-2" style="display:none"></label>
+                    <select asp-for="Status" class="form-control border-0 shadow">
+                        <option value="Available" selected>Available</option>
+                        <option value="Unavailable">Unavailable</option>
+                    </select>
+                    <label asp-for="Status" class="ms-2"></label>
+                    <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
 
                 <div class="row pt-2">
