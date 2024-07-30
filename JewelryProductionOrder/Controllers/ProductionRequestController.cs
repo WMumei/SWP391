@@ -38,15 +38,6 @@ namespace SWP391.Controllers
 			return View(obj);
 		}
 
-		public IActionResult CustomerView()
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(req => req.CustomerId == userId, includeProperties: "Customer,Jewelries").ToList();
-
-			return View("Index", obj);
-		}
-
 
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Deliver(int id)
@@ -199,8 +190,8 @@ namespace SWP391.Controllers
 
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = domain + "ProductionRequest/OrderConfirmation{productionRequest.Id}",
-				CancelUrl = domain + $"ProductionRequest/Index",
+				SuccessUrl = domain + $"ProductionRequest/OrderConfirmation{productionRequest.Id}",
+				CancelUrl = domain + "ProductionRequest/Index",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment",
 			};
