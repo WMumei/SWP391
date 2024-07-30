@@ -31,7 +31,10 @@
 				@* <th>Design</th> *@
 				<th>Deliver</th>
 				<th>Notes</th>
-				<th></th>
+				@if (User.IsInRole(SD.Role_Sales))
+				{
+					<th>Cancel</th>
+				}
 			</tr>
 		</thead>
 		<tbody>
@@ -196,12 +199,6 @@
 								<td></td>
 							}
 						}
-
-						else
-						{
-							<td></td>
-						}
-
 
 					</tr>
 				}
