@@ -35,6 +35,14 @@ namespace JewelryProductionOrder.Controllers
                 TempData["success"] = "Gemstone added";
                 return RedirectToAction("Index");
             }
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Debug.WriteLine(error.ErrorMessage);
+                }
+                // ...
+            }
             return View();
         }
 
