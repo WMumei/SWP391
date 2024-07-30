@@ -3,6 +3,7 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
@@ -33,6 +34,16 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Edit(Jewelry jewelry, int? redirectRequest)
 		{
+			if (jewelry is null)
+			{
+				return NotFound();
+			}
+			if (jewelry.Name.IsNullOrEmpty())
+			{
+				TempData["error"] = "Name is required";
+				return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
+
+			}
 
 			Jewelry dbJ = _unitOfWork.Jewelry.Get(j => j.Id == jewelry.Id);
 			dbJ.Description = jewelry.Description;
@@ -41,7 +52,7 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 			if (redirectRequest is not null)
 				return RedirectToAction(nameof(RequestIndex), new { reqId = redirectRequest });
-			return RedirectToAction(nameof(Edit));
+			return RedirectToAction(nameof(Edit), new {id = jewelry.Id});
 		}
 
 		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
