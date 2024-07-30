@@ -112,7 +112,10 @@
                 <div>
                     <a asp-controller="Material" asp-action="Index" class="button text-light">Manage Material</a>
                 </div>
+            }
 
+            @if (User.IsInRole(SD.Role_Admin))
+            {
                 <div>
                     <a asp-controller="User" asp-action="Index" class="button text-light">User management</a>
                 </div>
