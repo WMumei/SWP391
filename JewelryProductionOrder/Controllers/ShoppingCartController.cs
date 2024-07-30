@@ -121,10 +121,21 @@ namespace JewelryProductionOrder.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
+			// Validate ProductionRequest fields
+			if (string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.Address) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.ContactName) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.Email) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.PhoneNumber) 
+				)
+			{
+				TempData["error"] = "Please fill in all required fields: Address, Contact Name, and Email.";
+				return RedirectToAction(nameof(Summary));
+			}
+
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
 			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
 			ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-			//ShoppingCartVM.ProductionRequest.Status = SD.StatusPending;
+
 			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
 
 			var salesStaffIds = await GetSalesStaffIdsAsync();

@@ -50,6 +50,7 @@ namespace SWP391.Controllers
 		{
 			QuotationRequest request = _unitOfWork.QuotationRequest.Get(r => r.Id == id, includeProperties: "Jewelry");
 			if (request is null || request.Status == SD.StatusDiscontinued) return NotFound();
+			if (User.IsInRole(SD.Role_Customer) && (request.Status == SD.ManagerDisapproved)) return NotFound();
 			MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.Id == request.MaterialSetId, includeProperties: "Gemstones,Materials,MaterialSetMaterials");
 			QuotationRequestVM vm = new QuotationRequestVM
 			{
@@ -95,9 +96,7 @@ namespace SWP391.Controllers
 			if (vm.QuotationRequest.LaborPrice < 0)
 			{
                 TempData["error"] = "Labor Price must be >= 0";
-                if (redirectRequest is not null)
-                    return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-				return RedirectToAction("Index", "Home");
+                return RedirectToAction("Viewall", new { jId = vm.Jewelry.Id });
             }
 
 
@@ -105,15 +104,13 @@ namespace SWP391.Controllers
 			if (jewelry.MaterialSet is null)
 			{
 				TempData["error"] = "Material Set is not ready!";
-                if (redirectRequest is not null)
-					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-				return RedirectToAction("Index", "Home");
+                return RedirectToAction("Viewall", new { jId = vm.Jewelry.Id });
 
             }
 
-            if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved))
+            if (jewelry.QuotationRequests.Any(r => r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid))
             {
-                TempData["error"] = "There is an approved quotation request for this jewelry!";
+                TempData["error"] = "There is an approved or paid quotation request for this jewelry already!";
                 return RedirectToAction("ViewAll", new { jId = jewelry.Id });
             }
 
@@ -138,6 +135,7 @@ namespace SWP391.Controllers
 			var oldRequests = _unitOfWork.QuotationRequest
 				.GetAll(r => r.JewelryId == vm.Jewelry.Id && r.CreatedAt < vmCreatedAt);
 				//.OrderByDescending(r => r.CreatedAt);
+
 			foreach (var oldRequest in oldRequests)
 			{
 				oldRequest.Status = SD.StatusDiscontinued;

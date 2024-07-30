@@ -58,7 +58,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 1,
                             Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Ring.webp",
-                            Name = "Bezel Solitarie Engagement Ring",
+                            Name = "Bezel Solitairie Engagement Ring",
                             Type = "Company"
                         },
                         new
@@ -1272,9 +1272,8 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Purity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Purity")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -1291,7 +1290,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 1,
                             Color = "White",
                             Price = 100m,
-                            Purity = "14K",
+                            Purity = 58.5m,
                             Type = "Gold"
                         },
                         new
@@ -1299,7 +1298,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 2,
                             Color = "Rose",
                             Price = 50m,
-                            Purity = "10K",
+                            Purity = 41.7m,
                             Type = "Gold"
                         },
                         new
@@ -1307,7 +1306,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 3,
                             Color = "Yellow",
                             Price = 80m,
-                            Purity = "18K",
+                            Purity = 75.0m,
                             Type = "Gold"
                         },
                         new
@@ -1315,7 +1314,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 4,
                             Color = "Green",
                             Price = 90m,
-                            Purity = "14K",
+                            Purity = 58.5m,
                             Type = "Gold"
                         },
                         new
@@ -1323,7 +1322,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 5,
                             Color = "Silver",
                             Price = 60m,
-                            Purity = "925",
+                            Purity = 92.5m,
                             Type = "Silver"
                         },
                         new
@@ -1331,7 +1330,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 6,
                             Color = "Silver",
                             Price = 70m,
-                            Purity = "999",
+                            Purity = 99.9m,
                             Type = "Silver"
                         },
                         new
@@ -1339,7 +1338,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 7,
                             Color = "White",
                             Price = 120m,
-                            Purity = "950",
+                            Purity = 95.0m,
                             Type = "Platinum"
                         },
                         new
@@ -1347,7 +1346,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 8,
                             Color = "Red",
                             Price = 30m,
-                            Purity = "99.9%",
+                            Purity = 99.9m,
                             Type = "Copper"
                         },
                         new
@@ -1355,7 +1354,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 9,
                             Color = "Golden",
                             Price = 40m,
-                            Purity = "60%",
+                            Purity = 60.0m,
                             Type = "Brass"
                         },
                         new
@@ -1363,7 +1362,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 10,
                             Color = "Grey",
                             Price = 50m,
-                            Purity = "99.9%",
+                            Purity = 99.9m,
                             Type = "Titanium"
                         },
                         new
@@ -1371,7 +1370,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 11,
                             Color = "Silver",
                             Price = 45m,
-                            Purity = "304",
+                            Purity = 30.0m,
                             Type = "Steel"
                         },
                         new
@@ -1379,7 +1378,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 12,
                             Color = "Grey",
                             Price = 20m,
-                            Purity = "99.9%",
+                            Purity = 69.0m,
                             Type = "Zinc"
                         },
                         new
@@ -1387,7 +1386,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 13,
                             Color = "White",
                             Price = 150m,
-                            Purity = "99.9%",
+                            Purity = 42.0m,
                             Type = "Rhodium"
                         },
                         new
@@ -1395,7 +1394,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 14,
                             Color = "White",
                             Price = 100m,
-                            Purity = "95%",
+                            Purity = 0.95m,
                             Type = "Palladium"
                         },
                         new
@@ -1403,7 +1402,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 15,
                             Color = "Grey",
                             Price = 180m,
-                            Purity = "99.9%",
+                            Purity = 0.01m,
                             Type = "Iridium"
                         });
                 });

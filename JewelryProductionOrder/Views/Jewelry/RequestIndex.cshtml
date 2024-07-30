@@ -117,25 +117,36 @@
 
 					@if (@obj.WarrantyCard is not null)
 					{
-						<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">View</a></td>
-					}
-					else if (User.IsInRole(SD.Role_Sales))
-					{
-						if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
-						|| obj.Status == SD.StatusManufactured || obj.Status == SD.StatusAllManufactured || obj.Status == SD.StatusManufaturing)
+						if (User.IsInRole(SD.Role_Sales) || User.IsInRole(SD.Role_Customer))
 						{
-							<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+							<td><a asp-controller="WarrantyCard" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">View</a></td>
 						}
 						else
 						{
 							<td></td>
 						}
-						
+
 					}
-					else
+					else 
 					{
-						<td></td>
+						if (User.IsInRole(SD.Role_Sales))
+						{
+							if (
+							obj.Status == SD.StatusManufactured )
+							{
+								<td><a asp-controller="WarrantyCard" asp-action="Create" asp-route-jid="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Create</a></td>
+							}
+							else
+							{
+								<td></td>
+							}
+						}
+						else
+						{
+							<td></td>
+						}
 					}
+					
 
 					@if (User.IsInRole(SD.Role_Sales))
 					{
@@ -143,18 +154,14 @@
 							<a asp-controller="Jewelry" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary btn-sm" asp-route-redirectRequest="@obj.ProductionRequestId">Edit</a>
 						</td>
 					}
+					
 				</tr>
 			}
 		</tbody>
 	</table>
-	@if (User.IsInRole(SD.Role_Customer))
-	{
-		<a asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-primary ">Back</a>
-	}
-	else
-	{
-		<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-primary ">Back</a>
-	}
+	
+		<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-secondary ">Back</a>
+	
 	
 
 </div>

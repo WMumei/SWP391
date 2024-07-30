@@ -153,7 +153,7 @@ namespace JewelryProductionOrder.Data
 
 			#region SeedDatabase
 			modelBuilder.Entity<BaseDesign>().HasData(
-				new BaseDesign { Id = 1, Image = @"\Images\Ring.webp", Name = "Bezel Solitarie Engagement Ring", Type = "Company", Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
+				new BaseDesign { Id = 1, Image = @"\Images\Ring.webp", Name = "Bezel Solitairie Engagement Ring", Type = "Company", Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
 				new BaseDesign { Id = 2, Image = @"\Images\Pendant.jpg", Name = "Diamond Reiki Symbol Pendant", Type = "Company", Description = "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
 				new BaseDesign { Id = 3, Image = @"\Images\Necklace.webp", Name = "Smile Necklace", Type = "Company", Description = "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
 				new BaseDesign { Id = 4, Image = @"\Images\Band.webp", Name = "Swirl Diamond Wedding Band", Type = "Company", Description = "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote." },
@@ -189,22 +189,22 @@ namespace JewelryProductionOrder.Data
 				new BaseDesign { Id = 34, Image = @"\Images\b4d5613ae690104bf388af17964be9a2-img-1_e13c8c38-1b59-42ae-a4a5-12ade79002cc.webp", Name = "Star Sapphire Swirl Ring", Type = "Company", Description = "This 14k white gold bypass swirl ring features a round blue star sapphire and heirloom diamonds." }
 				);
 
-			modelBuilder.Entity<Material>().HasData(
-				new Material { Id = 1, Type = "Gold", Purity = "14K", Color = "White", Price = 100m },
-				new Material { Id = 2, Type = "Gold", Purity = "10K", Color = "Rose", Price = 50m },
-				new Material { Id = 3, Type = "Gold", Purity = "18K", Color = "Yellow", Price = 80m },
-				new Material { Id = 4, Type = "Gold", Purity = "14K", Color = "Green", Price = 90m },
-				new Material { Id = 5, Type = "Silver", Purity = "925", Color = "Silver", Price = 60m },
-				new Material { Id = 6, Type = "Silver", Purity = "999", Color = "Silver", Price = 70m },
-				new Material { Id = 7, Type = "Platinum", Purity = "950", Color = "White", Price = 120m },
-				new Material { Id = 8, Type = "Copper", Purity = "99.9%", Color = "Red", Price = 30m },
-				new Material { Id = 9, Type = "Brass", Purity = "60%", Color = "Golden", Price = 40m },
-				new Material { Id = 10, Type = "Titanium", Purity = "99.9%", Color = "Grey", Price = 50m },
-				new Material { Id = 11, Type = "Steel", Purity = "304", Color = "Silver", Price = 45m },
-				new Material { Id = 12, Type = "Zinc", Purity = "99.9%", Color = "Grey", Price = 20m },
-				new Material { Id = 13, Type = "Rhodium", Purity = "99.9%", Color = "White", Price = 150m },
-				new Material { Id = 14, Type = "Palladium", Purity = "95%", Color = "White", Price = 100m },
-				new Material { Id = 15, Type = "Iridium", Purity = "99.9%", Color = "Grey", Price = 180m }
+            modelBuilder.Entity<Material>().HasData(
+                new Material { Id = 1, Type = "Gold", Purity = 58.5m, Color = "White", Price = 100m },
+                new Material { Id = 2, Type = "Gold", Purity = 41.7m, Color = "Rose", Price = 50m }, 
+                new Material { Id = 3, Type = "Gold", Purity = 75.0m, Color = "Yellow", Price = 80m },
+                new Material { Id = 4, Type = "Gold", Purity = 58.5m, Color = "Green", Price = 90m },
+                new Material { Id = 5, Type = "Silver", Purity = 92.5m, Color = "Silver", Price = 60m },
+                new Material { Id = 6, Type = "Silver", Purity = 99.9m, Color = "Silver", Price = 70m },
+                new Material { Id = 7, Type = "Platinum", Purity = 95.0m, Color = "White", Price = 120m },
+                new Material { Id = 8, Type = "Copper", Purity = 99.9m, Color = "Red", Price = 30m },
+                new Material { Id = 9, Type = "Brass", Purity = 60.0m, Color = "Golden", Price = 40m },
+                new Material { Id = 10, Type = "Titanium", Purity = 99.9m, Color = "Grey", Price = 50m },
+				new Material { Id = 11, Type = "Steel", Purity = 30.0m, Color = "Silver", Price = 45m },
+				new Material { Id = 12, Type = "Zinc", Purity = 69.0m, Color = "Grey", Price = 20m },
+				new Material { Id = 13, Type = "Rhodium", Purity = 42.0m, Color = "White", Price = 150m },
+				new Material { Id = 14, Type = "Palladium", Purity = 0.95m, Color = "White", Price = 100m },
+				new Material { Id = 15, Type = "Iridium", Purity = 0.01m, Color = "Grey", Price = 180m }
 			);
 
 			modelBuilder.Entity<Gemstone>().HasData(

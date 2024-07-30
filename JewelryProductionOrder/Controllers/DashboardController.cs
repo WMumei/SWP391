@@ -164,7 +164,7 @@ namespace JewelryProductionOrder.Controllers
 					revenueData[quotation.CreatedAt.Month - 1] += quotation.TotalPrice;
 				}
 			}
-
+			TempData["success"] = "Data is updated.";
 			return Json(revenueData);
 		}
 		[HttpGet]
@@ -179,6 +179,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				soldData[(quotation.CreatedAt - startDateObj).Days] += quotation.TotalPrice;
 			}
+			TempData["success"] = "Data is updated.";
 			return Json(soldData);
 		}
 
@@ -194,6 +195,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				soldData[(delivery.DeliveredAt - startDateObj).Days] += 1;
 			}
+			TempData["success"] = "Data is updated.";
 			return Json(soldData);
 		}
 
@@ -222,6 +224,7 @@ namespace JewelryProductionOrder.Controllers
 				Value1 = soldData,
 				Value2 = years
 			};
+			
 			return Json(result);
 		}
 		[HttpGet]
@@ -249,6 +252,7 @@ namespace JewelryProductionOrder.Controllers
 				Value1 = soldData,
 				Value2 = years
 			};
+			
 			return Json(result);
 		}
 
@@ -260,19 +264,10 @@ namespace JewelryProductionOrder.Controllers
 
 			if (month != 0)
 			{
-				if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-				{
+				
 
-					soldData = Enumerable.Repeat((decimal?)0, 31).ToArray();
-				} else if (month == 2)
-				{
-					soldData = Enumerable.Repeat((decimal?)0, 28).ToArray();
-				}
-				else
-				{
-					soldData = Enumerable.Repeat((decimal?)0, 30).ToArray();
-				}
-
+				soldData = Enumerable.Repeat((decimal?)0, 31).ToArray();
+				
 				deliveries = _unitOfWork.Delivery.GetAll(q => q.DeliveredAt.Year == year
 				&& q.DeliveredAt.Month == month).ToList();
 			}
@@ -297,7 +292,7 @@ namespace JewelryProductionOrder.Controllers
 
 			}
 
-
+			TempData["success"] = "Data is updated.";
 			return Json(soldData);
 		}
 		[HttpGet]
@@ -324,6 +319,7 @@ namespace JewelryProductionOrder.Controllers
 				quantity = soldData,
 				labels = label
 			};
+			
 			return Json(result);
 		}
 		[HttpGet]
@@ -353,6 +349,7 @@ namespace JewelryProductionOrder.Controllers
 				quantity = soldData,
 				labels = label
 			};
+			
 			return Json(result);
 		}
 		[HttpGet]

@@ -56,7 +56,7 @@
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_Customer))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="CustomerView" class="btn btn-outline-primary">View Order</a>
+                                <a class="nav-link text-dark" asp-controller="ProductionRequest" asp-action="Index" class="btn btn-outline-primary">View Order</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index" class="btn btn-outline-primary">
@@ -74,7 +74,7 @@
             </div>
         </nav>
     </header>
-    @if (User.Identity.IsAuthenticated && !User.IsInRole(SD.Role_Customer))
+    @if (SignInManager.IsSignedIn(User) && !User.IsInRole(SD.Role_Customer))
     {
         <div class="menu-icon-2" id="menu-icon-2">
             <img src="~/Images/Inverted Menu Icon.png" alt="Blue Menu Icon" />
@@ -112,7 +112,10 @@
                 <div>
                     <a asp-controller="Material" asp-action="Index" class="button text-light">Manage Material</a>
                 </div>
+            }
 
+            @if (User.IsInRole(SD.Role_Admin))
+            {
                 <div>
                     <a asp-controller="User" asp-action="Index" class="button text-light">User management</a>
                 </div>
@@ -156,10 +159,12 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="//cdn.datatables.net/2.1.0/js/dataTables.min.js"></script>
+    @* <script src="//cdn.datatables.net/2.1.0/js/dataTables.min.js"></script> *@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="//cdn.datatables.net/2.1.0/js/dataTables.min.js" asp-append-version="true"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> *@
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 @*     <script src="//cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js" asp-append-version="true"></script>
  *@    @await RenderSectionAsync("Scripts", required: false)

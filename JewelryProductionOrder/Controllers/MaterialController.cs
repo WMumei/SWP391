@@ -40,6 +40,7 @@ namespace JewelryProductionOrder.Controllers
 		{
 			_unitOfWork.Material.Add(obj);
 			_unitOfWork.Save();
+			TempData["success"] = "Material Created";
 			return RedirectToAction("Index");
 		}
 
@@ -89,6 +90,7 @@ namespace JewelryProductionOrder.Controllers
 			}
 			_unitOfWork.Material.Remove(material);
 			_unitOfWork.Save();
+			TempData["success"] = "Material Removed";
 			return RedirectToAction("Index");
 		}
 

@@ -2,6 +2,7 @@
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Diagnostics;
@@ -30,10 +31,24 @@ namespace JewelryProductionOrder.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (objGemstone.Status != SD.StatusUnavailable && objGemstone.Status != SD.StatusAvailable)
+                {
+                    TempData["error"] = "Invalid status";
+                    return View(objGemstone);
+                }
+
                 _unitOfWork.Gemstone.Add(objGemstone);
                 _unitOfWork.Save();
                 TempData["success"] = "Gemstone added";
                 return RedirectToAction("Index");
+            }
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Debug.WriteLine(error.ErrorMessage);
+                }
+                // ...
             }
             return View();
         }
@@ -56,6 +71,11 @@ namespace JewelryProductionOrder.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (objGemstone.Status != SD.StatusUnavailable && objGemstone.Status != SD.StatusAvailable)
+                {
+                    TempData["error"] = "Invalid status";
+                    return View(objGemstone);
+                }
                 _unitOfWork.Gemstone.Update(objGemstone);
                 _unitOfWork.Save();
                 TempData["success"] = "Gemstone updated";
@@ -74,7 +94,7 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult Delete(int id)
         {
-            if (id==null || id==0)
+            if (id==0)
             {
                 return NotFound();
             }

@@ -60,8 +60,8 @@ namespace JewelryProductionOrder.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer");
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer,WarrantyCard");
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries", tracked:true);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 
@@ -80,8 +80,22 @@ namespace JewelryProductionOrder.Controllers
 			}
 			if (vm.WarrantyCard.CreatedAt.Date >= DateTime.Now.Date && vm.WarrantyCard.ExpiredAt >= vm.WarrantyCard.CreatedAt.AddYears(1))
 			{
-
 				_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
+				_unitOfWork.Save();
+				bool completed = true;
+				foreach (var j in productionRequest.Jewelries)
+				{
+					if (j.WarrantyCard == null)
+					{
+						completed = false;
+						break;
+					}
+				}
+				if (completed)
+				{
+					productionRequest.Status = SD.StatusAllWarrantyCard;
+
+				}
 				_unitOfWork.Save();
 				TempData["success"] = "Warranty Card is created successfully!";
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = productionRequest.Id });

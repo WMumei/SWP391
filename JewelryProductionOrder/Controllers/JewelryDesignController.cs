@@ -80,7 +80,7 @@ namespace JewelryProductionOrder.Controllers
 				
                 if (redirectRequest is null)
                     return RedirectToAction("Index", "Home");
-                return RedirectToAction("ViewAll", new { jId = obj.Jewelry.Id });
+                return RedirectToAction("ViewAll", new { jId = obj.JewelryId });
             }
 			else
 			{
@@ -145,6 +145,7 @@ namespace JewelryProductionOrder.Controllers
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
 		}
+
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id, int? redirectRequest)
 		{
