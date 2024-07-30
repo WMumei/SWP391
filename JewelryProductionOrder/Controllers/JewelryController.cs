@@ -55,19 +55,7 @@ namespace JewelryProductionOrder.Controllers
 			return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
 		}
 
-		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
-		//public IActionResult Index()
-		//{
 
-		//	List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-		//	bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
-		//	CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
-		//	{
-		//		Jewelries = jewelries,
-		//		checkStatus = checkStatus
-		//	};
-		//	return View(checkJewelryVM);
-		//}
 		[HttpPost]
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Create(Jewelry obj)
@@ -272,6 +260,20 @@ namespace JewelryProductionOrder.Controllers
 		//		ProductionRequest = productionRequest
 		//	};
 		//	return View(obj);
+		//}
+
+		//[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
+		//public IActionResult Index()
+		//{
+
+		//	List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
+		//	bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
+		//	CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
+		//	{
+		//		Jewelries = jewelries,
+		//		checkStatus = checkStatus
+		//	};
+		//	return View(checkJewelryVM);
 		//}
 	}
 }
