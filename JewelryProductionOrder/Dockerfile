@@ -10,6 +10,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["JewelryProductionOrder/JewelryProductionOrder.csproj", "JewelryProductionOrder/"]
+COPY ["JewelryProductionOrder.DataAccess/JewelryProductionOrder.DataAccess.csproj", "JewelryProductionOrder.DataAccess/"]
+COPY ["JewelryProductionOrder.Models/JewelryProductionOrder.Models.csproj", "JewelryProductionOrder.Models/"]
 RUN dotnet restore "./JewelryProductionOrder/JewelryProductionOrder.csproj"
 COPY . .
 WORKDIR "/src/JewelryProductionOrder"

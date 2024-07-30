@@ -12,8 +12,8 @@ namespace JewelryProductionOrder.Models
 		public int MaterialSetId { get; set; }
 		[ForeignKey("MaterialSetId")]
 		public MaterialSet MaterialSet { get; set; }
-		[Range(0, double.MaxValue)]
+		[Range(0.001, double.MaxValue)]
 		public decimal Weight { get; set; }
-		public DateTime CreatedAt { get; set; }
+		public DateTime? CreatedAt { get; set; }
 	}
 }

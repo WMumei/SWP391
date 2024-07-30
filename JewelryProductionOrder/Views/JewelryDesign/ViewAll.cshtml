@@ -1,0 +1,43 @@
+﻿@model List<JewelryDesign>
+
+<div>
+	<div>
+		<div class="d-flex justify-content-between align-items-center my-4">
+			<h2 class="col-10">Jewelry Design for Jewelry: @Model.FirstOrDefault().Jewelry.Name</h2>
+			<div class="d-flex gap-2">
+			
+			@if (Model.Any(obj => obj.Status == SD.CustomerApproved))
+			{
+			}
+			else if (User.IsInRole(SD.Role_Design))
+			{
+				<div class="col-2 d-flex justify-content-end">
+					<a class="btn btn-primary" asp-controller="JewelryDesign" asp-action="Create" asp-route-jId="@Model.FirstOrDefault().JewelryId" asp-route-redirectRequest="@Model.FirstOrDefault().Jewelry.ProductionRequestId">Create</a>
+				</div>
+			}
+			</div>
+		</div>
+	</div>
+	<table class="table table-bordered table-striped fs-6 fw-normal">
+		<thead>
+			<tr class="fw-normal">
+				<th>Id</th>
+				<th>Created At</th>
+				<th>Status</th>
+				<th>Details</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model.OrderByDescending(u => u.CreatedAt))
+			{
+				<tr>
+					<td>@obj.Id</td>
+					<td>@obj.CreatedAt</td>
+					<td>@obj.Status</td>
+					<td><a asp-controller="JewelryDesign" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.FirstOrDefault()?.Jewelry?.ProductionRequestId">Back</a>
+</div>

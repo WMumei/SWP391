@@ -36,16 +36,15 @@
 									<img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
 								}
 
-								<div class="card-body custom-card-body">
+								<div class="card-body custom-card-body" style="">
 									<div class="pl-1">
-										<p class="card-title text-dark opacity-75 text-center p-1 dec-none">@baseDesign.Name</p>
+										<p class="card-title text-dark text-center p-1 dec-none">@baseDesign.Name</p>
 									</div>
+									<btn class="custom-button d-flex justify-content-center">
+										View Product
+									</btn>
 								</div>
 
-								<btn class="custom-button">
-
-									View Product
-								</btn>
 							</div>
 						</a>
 					</div>
@@ -56,12 +55,20 @@
 @* 	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">Or</div> *@
 
 	<div class="col-12 d-flex justify-content-center align-items-center mb-5">
-		<a 
-			asp-controller="BaseDesign"
-			asp-action="Create"
-			class="btn btn-primary">
-			Upload your design
-		</a>
+        <div class="col-12 d-flex justify-content-center align-items-center mb-5">
+            <a 
+                asp-controller="BaseDesign"
+                asp-action="Create"
+                class="btn btn-primary">
+                Upload your design
+            </a>
+            <span class="mx-2"></span>
+            <a asp-controller="Home"
+               asp-action="ViewMore"
+               class="btn btn-primary">
+                View more
+            </a>
+        </div>
 	</div>
 
 

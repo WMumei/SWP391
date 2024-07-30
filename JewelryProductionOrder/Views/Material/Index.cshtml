@@ -1,0 +1,27 @@
+﻿@model List<Material>
+
+<div class="container">
+	<div class="caption-top row d-flex justify-content-between">
+		<h2 class="col-10">Material Management </h2>
+
+		<div class="col-2 d-flex justify-content-end">
+			<a class="btn btn-primary btn-lg px-4" asp-controller="Material" asp-action="Create" asp-route-mId="">Create</a>
+		</div>
+	</div>
+	<table id="tblData" class="table table-bordered table-striped" style="width:100%">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Type</th>
+				<th>Purity (%)</th>
+				<th>Color</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+
+@section Scripts {
+	<script src="~/js/Material/Material.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

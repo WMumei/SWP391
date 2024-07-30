@@ -6,6 +6,7 @@ using JewelryProductionOrder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Models.Repositories.Repository.IRepository;
 using System.ComponentModel.DataAnnotations;
 
 namespace JewelryProductionOrder.Areas.Identity.Pages.Account.Manage
@@ -14,11 +15,14 @@ namespace JewelryProductionOrder.Areas.Identity.Pages.Account.Manage
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-		public IndexModel(
+        public IndexModel(
 			UserManager<User> userManager,
-			SignInManager<User> signInManager)
+			SignInManager<User> signInManager,
+			IUnitOfWork unitOfWork)
 		{
+			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_signInManager = signInManager;
 		}
@@ -55,19 +59,25 @@ namespace JewelryProductionOrder.Areas.Identity.Pages.Account.Manage
 			/// </summary>
 			[Phone]
 			[Display(Name = "Phone number")]
-			public string PhoneNumber { get; set; }
-		}
+            [RegularExpression(@"^[0-9]{8,15}$",
+                   ErrorMessage = "Invalid phone number")]
+            public string PhoneNumber { get; set; }
+            [Display(Name = "Street Address")]
+            public string StreetAddress { get; set; }
+        }
 
 		private async Task LoadAsync(User user)
 		{
 			var userName = await _userManager.GetUserNameAsync(user);
 			var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+			var address = user.Address;
 
 			Username = userName;
 
 			Input = new InputModel
 			{
-				PhoneNumber = phoneNumber
+				PhoneNumber = phoneNumber,
+				StreetAddress = address
 			};
 		}
 
@@ -107,9 +117,12 @@ namespace JewelryProductionOrder.Areas.Identity.Pages.Account.Manage
 					return RedirectToPage();
 				}
 			}
+			user.Address = Input.StreetAddress;
+			_unitOfWork.User.Update(user);
+			_unitOfWork.Save();
 
 			await _signInManager.RefreshSignInAsync(user);
-			StatusMessage = "Your profile has been updated";
+			TempData["success"] = "Profile upated";
 			return RedirectToPage();
 		}
 	}

@@ -14,20 +14,19 @@
 		public const string StatusQuotationing = "Waiting for Quotation";
 		public const string StatusQuotationApproved = "Quotation Approved";
 		public const string StatusDesigning = "Designing";
-		public const string StatusDesignedApproved = "Design Approved";
 		public const string StatusDelivered = "Delivered";
 		public const string StatusConfirmDelivered = "Confirm Delivered";
-		public const string StatusAllQuotationApproved = "All Quotation Approved";
+		public const string StatusAllQuotationApproved = "All Quotations Approved";
 
         public const string StatusRequestDone = "Done";
-        public const string StatusRequestDelayedPayment = "Payment Delayed";
         public const string StatusPaid = "Paid";
 
 		public const string StatusManufaturing = "Currently manufacturing";
 		public const string StatusManufactured = "Manufactured";
 		public const string StatusAllManufactured = "All Jewelires Manufactured";
 
-		public const string DesignApproved = "Design Approved";
+		public const string StatusDesignApproved = "Design Approved";
+		public const string StatusAllDesignApproved = "All Designs Approved";
 
 		public const string StatusPending = "Pending";
 		public const string StatusDiscontinued = "Discontinued";
@@ -35,5 +34,9 @@
 		public const string CustomerDisapproved = "Disapproved by Customer";
 		public const string ManagerApproved = "Approved by Manager";
 		public const string ManagerDisapproved = "Disapproved by Manager";
+
+		public const string StatusUnavailable = "Unavailable";
+		public const string StatusAvailable = "Available";
+
 	}
 }

@@ -31,39 +31,74 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Design)]
 		public IActionResult Create(JewelryDesign obj, IFormFile? file, int? redirectRequest)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			obj.DesignStaffId = userId;
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId);
 			obj.CreatedAt = DateTime.Now;
+			
 			string wwwRootPath = _webHostEnvironment.WebRootPath;
-			if (file is not null)
+			if (file is null)
 			{
-				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-				string filePath = Path.Combine(wwwRootPath, @"files");
-				using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+				ModelState.AddModelError("DesignFile", "Design file is null.");
+                if (obj.Name is null)
+                {
+                    ModelState.AddModelError("Name", "Please enter name for design.");
+                }
+
+            }
+			else
+			//if (file is not null)
+			{ 
+				if(obj.Name is null)
 				{
-					file.CopyTo(fileStream);
+                    ModelState.AddModelError("Name", "Please enter name for design.");
 				}
-				obj.DesignFile = Path.Combine("\\files", fileName);
-			}
-			obj.Status = SD.StatusPending;
-			//obj.JewelryId = obj.Jewelry.Id;
-			_unitOfWork.JewelryDesign.Add(obj);
-			_unitOfWork.Save();
-			if (redirectRequest is null)
-				return RedirectToAction("Index", "Jewelry");
-			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-			//return View(new JewelryDesign { ProductionRequestId = obj.ProductionRequestId });
-		}
+				else
+				{
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string filePath = Path.Combine(wwwRootPath, @"files");
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    obj.DesignFile = Path.Combine("\\files", fileName);
 
-		public IActionResult Index()
-		{
-			List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
-			return View(jewelries);
-		}
+                    obj.Status = SD.StatusPending;
+					obj.CustomerId = jewelry.CustomerId;
+					_unitOfWork.JewelryDesign.Add(obj);
+                    _unitOfWork.Save();
+                    //DateTime vmCreatedAt = (DateTime)obj.CreatedAt;
+                    //var oldDesigns = _unitOfWork.JewelryDesign
+                    //    .GetAll(r => r.JewelryId == obj.JewelryId && r.CreatedAt < vmCreatedAt)
+                    //    .OrderByDescending(r => r.CreatedAt);
+                    //foreach (var oldDesign in oldDesigns)
+                    //{
+                    //    oldDesign.Status = SD.StatusDiscontinued;
+                    //    _unitOfWork.Save();
+                    //}
+                   
+                }
+                TempData["success"] = "Created";
 
-		public IActionResult Details(int jId)
+				return RedirectToAction(nameof(Details), new { id = obj.Id });
+            }
+            return RedirectToAction(nameof(Create), new { jId = obj.JewelryId });
+            
+        }
+
+		//public IActionResult Index()
+		//{
+		//	List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
+		//	return View(jewelries);
+		//}
+
+		public IActionResult Details(int id)
 		{
-			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.JewelryId == jId, includeProperties: "Jewelry");
+			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
 		}
+
 		[Authorize(Roles = SD.Role_Customer)]
 		public IActionResult CustomerApprove(int id, int? redirectRequest)
 		{
@@ -77,18 +112,44 @@ namespace JewelryProductionOrder.Controllers
 			}
 			_unitOfWork.JewelryDesign.Update(design);
 			_unitOfWork.Save();
+			
+			var oldDesigns = _unitOfWork.JewelryDesign
+				.GetAll(r => r.JewelryId == design.JewelryId && r.Status != SD.CustomerApproved)
+				.OrderByDescending(r => r.CreatedAt);
+			foreach (var oldDesign in oldDesigns)
+			{
+				oldDesign.Status = SD.StatusDiscontinued;
+				_unitOfWork.Save();
+			}
 
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == design.JewelryId);
-			jewelry.Status = SD.DesignApproved;
+			jewelry.Status = SD.StatusDesignApproved;
 			_unitOfWork.Jewelry.Update(jewelry);
 			_unitOfWork.Save();
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
-			req.Status = SD.DesignApproved;
-			_unitOfWork.ProductionRequest.Update(req);
+
+
+			ProductionRequest req = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries", tracked: true);
+            bool completed = true;
+            foreach (var j in req.Jewelries)
+            {
+                if (j.Status != SD.StatusDesignApproved)
+                {
+                    completed = false;
+                    break;
+                }
+            }
+            if (completed)
+            {
+                req.Status = SD.StatusAllDesignApproved;
+                
+            }
+            
+			
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved";
 			if (redirectRequest is null)
 				return RedirectToAction("Index", "Home");
+			return RedirectToAction("Details", new { id = design.Id });
 			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 		}
 
@@ -96,13 +157,20 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult CustomerDisapprove(int id, int? redirectRequest)
 		{
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id);
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (design is not null)
+			{
+				design.CustomerId = userId;
+				design.Status = SD.CustomerDisapproved;
+			}
+            _unitOfWork.JewelryDesign.Update(design);
+            _unitOfWork.Save();
+			TempData["Success"] = "Disapproved";
 
-			_unitOfWork.JewelryDesign.Remove(design);
-			_unitOfWork.Save();
-
-			TempData["Success"] = "Disapproved. This design will be removed.";
 			if (redirectRequest is null)
 				return RedirectToAction("Index", "Home");
+			return RedirectToAction("Details", new { id = design.Id });
 			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 		}
 
@@ -120,23 +188,24 @@ namespace JewelryProductionOrder.Controllers
 		//	return View(vm);
 		//}
 
-		//[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Customer},{SD.Role_Sales}")]
-		//public IActionResult ViewAll(int jId)
-		//{
-		//	var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
-		//	var claimsIdentity = (ClaimsIdentity)User.Identity;
-		//	var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-		//	if (User.IsInRole(SD.Role_Customer))
-		//	{
-		//		quotationRequests = quotationRequests.Where(r => r.CustomerId == userId && r.Status == SD.ManagerApproved).ToList();
-		//	}
-		//	/*else if(User.IsInRole(SD.Role_Sales))
-		//	{
-		//		quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
-		//	}*/
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		public IActionResult ViewAll(int jId)
+		{
+			var jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (User.IsInRole(SD.Role_Customer))
+			{
+				//jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
+				jewelryDesigns = jewelryDesigns.Where(jD => jD.CustomerId == userId).ToList();
+				//if (jewelryDesigns.Count == 0)
+				//{
+				//	jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
+				//}
+			}
 
-		//	return View(quotationRequests);
-		//}
+			return View(jewelryDesigns);
+		}
 
 	}
 }

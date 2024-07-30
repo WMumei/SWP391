@@ -1,34 +1,29 @@
-﻿
+﻿@model ShoppingCart
 
-@model ShoppingCart
-
-@* <div class="caption-top row">
-	<h2>Design Details</h2>
-</div> *@
 <br />
 <form method="post">
-	<input hidden asp-for="BaseDesignId" />
-	<div class="form-group">
-		<div class="row d-flex flex-column align-content-center">
-			<div style="" class="row col-6 d-flex justify-content-center">
-				<img src="@Model.BaseDesign.Image" height="600px" style="" />
-			</div>
-			<div style="height:200px;" class="row col-6 py-2 text-center d-flex flex-column justify-content-center">
-				<div class="row">
-					<h3 class="">@Model.BaseDesign.Name</h3>
-				</div>
-				<div style="width:700px;" class="row d-flex justify-content-center">
-					<div style="height:50px; " class="col-6 row gap-2 d-flex justify-content-center">
-						<input asp-for="Quantity" class="col-6 form-control text-end w-25" />
-						<button type="submit"
-								class="col-5 btn btn-primary bg-gradient flex-grow-0 p-1">
-							Add to Cart
-						</button>
-					</div>
-
-				</div>
-
-			</div>
-		</div>
+    <input hidden asp-for="BaseDesignId" />
+    <div class="form-group">
+        <div class="row d-flex">
+            <div class="col-md-6 d-flex justify-content-center">
+                <img src="@Model.BaseDesign.Image" height="600px" class="img-fluid" />
+            </div>
+            <div class="col-md-6 d-flex flex-column justify-content-center">
+                <div class="row">
+                    <h3 class="text-center">@Model.BaseDesign.Name</h3>
+                </div>
+                <div class="row">
+                    <p class="text-center">@Model.BaseDesign.Description</p>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-6 d-flex justify-content-center gap-2">
+                        <input asp-for="Quantity" class="form-control text-end w-25" />
+                        <button type="submit" class="btn btn-primary bg-gradient p-1 px-2">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
-

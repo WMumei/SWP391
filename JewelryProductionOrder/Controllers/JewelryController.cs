@@ -3,11 +3,13 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Models.Repositories.Repository.IRepository;
 using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
+	[Authorize()]
 	public class JewelryController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -15,21 +17,7 @@ namespace JewelryProductionOrder.Controllers
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Create(int reqId)
-		{
-			var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties: "Jewelries");
-			if (productionRequest == null)
-			{
-				return NotFound();
-			}
-			Jewelry obj = new Jewelry
-			{
-				ProductionRequestId = reqId,
-				CustomerId = productionRequest.CustomerId,
-				ProductionRequest = productionRequest
-			};
-			return View(obj);
-		}
+
 
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Edit(int id)
@@ -46,6 +34,16 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Edit(Jewelry jewelry, int? redirectRequest)
 		{
+			if (jewelry is null)
+			{
+				return NotFound();
+			}
+			if (jewelry.Name.IsNullOrEmpty())
+			{
+				TempData["error"] = "Name is required";
+				return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
+
+			}
 
 			Jewelry dbJ = _unitOfWork.Jewelry.Get(j => j.Id == jewelry.Id);
 			dbJ.Description = jewelry.Description;
@@ -54,22 +52,10 @@ namespace JewelryProductionOrder.Controllers
 			_unitOfWork.Save();
 			if (redirectRequest is not null)
 				return RedirectToAction(nameof(RequestIndex), new { reqId = redirectRequest });
-			return RedirectToAction(nameof(Edit));
+			return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
 		}
 
-		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
-		//public IActionResult Index()
-		//{
 
-		//	List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
-		//	bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
-		//	CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
-		//	{
-		//		Jewelries = jewelries,
-		//		checkStatus = checkStatus
-		//	};
-		//	return View(checkJewelryVM);
-		//}
 		[HttpPost]
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Create(Jewelry obj)
@@ -92,7 +78,29 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult RequestIndex(int reqId)
 		{
+
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == reqId, includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns,ProductionRequest,WarrantyCard").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (jewelries.Count == 0)
+			{
+				return NotFound();
+			}
+			ProductionRequest request = jewelries.First().ProductionRequest;
+			if (User.IsInRole(SD.Role_Customer) && request.CustomerId != userId)
+			{
+				return Unauthorized();
+			}
+			if (request.Status == SD.StatusCancelled)
+			{
+				TempData["error"] = "This request has been cancelled.";
+				return RedirectToAction("Index", "Home");
+			}
+
+			// Remove Session Const of Material Set
+			HttpContext.Session.Remove(SessionConst.MATERIAL_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.GEMSTONE_LIST_KEY);
+			HttpContext.Session.Remove(SessionConst.DELETED_GEMSTONE_LIST_KEY);
 			return View(jewelries);
 		}
 
@@ -104,7 +112,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				return NotFound();
 			}
-			if (jewelry.Status != SD.DesignApproved)
+			if (jewelry.Status != SD.StatusDesignApproved)
 			{
 				TempData["Error"] = "Jewelry Design has not been approved";
 			}
@@ -132,14 +140,15 @@ namespace JewelryProductionOrder.Controllers
 			{
 
 				Jewelry jewelry = _unitOfWork.Jewelry.Get(jewelry => jewelry.Id == jId, tracked: true);
-				//User productionStaff = _unitOfWork.User.Get(u => u.Id == 1);
-				//if (jewelry is not null)
-				//{
+				if (jewelry is null)
+				{
+					TempData["error"] = "Jewelry not found";
+					return RedirectToAction("Index", "Home");
+				}
 				var claimsIdentity = (ClaimsIdentity)User.Identity;
 				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 				jewelry.ProductionStaffId = userId;
-				//    jewelry.Status = $"Manufactured by {productionStaff.Name}";
-				//}
+
 				jewelry.Status = SD.StatusManufactured;
 				_unitOfWork.Jewelry.Update(jewelry);
 				_unitOfWork.Save();
@@ -161,7 +170,7 @@ namespace JewelryProductionOrder.Controllers
 				TempData["Success"] = "Jewelry Completed!";
 				if (redirectRequest is not null)
 					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
-				return RedirectToAction("Index");
+				return RedirectToAction("Index", "Home");
 			}
 			catch (Exception e)
 			{
@@ -235,6 +244,36 @@ namespace JewelryProductionOrder.Controllers
 		//	//             TempData["Error"] = "Error creating Jewelry";
 		//	//             return RedirectToAction("Create", new { reqId = obj.ProductionRequestId });
 		//	//}
+		//}
+
+		//public IActionResult Create(int reqId)
+		//{
+		//	var productionRequest = _unitOfWork.ProductionRequest.Get(pr => pr.Id == reqId, includeProperties: "Jewelries");
+		//	if (productionRequest == null)
+		//	{
+		//		return NotFound();
+		//	}
+		//	Jewelry obj = new Jewelry
+		//	{
+		//		ProductionRequestId = reqId,
+		//		CustomerId = productionRequest.CustomerId,
+		//		ProductionRequest = productionRequest
+		//	};
+		//	return View(obj);
+		//}
+
+		//[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Design},{SD.Role_Production}")]
+		//public IActionResult Index()
+		//{
+
+		//	List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(includeProperties: "MaterialSet,QuotationRequests,JewelryDesigns").ToList();
+		//	bool checkStatus = jewelries != null && jewelries.Exists(r => r.Status == SD.StatusCancelled);
+		//	CheckJewelryVM checkJewelryVM = new CheckJewelryVM()
+		//	{
+		//		Jewelries = jewelries,
+		//		checkStatus = checkStatus
+		//	};
+		//	return View(checkJewelryVM);
 		//}
 	}
 }

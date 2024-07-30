@@ -1,6 +1,7 @@
 ﻿@model BaseDesign
 <div class="container">
 	<form method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="d-flex gap-2 flex-column align-items-center gap-2">
 			<div>
 				<h2>Use your design to create a jewelry</h2>
@@ -10,6 +11,7 @@
 			<div class="form-floating col-6 py-2">
 				<input asp-for="Name" type="text" class="form-control border-0 shadow" />
 				<label asp-for="Name" class="ms-2">Design name:</label>
+				<span asp-validation-for="@Model.Name" class="text-danger"></span>
 			</div>
 			<div class="form-floating col-6 py-2">
 				<input asp-for="Description" type="text" class="form-control border-0 shadow" />
@@ -18,15 +20,29 @@
 			<div class="form-floating col-6 py-2">
 				<input type="file" name="file" class="form-control border-0 shadow" />
 				<label class="ms-2">Image</label>
+				<span asp-validation-for="@Model.Image" class="text-danger"></span>
 			</div>
 
 			<div class="row">
-				<div class="">
+				<div class="col-5">
 					<button type="submit" class="btn btn-primary form-control">Create</button>
 				</div>
+				<div class="col-7">
+					@if (User.IsInRole(SD.Role_Customer))
+					{
+						<a asp-controller="Home" asp-action="Index" class="btn btn-primary form-control">Back to List</a>
+					}
+					else if (User.IsInRole(SD.Role_Design))
+					{
+						<a asp-action="Index" class="btn btn-primary form-control">Back to List</a>
+					}
+
+				</div>
 			</div>
+		</div>
 	</form>
 </div>
+
 
 @section Scripts
 {
