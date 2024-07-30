@@ -68,7 +68,7 @@ namespace JewelryProductionOrder.Controllers
 			}
 
 			TempData["success"] = "Create successfully";
-			if (User.IsInRole("Customer"))
+			if (User.IsInRole(SD.Role_Customer))
 			{
 				return RedirectToAction("Create");
 			}

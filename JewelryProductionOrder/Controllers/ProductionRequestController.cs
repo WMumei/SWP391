@@ -172,12 +172,13 @@ namespace SWP391.Controllers
 		}
         public IActionResult CancelRequest(int id)
         {
-            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id,tracked:true);
-            if (req is not null)
-            {
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id && r.Status != SD.StatusRequestDone 
+			&& r.Status != SD.StatusAllManufactured && r.Status != SD.StatusConfirmDelivered,tracked:true);
+			if (req is null) return NotFound();
+            
                 req.Status = SD.StatusCancelled;
                 _unitOfWork.Save();
-            }
+           
 
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
             if (jewelries.Count > 0)
