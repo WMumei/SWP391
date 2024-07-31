@@ -52,21 +52,21 @@
 				<h6>Latest status of the order: </h6><h3>@Model.Status </h3>
 			</div>
 
-			@* @if (User.IsInRole(SD.Role_Sales))
+			@if (User.IsInRole(SD.Role_Sales))
 			{
-				if (@Model.Status == SD.StatusConfirmDelivered)
+				if (@Model.Status == SD.StatusAllWarrantyCard)
 				{
 					<div class="col-12 py-2 form-floating">
-						<p style="strong">If customer has confirmed order: </p>
+						
 					<a asp-controller="ProductionRequest" asp-action="Delivered" asp-route-id="@Model.Id" class="btn btn-success btn-lg ">Delivered</a>
 					</div>
 				}
-				else *@ @if (@Model.Status != SD.StatusConfirmDelivered)
+				else if (@Model.Status == SD.StatusDelivered)
 				{
 					<div class="text-center"><h2>Delivering...</h2></div>
 					<div class="text-center">Waiting for customer confirming order...</div>
 				}
-			@* } *@
+			}
 			
 
 

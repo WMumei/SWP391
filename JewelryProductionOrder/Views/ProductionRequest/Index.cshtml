@@ -138,10 +138,10 @@
 							{
 
 
-								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+								<td></td>
 							}
 						}
-						else if ( obj.Status == SD.StatusRequestDone)
+						else if ( obj.Status == SD.StatusDelivered)
 						{
 							@if (User.IsInRole(SD.Role_Sales))
 							{
@@ -151,19 +151,16 @@
 
 							else if (User.IsInRole(SD.Role_Customer))
 							{
-
-
-
-								<td>Delivered</td>
+								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
 							else
 							{
 								<td></td>
 							}
 						}
-						else
+						else if (obj.Status == SD.StatusRequestDone)
 						{
-							<td></td>
+							<td>Delivered</td>
 						}
 
 

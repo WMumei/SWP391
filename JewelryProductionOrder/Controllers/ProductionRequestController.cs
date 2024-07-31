@@ -45,13 +45,22 @@ namespace SWP391.Controllers
             ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries");
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
 
-            _unitOfWork.Save();
-            return View("Deliver", productionRequest);
-        }
+			_unitOfWork.Save();
+			return View("Deliver", productionRequest);
+		}
+		public IActionResult Delivered(int id)
 
-        public IActionResult CustomerViewDelivery(int id)
-        {
-            ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries", tracked: true);
+		{
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries",tracked:true);
+			
+			productionRequest.Status = SD.StatusDelivered;
+			TempData["success"] = "Order is delivering";
+			_unitOfWork.Save();
+			return RedirectToAction("Index");
+		}
+		public IActionResult CustomerViewDelivery(int id)
+		{
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries", tracked: true);
 
             List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
             var claimsIdentity = (ClaimsIdentity)User.Identity;
