@@ -60,8 +60,14 @@ namespace JewelryProductionOrder.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer,WarrantyCard");
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId, includeProperties: "Jewelries", tracked:true);
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == vm.Jewelry.Id, includeProperties: "Customer");
+			if (jewelry.Status != SD.StatusManufactured)
+			{
+				TempData["error"] = "The jewelry hasn't been manufactured yet";
+				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
+			}
+
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 
@@ -126,11 +132,7 @@ namespace JewelryProductionOrder.Controllers
 
 		public IActionResult Edit(int id)
 		{
-
-
 			WarrantyCard warrantyCard = _unitOfWork.WarrantyCard.Get(j => j.Id == id, includeProperties: "Customer,Jewelry");
-
-
 			return View(warrantyCard);
 		}
 		[HttpPost]

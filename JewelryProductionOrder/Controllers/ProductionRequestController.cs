@@ -174,7 +174,7 @@ namespace SWP391.Controllers
 			};
 			var jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == pId).ToList();
 
-			if (!jewelries.Any())
+			if (jewelries.Count() == 0)
 			{
 				return BadRequest("No jewelries found for the given production request.");
 			}
@@ -185,7 +185,7 @@ namespace SWP391.Controllers
 				var quotation = _unitOfWork.QuotationRequest.Get(q => q.JewelryId == jewelry.Id && q.Status == SD.CustomerApproved);
 				if (quotation is null)
 				{
-					return Json(new { success = false, message = "Not found any quotation for this jewelry" });
+					return Json(new { success = false, message = $"Not found any approved quotation for the jewelry {jewelry.Id},{jewelry.Name} in the request" });
 				}
 				else
 				{
