@@ -109,7 +109,11 @@ namespace JewelryProductionOrder.Controllers
 			// Count distinct years
 			int distinctYearCount = distinctYears.Count();
 			// Find the minimum year
-			int minYear = distinctYears.Min();
+			int minYear = 0;
+			if(distinctYears.ToList().Count > 0)
+			{
+				minYear = distinctYears.Min();
+			}
 			decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
 			foreach (var quotation in quotations)
 			{
@@ -137,7 +141,11 @@ namespace JewelryProductionOrder.Controllers
 			// Count distinct years
 			int distinctYearCount = distinctYears.Count();
 			// Find the minimum year
-			int minYear = distinctYears.Min();
+			int minYear = 0;
+			if (distinctYears.ToList().Count > 0)
+			{
+				minYear = distinctYears.Min();
+			}
 			decimal?[] soldData = Enumerable.Repeat((decimal?)0, distinctYearCount).ToArray();
 			foreach (var delivery in deliveries)
 			{
@@ -197,94 +205,116 @@ namespace JewelryProductionOrder.Controllers
 		[HttpGet]
 		public IActionResult GetGemstone()
 		{
-			List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable && g.MaterialSetId !=null).ToList();
-
-			int gemstoneCount = gemstones.Count;
-			var type = gemstones
-				.Select(q => q.Name)
-				.Distinct();
-			int typeCount = type.Count();
-			//double rate = typeCount / gemstoneCount;
-			int[] soldData = new int[typeCount];
-			String[] label = type.ToArray();
-			for (int i = 0; i < typeCount; i++)
+			try
 			{
-				soldData[i] = gemstones.Count(q => q.Name == label[i]);
 
+
+				List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable && g.MaterialSetId != null).ToList();
+
+				int gemstoneCount = gemstones.Count;
+				var type = gemstones
+					.Select(q => q.Name)
+					.Distinct();
+				int typeCount = type.Count();
+				//double rate = typeCount / gemstoneCount;
+				int[] soldData = new int[typeCount];
+				String[] label = type.ToArray();
+				for (int i = 0; i < typeCount; i++)
+				{
+					soldData[i] = gemstones.Count(q => q.Name == label[i]);
+
+				}
+
+				var result = new
+				{
+					quantity = soldData,
+					labels = label
+				};
+
+				return Json(result);
+			} catch (Exception ex)
+			{
+				return Empty;
 			}
-
-			var result = new
-			{
-				quantity = soldData,
-				labels = label
-			};
-			
-			return Json(result);
 		}
 		[HttpGet]
 		public IActionResult GetMaterial()
 		{
-			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
-			var materialTypes = materialSetMaterials
-				.Select(q => q.Material.Type)
-				.Distinct();
-			int typeCount = materialTypes.Count();
-			decimal[] soldData = new decimal[typeCount];
-			//
-			String[] label = materialTypes.ToArray();
-			//
-			for(int i =0;i<typeCount;i++)
+			try
 			{
-                string type = label[i];
-                decimal totalWeight = materialSetMaterials
-                    .Where(q => q.Material.Type == type)
-                    .Sum(q => q.Weight);
+				List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+				var materialTypes = materialSetMaterials
+					.Select(q => q.Material.Type)
+					.Distinct();
+				int typeCount = materialTypes.Count();
+				decimal[] soldData = new decimal[typeCount];
+				//
+				String[] label = materialTypes.ToArray();
+				//
+				for (int i = 0; i < typeCount; i++)
+				{
+					string type = label[i];
+					decimal totalWeight = materialSetMaterials
+						.Where(q => q.Material.Type == type)
+						.Sum(q => q.Weight);
 
-                soldData[i] = totalWeight;
-            }
-			
-			var result = new
+					soldData[i] = totalWeight;
+				}
+
+				var result = new
+				{
+					quantity = soldData,
+					labels = label
+				};
+
+				return Json(result);
+			}
+			catch (Exception ex)
 			{
-				quantity = soldData,
-				labels = label
-			};
-			
-			return Json(result);
+				return Empty;
+			}
 		}
 		[HttpGet]
 		public IActionResult GetRevenue()
 		{
-			List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
-			
-			List<decimal?> decimalList = new List<decimal?>();
-            foreach (var q in requests)
+			try
 			{
-                decimalList.Add(q.TotalPrice.Value);
-				
-			}
-            var sum = decimalList.Sum();
+				List<QuotationRequest> requests = _unitOfWork.QuotationRequest.GetAll(q => q.Status == SD.StatusPaid).ToList();
 
-            return Content(sum.ToString());
+				List<decimal?> decimalList = new List<decimal?>();
+				foreach (var q in requests)
+				{
+					decimalList.Add(q.TotalPrice.Value);
+
+				}
+				var sum = decimalList.Sum();
+
+				return Content(sum.ToString());
+			}catch (Exception ex)
+			{
+				return Empty;
+			}
         }
         [HttpGet]
         public IActionResult GetOrder()
         {
-            List<ProductionRequest> requestsComplete = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusRequestDone).ToList();
-            List<ProductionRequest> requestsCancel = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusCancelled).ToList();
-
-            
-			
-            
-			var	sum1 = requestsComplete.Count();
-              var  sum2 = requestsCancel.Count();
-            var result = new
-            {
-                sum1 = sum1,
-                sum2 = sum2
-            };
+			try
+			{
+				List<ProductionRequest> requestsComplete = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusRequestDone).ToList();
+				List<ProductionRequest> requestsCancel = _unitOfWork.ProductionRequest.GetAll(q => q.Status == SD.StatusCancelled).ToList();
+				var sum1 = requestsComplete.Count();
+				var sum2 = requestsCancel.Count();
+				var result = new
+				{
+					sum1 = sum1,
+					sum2 = sum2
+				};
 
 
-            return Json(result);
+				return Json(result);
+			}catch (Exception ex) { 
+				return Empty;
+			}
         }
     }
 }

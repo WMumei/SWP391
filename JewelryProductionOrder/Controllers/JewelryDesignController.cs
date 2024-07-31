@@ -39,9 +39,9 @@ namespace JewelryProductionOrder.Controllers
 			obj.DesignStaffId = userId;
 			
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId);
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(r => r.CustomerId == jewelry.CustomerId,tracked:true);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(r => r.Id == jewelry.ProductionRequestId,tracked:true);
             productionRequest.DesignStaffId = userId;
-			_unitOfWork.ProductionRequest.Update(productionRequest);
+			
 			_unitOfWork.Save();
 			obj.CreatedAt = DateTime.Now;
 			if (obj.Name is null)
@@ -240,6 +240,10 @@ namespace JewelryProductionOrder.Controllers
 				//{
 				//	jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
 				//}
+			}
+			else if (User.IsInRole(SD.Role_Design))
+			{
+				jewelryDesigns = jewelryDesigns.Where(jD => jD.DesignStaffId == productionRequest.DesignStaffId).ToList();
 			}
 
 			return View(jewelryDesigns);
