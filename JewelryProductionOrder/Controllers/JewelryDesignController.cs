@@ -34,9 +34,6 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = SD.Role_Design)]
 		public IActionResult Create(JewelryDesign obj, List<IFormFile> files , int? redirectRequest)
 		{
-            
-
-            
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			obj.DesignStaffId = userId;
@@ -66,10 +63,6 @@ namespace JewelryProductionOrder.Controllers
 						}
                     //obj.DesignFile = Path.Combine("\\files", fileName);
                     designFiles.Add(Path.Combine("\\files", fileName));
-
-					
-
-
 				}
                 obj.DesignFile = string.Join(",", designFiles);
                 obj.Status = SD.StatusPending;

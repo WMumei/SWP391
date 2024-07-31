@@ -99,7 +99,7 @@
 							<span id="validationStartEndDate" style="display:none; color:red">End Date is invalid.</span>
 						</div>
 						<div>
-							<button id="click" class="btn-primary" onclick="showToast()">Show</button>
+							<button id="click" class="btn-primary">Show</button>
 
 						</div>
 
@@ -236,6 +236,7 @@
 		//TODO:Check so ngay trong thang
 		var monthLabelChart1 = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 		var labelChart1 = yearLabelChart1;
+		
 
 
 		function myFunction() {
@@ -314,6 +315,8 @@
 						type: 'GET',
 						data: {},
 						success: function (rd) {
+							showToast();
+							showToast();
 							if (myChart) {
 								myChart.clear();
 								myChart.destroy();
@@ -354,7 +357,7 @@
 							//
 						},
 						error: function () {
-							$('#output').text('An error occurred');
+							toastr.error("Updating data failed.");
 						}
 					});
 
@@ -376,8 +379,6 @@
 						var diffInMs = end - start;
 						if (diffInMs <= 0 || end > currentDate) {
 							$("#validationStartEndDate").show();
-
-
 						}
 						else {
 							// Convert milliseconds to days
@@ -391,6 +392,7 @@
 									type: 'GET',
 									data: { startDate: startDate, endDate: endDate, diffInDays: diffInDays },
 									success: function (data) {
+										showToast();
 										if (myChart) {
 											myChart.clear();
 											myChart.destroy();
@@ -431,6 +433,7 @@
 									}
 								});
 
+								
 							} else {
 								//Trường hợp lớn hơn 40
 								Swal.fire({
@@ -470,6 +473,7 @@
 						type: 'GET',
 						data: { year: year, month: monthValue },
 						success: function (data) {
+							showToast();
 							if (myChart) {
 								myChart.clear();
 								myChart.destroy();
@@ -478,7 +482,7 @@
 							//data is an array
 							const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 							$("#totalvalue").text(sum);
-							console.log(data);
+							
 
 							// Revenue Chart
 							const ctxDaily = document.getElementById('revenueChart').getContext('2d');
@@ -506,7 +510,7 @@
 							//
 						},
 						error: function () {
-							$('#output').text('An error occurred');
+							toastr.error("Updating data failed.");
 						}
 					});
 				}
@@ -525,6 +529,7 @@
 						type: 'GET',
 						data: {},
 						success: function (data) {
+							showToast();
 							if (myChart1) {
 								myChart1.clear();
 								myChart1.destroy();
@@ -557,7 +562,7 @@
 							//
 						},
 						error: function () {
-							$('#output').text('An error occurred');
+							toastr.error("Updating data failed.");
 						}
 					});
 				} else if (x1 == "optionJe") {
@@ -575,6 +580,7 @@
 						var diffInMs = end - start;
 						if (diffInMs <= 0 || end > currentDate) {
 							$("#validationStartEndDateJe").show();
+							
 						}
 						else {
 							// Convert milliseconds to days
@@ -588,6 +594,7 @@
 									type: 'GET',
 									data: { startDate: startDate, endDate: endDate, diffInDays: diffInDays },
 									success: function (data) {
+										showToast();
 										if (myChart1) {
 											myChart1.clear();
 											myChart1.destroy();
@@ -596,7 +603,7 @@
 										//data is an array
 										const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 										$("#totalvalueJe").text(sum);
-										console.log(data);
+										
 
 										// Revenue Chart
 										const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
@@ -642,6 +649,7 @@
 					} else {
 
 						$("#validation1Je").show();
+						
 
 						//trường hợp startDate và endDate null
 
@@ -653,6 +661,7 @@
 						type: 'GET',
 						data: {},
 						success: function (data) {
+							showToast();
 							if (myChart1) {
 								myChart1.clear();
 								myChart1.destroy();
@@ -712,6 +721,7 @@
 					type: 'GET',
 					data: { year: yearJe, month: monthValue1 },
 					success: function (data) {
+						showToast();
 						if (myChart1) {
 							myChart1.clear();
 							myChart1.destroy();
@@ -748,7 +758,7 @@
 						//
 					},
 					error: function () {
-						$('#output').text('An error occurred');
+						toastr.error("Updating data failed.");
 					}
 				});
 
@@ -823,6 +833,7 @@
 				type: 'GET',
 				data: {},
 				success: function (data) {
+					
 					if (myPieChart) {
 						myPieChart.clear();
 						myPieChart.destroy();
@@ -878,7 +889,7 @@
 					//
 				},
 				error: function () {
-					$('#output').text('An error occurred');
+					toastr.error("Updating data failed.");
 				}
 			});
 			$.ajax({
@@ -886,6 +897,7 @@
 				type: 'GET',
 				data: {},
 				success: function (data) {
+					
 					if (myPieChart1) {
 						myPieChart1.clear();
 						myPieChart1.destroy();
@@ -941,7 +953,8 @@
 					//
 				},
 				error: function () {
-					$('#output').text('An error occurred');
+					
+					toastr.error("Updating data failed.");
 				}
 			});
 			$.ajax({
@@ -951,9 +964,10 @@
 				success: function (sum) {
 					// Handle the response from the controller
 					$("#totalRevenue").text(sum);
+					
 				},
 				error: function () {
-					alert('An error occurred while making the request.');
+					toastr.error("Updating data failed.");
 				}
 			});
 			$.ajax({
@@ -966,7 +980,7 @@
 					$("#orderCancel").text(result.sum2);
 				},
 				error: function () {
-					alert('An error occurred while making the request.');
+					toastr.error("Updating data failed.");
 				}
 			});
 		});
