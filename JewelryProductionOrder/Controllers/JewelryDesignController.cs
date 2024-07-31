@@ -229,7 +229,7 @@ namespace JewelryProductionOrder.Controllers
 		//	return View(vm);
 		//}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Production}")]
 		public IActionResult ViewAll(int jId)
 		{
 			var jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
