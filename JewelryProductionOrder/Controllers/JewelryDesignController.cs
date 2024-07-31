@@ -128,13 +128,14 @@ namespace JewelryProductionOrder.Controllers
 			return NotFound();
         }
 
-        //public IActionResult Index()
-        //{
-        //	List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
-        //	return View(jewelries);
-        //}
+		//public IActionResult Index()
+		//{
+		//	List<JewelryDesign> jewelries = _unitOfWork.JewelryDesign.GetAll().ToList();
+		//	return View(jewelries);
+		//}
 
-        public IActionResult Details(int id)
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Production}")]
+		public IActionResult Details(int id)
 		{
 			JewelryDesign design = _unitOfWork.JewelryDesign.Get(design => design.Id == id, includeProperties: "Jewelry");
 			return View(design);
@@ -184,14 +185,10 @@ namespace JewelryProductionOrder.Controllers
                 req.Status = SD.StatusAllDesignApproved;
                 
             }
-            
 			
 			_unitOfWork.Save();
 			TempData["Success"] = "Approved";
-			if (redirectRequest is null)
-				return RedirectToAction("Index", "Home");
 			return RedirectToAction("Details", new { id = design.Id });
-			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 		}
 
 		[Authorize(Roles = SD.Role_Customer)]
@@ -209,10 +206,7 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork.Save();
 			TempData["Success"] = "Disapproved";
 
-			if (redirectRequest is null)
-				return RedirectToAction("Index", "Home");
 			return RedirectToAction("Details", new { id = design.Id });
-			return RedirectToAction("RequestIndex", "Jewelry", new { reqId = redirectRequest });
 		}
 
 		//public IActionResult Manufacture(int jId)
@@ -229,7 +223,7 @@ namespace JewelryProductionOrder.Controllers
 		//	return View(vm);
 		//}
 
-		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+		[Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Production}")]
 		public IActionResult ViewAll(int jId)
 		{
 			var jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
