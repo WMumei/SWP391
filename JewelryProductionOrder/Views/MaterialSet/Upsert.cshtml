@@ -1,200 +1,150 @@
-﻿@model MaterialSetVM
+﻿<style>
+	.total-text {
+		border-color: darkgoldenrod !important;
+		width: fit-content;
+		font-weight: normal;
+	}
+</style>
+	<h2 class="my-4">Material Set Details:<span class="" id=""></span></h2>
+<hr />
+<div id="materialDiv" class="my-2">
 
-<form method="post" class="container" id="materialForm">
-	<div class="caption-top row">
-		<h2>Choose material for jewelry @Model.Jewelry.Name</h2>
-	</div>
-	<div class="form-group">
-		<div class="row">
-			<div class="col-10">
-				<input asp-for="@Model.Jewelry.Id" class="ms-2" type="hidden" />
-				<input asp-for="@Model.Jewelry.MaterialSetId" class="ms-2" type="hidden" />
+	<div id="material-card-group" class="card-group d-flex justify-content-between" style="min-height:600px;">
+		<div class=" card shadow border-0 m-1" style="flex: 0 0 55%;">
+
+			<div class="card-header bg-primary" style="background-color: #445B8D;">
 				<div class="row">
-
-					<div class="form-floating py-2 col-10">
-						<select asp-for="@Model.Gemstone.Id" asp-items="@Model.GemstoneList" class="form-select border-0 shadow">
-							<option disabled selected>--Select Gemstone--</option>
-						</select>
-						<label asp-for="Gemstone" class="ms-2"></label>
-						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
-
-					</div>
-					<div class="col-2 my-2">
-						<button type="button" id="submitAddGemstone" class="btn btn-primary form-control">Add Gemstone</button>
-					</div>
-				</div>
-				<div class="row">
-
-					<div class="form-floating py-2 col-5">
-						@* Check if we can use @Model.MaterialSet.Materials *@
-						<select asp-for="@Model.Material.Id" asp-items="@Model.MaterialList" class="form-select border-0 shadow">
-							<option disabled selected>--Select Material--</option>
-						</select>
-						<label asp-for="Material" class="ms-2"></label>
-						@* <span asp-validation-for="MaterialSet.Materials" class="text-danger"></span> *@
-
-					</div>
-					<div class="col-5 py-2 form-floating">
-						<input asp-for="Weight" class="form-control border-0 shadow" />
-						<label asp-for="Weight" class="">Weight (g)</label>
-					</div>
-					<div class="col-2 my-2">
-						<button type="button" id="submitAddMaterial" class="btn btn-secondary form-control">Add Material</button>
+					<div class="col-12 text-center">
+						<h4 class=" fw-normal text-white m-0">Current Materials</h4>
 					</div>
 				</div>
 			</div>
+			<div class="card-body d-flex flex-column justify-content-between">
+				<table id="currentMaterialTable" class="">
+					<thead>
+						<tr>
+							<td>Type</td>
+							<td>Color</td>
+							<td>Purity (%)</td>
+							<td>Unit Price ($)</td>
+							<td>Weight (g)</td>
+							<td>Total Price ($)</td>
+							@* Remember to reserve a column for actions *@
+							<td></td>
+						</tr>
+					</thead>
+				</table>
+				<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" style="" id="">Material Total: $<span id="materialTotal">0</span></div>
+
+			</div>
+
+		</div>
+		<div class=" card shadow border-0 m-1" style="flex: 0 0 42%;">
+
+			<div class="card-header bg-primary">
+				<div class="row">
+					<div class="col-12 text-center">
+						<h4 class=" fw-normal text-white m-0">Available Materials</h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<table id="materialTable">
+					<thead>
+						<tr>
+							<td>Type</td>
+							<td>Color</td>
+							<td>Purity (%)</td>
+							<td>Unit Price ($)</td>
+							<td></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
-	@if (Model.MaterialSet is not null)
-	{
-		<div class="col-12 py-2 form-floating">
+</div>
+<hr />
+<div id="gemstone-card-group" class="card-group my-2" style="min-height:600px;">
 
-			<h2>Gemstones</h2>
-			<table class="table table-bordered table-striped">
+	@* <div class="col-6"> *@
+	<div class="card shadow border-0 m-2">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h4 class=" fw-normal text-white m-0">Current Gemstones</h4>
+				</div>
+			</div>
+		</div>
+
+		<div class="card-body d-flex flex-column justify-content-between">
+			<table id="currentGemstoneTable">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Weight (carat)</th>
-						<th>Price</th>
-						<th width="15%"></th>
+						<td>Name</td>
+						<td>Price ($)</td>
+						<td>Carat</td>
+						<td>Color</td>
+						<td>Clarity</td>
+						<td>Cut</td>
+						<td></td>
 					</tr>
-				</thead>
-				<tbody>
-					@foreach (Gemstone gemstone in @Model.MaterialSet.Gemstones)
-					{
-						<tr>
-							<td>@gemstone.Name</td>
-							<td>@gemstone.Weight</td>
-							<td>@gemstone.Price</td>
-							<td>
-								<button onclick="@($"deleteGemstone({gemstone.Id},{Model.MaterialSet.Id})")"  type="button" class="btn btn-danger form-control">Delete</button>
 
-							</td>
-						</tr>
-					}
-				</tbody>
+				</thead>
+
 			</table>
+			<div class="border border-1 p-1 px-2 text-start text-primary fs-5 mt-4 rounded total-text" id="">Gemstone Total: $<span id="gemstoneTotal">0</span></div>
 
 		</div>
-		<div class="col-12 py-2 form-floating">
-
-
-			<h2>Materials</h2>
-			<table class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Weight (g)</th>
-						<th>Unit Price</th>
-						<th>Total Price</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (MaterialSetMaterial join in @Model.MaterialSet.MaterialSetMaterials)
-					{
-						var material = @Model.MaterialSet.Materials.FirstOrDefault(m => m.Id == join.MaterialId);
-						<tr>
-							<td>@material?.Name</td>
-							<td><input id="@($"join-{join.MaterialId}-{join.MaterialSetId}")" name="weight" value="@join.Weight" /></td>
-							<td>@material?.Price</td>
-							<td>@(join.Weight * material?.Price)</td>
-							<td class="d-flex gap-2">
-								@* <form asp-controller="MaterialSet" asp-action="EditMaterial" method="post">
-									<input type="hidden" name="materialSetId" value="@Model.MaterialSet.Id" />
-									 <input type="hidden" name="weight" value="@join.Weight" /> 
-									<input type="hidden" name="jewelryId" value="@Model.Jewelry.Id" />
-									<input type="hidden" name="materialEditId" value="@join.MaterialId" />
-								</form> *@
-								<button type="submit" onclick="@($"callEditMaterial({join.MaterialId},{Model.MaterialSet.Id},{Model.Jewelry.Id})")" class="btn btn-secondary form-control btn-sm">Save</button>
-								<button type="button" onclick="@($"callDeleteMaterial({join.MaterialId},{Model.MaterialSet.Id})")" class="btn btn-danger form-control btn-sm">Delete</button>
-
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-	}
-	<div class="col-md-3">
-		<button type="submit" class="btn btn-primary form-control my-2">Create</button>
 	</div>
+	@* 	</div>
+	<div class="col-6"> *@
+	<div class="card shadow border-0 m-2 ">
+		<div class="card-header bg-primary" style="background-color: #445B8D;">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h4 class=" fw-normal text-white m-0">Available Gemstones</h4>
+				</div>
+			</div>
+		</div>
+		<div>
+			<table id="gemstoneTable">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Price ($)</td>
+						<td>Carat</td>
+						<td>Color</td>
+						<td>Clarity</td>
+						<td>Cut</td>
+						<td></td>
+					</tr>
 
+				</thead>
 
-</form>
+			</table>
+		</div>
+	</div>
+	@* </div> *@
+
+</div>
+<hr />
+<div class="d-flex gap-2 flex-column my-3">
+	<h3 class=" fw-normal">Material Set Total Price: $<span class="" id="totalPrice"></span></h3>
+	<div class="d-flex gap-2">
+		<button id="saveButton" class="btn btn-outline-primary btn-lg p-2 py-1 flex-grow-0" style="width: fit-content">Save</button>
+		<button id="cancelButton" class="btn btn-outline-secondary btn-lg p-2 py-1 flex-grow-0" style="width: fit-content">Cancel</button>
+	</div>
+</div>
 
 @section Scripts
 {
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-	<script>
-		let form = document.getElementById('materialForm');
-		document.getElementById('submitAddGemstone').addEventListener('click', function () {
-			form.action = '@Url.Action("AddGemstone", "MaterialSet")';
-			form.submit();
-		});
-		document.getElementById('submitAddMaterial').addEventListener('click', function () {
 
-			form.action = '@Url.Action("AddMaterial", "MaterialSet")';
-			form.submit();
-		});
-		// document.getElementById('submitDeleteGemstone').addEventListener('click', function () {
-
-		// 	form.action = '@Url.Action("DeleteGemstone", "MaterialSet")';
-		// 	form.submit();
-		// });
-		// document.getElementById('submitDeleteMaterial').addEventListener('click', function () {
-
-		// 	form.action = '@Url.Action("DeleteMaterial", "MaterialSet")';
-		// 	form.submit();
-		// });
-		// document.getElementById('submitEditMaterial').addEventListener('click', function () {
-
-		// 	form.action = '@Url.Action("EditMaterial", "MaterialSet")';
-		// 	form.submit();
-		// });
-		// const reloadWithDelay = () => {
-		// 	setTimeout(() => {
-		// 		location.reload();
-		// 	}, 500); // Delay in milliseconds
-		// };
-
-		const callEditMaterial = (materialId, materialSetId, jewelryId) => {
-			const weightInput = document.getElementById(`join-${materialId}-${materialSetId}`)
-			const weight = weightInput.value;
-			fetch(`/MaterialSet/EditMaterial?materialId=${materialId}&materialSetId=${materialSetId}&weight=${weight}&jewelryId=${jewelryId}`).
-				then(data => data.json()).
-				then(e => {
-					if (e.message == "Edited") {
-						toastr.success("Material edited successfully");
-					}
-					else {
-						toastr.error(e.message);
-					}
-					// reloadWithDelay();
-					location.reload();
-				})
-		};
-		const deleteGemstone = (gemstoneId, materialSetId) => {
-			fetch(`/MaterialSet/DeleteGemstone?gemstoneId=${gemstoneId}&materialSetId${materialSetId}`).
-			then(data => data.json()).
-			then(e => {
-				toastr.success(e.message);
-					// reloadWithDelay();
-					location.reload();
-			});
-
-		}
-
-		const callDeleteMaterial = (materialId, materialSetId) => {
-			fetch(`/MaterialSet/DeleteMaterial?materialId=${materialId}&materialSetId=${materialSetId}`).
-				then(data => data.json()).
-				then(e => {
-					toastr.success(e.message);
-					// reloadWithDelay();
-					location.reload();
-				});
-		}
-	</script>
+	<script src="~/js/MaterialSet/Upsert.js"></script>
+	<script src="~/js/MaterialSet/Material.js"></script>
+	<script src="~/js/MaterialSet/Gemstone.js"></script>
 }

@@ -22,7 +22,8 @@ namespace Models.Repositories.Repository
 		public IShoppingCartRepository ShoppingCart { get; private set; }
 		public IBaseDesignRepository BaseDesign { get; private set; }
 		public IPostRepository Post { get; private set; }
-		public IWarrantyCardRepository WarrantyCard { get; private set; }
+        public ICommentRepository Comment { get; private set; }
+        public IWarrantyCardRepository WarrantyCard { get; private set; }
 		public IDeliveryRepository Delivery { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext db)
@@ -41,7 +42,8 @@ namespace Models.Repositories.Repository
 			ShoppingCart = new ShoppingCartRepository(_db);
 			BaseDesign = new BaseDesignRepository(_db);
 			Post = new PostRepository(_db);
-			WarrantyCard = new WarrantyCardRepository(_db);
+            Comment = new CommentRepository(_db);
+            WarrantyCard = new WarrantyCardRepository(_db);
 			Delivery = new DeliveryRepository(_db);
 
 		}

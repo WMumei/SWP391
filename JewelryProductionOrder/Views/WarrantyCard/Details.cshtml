@@ -1,5 +1,7 @@
 ﻿@model WarrantyCardVM
-
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
 <form method="post" class="container">
 	<div class="caption-top row">
@@ -21,7 +23,41 @@
 				<input disabled asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="form-control border-0 shadow" />
 				<label asp-for="@Model.WarrantyCard.ExpiredAt" type="date" class="ms-2"></label>
 			</div>
-</div>
+
+			@if (User.IsInRole(SD.Role_Customer))
+			{
+				<div>
+                    <h3>Warranty Details</h3>
+                    <strong>Warranty Period:</strong> 1-2 year from the date of purchase
+                    <br/>
+                    <strong>Coverage:</strong> This warranty covers manufacturing defects in materials and workmanship. It does not cover damage due to misuse, accidental damage, or normal wear and tear.
+                    <br />
+                    <strong>Terms and Conditions</strong>
+                    The warranty is valid only with the original purchase receipt.
+                    The jewelry must be inspected by an authorized jeweler to confirm the defect.
+                    Repairs or modifications made by unauthorized persons void this warranty.
+                    The warranty does not cover loss or theft of the jewelry.
+                    The customer is responsible for shipping and handling charges for warranty service.
+                    <br />
+                    <strong>Maintenance Tips</strong>
+                    Remove jewelry before swimming, showering, or engaging in physical activities.
+                    Store jewelry in a clean, dry place, preferably in a jewelry box or pouch.
+                    Avoid exposing jewelry to harsh chemicals, perfumes, and lotions.
+                    Clean jewelry with a soft cloth and mild soap solution; avoid using abrasive materials.
+				</div>
+			}
+        
+			else if (User.IsInRole(SD.Role_Sales))
+			{
+                <div class="d-flex gap-2 my-2">
+				<a asp-controller="WarrantyCard" asp-action="Edit" asp-route-id="@Model.WarrantyCard.Id" class="btn btn-primary btn-sm">
+					<i class="bi bi-pencil"></i> Edit
+				</a>
+                <a class="btn btn-secondary" asp-action="RequestIndex" asp-controller="Jewelry" asp-route-reqId="@Model.Jewelry?.ProductionRequestId">Back</a>
+                </div>
+				
+			}
+        </div>
 </div>
 
 

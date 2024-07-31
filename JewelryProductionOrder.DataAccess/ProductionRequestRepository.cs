@@ -3,6 +3,7 @@ using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Models.Repository;
+using System.Security.Cryptography.X509Certificates;
 
 namespace JewelryProductionOrder.Repositories
 {
@@ -34,13 +35,20 @@ namespace JewelryProductionOrder.Repositories
 			if (requestFromDb != null)
 			{
 				requestFromDb.Status = requestStatus;
-				if (!string.IsNullOrEmpty(requestStatus))
+				if (!string.IsNullOrEmpty(paymentStatus))
 				{
 					requestFromDb.Status = paymentStatus;
 				}
 				foreach (Jewelry jewelry in requestFromDb.Jewelries)
 				{
 					jewelry.Status = paymentStatus;
+					var quotations = _db.QuotationRequests.Where(x => x.JewelryId == jewelry.Id);
+					QuotationRequest quote = quotations
+											   .OrderByDescending(q => q.CreatedAt) 
+											   .FirstOrDefault();
+					//status of quotation = customerApproved in CustomerApprove() QuotationController
+					quote.Status = paymentStatus; 
+					
 				}
 			}
 		}

@@ -1,0 +1,48 @@
+﻿@model Material
+<div class="container">
+    <form method="post">
+        <div class="d-flex gap-2 flex-column">
+            <div>
+                <h2>Create Material</h2>
+                <hr />
+            </div>
+            <div>
+                <label asp-for="Type">Type in Material's Type:</label>
+                <input asp-for="Type" type="text" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Purity">Type in Material's purity (%):</label>
+                <input asp-for="Purity" type="text" class="form-control" />
+                <span asp-validation-for="Purity" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Color">Type in Material's color:</label>
+                <input asp-for="Color" type="text" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Price">Price: </label>
+                <input asp-for="Price" type="text" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Material" asp-action="Index" class="btn btn-outline-primary form-control">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+    </form>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

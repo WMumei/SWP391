@@ -3,25 +3,28 @@
     <form method="post" enctype="multipart/form-data">
         <div class="d-flex gap-2 flex-column">
             <div>
-                <h2>Create a design for Jewelry @Model.Jewelry.Name</h2>
+                <h2>Create a design for Jewelry </h2>
                 <hr />
             </div>
 
             <!-- <div asp-validation-summary="All"></div> -->
             <input asp-for="JewelryId" type="hidden" class="form-control" />
-            <img src="@Model.DesignFile" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
+            @* <img src="@Model.DesignFiles" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" /> *@
+            
 
             <div>
                 <label asp-for="Name">Design name:</label>
                 <input asp-for="Name" type="text" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
             </div>
 @*             <div class="form-floating col-12">
                 <input type="file" name="files" class="form-control border-0 shadow" />
                 <label class="ms-2">Image</label>
             </div> *@
             <div class="form-floating col-12">
-                <input type="file" name="file" class="form-control border-0 shadow" />
+                <input type="file" name="files" class="form-control border-0 shadow" multiple/>
                 <label class="ms-2">Design File</label>
+                <span asp-validation-for="@Model.DesignFile" class="text-danger"></span>
             </div>
             <br />
             <div class="row">

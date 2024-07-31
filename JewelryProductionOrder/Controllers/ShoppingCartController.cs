@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-	[Authorize]
+	[Authorize(Roles = SD.Role_Customer)]
 	public class ShoppingCartController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -68,6 +68,7 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult Remove(int cartId)
 		{
 			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			TempData["success"] = "Jewelry is removed!";
 			_unitOfWork.ShoppingCart.Remove(cartFromDb);
 			_unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
@@ -77,11 +78,17 @@ namespace JewelryProductionOrder.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var cartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId, includeProperties: "BaseDesign").ToList();
+
+			if (cartList.Count <= 0)
+			{
+				TempData["error"] = "Your shopping cart is empty. Please add one or more items first.";
+				return RedirectToAction(nameof(Index));
+			}
 
 			ShoppingCartVM = new()
 			{
-				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
-				includeProperties: "BaseDesign").ToList(),
+				ShoppingCartList = cartList,
 				ProductionRequest = new()
 				{
 					CreatedAt = DateTime.Now
@@ -90,11 +97,11 @@ namespace JewelryProductionOrder.Controllers
 
 			User customer = _unitOfWork.User.Get(u => u.Id == userId);
 			ShoppingCartVM.ProductionRequest.Customer = customer;
-			// Default values for shipping
-			ShoppingCartVM.ProductionRequest.ContactName = customer.Name;
-			ShoppingCartVM.ProductionRequest.PhoneNumber = customer.PhoneNumber;
-			ShoppingCartVM.ProductionRequest.Address = customer.Address;
-			ShoppingCartVM.ProductionRequest.Email = customer.Email;
+			// Default values are from the user's profile
+			ShoppingCartVM.ProductionRequest.ContactName = customer?.Name;
+			ShoppingCartVM.ProductionRequest.PhoneNumber = customer?.PhoneNumber;
+			ShoppingCartVM.ProductionRequest.Address = customer?.Address;
+			ShoppingCartVM.ProductionRequest.Email = customer?.Email;
 
 			return View(ShoppingCartVM);
 		}
@@ -109,10 +116,27 @@ namespace JewelryProductionOrder.Controllers
 			ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "BaseDesign").ToList();
 
+			if (ShoppingCartVM.ShoppingCartList.Count() <= 0)
+			{
+				TempData["error"] = "Your shopping cart is empty. Please add one or more items first.";
+				return RedirectToAction(nameof(Index));
+			}
+
+			// Validate ProductionRequest fields
+			if (string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.Address) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.ContactName) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.Email) ||
+				string.IsNullOrEmpty(ShoppingCartVM.ProductionRequest.PhoneNumber) 
+				)
+			{
+				TempData["error"] = "Please fill in all required fields: Address, Contact Name, and Email.";
+				return RedirectToAction(nameof(Summary));
+			}
+
 			ShoppingCartVM.ProductionRequest.CustomerId = userId;
 			ShoppingCartVM.ProductionRequest.Status = SD.StatusProcessing;
 			ShoppingCartVM.ProductionRequest.CreatedAt = DateTime.Now;
-			ShoppingCartVM.ProductionRequest.Status = SD.StatusPending;
+
 			User applicationUser = _unitOfWork.User.Get(u => u.Id == userId);
 
 			var salesStaffIds = await GetSalesStaffIdsAsync();
@@ -139,8 +163,8 @@ namespace JewelryProductionOrder.Controllers
 						ProductionRequestId = ShoppingCartVM.ProductionRequest.Id,
 						CreatedAt = DateTime.Now,
 						CustomerId = userId,
-						SalesStaffId = assignedStaffId
-
+						SalesStaffId = assignedStaffId,
+						Status = SD.StatusProcessing
 					};
 					_unitOfWork.Jewelry.Add(jewelry);
 				}
@@ -157,6 +181,11 @@ namespace JewelryProductionOrder.Controllers
 		{
 
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id);
+			if (productionRequest is null)
+			{
+				TempData["error"] = "Error while confirming order";
+				return RedirectToAction("Index", "Home");
+			}
 
 			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
 				.GetAll(u => u.UserId == productionRequest.CustomerId).ToList();

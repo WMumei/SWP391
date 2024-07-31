@@ -1,20 +1,25 @@
 ﻿@model WarrantyCard
 <head>
     <link rel="stylesheet" href="~/css/CreateWarrantyCard.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+   
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
+<body>
 <form asp-action="Edit">
     <div>
         <div>
             <input asp-for="Jewelry.Id" hidden />
-            @*<input asp-for="@Model.CustomerId" hidden />*@
-            <!--<input asp-for="Jewelry.CustomerId" hidden/>-->
+            
             <h1>Edit Warranty Card for Jewelry: @Model.Jewelry.Name</h1>
             <hr />
         </div>
         <!-- <div asp-validation-summary="All"></div> -->
         <h2>Customer Information:</h2>
         <div class="form-floating">
-            <div class="first-col">
+                <div class="bg-opacity-75">
                 <label asp-for="@Model.Customer.Name" class="labels"></label>
                 <input disabled asp-for="@Model.Customer.Name" />
             </div>
@@ -40,6 +45,29 @@
         </div>
 
 
-        <button asp-asp-controller="WarrantyCard" asp-action="Edit"> Save </button> <button asp-controller="WarrantyCard" asp-action="Index">Cancel</button>
+            <button asp-asp-controller="WarrantyCard" asp-action="Edit" class="btn btn-primary" onclick="confirmSave(event)"> Save </button>
+            <button asp-controller="Jewelry" asp-action="RequestIndex" class="btn btn-secondary" asp-route-reqId="@Model.Jewelry.ProductionRequestId">Cancel</button>
 
 </form>
+
+</body>
+<script>
+    function confirmSave(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to save the changes?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, save it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                event.target.closest('form').submit();
+            }
+        });
+    }
+</script>
