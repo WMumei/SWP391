@@ -285,17 +285,17 @@ namespace SWP391.Controllers
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(r => r.Id == jId);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (User.IsInRole(SD.Role_Customer))
-			{
-				quotationRequests = quotationRequests
-					.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
-				if(quotationRequests.Count == 0)
-				{
-					TempData["error"] = "There are no available quotation requests";
-					return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
-				}
-			}
-			else if (User.IsInRole(SD.Role_Sales))
+			//if (User.IsInRole(SD.Role_Customer))
+			//{
+			//	quotationRequests = quotationRequests
+			//		.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
+			//	if(quotationRequests.Count == 0)
+			//	{
+			//		TempData["error"] = "There are no available quotation requests";
+			//		return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
+			//	}
+			//}
+			if (User.IsInRole(SD.Role_Sales))
 			{
 				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == jewelry.SalesStaffId).ToList();
 			}
