@@ -24,5 +24,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JewelryProductionOrder.Models\JewelryProductionOrder.Models.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 
 </Project>

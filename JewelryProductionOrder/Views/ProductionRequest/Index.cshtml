@@ -90,12 +90,12 @@
 						}
 						@if (User.IsInRole(SD.Role_Customer))
 						{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved 
 							|| obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
-							{
-
-								<td>Paid!</td>
+						{
+							
+								<td>Paid</td>
 							}
 							else if (obj.Status == SD.StatusAllQuotationApproved)
 							{
@@ -109,7 +109,7 @@
 						}
 						else
 						{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved || obj.Status == SD.StatusDesigning
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved 
 							|| obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 							{
@@ -125,10 +125,10 @@
 
 
 
-						@if (obj.Status == SD.StatusAllManufactured)
+						@if (obj.Status == SD.StatusAllWarrantyCard)
 						{
 
-							@if (!User.IsInRole(SD.Role_Customer))
+							@if (User.IsInRole(SD.Role_Sales))
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
@@ -141,9 +141,9 @@
 								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
 						}
-						else if (obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
+						else if ( obj.Status == SD.StatusRequestDone)
 						{
-							@if (!User.IsInRole(SD.Role_Customer))
+							@if (User.IsInRole(SD.Role_Sales))
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
@@ -153,7 +153,12 @@
 							{
 
 
-								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+
+								<td>Delivered</td>
+							}
+							else
+							{
+								<td></td>
 							}
 						}
 						else
@@ -184,7 +189,7 @@
 
 						@if (User.IsInRole(SD.Role_Sales))
 						{
-							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured)
+							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured && obj.Status != SD.StatusCancelled)
 							{
 
 								<td>
@@ -205,7 +210,9 @@
 			}
 		</tbody>
 	</table>
+	
 </div>
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back</a>
 <script>
 
 	function confirmCancel(reqId) {

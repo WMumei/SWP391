@@ -50,9 +50,8 @@ namespace JewelryProductionOrder.Controllers
 			dbJ.Name = jewelry.Name;
 			_unitOfWork.Jewelry.Update(dbJ);
 			_unitOfWork.Save();
-			if (redirectRequest is not null)
-				return RedirectToAction(nameof(RequestIndex), new { reqId = redirectRequest });
-			return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
+            TempData["success"] = "Updated!";
+            return RedirectToAction(nameof(Edit), new { id = jewelry.Id });
 		}
 
 

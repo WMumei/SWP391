@@ -1,0 +1,16 @@
+sai giá
+4c của gemstone(color,...)
+gemstone phải mất khi dung
+add validation
+fix deliver
+CRUD danh muc
+post chua co hinh anh
+loi sai gia quotation
+
+loi weight =0
+gem xai xong phai mat
+lien quan gem thieu thong tin
+loi FE
+loi warranty
+loi dashboard
+crud material, gem 

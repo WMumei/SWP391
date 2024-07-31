@@ -98,7 +98,7 @@ namespace JewelryProductionOrder.Controllers
             {
                 return NotFound();
             }
-            Gemstone? gemstoneFromDb = _unitOfWork.Gemstone.Get(u =>u.Id == id);
+            Gemstone? gemstoneFromDb = _unitOfWork.Gemstone.Get(u =>u.Id == id && u.Status == SD.StatusAvailable);
 
             if (gemstoneFromDb == null)
             {
@@ -110,12 +110,12 @@ namespace JewelryProductionOrder.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Gemstone? objGemstone = _unitOfWork.Gemstone.Get(u => u.Id == id);
+            Gemstone? objGemstone = _unitOfWork.Gemstone.Get(u => u.Id == id && u.Status == SD.StatusAvailable);
             if (objGemstone == null)
             {
                 return NotFound();
             }
-            objGemstone.Status = "Unavailable";
+            objGemstone.Status = SD.StatusUnavailable;
             _unitOfWork.Gemstone.Update(objGemstone);
             _unitOfWork.Save();
             TempData["success"] = "Gemstone removed";

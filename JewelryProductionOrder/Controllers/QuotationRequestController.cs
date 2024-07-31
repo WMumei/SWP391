@@ -4,6 +4,7 @@ using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using Stripe;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -281,16 +282,23 @@ namespace SWP391.Controllers
 		public IActionResult ViewAll(int jId)
 		{
 			var quotationRequests = _unitOfWork.QuotationRequest.GetAll(r => r.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(r => r.Id == jId);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			if (User.IsInRole(SD.Role_Customer))
+			//if (User.IsInRole(SD.Role_Customer))
+			//{
+			//	quotationRequests = quotationRequests
+			//		.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
+			//	if(quotationRequests.Count == 0)
+			//	{
+			//		TempData["error"] = "There are no available quotation requests";
+			//		return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
+			//	}
+			//}
+			if (User.IsInRole(SD.Role_Sales))
 			{
-				quotationRequests = quotationRequests.Where(r => r.Status == SD.ManagerApproved || r.Status == SD.CustomerApproved || r.Status == SD.StatusPaid).ToList();
+				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == jewelry.SalesStaffId).ToList();
 			}
-			/*else if(User.IsInRole(SD.Role_Sales))
-			{
-				quotationRequests = quotationRequests.Where(r => r.SalesStaffId == userId).ToList();
-			}*/
 
 			return View(quotationRequests);
 		}
