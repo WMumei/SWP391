@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
+using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -39,8 +30,8 @@ namespace JewelryProductionOrder.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-			post.CreatedAt = DateTime.Now;
-			post.SalesStaffId = userId;
+            post.CreatedAt = DateTime.Now;
+            post.SalesStaffId = userId;
 
             if (post.Content == null)
             {
@@ -74,26 +65,26 @@ namespace JewelryProductionOrder.Controllers
             return RedirectToAction("Index");
         }
 
-		[Authorize]
-		public IActionResult Index()
-		{
-			var posts = _unitOfWork.Post.GetAll(includeProperties: "SalesStaff").ToList();
-			return View(posts);
-		}
+        [Authorize]
+        public IActionResult Index()
+        {
+            var posts = _unitOfWork.Post.GetAll(includeProperties: "SalesStaff").ToList();
+            return View(posts);
+        }
 
-		public IActionResult Details(int id)
-		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner,Comments.Replies,Comments.Replies.Owner");
-			if (post == null)
-			{
-				return NotFound();
-			}
+        public IActionResult Details(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff,Comments,Comments.Owner,Comments.Replies,Comments.Replies.Owner");
+            if (post == null)
+            {
+                return NotFound();
+            }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ViewData["CurrentUserId"] = userId;
 
             return View(post);
-		}
+        }
 
         public IActionResult Edit(int id)
         {
@@ -155,7 +146,7 @@ namespace JewelryProductionOrder.Controllers
                 _unitOfWork.Save();
                 TempData["success"] = "Post updated successfully";
                 return RedirectToAction("Index");
-                
+
             }
             else
             {
@@ -164,15 +155,15 @@ namespace JewelryProductionOrder.Controllers
             }
         }
 
-		public IActionResult Delete(int id)
-		{
-			var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
-			if (post == null)
-			{
-				return NotFound();
-			}
-			return View(post);
-		}
+        public IActionResult Delete(int id)
+        {
+            var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -290,7 +281,7 @@ namespace JewelryProductionOrder.Controllers
 
             var reply = new Comment
             {
-                Content = "Reply to " + user.Name + ":<br />" +  Content,
+                Content = "Reply to " + user.Name + ":<br />" + Content,
                 CreatedAt = DateTime.Now,
                 OwnerId = userId,
                 PostId = PostId,
