@@ -83,11 +83,20 @@ namespace JewelryProductionOrder.Controllers
 		[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager}")]
 		public IActionResult Delete(int mId)
 		{
-			Material material = _unitOfWork.Material.Get(m => m.Id == mId);
+			
+			List<MaterialSetMaterial> materialSetMaterials = _unitOfWork.MaterialSetMaterial.GetAll(includeProperties: "Material").ToList();
+			Material material = _unitOfWork.Material.Get(m => m.Id == mId );
 			if (material == null)
 			{
 				return NotFound();
 			}
+			bool isMaterialInUse = materialSetMaterials.Any(msm => msm.MaterialId == mId);
+			if (isMaterialInUse)
+			{
+				TempData["error"] = "Material is currently in use";
+				return RedirectToAction("Index");
+			}
+
 			_unitOfWork.Material.Remove(material);
 			_unitOfWork.Save();
 			TempData["success"] = "Material Removed";

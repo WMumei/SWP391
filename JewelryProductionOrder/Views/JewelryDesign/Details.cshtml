@@ -14,37 +14,66 @@
                 </div>
                 <div class="col-4">
                     @{
-                        var isImage = Model.DesignFile.EndsWith(".jpg") || Model.DesignFile.EndsWith(".jpeg") || Model.DesignFile.EndsWith(".png") || Model.DesignFile.EndsWith(".gif");
+                        var designFiles = Model.DesignFile.Split(',');
+                       
+                        <ul>
+                    @foreach (var file in designFiles)
+                        {
+                        var trimmedFile = file.Trim();
+
+                                var isImage = trimmedFile.EndsWith(".jpg") || trimmedFile.EndsWith(".jpeg") || trimmedFile.EndsWith(".png") || trimmedFile.EndsWith(".gif");
+                       
                         if (isImage)
                         {
-                            <img src="@Model.DesignFile" width="100%" style="border-radius:5px; border:1px solid #bbbbbb"/>
+                                    <img src="@Url.Content(trimmedFile)" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
                         }
                         else
                         {
-                            <a href="@Model.DesignFile" download class="btn btn-secondary">Download Design File</a>
+                                    // <a href="@Url.Content(trimmedFile)" download class="btn btn-secondary">Download Design File</a>
+                                    <a href="@Url.Action("DownloadAllFiles", new { id = Model.Id })" class="btn btn-success">Download File(s)</a>
                         }
                     }
+                        </ul>
+                        
+                     }
                 </div>
         </div>
     </div>
 
-</form>
-<div class="row">
 
-    @if (User.IsInRole(SD.Role_Customer) && Model.Status != SD.CustomerApproved )
+        <div class="d-flex justify-content-start align-items-center mt-1">
+
+    @if (User.IsInRole(SD.Role_Customer))
     {
-        if (Model.Status != SD.CustomerDisapproved && Model.Status != SD.StatusDiscontinued)
+        if (Model.Status != SD.CustomerDisapproved && Model.Status != SD.StatusDiscontinued && Model.Status != SD.CustomerApproved)
         {
-            <div class="col text-center">
-                <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm col-4 my-2" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
-            </div>
-            <div class="col">
-                <a asp-controller="JewelryDesign" asp-action="CustomerDisapprove" asp-route-id="@Model.Id" class="btn btn-primary btn-sm col-4 my-2" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Disapprove</a>
+            
+                        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
+            
+            
+                        <a asp-controller="JewelryDesign" asp-action="CustomerDisapprove" asp-route-id="@Model.Id" class="btn btn-danger btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Disapprove</a>
+            
+        }
+        else if (Model.Status == SD.CustomerApproved)
+        {
+            <div class="text-center">
+                <h3 class="text-success">Approved!</h3>
             </div>
         }
-       
+        else if (Model.Status == SD.CustomerDisapproved)
+        {
+            <div class="text-center">
+                <h3 class="text-danger ">Disapproved!</h3>
+            </div>
+        }
+
     }
+    
 
 </div>
+        <div class="d-flex gap-2 my-2">
+            <a class="btn btn-secondary" asp-action="ViewAll" asp-route-jId="@Model.Jewelry.Id">Back</a>
+        </div>
+</form>
 
 

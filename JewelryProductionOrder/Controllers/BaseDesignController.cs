@@ -36,6 +36,7 @@ namespace JewelryProductionOrder.Controllers
 			obj.CreatedAt = DateTime.Now;
 
 			string wwwRootPath = _webHostEnvironment.WebRootPath;
+			
 			if (file is not null)
 			{
 				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -45,13 +46,15 @@ namespace JewelryProductionOrder.Controllers
 					file.CopyTo(fileStream);
 				}
 				obj.Image = Path.Combine("\\files", fileName);
+				if (User.IsInRole(SD.Role_Customer)) obj.Type = "Customer";
+				else obj.Type = "Company";
+				_unitOfWork.BaseDesign.Add(obj);
+				_unitOfWork.Save();
 			}
-
-			if (User.IsInRole(SD.Role_Customer)) obj.Type = "Customer";
-			else obj.Type = "Company";
-
-			_unitOfWork.BaseDesign.Add(obj);
-			_unitOfWork.Save();
+			else
+			{
+				return View(obj);
+			}
 			if (User.IsInRole(SD.Role_Customer))
 			{
 				ShoppingCart shoppingCart = new ShoppingCart
@@ -67,7 +70,7 @@ namespace JewelryProductionOrder.Controllers
 			TempData["success"] = "Create successfully";
 			if (User.IsInRole(SD.Role_Customer))
 			{
-				return RedirectToAction("Index", "Home");
+				return RedirectToAction("Create");
 			}
 			return RedirectToAction("Index");
 		}

@@ -10,6 +10,7 @@ namespace JewelryProductionOrder.Models
 		[StringLength(100)]
 		public string? Name { get; set; }
 		public string? Image { get; set; }
+		//public List<string> DesignFiles { get; set; } = new List<string>();
 		public string? DesignFile { get; set; }
 		public string? Status { get; set; }
 		public DateTime? CreatedAt { get; set; }

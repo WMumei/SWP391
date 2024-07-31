@@ -312,7 +312,7 @@ namespace SWP391.Controllers
 		/// <param name="mId">The ID of the material set.</param>
 		/// <param name="jId">The ID of the jewelry.</param>
 		/// <returns>The view for creating or updating a material set.</returns>
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 
 		public IActionResult Upsert(int mId, int jId)
 		{
@@ -349,6 +349,7 @@ namespace SWP391.Controllers
 				var gemstoneList = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == mId).ToList();
 				HttpContext.Session.Set(SessionConst.GEMSTONE_LIST_KEY, gemstoneList);
 
+				HttpContext.Session.Remove(SessionConst.DELETED_GEMSTONE_LIST_KEY);
 			}
 			else
 			{
@@ -360,7 +361,7 @@ namespace SWP391.Controllers
 
 
 		[HttpPost]
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[ActionName("Upsert")]
 		public IActionResult UpsertPOST(int mId, int jId)
 		{
@@ -398,7 +399,7 @@ namespace SWP391.Controllers
 
 				MaterialSet materialSet = new MaterialSet() { CreatedAt = DateTime.Now, JewelryId = jId, TotalPrice = GetSetTotal() };
 				materialSet.TotalPrice = GetSetTotal();
-                _unitOfWork.MaterialSet.Add(materialSet);
+				_unitOfWork.MaterialSet.Add(materialSet);
 				_unitOfWork.Save();
 				// Add each material to the set
 				foreach (var material in materials)
@@ -432,13 +433,13 @@ namespace SWP391.Controllers
 			else
 			{
 				MaterialSet materialSet = _unitOfWork.MaterialSet.Get(i => i.Id == mId, tracked: true);
-                materialSet.TotalPrice = GetSetTotal();
-                if (materialSet == null)
+				materialSet.TotalPrice = GetSetTotal();
+				if (materialSet == null)
 				{
 					return Json(new { success = false, message = "Material Set not found!" });
 				}
 
-				// Updating the material set will set the status any quotation using this material set to discontinued
+				// Updating the material set will set the status previous quotations to discontinued
 				var requests = _unitOfWork.QuotationRequest.GetAll(q => q.MaterialSetId == mId);
 				foreach (QuotationRequest request in requests)
 				{
@@ -509,7 +510,7 @@ namespace SWP391.Controllers
 		}
 
 
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpGet]
 		public IActionResult GetMaterials()
 		{
@@ -517,7 +518,7 @@ namespace SWP391.Controllers
 			var materials = _unitOfWork.Material.GetAll(m => !sessionMaterialIds.Contains(m.Id));
 			return Json(new { data = materials });
 		}
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpGet]
 		public IActionResult GetGemstones()
 		{
@@ -533,13 +534,13 @@ namespace SWP391.Controllers
 		}
 
 
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpGet]
 		public IActionResult GetSessionMaterials()
 		{
 			return Json(new { data = MaterialListSession });
 		}
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpGet]
 		public IActionResult GetSessionGemstones()
 		{
@@ -547,7 +548,7 @@ namespace SWP391.Controllers
 		}
 
 
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpPost]
 		public IActionResult AddMaterial(int id)
 		{
@@ -571,7 +572,7 @@ namespace SWP391.Controllers
 
 			return Json(new { success = true, message = "Material added successfully" });
 		}
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpPost]
 		public IActionResult AddGemstone(int id)
 		{
@@ -610,7 +611,7 @@ namespace SWP391.Controllers
 		}
 
 
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpPost]
 		public IActionResult UpdateMaterial(int id, decimal weight)
 		{
@@ -637,7 +638,7 @@ namespace SWP391.Controllers
 		}
 
 
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpDelete]
 		public IActionResult DeleteMaterial(int id)
 		{
@@ -653,7 +654,7 @@ namespace SWP391.Controllers
 			}
 			return Json(new { success = false, message = "Material not found" });
 		}
-	[Authorize(Roles = SD.Role_Sales)]
+		[Authorize(Roles = SD.Role_Sales)]
 		[HttpDelete]
 		public IActionResult DeleteGemstone(int id)
 		{
@@ -694,7 +695,7 @@ namespace SWP391.Controllers
 
 		[HttpGet]
 		[Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Sales},{SD.Role_Customer}")]
-        public IActionResult GetCurrentPrice(int mId)
+		public IActionResult GetCurrentPrice(int mId)
 		{
 			// Retrieve the MaterialSet from the database
 			var materialSet = _unitOfWork.MaterialSet.Get(

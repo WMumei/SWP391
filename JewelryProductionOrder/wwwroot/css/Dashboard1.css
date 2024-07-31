@@ -13,10 +13,11 @@
 
 }
 .dashboard-box {
-    padding: 40px;
+    padding: 20px 10px;
     border: 2px solid #c7f1ec;
+    margin-bottom: 70px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /*header {
@@ -53,9 +54,9 @@
     background: #fff;
     padding: 20px;
     border: #ccc 1px solid;
-    width: 60%;
+    width: 85%;
    
-    margin: 0 0 10px;
+    margin: 0 0 35px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .card1 {

@@ -44,7 +44,7 @@ namespace JewelryProductionOrder.Repositories
 					jewelry.Status = paymentStatus;
 					var quotations = _db.QuotationRequests.Where(x => x.JewelryId == jewelry.Id);
 					QuotationRequest quote = quotations
-											   .OrderByDescending(q => q.CreatedAt) // Assuming you have a Date property in Quotation
+											   .OrderByDescending(q => q.CreatedAt) 
 											   .FirstOrDefault();
 					//status of quotation = customerApproved in CustomerApprove() QuotationController
 					quote.Status = paymentStatus; 

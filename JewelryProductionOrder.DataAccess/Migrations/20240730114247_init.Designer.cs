@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240729131321_databaseOfCRUDGemstoneAfterMergingWithMaterialSet")]
-    partial class databaseOfCRUDGemstoneAfterMergingWithMaterialSet
+    [Migration("20240730114247_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                             Id = 1,
                             Description = "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.",
                             Image = "\\Images\\Ring.webp",
-                            Name = "Bezel Solitarie Engagement Ring",
+                            Name = "Bezel Solitairie Engagement Ring",
                             Type = "Company"
                         },
                         new
