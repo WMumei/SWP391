@@ -22,10 +22,10 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build Assignment.sln --configuration Release
+        run: dotnet build JewelryProductionOrder.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish Assignment.sln -c Release -o ${{env.DOTNET_ROOT}}\myapp
+        run: dotnet publish JewelryProductionOrder.csproj -c Release -o ${{env.DOTNET_ROOT}}\myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
