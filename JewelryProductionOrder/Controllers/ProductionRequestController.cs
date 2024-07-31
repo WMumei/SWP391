@@ -54,7 +54,7 @@ namespace SWP391.Controllers
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries",tracked:true);
 			
 			productionRequest.Status = SD.StatusDelivered;
-			TempData["success"] = "Order is delivering";
+			TempData["success"] = "Order is delivered";
 			_unitOfWork.Save();
 			return RedirectToAction("Index");
 		}
@@ -100,7 +100,7 @@ namespace SWP391.Controllers
                 }
             }
 
-            TempData["success"] = "Order is delivered successfully";
+            TempData["success"] = "Delivery confirmed successfully";
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
