@@ -70,7 +70,8 @@ namespace JewelryProductionOrder.Controllers
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
 			}
 
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId,includeProperties:"Jewelries,Jewelries.WarrantyCard",tracked:true);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId,
+				includeProperties:"Jewelries,Jewelries.WarrantyCard",tracked:true);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 

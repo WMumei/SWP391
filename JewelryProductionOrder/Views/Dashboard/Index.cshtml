@@ -315,7 +315,7 @@
 						type: 'GET',
 						data: {},
 						success: function (rd) {
-							showToast();
+							
 							showToast();
 							if (myChart) {
 								myChart.clear();
@@ -535,16 +535,17 @@
 								myChart1.destroy();
 							}
 
-
+							const sum = data.value1.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+							$("#totalvalueJe").text(sum);
 
 							const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
 							myChart = new Chart(ctxDaily, {
 								type: 'line',
 								data: {
-									labels: data.Value2,
+									labels: data.value2,
 									datasets: [{
 										label: 'Jewelries',
-										data: data.Value1,
+										data: data.value1,
 										backgroundColor: 'rgba(119, 212, 42, 0.2)',
 										borderColor: 'rgba(119, 212, 42, 1)',
 										borderWidth: 1,
@@ -654,49 +655,6 @@
 						//trường hợp startDate và endDate null
 
 					}
-				}
-				else if (x1 == "alltimeJe") {
-					$.ajax({
-						url: '/Dashboard/GetJewelryByAll',
-						type: 'GET',
-						data: {},
-						success: function (data) {
-							showToast();
-							if (myChart1) {
-								myChart1.clear();
-								myChart1.destroy();
-							}
-
-
-
-							const ctxDaily = document.getElementById('jewelrychart').getContext('2d');
-							myChart = new Chart(ctxDaily, {
-								type: 'line',
-								data: {
-									labels: data.value2,
-									datasets: [{
-										label: 'Jewelries',
-										data: data.value1,
-										backgroundColor: 'rgba(119, 212, 42, 0.2)',
-										borderColor: 'rgba(119, 212, 42, 1)',
-										borderWidth: 1,
-										fill: true
-									}]
-								},
-								options: {
-									scales: {
-										y: {
-											beginAtZero: true
-										}
-									}
-								}
-							});
-							//
-						},
-						error: function () {
-							$('#output').text('An error occurred');
-						}
-					});
 				}
 				else {
 

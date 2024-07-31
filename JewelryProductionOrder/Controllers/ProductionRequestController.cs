@@ -52,7 +52,16 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return View("Deliver", productionRequest);
 		}
+		public IActionResult Delivered(int id)
 
+		{
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries",tracked:true);
+			
+			productionRequest.Status = SD.StatusDelivered;
+			TempData["success"] = "Order is delivering";
+			_unitOfWork.Save();
+			return RedirectToAction("Index");
+		}
 		public IActionResult CustomerViewDelivery(int id)
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries", tracked: true);
