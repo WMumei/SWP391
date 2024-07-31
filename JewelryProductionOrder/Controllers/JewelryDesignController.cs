@@ -39,9 +39,10 @@ namespace JewelryProductionOrder.Controllers
 			obj.DesignStaffId = userId;
 			
 			Jewelry jewelry = _unitOfWork.Jewelry.Get(j => j.Id == obj.JewelryId);
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(r => r.CustomerId == jewelry.CustomerId);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(r => r.CustomerId == jewelry.CustomerId,tracked:true);
             productionRequest.DesignStaffId = userId;
-            obj.CreatedAt = DateTime.Now;
+			_unitOfWork.Save();
+			obj.CreatedAt = DateTime.Now;
 			if (obj.Name is null)
 			{
 				ModelState.AddModelError("Name", "Please enter name for design.");
@@ -232,16 +233,21 @@ namespace JewelryProductionOrder.Controllers
 		public IActionResult ViewAll(int jId)
 		{
 			var jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
+			Jewelry jewelry = _unitOfWork.Jewelry.Get(r => r.Id == jId);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(r => r.Id == jewelry.ProductionRequestId);
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))
 			{
 				//jewelryDesign = jewelryDesign.Where(jD => jD.CustomerId == userId && jD.Status == SD.CustomerApproved).ToList();
-				jewelryDesigns = jewelryDesigns.Where(jD => jD.CustomerId == userId).ToList();
+				jewelryDesigns = jewelryDesigns.Where(jD => jD.CustomerId == jewelry.CustomerId).ToList();
 				//if (jewelryDesigns.Count == 0)
 				//{
 				//	jewelryDesigns = _unitOfWork.JewelryDesign.GetAll(jD => jD.JewelryId == jId, includeProperties: "Jewelry").ToList();
 				//}
+			}else if (User.IsInRole(SD.Role_Design))
+			{
+				jewelryDesigns = jewelryDesigns.Where(jD => jD.DesignStaffId == productionRequest.DesignStaffId).ToList();
 			}
 
 			return View(jewelryDesigns);
