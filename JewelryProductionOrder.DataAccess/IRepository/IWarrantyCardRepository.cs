@@ -3,11 +3,11 @@ using Models.Repositories.IRepository;
 
 namespace JewelryProductionOrder.Repositories.IRepository
 {
-	public interface IWarrantyCardRepository : IRepository<WarrantyCard>
+    public interface IWarrantyCardRepository : IRepository<WarrantyCard>
 
-	{
+    {
 
-		void Update(WarrantyCard obj);
-		void Save();
-	}
+        void Update(WarrantyCard obj);
+        void Save();
+    }
 }

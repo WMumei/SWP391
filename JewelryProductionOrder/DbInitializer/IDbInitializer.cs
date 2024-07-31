@@ -1,7 +1,7 @@
 ﻿namespace JewelryProductionOrder.DbInitializer
 {
-	public interface IDbInitializer
-	{
-		void Initialize();
-	}
+    public interface IDbInitializer
+    {
+        void Initialize();
+    }
 }
