@@ -63,7 +63,7 @@ namespace JewelryProductionOrder.Controllers
 					revenueData[quotation.CreatedAt.Month - 1] += quotation.TotalPrice;
 				}
 			}
-			TempData["success"] = "Data is updated.";
+			
 			return Json(revenueData);
 		}
 		[HttpGet]
@@ -78,7 +78,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				soldData[(quotation.CreatedAt - startDateObj).Days] += quotation.TotalPrice;
 			}
-			TempData["success"] = "Data is updated.";
+			
 			return Json(soldData);
 		}
 
@@ -94,7 +94,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				soldData[(delivery.DeliveredAt - startDateObj).Days] += 1;
 			}
-			TempData["success"] = "Data is updated.";
+			
 			return Json(soldData);
 		}
 
@@ -191,7 +191,7 @@ namespace JewelryProductionOrder.Controllers
 
 			}
 
-			TempData["success"] = "Data is updated.";
+			
 			return Json(soldData);
 		}
 		[HttpGet]
