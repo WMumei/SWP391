@@ -29,6 +29,9 @@ namespace JewelryProductionOrder.Controllers
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 			jewelry.CustomerId = customer.Id;
+			customer.Name= productionRequest.ContactName;
+			_unitOfWork.User.Update(customer);
+			_unitOfWork.Save();
             //if (jewelry.MaterialSet == null && jewelry.QuotationRequests == null)
             //{
             //	TempData["Error"] = "Please create Material Set and Quotation Request!"; 
@@ -67,7 +70,7 @@ namespace JewelryProductionOrder.Controllers
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = jewelry.ProductionRequestId });
 			}
 
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId);
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(j => j.Id == jewelry.ProductionRequestId,includeProperties:"Jewelries",tracked:true);
 			var customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
 
 
@@ -86,8 +89,22 @@ namespace JewelryProductionOrder.Controllers
 			}
 			if (vm.WarrantyCard.CreatedAt.Date >= DateTime.Now.Date && vm.WarrantyCard.ExpiredAt >= vm.WarrantyCard.CreatedAt.AddYears(1))
 			{
-
 				_unitOfWork.WarrantyCard.Add(vm.WarrantyCard);
+				_unitOfWork.Save();
+				bool completed = true;
+				foreach (var j in productionRequest.Jewelries)
+				{
+					if (j.WarrantyCard == null)
+					{
+						completed = false;
+						break;
+					}
+				}
+				if (completed)
+				{
+					productionRequest.Status = SD.StatusAllWarrantyCard;
+
+				}
 				_unitOfWork.Save();
 				TempData["success"] = "Warranty Card is created successfully!";
 				return RedirectToAction("RequestIndex", "Jewelry", new { reqId = productionRequest.Id });

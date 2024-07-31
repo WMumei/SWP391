@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JewelryProductionOrder.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class databaseOfCRUDGemstoneAfterMergingWithMaterialSet : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -654,7 +654,7 @@ namespace JewelryProductionOrder.DataAccess.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "Image", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, null, "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Ring.webp", "Bezel Solitarie Engagement Ring", "Company" },
+                    { 1, null, "Sleek and contemporary, this 4.50ct round brilliant cut diamond pops in a custom bezel set solitaire ring. This setting was custom made to allow for the large center stone to sit as close to the finger as possible.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Ring.webp", "Bezel Solitairie Engagement Ring", "Company" },
                     { 2, null, "Reiki symbols are used in alternative healing. After a major life upheaval, our client found meaning in the At Mata symbol, crafted using white gold and a trillion cut diamond, which is said to remove emotional blocks that prevent you from seeing clearly.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Pendant.jpg", "Diamond Reiki Symbol Pendant", "Company" },
                     { 3, null, "We created a custom milgrain smile style necklace for a client's sentimental single cut diamonds. This same design can be modified for stones of any size, color, or shape!\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Necklace.webp", "Smile Necklace", "Company" },
                     { 4, null, "Swirls of platinum arc and curl around sparkling round brilliant cut diamonds to create this unique wedding band.\r\n\r\nThis piece can be replicated or modified for you. The stones can be similar or different types, sizes, or shapes, or even your stones. Therefore, please contact us for a quote.", "\\Images\\Band.webp", "Swirl Diamond Wedding Band", "Company" },

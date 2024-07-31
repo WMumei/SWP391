@@ -64,7 +64,7 @@
 
 		
 		<div class="text-center">
-			<h2>Latest status of the order: @Model.FirstOrDefault().ProductionRequest.Status </h2>
+			@* <h2>Latest status of the order: <strong>@Model.FirstOrDefault().ProductionRequest.Status </strong></h2> *@
 			<br />
 
 
@@ -72,7 +72,7 @@
 
 			{
 				<h3>Please confirm your order after receiving and checking order with the policies below</h3>
-				<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.FirstOrDefault().ProductionRequest.Id" class="btn btn-primary btn-sm">Confirm</a>
+				<a asp-controller="ProductionRequest" asp-action="Confirm" asp-route-id="@Model.FirstOrDefault().ProductionRequest.Id" class="btn btn-success btn-lg">Confirm</a>
 			}
 
 
@@ -111,4 +111,5 @@
 	</div>
 
 	</div>
+	<a asp-controller="ProductionRequest" asp-action="Index" class="btn btn-secondary">Back</a>
 </form>

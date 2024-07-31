@@ -41,6 +41,7 @@ namespace SWP391.Controllers
 
 		[Authorize(Roles = SD.Role_Sales)]
 		public IActionResult Deliver(int id)
+		
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Customer,Jewelries");
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard").ToList();
@@ -49,49 +50,11 @@ namespace SWP391.Controllers
 			return View("Deliver", productionRequest);
 		}
 
-		public IActionResult Delivered(int id)
-		{
 
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "SalesStaff,Jewelries", tracked: true);
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "WarrantyCard,SalesStaff").ToList();
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-			User customer = _unitOfWork.User.Get(u => u.Id == productionRequest.CustomerId);
-
-			foreach (var jewelry in jewelries)
-			{
-
-				if (jewelry.WarrantyCard == null)
-				{
-					TempData["error"] = "Warranty Card is not available";
-				}
-				else
-				{
-					Delivery delivery = new Delivery()
-					{
-						//SalesStaffId = userId,
-						CustomerId = customer.Id,
-						JewelryId = jewelry.Id,
-						WarrantyCardId = jewelry.WarrantyCard.Id,
-						DeliveredAt = DateTime.Now,
-						SalesStaffId = userId
-					};
-					productionRequest.Status = SD.StatusRequestDone;
-					jewelry.Status = SD.StatusDelivered;
-					_unitOfWork.Jewelry.Update(jewelry);
-					_unitOfWork.Delivery.Add(delivery);
-					TempData["success"] = "Order is delivered successfully";
-					_unitOfWork.Save();
-				}
-
-			}
-
-			return RedirectToAction("Index");
-		}
 
 		public IActionResult CustomerViewDelivery(int id)
 		{
-			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
+			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries", tracked: true);
 
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,SalesStaff,ProductionRequest").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -103,7 +66,7 @@ namespace SWP391.Controllers
 		public IActionResult Confirm(int id)
 		{
 			ProductionRequest productionRequest = _unitOfWork.ProductionRequest.Get(u => u.Id == id, includeProperties: "Jewelries");
-			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,ProductionRequest").ToList();
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(jewelry => jewelry.ProductionRequestId == productionRequest.Id, includeProperties: "Customer,ProductionRequest,WarrantyCard").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			productionRequest.CustomerId = userId;
@@ -113,23 +76,37 @@ namespace SWP391.Controllers
 				if (jewelry is not null)
 				{
 
-					jewelry.Status = SD.StatusConfirmDelivered;
-					jewelry.ProductionRequest.Status = SD.StatusConfirmDelivered;
-					TempData["success"] = "Confirmed Order successfully";
+					jewelry.Status = SD.StatusDelivered;
+					jewelry.ProductionRequest.Status = SD.StatusRequestDone;
+					
+					Delivery delivery = new Delivery()
+					{
+						//SalesStaffId = userId,
+						CustomerId = jewelry.CustomerId,
+						JewelryId = jewelry.Id,
+						WarrantyCardId = jewelry.WarrantyCard.Id,
+						DeliveredAt = DateTime.Now,
+						SalesStaffId = userId
+					};
+
+					_unitOfWork.Jewelry.Update(jewelry);
+					_unitOfWork.Delivery.Add(delivery);
 				}
 			}
+			
+			TempData["success"] = "Order is delivered successfully";
 			_unitOfWork.Save();
 			return RedirectToAction("Index");
 		}
-
-		public IActionResult CancelRequest(int id)
-		{
-			ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id, tracked: true);
-			if (req is not null)
-			{
-				req.Status = SD.StatusCancelled;
-				_unitOfWork.Save();
-			}
+        public IActionResult CancelRequest(int id)
+        {
+            ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id && r.Status != SD.StatusRequestDone 
+			&& r.Status != SD.StatusAllManufactured && r.Status != SD.StatusConfirmDelivered,tracked:true);
+			if (req is null) return NotFound();
+            
+                req.Status = SD.StatusCancelled;
+                _unitOfWork.Save();
+           
 
 			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
 			if (jewelries.Count > 0)

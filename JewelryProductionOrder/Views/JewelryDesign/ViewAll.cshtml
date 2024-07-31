@@ -3,7 +3,7 @@
 <div>
 	<div>
 		<div class="d-flex justify-content-between align-items-center my-4">
-			<h2 class="col-10">Jewelry Design for Jewelry: @Model.FirstOrDefault().Jewelry.Name</h2>
+			<h2 class="col-10">Jewelry Design for Jewelry: @Model.FirstOrDefault()?.Jewelry?.Name</h2>
 			<div class="d-flex gap-2">
 			
 			@if (Model.Any(obj => obj.Status == SD.CustomerApproved))

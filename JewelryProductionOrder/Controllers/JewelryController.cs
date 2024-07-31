@@ -27,6 +27,7 @@ namespace JewelryProductionOrder.Controllers
 			{
 				return NotFound();
 			}
+			TempData["success"] = "Updated!";
 			return View(jewelry);
 		}
 
