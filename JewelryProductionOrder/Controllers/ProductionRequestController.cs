@@ -23,16 +23,19 @@ namespace SWP391.Controllers
 			_userManager = userManager;
 		}
 
-
 		[Authorize]
 		public IActionResult Index()
 		{
 			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))
 			{
-				var claimsIdentity = (ClaimsIdentity)User.Identity;
-				var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 				obj = obj.Where(obj => obj.CustomerId == userId).ToList();
+			}
+			if (User.IsInRole(SD.Role_Sales))
+			{
+				obj = obj.Where(obj => obj.SalesStaffId == userId).ToList();
 			}
 
 			return View(obj);
@@ -49,8 +52,6 @@ namespace SWP391.Controllers
 			_unitOfWork.Save();
 			return View("Deliver", productionRequest);
 		}
-
-
 
 		public IActionResult CustomerViewDelivery(int id)
 		{
@@ -101,7 +102,7 @@ namespace SWP391.Controllers
         public IActionResult CancelRequest(int id)
         {
             ProductionRequest req = _unitOfWork.ProductionRequest.Get(r => r.Id == id && r.Status != SD.StatusRequestDone 
-			&& r.Status != SD.StatusAllManufactured && r.Status != SD.StatusConfirmDelivered,tracked:true);
+			&& r.Status != SD.StatusAllManufactured && r.Status != SD.StatusConfirmDelivered && r.Status != SD.StatusPaid,tracked:true);
 			if (req is null) return NotFound();
             
                 req.Status = SD.StatusCancelled;
