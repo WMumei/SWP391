@@ -38,6 +38,6 @@
 
 		public const string StatusUnavailable = "Unavailable";
 		public const string StatusAvailable = "Available";
-
+		
 	}
 }

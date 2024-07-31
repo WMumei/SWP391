@@ -298,7 +298,7 @@ namespace JewelryProductionOrder.Controllers
 		[HttpGet]
 		public IActionResult GetGemstone()
 		{
-			List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable).ToList();
+			List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.Status == SD.StatusUnavailable && g.MaterialSetId !=null).ToList();
 
 			int gemstoneCount = gemstones.Count;
 			var type = gemstones
