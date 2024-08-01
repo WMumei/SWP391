@@ -2,15 +2,13 @@
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
 using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
-    [Authorize(Roles = SD.Role_Sales)]
-    public class GemstoneController : Controller
+	[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Admin}")]
+	public class GemstoneController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         public GemstoneController(IUnitOfWork unitOfWork)
@@ -94,11 +92,11 @@ namespace JewelryProductionOrder.Controllers
 
         public IActionResult Delete(int id)
         {
-            if (id==0)
+            if (id == 0)
             {
                 return NotFound();
             }
-            Gemstone? gemstoneFromDb = _unitOfWork.Gemstone.Get(u =>u.Id == id && u.Status == SD.StatusAvailable);
+            Gemstone? gemstoneFromDb = _unitOfWork.Gemstone.Get(u => u.Id == id && u.Status == SD.StatusAvailable);
 
             if (gemstoneFromDb == null)
             {

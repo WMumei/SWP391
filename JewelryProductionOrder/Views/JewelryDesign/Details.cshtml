@@ -1,79 +1,72 @@
 ﻿@model JewelryDesign
 
 <form method="post" class="container">
-    <div class="caption-top row">
-        <h2>Design for Jewelry: @Model.Jewelry.Name</h2>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-10">
-                <input asp-for="@Model.Jewelry.Id" hidden />
-                <div class="col-6 py-2 form-floating my-2">
-                    <input disabled asp-for="@Model.Name" class="form-control border-0 shadow" />
-                    <label asp-for="@Model.Name" class="ms-2"></label>
-                </div>
-                <div class="col-4">
-                    @{
-                        var designFiles = Model.DesignFile.Split(',');
-                       
-                        <ul>
-                    @foreach (var file in designFiles)
-                        {
-                        var trimmedFile = file.Trim();
+	<div class="caption-top row">
+		<h2>Design for Jewelry: @Model.Jewelry.Name</h2>
+	</div>
+	<div class="form-group">
+		<div class="row">
+			<div class="col-10">
+				<input asp-for="@Model.Jewelry.Id" hidden />
+				<div class="col-6 py-2 form-floating my-2">
+					<input disabled asp-for="@Model.Name" class="form-control border-0 shadow" />
+					<label asp-for="@Model.Name" class="ms-2"></label>
+				</div>
+				<div class="col-4">
+					@{
+						var designFiles = Model.DesignFile.Split(',');
+						var imageFiles = designFiles.Where(file => file.Trim().EndsWith(".jpg") || file.Trim().EndsWith(".webp") || file.Trim().EndsWith(".jpeg") || file.Trim().EndsWith(".png") || file.Trim().EndsWith(".gif")).ToList();
+					}
 
-                                var isImage = trimmedFile.EndsWith(".jpg") || trimmedFile.EndsWith(".jpeg") || trimmedFile.EndsWith(".png") || trimmedFile.EndsWith(".gif");
-                       
-                        if (isImage)
-                        {
-                                    <img src="@Url.Content(trimmedFile)" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
-                        }
-                        else
-                        {
-                                    // <a href="@Url.Content(trimmedFile)" download class="btn btn-secondary">Download Design File</a>
-                                    <a href="@Url.Action("DownloadAllFiles", new { id = Model.Id })" class="btn btn-success">Download File(s)</a>
-                        }
-                    }
-                        </ul>
-                        
-                     }
-                </div>
-        </div>
-    </div>
+					@if (imageFiles.Any())
+					{
+						<h2>Images</h2>
+						<ul>
+							@foreach (var file in imageFiles)
+							{
+								var trimmedFile = file.Trim();
+								<li>
+									<img src="@Url.Content(trimmedFile)" width="100%" style="border-radius:5px; border:1px solid #bbbbbb" />
+								</li>
+							}
+						</ul>
+					}
 
+					<h2>Download all files</h2>
+					<ul>
+						<li>
+							<a href="@Url.Action("DownloadAllFiles", new { id = Model.Id })" class="btn btn-success">Download File(s)</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        <div class="d-flex justify-content-start align-items-center mt-1">
+	<div class="d-flex justify-content-start align-items-center mt-1">
+		@if (User.IsInRole(SD.Role_Customer))
+		{
+			if (Model.Status != SD.CustomerDisapproved && Model.Status != SD.StatusDiscontinued && Model.Status != SD.CustomerApproved)
+			{
+				<a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
+				<a asp-controller="JewelryDesign" asp-action="CustomerDisapprove" asp-route-id="@Model.Id" class="btn btn-danger btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Disapprove</a>
+			}
+			else if (Model.Status == SD.CustomerApproved)
+			{
+				<div class="text-center">
+					<h3 class="text-success">Approved!</h3>
+				</div>
+			}
+			else if (Model.Status == SD.CustomerDisapproved)
+			{
+				<div class="text-center">
+					<h3 class="text-danger">Disapproved!</h3>
+				</div>
+			}
+		}
+	</div>
 
-    @if (User.IsInRole(SD.Role_Customer))
-    {
-        if (Model.Status != SD.CustomerDisapproved && Model.Status != SD.StatusDiscontinued && Model.Status != SD.CustomerApproved)
-        {
-            
-                        <a asp-controller="JewelryDesign" asp-action="CustomerApprove" asp-route-id="@Model.Id" class="btn btn-primary btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Approve</a>
-            
-            
-                        <a asp-controller="JewelryDesign" asp-action="CustomerDisapprove" asp-route-id="@Model.Id" class="btn btn-danger btn-lg mx-1 my-1" asp-route-redirectRequest="@Model.Jewelry.ProductionRequestId">Disapprove</a>
-            
-        }
-        else if (Model.Status == SD.CustomerApproved)
-        {
-            <div class="text-center">
-                <h3 class="text-success">Approved!</h3>
-            </div>
-        }
-        else if (Model.Status == SD.CustomerDisapproved)
-        {
-            <div class="text-center">
-                <h3 class="text-danger ">Disapproved!</h3>
-            </div>
-        }
-
-    }
-    
-
-</div>
-        <div class="d-flex gap-2 my-2">
-            <a class="btn btn-secondary" asp-action="ViewAll" asp-route-jId="@Model.Jewelry.Id">Back</a>
-        </div>
+	<div class="d-flex gap-2 my-2">
+		<a class="btn btn-secondary" asp-action="ViewAll" asp-route-jId="@Model.Jewelry.Id">Back</a>
+	</div>
 </form>
-
-

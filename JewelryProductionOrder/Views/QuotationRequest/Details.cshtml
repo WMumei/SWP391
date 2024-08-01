@@ -83,7 +83,7 @@
     </div>
 <h3 class="fw-normal">Quotation Total Price: $<span id="quotationPrice">@Model.QuotationRequest.TotalPrice</span></h3>
 <div class="d-flex justify-content-start align-items-center mt-1">
-    @if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved))
+    @if (User.IsInRole(SD.Role_Manager) && !(Model.QuotationRequest.Status == SD.ManagerDisapproved || Model.QuotationRequest.Status == SD.ManagerApproved || Model.QuotationRequest.Status == SD.CustomerApproved))
     {
         <a asp-controller="QuotationRequest" asp-action="ManagerApprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-primary btn-lg mx-1 my-1">Approve</a>
         <a asp-controller="QuotationRequest" asp-action="ManagerDisapprove" asp-route-id="@Model.QuotationRequest.Id" class="btn btn-danger btn-lg mx-1 my-1">Disapprove</a>

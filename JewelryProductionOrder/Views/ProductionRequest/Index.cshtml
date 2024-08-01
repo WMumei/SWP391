@@ -19,16 +19,12 @@
 				<th>Name</th>
 				<th>Phone</th>
 				<th>Email</th>
+				<th>Sales Name</th>
 				<th>Status</th>
 				<th>Jewelries</th>
-				@* @if(!User.IsInRole(SD.Role_Customer))
-				{
 
-				<th>Cancel</th>
-				} *@
 				<th>Payment</th>
 
-				@* <th>Design</th> *@
 				<th>Deliver</th>
 				<th>Notes</th>
 				@if (User.IsInRole(SD.Role_Sales))
@@ -50,12 +46,13 @@
 						<td>@obj.ContactName</td>
 						<td>@obj.PhoneNumber</td>
 						<td>@obj.Email</td>
-						<td><span class="fw-bold text-danger" >@obj.Status</span></td>
+						<td>@obj.SalesStaff.Name</td>
+						<td><span class="fw-bold text-danger">@obj.Status</span></td>
 						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
+
 					</tr>
 				}
 				else
@@ -67,18 +64,8 @@
 						<td>@obj.ContactName</td>
 						<td>@obj.PhoneNumber</td>
 						<td>@obj.Email</td>
+						<td>@obj.SalesStaff.Name</td>
 						<td>@obj.Status</td>
-						@* 					<td><a asp-controller="ProductionRequestDetail" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
-
-
-						@*                 @if (obj.QuotationRequest is not null)
-				{
-				<td><a asp-controller="QuotaionRequest" asp-action="Index" asp-route-id="@obj.QuotationRequest.Id" class="btn btn-primary btn-sm">View</a></td>
-				}
-				else
-				{
-				<td><a asp-controller="QuotationRequest" asp-action="Create" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">Create</a></td>
-				} *@
 
 						@if (@obj.Jewelries.Count >= 1)
 						{
@@ -88,13 +75,14 @@
 						{
 							<td></td>
 						}
+
 						@if (User.IsInRole(SD.Role_Customer))
 						{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved 
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved
 							|| obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
-						{
-							
+							{
+
 								<td>Paid</td>
 							}
 							else if (obj.Status == SD.StatusAllQuotationApproved)
@@ -109,7 +97,7 @@
 						}
 						else
 						{
-							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved 
+							if (obj.Status == SD.StatusPaid || obj.Status == SD.StatusDesignApproved
 							|| obj.Status == SD.StatusAllManufactured ||
 							obj.Status == SD.StatusConfirmDelivered || obj.Status == SD.StatusRequestDone)
 							{
@@ -120,10 +108,7 @@
 							{
 								<td></td>
 							}
-
 						}
-
-
 
 						@if (obj.Status == SD.StatusAllWarrantyCard)
 						{
@@ -132,16 +117,12 @@
 							{
 								<td><a asp-controller="ProductionRequest" asp-action="Deliver" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
-
-
-							else if (User.IsInRole(SD.Role_Customer))
+							else
 							{
-
-
-								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
+								<td></td>
 							}
 						}
-						else if ( obj.Status == SD.StatusRequestDone)
+						else if (obj.Status == SD.StatusDelivered)
 						{
 							@if (User.IsInRole(SD.Role_Sales))
 							{
@@ -151,45 +132,28 @@
 
 							else if (User.IsInRole(SD.Role_Customer))
 							{
-
-
-
-								<td>Delivered</td>
+								<td><a asp-controller="ProductionRequest" asp-action="CustomerViewDelivery" asp-route-id="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
 							}
 							else
 							{
 								<td></td>
 							}
 						}
+						else if (obj.Status == SD.StatusRequestDone)
+						{
+							<td>Delivered</td>
+						}
 						else
 						{
 							<td></td>
 						}
 
-
-
-
-						@* 					@if (User.IsInRole(SD.Role_Sales))
-				{
-				<td><a asp-controller="Jewelry" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td>
-				} *@
-						@* <td><a asp-controller="Jewelry" asp-action="RequestIndex" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
-						@* @if (User.IsInRole(SD.Role_Customer))
-				{
-				if(obj.Status == SD.StatusPaid)
-				{
-				<td>Paid!</td>
-				}
-				else
-				{
-				<td><a asp-controller="ProductionRequest" asp-action="Payment" asp-route-pId="@obj.Id" class="btn btn-success btn-sm">Payment</a></td>
-				}
-				} *@
 						<td>@obj.Note</td>
 
 						@if (User.IsInRole(SD.Role_Sales))
 						{
-							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured)
+							var checkStatus = obj.Status == SD.StatusProcessing || obj.Status == SD.StatusAllQuotationApproved;
+							if (checkStatus)
 							{
 
 								<td>
@@ -210,7 +174,7 @@
 			}
 		</tbody>
 	</table>
-	
+
 </div>
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back</a>
 <script>

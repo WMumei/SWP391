@@ -1,5 +1,4 @@
-﻿using JewelryProductionOrder.Data;
-using JewelryProductionOrder.Models;
+﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Models.ViewModels;
 using JewelryProductionOrder.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
-using NuGet.Protocol.Plugins;
-using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -158,13 +155,13 @@ namespace JewelryProductionOrder.Controllers
                 return Json(new { success = false });
             }
 
-            if (objFromDb.LockoutEnd!=null && objFromDb.LockoutEnd > DateTime.Now)
+            if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
             {
                 objFromDb.LockoutEnd = DateTime.Now;
             }
             else
             {
-                objFromDb.LockoutEnd= DateTime.Now.AddDays(7);
+                objFromDb.LockoutEnd = DateTime.Now.AddDays(7);
             }
             _unitOfWork.User.Update(objFromDb);
             _unitOfWork.Save();
