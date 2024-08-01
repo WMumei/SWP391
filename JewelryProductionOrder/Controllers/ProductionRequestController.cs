@@ -19,20 +19,20 @@ namespace SWP391.Controllers
             _userManager = userManager;
         }
 
-        [Authorize]
-        public IActionResult Index()
-        {
-            List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (User.IsInRole(SD.Role_Customer))
-            {
-                obj = obj.Where(obj => obj.CustomerId == userId).ToList();
-            }
-            if (User.IsInRole(SD.Role_Sales))
-            {
-                obj = obj.Where(obj => obj.SalesStaffId == userId).ToList();
-            }
+		[Authorize]
+		public IActionResult Index()
+		{
+			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries,SalesStaff").ToList();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			if (User.IsInRole(SD.Role_Customer))
+			{
+				obj = obj.Where(obj => obj.CustomerId == userId).ToList();
+			}
+			if (User.IsInRole(SD.Role_Sales))
+			{
+				obj = obj.Where(obj => obj.SalesStaffId == userId).ToList();
+			}
 
             return View(obj);
         }
@@ -114,26 +114,27 @@ namespace SWP391.Controllers
             _unitOfWork.Save();
 
 
-            List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
-            if (jewelries.Count > 0)
-            {
-                foreach (Jewelry jewelry in jewelries)
-                {
-                    if (jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured)
-                    {
-                        MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
-                        MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
-                        if (materialSet != null)
-                        {
-                            List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
-                            foreach (var gem in gemstones)
-                            {
-                                gem.Status = SD.StatusAvailable;
-                                _unitOfWork.Gemstone.Update(gem);
-                                _unitOfWork.Save();
-                            }
-                            _unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
-                            _unitOfWork.Save();
+			List<Jewelry> jewelries = _unitOfWork.Jewelry.GetAll(j => j.ProductionRequestId == id).ToList();
+			if (jewelries.Count > 0)
+			{
+				foreach (Jewelry jewelry in jewelries)
+				{
+					if (jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured )
+					{
+						MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
+						
+						if (materialSet != null)
+						{
+							MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
+							List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
+							foreach (var gem in gemstones)
+							{
+								gem.Status = SD.StatusAvailable;
+								_unitOfWork.Gemstone.Update(gem);
+								_unitOfWork.Save();
+							}
+							_unitOfWork.MaterialSetMaterial.Remove(materialSetMaterial);
+							_unitOfWork.Save();
 
                         }
                     }
