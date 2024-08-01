@@ -182,7 +182,9 @@
 
 						@if (User.IsInRole(SD.Role_Sales))
 						{
-							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone && obj.Status != SD.StatusAllManufactured && obj.Status != SD.StatusCancelled)
+							if (obj.Status != SD.StatusConfirmDelivered && obj.Status != SD.StatusRequestDone 
+							&& obj.Status != SD.StatusAllManufactured && obj.Status != SD.StatusCancelled
+							&& obj.Status != SD.StatusAllWarrantyCard && obj.Status != SD.StatusAllDesignApproved)
 							{
 
 								<td>
