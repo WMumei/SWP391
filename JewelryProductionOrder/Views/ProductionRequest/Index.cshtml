@@ -51,14 +51,14 @@
 						<td>@obj.Email</td>
 						@if (User.IsInRole(SD.Role_Manager))
 						{
-							<td></td>
+							<td>@obj.SalesStaff.Name</td>
 						}
 						<td><span class="fw-bold text-danger" >@obj.Status</span></td>
 						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						
 					</tr>
 				}
 				else
