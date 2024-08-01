@@ -26,7 +26,7 @@ namespace SWP391.Controllers
 		[Authorize]
 		public IActionResult Index()
 		{
-			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries").ToList();
+			List<ProductionRequest> obj = _unitOfWork.ProductionRequest.GetAll(includeProperties: "Customer,Jewelries,SalesStaff").ToList();
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			if (User.IsInRole(SD.Role_Customer))

@@ -19,16 +19,15 @@
 				<th>Name</th>
 				<th>Phone</th>
 				<th>Email</th>
+				@if (User.IsInRole(SD.Role_Manager))
+				{
+					<th>Sale Staff's Name</th>
+				}
 				<th>Status</th>
 				<th>Jewelries</th>
-				@* @if(!User.IsInRole(SD.Role_Customer))
-				{
-
-				<th>Cancel</th>
-				} *@
+				
 				<th>Payment</th>
 
-				@* <th>Design</th> *@
 				<th>Deliver</th>
 				<th>Notes</th>
 				@if (User.IsInRole(SD.Role_Sales))
@@ -50,6 +49,10 @@
 						<td>@obj.ContactName</td>
 						<td>@obj.PhoneNumber</td>
 						<td>@obj.Email</td>
+						@if (User.IsInRole(SD.Role_Manager))
+						{
+							<td></td>
+						}
 						<td><span class="fw-bold text-danger" >@obj.Status</span></td>
 						<td></td>
 						<td></td>
@@ -67,6 +70,10 @@
 						<td>@obj.ContactName</td>
 						<td>@obj.PhoneNumber</td>
 						<td>@obj.Email</td>
+						@if (User.IsInRole(SD.Role_Manager))
+						{
+							<td>@obj.SalesStaff.Name</td>
+						}
 						<td>@obj.Status</td>
 						@* 					<td><a asp-controller="ProductionRequestDetail" asp-action="Index" asp-route-reqId="@obj.Id" class="btn btn-primary btn-sm">View</a></td> *@
 
