@@ -1,13 +1,14 @@
 ﻿@model UserVM
+
 <div class="container">
-    <form asp-action="Create" method="post">
+    <form asp-action="Edit" method="post">
         <div class="d-flex gap-2 flex-column">
             <div>
-                <h2>Create Account</h2>
+                <h2>Edit Account</h2>
                 <hr />
             </div>
             <div>
-                <input asp-for="Id" value="1" hidden type="text" class="form-control" />
+                <input asp-for="Id" type="hidden" class="form-control" />
             </div>
             <div class="form-floating py-2 col-12">
                 <input asp-for="Name" type="text" class="form-control" />
@@ -16,13 +17,8 @@
             </div>
             <div class="form-floating py-2 col-12">
                 <input asp-for="Email" type="text" class="form-control" />
-                <label asp-for="Email">Email: (this will be used as username)</label>
+                <label asp-for="Email">Email:</label>
                 <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-12">
-                <input asp-for="Password" type="password" class="form-control" />
-                <label asp-for="Password">Password:</label>
-                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-floating py-2 col-12">
                 <input asp-for="PhoneNumber" type="text" class="form-control" />
@@ -35,13 +31,21 @@
                 <span asp-validation-for="StreetAddress" class="text-danger"></span>
             </div>
             <div class="form-floating py-2 col-12">
-                <select asp-for="Role" asp-items="@Model.RoleSelectList" class="form-select"></select>
-                <label asp-for="Role">Select the role for this employee</label>
+                <input asp-for="UserName" type="text" class="form-control" readonly />
+                <label asp-for="UserName">Username:</label>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="LockoutEnd" hidden type="text" class="form-control" readonly />
+                <label asp-for="LockoutEnd" hidden>Lockout End:</label>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Role" type="text" class="form-control" readonly />
+                <label asp-for="Role">Role:</label>
             </div>
             <br />
             <div class="row">
                 <div class="col-6 col-md-3">
-                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                    <button type="submit" class="btn btn-primary form-control">Save</button>
                 </div>
                 <div class="col-6 col-md-3">
                     <a asp-controller="User" asp-action="Index" class="btn btn-outline-primary form-control">
@@ -57,5 +61,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/addAccountValidation.js"></script>
 }

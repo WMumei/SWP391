@@ -15,6 +15,13 @@ namespace JewelryProductionOrder.Models.ViewModels
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        [Phone]
+        [Display(Name = "Phone number")]
+        [RegularExpression(@"^[0-9]{8,15}$",
+               ErrorMessage = "Invalid phone number")]
+        public string PhoneNumber { get; set; }
+        [Display(Name = "Street Address")]
+        public string StreetAddress { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
         public string Role { get; set; }
         public SelectList? RoleSelectList { get; set; }
