@@ -190,7 +190,6 @@ namespace SWP391.Controllers
         [Authorize(Roles = SD.Role_Customer)]
         public IActionResult CustomerApprove(int id)
         {
-            // TODO: Handle if there is already an approved quotationu
 
             QuotationRequest req = _unitOfWork.QuotationRequest.Get(req => req.Id == id);
             if (req.Status == SD.StatusDiscontinued) return NotFound();

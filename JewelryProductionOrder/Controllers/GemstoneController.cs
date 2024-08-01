@@ -7,8 +7,8 @@ using System.Diagnostics;
 
 namespace JewelryProductionOrder.Controllers
 {
-    [Authorize(Roles = SD.Role_Sales)]
-    public class GemstoneController : Controller
+	[Authorize(Roles = $"{SD.Role_Sales},{SD.Role_Manager},{SD.Role_Admin}")]
+	public class GemstoneController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         public GemstoneController(IUnitOfWork unitOfWork)

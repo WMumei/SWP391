@@ -1,5 +1,6 @@
 ﻿using JewelryProductionOrder.Models;
 using JewelryProductionOrder.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Repositories.Repository.IRepository;
@@ -7,6 +8,7 @@ using System.Data;
 
 namespace JewelryProductionOrder.Controllers
 {
+	[Authorize(Roles = SD.Role_Manager)]
     public class DashboardController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

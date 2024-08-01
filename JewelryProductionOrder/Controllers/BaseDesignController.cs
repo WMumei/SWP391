@@ -7,7 +7,6 @@ using System.Security.Claims;
 
 namespace JewelryProductionOrder.Controllers
 {
-    [Authorize]
     public class BaseDesignController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -17,7 +16,7 @@ namespace JewelryProductionOrder.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = hostEnvironment;
         }
-        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Create()
         {
             BaseDesign obj = new BaseDesign
@@ -27,7 +26,7 @@ namespace JewelryProductionOrder.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Create(BaseDesign obj, IFormFile? file)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -75,21 +74,21 @@ namespace JewelryProductionOrder.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Manager},{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Index()
         {
             List<BaseDesign> designList = _unitOfWork.BaseDesign.GetAll().ToList();
             return View(designList);
         }
 
-        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager},{SD.Role_Sales}")]
+        [Authorize(Roles = $"{SD.Role_Customer},{SD.Role_Design},{SD.Role_Manager},{SD.Role_Sales},{SD.Role_Admin}")]
         public IActionResult Details(int bId)
         {
             BaseDesign design = _unitOfWork.BaseDesign.Get(design => design.Id == bId);
             return View(design);
         }
 
-        [Authorize(Roles = $"{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Edit(int bId)
         {
             var baseDesign = _unitOfWork.BaseDesign.Get(m => m.Id == bId);
@@ -101,7 +100,7 @@ namespace JewelryProductionOrder.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Edit(BaseDesign baseDesign, IFormFile? file)
         {
             var existingDesign = _unitOfWork.BaseDesign.Get(d => d.Id == baseDesign.Id);
@@ -136,7 +135,7 @@ namespace JewelryProductionOrder.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = $"{SD.Role_Design}")]
+        [Authorize(Roles = $"{SD.Role_Design},{SD.Role_Admin}")]
         public IActionResult Delete(int bId)
         {
             BaseDesign baseDesign = _unitOfWork.BaseDesign.Get(bD => bD.Id == bId);

@@ -4,14 +4,14 @@
 	<div>
 		<div class="caption-top row d-flex justify-content-between">
 			<h2 class="col-10">Base Design Management</h2>
-			@if (User.IsInRole(SD.Role_Design))
+			@if (User.IsInRole(SD.Role_Design) || User.IsInRole(SD.Role_Admin))
 			{
 				<div class="col-2 d-flex justify-content-end">
 					<a class="btn btn-primary btn-lg px-4" asp-controller="BaseDesign" asp-action="Create">Create</a>
-</div>
+				</div>
 
 			}
-			</div>
+		</div>
 	</div>
 	<table class="table table-bordered table-striped fs-6 fw-normal">
 		<thead>
@@ -21,7 +21,7 @@
 				<th>Type</th>
 				<th>Created at</th>
 				<th>Detail</th>
-				@if(User.IsInRole(SD.Role_Design))
+				@if (User.IsInRole(SD.Role_Design) || User.IsInRole(SD.Role_Admin))
 				{
 					<th>Edit</th>
 					<th>Delete</th>
@@ -37,11 +37,11 @@
 					<td>@obj.Type</td>
 					<td>@obj.CreatedAt</td>
 					<td><a asp-controller="BaseDesign" asp-action="Details" asp-route-bId="@obj.Id" class="btn btn-primary btn-sm">Details</a></td>
-					@if (User.IsInRole(SD.Role_Design))
+					@if (User.IsInRole(SD.Role_Design) || User.IsInRole(SD.Role_Admin))
 					{
 						<td><a asp-controller="BaseDesign" asp-action="Edit" asp-route-bId="@obj.Id" class="btn btn-primary btn-sm">Edit</a></td>
 					}
-					@if (User.IsInRole(SD.Role_Design))
+					@if (User.IsInRole(SD.Role_Design) || User.IsInRole(SD.Role_Admin))
 					{
 						<td><a asp-controller="BaseDesign" asp-action="Delete" asp-route-bId="@obj.Id" class="btn btn-danger btn-sm">Delete</a></td>
 					}
@@ -49,5 +49,5 @@
 			}
 		</tbody>
 	</table>
-		</div>
+</div>
 

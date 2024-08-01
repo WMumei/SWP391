@@ -154,8 +154,9 @@ namespace JewelryProductionOrder.Controllers
                 return RedirectToAction("Index");
             }
         }
+		[Authorize(Roles = SD.Role_Sales)]
 
-        public IActionResult Delete(int id)
+		public IActionResult Delete(int id)
         {
             var post = _unitOfWork.Post.Get(p => p.Id == id, includeProperties: "SalesStaff");
             if (post == null)

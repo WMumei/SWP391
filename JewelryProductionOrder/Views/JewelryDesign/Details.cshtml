@@ -15,7 +15,7 @@
 				<div class="col-4">
 					@{
 						var designFiles = Model.DesignFile.Split(',');
-						var imageFiles = designFiles.Where(file => file.Trim().EndsWith(".jpg") || file.Trim().EndsWith(".jpeg") || file.Trim().EndsWith(".png") || file.Trim().EndsWith(".gif")).ToList();
+						var imageFiles = designFiles.Where(file => file.Trim().EndsWith(".jpg") || file.Trim().EndsWith(".webp") || file.Trim().EndsWith(".jpeg") || file.Trim().EndsWith(".png") || file.Trim().EndsWith(".gif")).ToList();
 					}
 
 					@if (imageFiles.Any())
