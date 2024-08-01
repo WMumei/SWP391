@@ -123,12 +123,13 @@ namespace SWP391.Controllers
 			{
 				foreach (Jewelry jewelry in jewelries)
 				{
-					if (jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured)
+					if (jewelry.Status != SD.StatusManufaturing && jewelry.Status != SD.StatusManufactured )
 					{
 						MaterialSet materialSet = _unitOfWork.MaterialSet.Get(m => m.JewelryId == jewelry.Id);
-						MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
+						
 						if (materialSet != null)
 						{
+							MaterialSetMaterial materialSetMaterial = _unitOfWork.MaterialSetMaterial.Get(m => m.MaterialSetId == materialSet.Id);
 							List<Gemstone> gemstones = _unitOfWork.Gemstone.GetAll(g => g.MaterialSetId == materialSet.Id).ToList();
 							foreach (var gem in gemstones)
 							{
