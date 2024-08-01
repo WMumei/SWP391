@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models.Repositories.Repository.IRepository;
+using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace JewelryProductionOrder.Controllers
 {
@@ -37,6 +39,69 @@ namespace JewelryProductionOrder.Controllers
             };
             return View(model);
         }
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userVM = new UserVM
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                StreetAddress = user.Address,
+                UserName = user.UserName, // Read-only field
+                LockoutEnd = user.LockoutEnd, // Read-only field
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() // Assuming single role
+            };
+
+            return View(userVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserVM userVM)
+        {
+            var user = await _userManager.FindByIdAsync(userVM.Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+                user.Name = userVM.Name;
+                user.Email = userVM.Email;
+                user.UserName = userVM.Email;
+                user.PhoneNumber = userVM.PhoneNumber;
+                user.Address = userVM.StreetAddress;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    TempData["success"] = "User updated successfully";
+                    return RedirectToAction("Index");
+                } else
+            {
+                TempData["error"] = "An account with this email has already existed";
+
+            }
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Debug.WriteLine(error.ErrorMessage);
+                }
+                // ...
+            }
+            return View(userVM);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(UserVM userVM)
@@ -48,6 +113,8 @@ namespace JewelryProductionOrder.Controllers
                     Name = userVM.Name,
                     UserName = userVM.Email,
                     Email = userVM.Email,
+                    Address = userVM.StreetAddress,
+                    PhoneNumber = userVM.PhoneNumber,
                     EmailConfirmed = true
                 };
 

@@ -52,6 +52,18 @@ function loadUserTable() {
                     }
 
                 },
+            },
+            {
+                data: 'id',
+                "render": function (data) {
+                    return `
+                        <div class="text-center">
+                            <a href="/User/Edit/${data}" class="btn btn-primary text-white" style="cursor:pointer;width:100px;">
+                                Edit
+                            </a>
+                        </div>`;
+                },
+                "orderable": false
             }
         ]
     });

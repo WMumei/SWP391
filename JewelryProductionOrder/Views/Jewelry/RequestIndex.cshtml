@@ -46,9 +46,15 @@
 					<td>@obj.Name</td>
 					<td>@obj.Description</td>
 					<td>@obj.Status</td>
-					<td>
-						<a asp-controller="BaseDesign" asp-action="Details" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
-					</td>
+					@if (User.IsInRole(SD.Role_Design) && User.IsInRole(SD.Role_Design))
+					{
+						<td>
+							<a asp-controller="BaseDesign" asp-action="Details" asp-route-bId="@obj.BaseDesignId" class="btn btn-primary btn-sm">View</a>
+						</td>
+					} else
+					{
+						<td></td>
+					}
 					@* <td>@obj.Status</td> *@
 					@* <td>@obj?.Customer?.Name</td> *@
 
@@ -91,7 +97,6 @@
 						{
 							<td></td>
 						}
-
 					}
 					else if (User.IsInRole(SD.Role_Design) && obj.Status == SD.StatusPaid)
 					{
